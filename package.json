@@ -1,0 +1,22 @@
+{
+  "name": "powerbi-visuals-tools",
+  "version": "1.0.0",
+  "description": "Some cool stuff",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/PowerBI-visuals-tools.git"
+  },
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/PowerBI-visuals-tools/issues"
+  },
+  "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
+}
