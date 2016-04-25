@@ -36,7 +36,7 @@
                 },
                 "externals" : {
                     "type": "array",
-                    "description": "External Javascript files that you would like to include"
+                    "description": "External files (such as JavaScript) that you would like to include"
                 },
                 "guid" : {
                     "type": "string",
@@ -48,11 +48,11 @@
                 },
                 "icon":{
                     "type": "string",
-                    "description": "Path to icon image" 
+                    "description": "Icon path" 
                 },
                 "version":{
                     "type": "string",
-                    "description": "version of this visual"
+                    "description": "Visual version"
                 }
             }
         }
