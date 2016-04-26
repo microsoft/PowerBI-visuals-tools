@@ -14,7 +14,7 @@ function VisualPackage(path) {
 
 /**
  * Creates a new visual package from the template 
- * @throws - throws io errors wrap in try/catch
+ * @throws - throws io errors (wrap in try/catch)
  */
 VisualPackage.prototype.create = function(force) {
     if(this.exists()) {
@@ -47,7 +47,8 @@ VisualPackage.prototype.valid = function() {
 
 /**
  * Loads the config data from the pbiviz.json file
- * @returns {Object}
+ * @returns {Object} - pbiviz object
+ * @throws - thows error if the json is invalid or not found (wrap in try/catch)
  */
 VisualPackage.prototype.getConfig = function() {
     return require(path.join(this.path, 'pbiviz.json'));
