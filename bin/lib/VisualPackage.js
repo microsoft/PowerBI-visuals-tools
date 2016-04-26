@@ -2,7 +2,7 @@ var fs = require('fs-extra');
 var path = require('path');
 
 var scriptPath = __dirname;
-var template = path.resolve(scriptPath + '/../../template');
+var templatePath = path.resolve(scriptPath + '/../../template');
 
 /**
  * Represents an instance of a visual package based on file path
@@ -25,7 +25,7 @@ VisualPackage.prototype.create = function(force) {
             throw new Error('This visual already exists. Use force to overwrite.');
         }
     }
-    fs.copySync(template, this.path);
+    fs.copySync(templatePath, this.path);
 };
 
 /**
