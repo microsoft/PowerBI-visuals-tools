@@ -18,4 +18,4 @@ if(!package.valid()) {
 }
 
 
-console.log('pbiviz start... coming soon.');
+console.log('pbiviz start... coming soon.', package.getConfig());

@@ -45,4 +45,12 @@ VisualPackage.prototype.valid = function() {
     return fs.existsSync(path.join(this.path, 'pbiviz.json'));
 };
 
+/**
+ * Loads the config data from the pbiviz.json file
+ * @returns {Object}
+ */
+VisualPackage.prototype.getConfig = function() {
+    return require(path.join(this.path, 'pbiviz.json'));
+}
+
 module.exports = VisualPackage;
