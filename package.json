@@ -2,8 +2,9 @@
   "name": "powerbi-visuals-tools",
   "version": "1.0.0",
   "description": "Some cool stuff",
-  "main": "index.js",
+  "main": "./lib/VisualPackage.js",
   "scripts": {
+    "start": "node ./bin/pbiviz.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {

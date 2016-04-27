@@ -1,7 +1,7 @@
 var path = require('path');
 var fs = require('fs-extra');
 var program = require('commander');
-var VisualPackage = require('./lib/VisualPackage');
+var VisualPackage = require('../lib/VisualPackage');
 
 program
     //.option('-f, --force', 'force creation (overwrites folder if exists)')
