@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PowerBI Custom Visual</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="/assets/visual.js"></script>
+    <link rel="stylesheet" href="/assets/visual.css">
+</head>
+<body>
+    <div id="visual" style="width: 500px; height: 500px; background: white; margin: 0;"></div>
+    
+    
+    <script>
+        var plugin, plugins = powerbi.visuals.plugins;
+        
+        for(var key in plugins) {
+            plugin = plugins[key];
+        }
+        console.log('plugin', plugin.name);
+        var visual = plugin.create();
+        console.log('visual', visual);
+        visual.init({
+            element: $('#visual'),
+            viewport: {
+                width:500,
+                height:500
+            }
+        });
+        setInterval(function(){
+            visual.update({dataView:Math.round(Math.random()*1000)})
+        },500)
+    </script>
+</body>
+</html>
