@@ -17,4 +17,16 @@ if(!package.valid()) {
     process.exit(1);
 }
 
-console.log('pbiviz package... coming soon.');
+var info;
+
+try {
+    info = package.getConfig();
+} catch (e) { }
+
+if(info) {
+    for(var key in info) {
+        console.log(key + ":", info[key]);
+    }
+} else {
+    console.error('Unable to load visual info. Please ensure the pbiviz.json is valid.');
+}

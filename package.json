@@ -2,8 +2,9 @@
   "name": "powerbi-visuals-tools",
   "version": "1.0.0",
   "description": "Some cool stuff",
-  "main": "index.js",
+  "main": "./lib/VisualPackage.js",
   "scripts": {
+    "start": "node ./bin/pbiviz.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
@@ -21,6 +22,8 @@
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
     "commander": "^2.9.0",
-    "fs-extra": "^0.28.0"
+    "connect": "^3.4.1",
+    "fs-extra": "^0.28.0",
+    "serve-static": "^1.10.2"
   }
 }
