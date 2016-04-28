@@ -23,7 +23,7 @@ if(!package.valid()) {
 // console.log('pbiviz start... coming soon.', package.getConfig());
 
 console.log('building visual');
-new VisualBuilder().build().then(function(){
+new VisualBuilder(cwd).build().then(function(){
     var assetPath = path.join(cwd, '.bin');
 
     if(!fs.existsSync(assetPath)) {
