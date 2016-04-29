@@ -1,1 +1,16 @@
-//placeholder for plugin template
+var powerbi;
+(function (powerbi) {
+    var visuals;
+    (function (visuals) {
+        var plugins;
+        (function (plugins) {
+            plugins.debugVisual = {
+                name: 'debugVisual',
+                class: 'debugVisual',
+                capabilities: powerbi.extensibility.<%= version %>.<%= className %>.__capabilities__,
+                apiVersion: "<%= versionstring %>",
+                create: function (options) { return new powerbi.extensibility.<%= version %>.<%= className %>(options); }
+        };
+        })(plugins = visuals.plugins || (visuals.plugins = {}));
+    })(visuals = powerbi.visuals || (powerbi.visuals = {}));
+})(powerbi || (powerbi = {}));

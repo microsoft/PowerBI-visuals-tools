@@ -5,5 +5,7 @@
         "experimentalDecorators": true,
         "target": "ES5"
     },
-    "files": []
+    "files": [
+        "visual.ts"
+    ]
 }
