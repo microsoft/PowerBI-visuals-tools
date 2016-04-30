@@ -3,9 +3,12 @@
         "allowJs": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "ES5"
+        "target": "ES5",
+        "sourceMap": true,
+        "out": "./.bin/visual.js"
     },
     "files": [
+        "capabilities.ts",
         "visual.ts"
     ]
 }

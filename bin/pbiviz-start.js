@@ -1,5 +1,3 @@
-var path = require('path');
-var fs = require('fs-extra');
 var program = require('commander');
 var VisualPackage = require('../lib/VisualPackage');
 var VisualServer = require('../lib/VisualServer');
@@ -11,31 +9,49 @@ program
 
 var args = program.args;
 var cwd = process.cwd();
+var server, builder;
 
-var package = new VisualPackage(cwd);
+VisualPackage.loadVisualPackage(cwd).then(function (package) {
+    
+    console.info('Building visual...');
+    builder = new VisualBuilder(package);
+    builder.build(true).then(function () {
+        builder.startWatcher();
+        builder.on('watch_change', function(event) {
+            console.info('CHANGE DETECTED (' + event + ')');
+        });
+        builder.on('watch_complete', function(event) {
+            console.info('BUILD COMPLETE (' + event + ')');
+        });
+        builder.on('watch_error', function(event) {
+            console.error('BUILD ERROR', event);
+        });
+        console.info('Starting server...');
+        server = new VisualServer(package, program.port);
+        server.start().then(function () {
+            console.info('Server listening on port ' + server.port + '.');
+        }).catch(function(e) {
+            console.error('SERVER ERROR', e);
+        });
+    }).catch(function (e) {
+        console.error('BUILD ERROR', e);
+    });
+}).catch(function(e){
+    console.error('LOAD ERROR', e);
+});
 
-if(!package.valid()) {
-    console.error('You must be in the root of a visual project to run this command.');
-    process.exit(1);
+//clean up
+function stopServer() {
+    console.info("Stopping server...");
+    if(server) {
+        server.stop();
+        server = null;
+    }
+    if(builder) {
+        builder.startWatcher();
+        builder = null;
+    }
 }
 
-
-// console.log('pbiviz start... coming soon.', package.getConfig());
-
-console.log('building visual');
-new VisualBuilder(cwd).build().then(function(){
-    var assetPath = path.join(cwd, '.bin');
-
-    if(!fs.existsSync(assetPath)) {
-        fs.mkdirSync(assetPath);
-        fs.writeFileSync(path.join(assetPath, 'visual.js'), "console.log('visual loaded');");
-        fs.writeFileSync(path.join(assetPath, 'visual.css'), "body { background: blue; }");
-    }
-
-    console.log('starting server')
-
-    var server = new VisualServer(assetPath, program.port);
-    server.start(function(){
-        console.log('Server listening on port ' + server.port + '.');
-    });
-});
+process.on('SIGINT', stopServer);
+process.on('SIGTERM', stopServer);

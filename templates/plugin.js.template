@@ -7,9 +7,9 @@ var powerbi;
             plugins.debugVisual = {
                 name: 'debugVisual',
                 class: 'debugVisual',
-                capabilities: powerbi.extensibility.<%= version %>.<%= className %>.__capabilities__,
-                apiVersion: "<%= versionstring %>",
-                create: function (options) { return new powerbi.extensibility.<%= version %>.<%= className %>(options); }
+                capabilities: powerbi.extensibility.visual.<%= className %>.__capabilities__,
+                apiVersion: "<%= apiVersion %>",
+                create: function (options) { return new powerbi.extensibility.visual.<%= className %>(options); }
         };
         })(plugins = visuals.plugins || (visuals.plugins = {}));
     })(visuals = powerbi.visuals || (powerbi.visuals = {}));

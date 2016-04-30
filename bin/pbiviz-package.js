@@ -1,5 +1,3 @@
-var path = require('path');
-var fs = require('fs-extra');
 var program = require('commander');
 var VisualPackage = require('../lib/VisualPackage');
 
@@ -10,11 +8,8 @@ program
 var args = program.args;
 var cwd = process.cwd();
 
-var package = new VisualPackage(cwd);
-
-if(!package.valid()) {
-    console.error('You must be in the root of a visual project to run this command.');
-    process.exit(1);
-}
-
-console.log('pbiviz package... coming soon.');
+VisualPackage.loadVisualPackage(cwd).then(function (package) {
+    console.log('pbiviz package... coming soon.');
+}).catch(function (e) {
+    console.error('LOAD ERROR', e);
+});
