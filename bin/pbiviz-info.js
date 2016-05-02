@@ -13,7 +13,7 @@ VisualPackage.loadVisualPackage(cwd).then(function (package) {
     var info = package.config;
     if (info) {
         for (var key in info) {
-            ConsoleWriter.info(key + ":", info[key]);
+            ConsoleWriter.infoTable(key, info[key]);
         }
     } else {
         ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
