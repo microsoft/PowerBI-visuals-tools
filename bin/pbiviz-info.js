@@ -1,5 +1,6 @@
 var program = require('commander');
 var VisualPackage = require('../lib/VisualPackage');
+var ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
     //.option('-f, --force', 'force creation (overwrites folder if exists)')
@@ -12,11 +13,11 @@ VisualPackage.loadVisualPackage(cwd).then(function (package) {
     var info = package.config;
     if (info) {
         for (var key in info) {
-            console.log(key + ":", info[key]);
+            ConsoleWriter.info(key + ":", info[key]);
         }
     } else {
-        console.error('Unable to load visual info. Please ensure the package is valid.');
+        ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
     }
 }).catch(function (e) {
-    console.error('LOAD ERROR', e);
+    ConsoleWriter.error('LOAD ERROR', e);
 });

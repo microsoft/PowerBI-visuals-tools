@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
+    "chalk": "^1.1.3",
     "commander": "^2.9.0",
     "concat-with-sourcemaps": "^1.0.4",
     "connect": "^3.4.1",

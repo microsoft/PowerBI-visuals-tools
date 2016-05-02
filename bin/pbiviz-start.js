@@ -2,6 +2,7 @@ var program = require('commander');
 var VisualPackage = require('../lib/VisualPackage');
 var VisualServer = require('../lib/VisualServer');
 var VisualBuilder = require('../lib/VisualBuilder');
+var ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
     .option('-p, --port [port]', 'force creation (overwrites folder if exists)')
@@ -13,36 +14,41 @@ var server, builder;
 
 VisualPackage.loadVisualPackage(cwd).then(function (package) {
     
-    console.info('Building visual...');
+    ConsoleWriter.info('Building visual...');
     builder = new VisualBuilder(package);
     builder.build(true).then(function () {
+        ConsoleWriter.done('build complete');
+        
         builder.startWatcher();
-        builder.on('watch_change', function(event) {
-            console.info('CHANGE DETECTED (' + event + ')');
+        builder.on('watch_change', function(changeType) {
+            ConsoleWriter.blank();
+            ConsoleWriter.info(changeType + ' change detected. Rebuilding...');
         });
-        builder.on('watch_complete', function(event) {
-            console.info('BUILD COMPLETE (' + event + ')');
+        builder.on('watch_complete', function(changeType) {
+            ConsoleWriter.info(changeType + ' build complete');
         });
-        builder.on('watch_error', function(event) {
-            console.error('BUILD ERROR', event);
+        builder.on('watch_error', function(errors) {
+            ConsoleWriter.formattedErrors(errors);
         });
-        console.info('Starting server...');
+        
+        ConsoleWriter.blank();
+        ConsoleWriter.info('Starting server...');
         server = new VisualServer(package, program.port);
         server.start().then(function () {
-            console.info('Server listening on port ' + server.port + '.');
+            ConsoleWriter.info('Server listening on port ' + server.port + '.');
         }).catch(function(e) {
-            console.error('SERVER ERROR', e);
+            ConsoleWriter.error('SERVER ERROR', e);
         });
     }).catch(function (e) {
-        console.error('BUILD ERROR', e);
+        ConsoleWriter.formattedErrors(e);
     });
 }).catch(function(e){
-    console.error('LOAD ERROR', e);
+    ConsoleWriter.error('LOAD ERROR', e);
 });
 
 //clean up
 function stopServer() {
-    console.info("Stopping server...");
+    ConsoleWriter.info("Stopping server...");
     if(server) {
         server.stop();
         server = null;

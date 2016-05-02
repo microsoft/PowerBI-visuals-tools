@@ -1,6 +1,7 @@
 var path = require('path');
 var program = require('commander');
 var VisualPackage = require('../lib/VisualPackage');
+var ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
@@ -9,7 +10,7 @@ program
 var args = program.args;
 
 if (args.length != 1 || !args[0]) {
-    console.error("You must enter a 1 word visual name");
+    ConsoleWriter.error("You must enter a 1 word visual name");
     process.exit(1);
 }
 
@@ -18,7 +19,7 @@ var cwd = process.cwd();
 var target = path.join(cwd, name);
 
 VisualPackage.createVisualPackage(target, program.force).then(function () {
-    console.log('Visual creation finished.');
+    ConsoleWriter.info('Visual creation finished.');
 }).catch(function (e) {
-    console.error('Unable to create visual.', e);
+    ConsoleWriter.error('Unable to create visual.', e);
 });
