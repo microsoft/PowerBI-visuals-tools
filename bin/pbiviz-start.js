@@ -6,6 +6,7 @@ var ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
     .option('-p, --port [port]', 'force creation (overwrites folder if exists)')
+    .option('-m, --mute', 'mute error sounds')
     .parse(process.argv);
 
 var args = program.args;
@@ -28,6 +29,7 @@ VisualPackage.loadVisualPackage(cwd).then(function (package) {
             ConsoleWriter.info(changeType + ' build complete');
         });
         builder.on('watch_error', function(errors) {
+            if(!program.mute) ConsoleWriter.beep();
             ConsoleWriter.formattedErrors(errors);
         });
         
@@ -40,6 +42,7 @@ VisualPackage.loadVisualPackage(cwd).then(function (package) {
             ConsoleWriter.error('SERVER ERROR', e);
         });
     }).catch(function (e) {
+        if(!program.mute) ConsoleWriter.beep();
         ConsoleWriter.formattedErrors(e);
     });
 }).catch(function(e){
