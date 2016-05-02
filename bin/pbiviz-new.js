@@ -18,8 +18,14 @@ var name = args[0];
 var cwd = process.cwd();
 var target = path.join(cwd, name);
 
+ConsoleWriter.info('Creating new visual');
+
+if(program.force) {
+    ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
+}
+
 VisualPackage.createVisualPackage(target, program.force).then(function () {
-    ConsoleWriter.info('Visual creation finished.');
+    ConsoleWriter.done('Visual creation complete');
 }).catch(function (e) {
     ConsoleWriter.error('Unable to create visual.', e);
 });
