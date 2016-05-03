@@ -19,7 +19,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
     ConsoleWriter.info('Building visual...');
     builder = new VisualBuilder(visualPackage);
-    builder.build(true).then(() => {
+    builder.build().then(() => {
         ConsoleWriter.done('build complete');
 
         builder.startWatcher();

@@ -1,0 +1,21 @@
+{
+    "templates": {
+        "visual": "templates/visual",
+        "pbiviz": "templates/pbiviz.json.template",
+        "plugin": "templates/plugin.js.template"
+    },
+    "build": {
+        "dropFolder": ".bin",
+        "js": "visual.js",
+        "css": "visual.css"
+    },
+    "package": {
+        "dropFolder": "dist"
+    },
+    "server": {
+        "root": "webRoot",
+        "assetsRoute": "/assets",
+        "privateKey":"certs/privatekey.key",
+        "certificate":"certs/certificate.crt"
+    }
+}
