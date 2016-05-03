@@ -13,7 +13,7 @@ program
     .command('package', 'Package the current visual into a pbiviz file');
 
 //prepend logo to help screen
-if (args.length === 2 || (args.length === 3 && args[2] === 'help')) {
+if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
     ConsoleWriter.logo();
 }
 
