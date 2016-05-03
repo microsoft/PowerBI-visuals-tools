@@ -18,4 +18,9 @@ if (args.length === 2 || (args.length === 3 && args[2] === 'help')) {
 
 program.parse(args);
 
-ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
+if(program.args.length > 0) {
+    var validCommands = program.commands.map(c => c.name())
+    if(validCommands.indexOf(program.args[0]) === -1) {   
+        ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
+    }
+}
