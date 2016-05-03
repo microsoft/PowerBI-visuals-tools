@@ -1,23 +1,24 @@
-var program = require('commander');
-var VisualPackage = require('../lib/VisualPackage');
-var ConsoleWriter = require('../lib/ConsoleWriter');
-var fs = require('fs');
-program
-    //.option('-f, --force', 'force creation (overwrites folder if exists)')
-    .parse(process.argv);
+"use strict";
 
-var args = program.args;
-var cwd = process.cwd();
+let program = require('commander');
+let VisualPackage = require('../lib/VisualPackage');
+let ConsoleWriter = require('../lib/ConsoleWriter');
+let fs = require('fs');
 
-VisualPackage.loadVisualPackage(cwd).then(function (package) {
-    var info = package.config;
+program.parse(process.argv);
+
+let args = program.args;
+let cwd = process.cwd();
+
+VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
+    let info = visualPackage.config;
     if (info) {
-        for (var key in info) {
+        for (let key in info) {
             ConsoleWriter.infoTable(key, info[key]);
         }
     } else {
         ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
     }
-}).catch(function (e) {
+}).catch((e) => {
     ConsoleWriter.error('LOAD ERROR', e);
 });

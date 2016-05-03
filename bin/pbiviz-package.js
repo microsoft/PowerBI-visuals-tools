@@ -1,16 +1,16 @@
-var program = require('commander');
-var VisualPackage = require('../lib/VisualPackage');
-var ConsoleWriter = require('../lib/ConsoleWriter');
+"use strict";
 
-program
-    //.option('-f, --force', 'force creation (overwrites folder if exists)')
-    .parse(process.argv);
+let program = require('commander');
+let VisualPackage = require('../lib/VisualPackage');
+let ConsoleWriter = require('../lib/ConsoleWriter');
 
-var args = program.args;
-var cwd = process.cwd();
+program.parse(process.argv);
 
-VisualPackage.loadVisualPackage(cwd).then(function (package) {
+let args = program.args;
+let cwd = process.cwd();
+
+VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('pbiviz package... coming soon.');
-}).catch(function (e) {
+}).catch((e) => {
     ConsoleWriter.error('LOAD ERROR', e);
 });

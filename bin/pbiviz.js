@@ -1,11 +1,12 @@
-#!/usr/bin/env node
-var program = require('commander');
-var package = require('../package.json');
-var ConsoleWriter = require('../lib/ConsoleWriter');
-var args = process.argv;
+"use strict";
+
+let program = require('commander');
+let npmPackage = require('../package.json');
+let ConsoleWriter = require('../lib/ConsoleWriter');
+let args = process.argv;
 
 program
-    .version(package.version)
+    .version(npmPackage.version)
     .command('new [name]', 'Create a new visual')
     .command('info', 'Display info about the current visual')
     .command('start', 'Start the current visual')
@@ -19,7 +20,7 @@ if (args.length === 2 || (args.length === 3 && args[2] === 'help')) {
 program.parse(args);
 
 if(program.args.length > 0) {
-    var validCommands = program.commands.map(c => c.name())
+    let validCommands = program.commands.map(c => c.name())
     if(validCommands.indexOf(program.args[0]) === -1) {   
         ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
     }
