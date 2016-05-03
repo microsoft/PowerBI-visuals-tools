@@ -1,0 +1,17 @@
+{
+    "visual": {
+        "name": "<%= name %>",
+        "displayName": "<%= displayName %>",
+        "guid": "<%= guid %>",
+        "visualClassName": "<%= visualClassName %>",
+        "version": "1.0.0",
+        "description": "",
+        "supportUrl": "",
+        "gitHubUrl": ""
+    },
+    "apiVersion": "<%= apiVersion %>",
+    "author": {
+        "name": "",
+        "email": ""
+    }
+}

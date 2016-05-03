@@ -13,9 +13,7 @@ let cwd = process.cwd();
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     let info = visualPackage.config;
     if (info) {
-        for (let key in info) {
-            ConsoleWriter.infoTable(key, info[key]);
-        }
+        ConsoleWriter.infoTable(info);
     } else {
         ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
     }

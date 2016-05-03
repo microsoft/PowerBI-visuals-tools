@@ -11,14 +11,13 @@ program
 
 let args = program.args;
 
-if (args.length != 1 || !args[0]) {
-    ConsoleWriter.error("You must enter a 1 word visual name");
+if (!args || args.length < 1) {
+    ConsoleWriter.error("You must enter a visual name");
     process.exit(1);
 }
 
-let name = args[0];
+let visualName = args.join(' ');
 let cwd = process.cwd();
-let target = path.join(cwd, name);
 
 ConsoleWriter.info('Creating new visual');
 
@@ -26,7 +25,7 @@ if (program.force) {
     ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
 }
 
-VisualPackage.createVisualPackage(target, program.force).then(() => {
+VisualPackage.createVisualPackage(cwd, visualName, program.force).then(() => {
     ConsoleWriter.done('Visual creation complete');
 }).catch((e) => {
     ConsoleWriter.error('Unable to create visual.', e);
