@@ -26,7 +26,7 @@ VisualPackage.loadVisualPackage(cwd).then(function (package) {
             ConsoleWriter.info(changeType + ' change detected. Rebuilding...');
         });
         builder.on('watch_complete', function(changeType) {
-            ConsoleWriter.info(changeType + ' build complete');
+            ConsoleWriter.done(changeType + ' build complete');
         });
         builder.on('watch_error', function(errors) {
             if(!program.mute) ConsoleWriter.beep();

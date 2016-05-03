@@ -1,7 +1,7 @@
 var program = require('commander');
 var VisualPackage = require('../lib/VisualPackage');
 var ConsoleWriter = require('../lib/ConsoleWriter');
-
+var fs = require('fs');
 program
     //.option('-f, --force', 'force creation (overwrites folder if exists)')
     .parse(process.argv);
