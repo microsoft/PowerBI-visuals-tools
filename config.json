@@ -2,10 +2,11 @@
     "templates": {
         "visual": "templates/visual",
         "pbiviz": "templates/pbiviz.json.template",
-        "plugin": "templates/plugin.js.template"
+        "plugin": "templates/plugin.ts.template"
     },
     "build": {
-        "dropFolder": ".bin",
+        "precompileFolder": ".tmp/precompile",
+        "dropFolder": ".tmp/drop",
         "js": "visual.js",
         "css": "visual.css"
     },
@@ -16,6 +17,7 @@
         "root": "webRoot",
         "assetsRoute": "/assets",
         "privateKey":"certs/privatekey.key",
-        "certificate":"certs/certificate.crt"
+        "certificate":"certs/certificate.crt",
+        "port":"8080"
     }
 }

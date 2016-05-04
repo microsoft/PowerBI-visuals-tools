@@ -18,7 +18,7 @@ let server, builder;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
     ConsoleWriter.info('Building visual...');
-    builder = new VisualBuilder(visualPackage);
+    builder = new VisualBuilder(visualPackage, 'CustomVisual');
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
 
