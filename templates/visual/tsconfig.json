@@ -9,6 +9,9 @@
     },
     "files": [
         "src/capabilities.ts",
-        "src/visual.ts"
+        "src/visual.ts",
+        
+        //DO NOT remove or modify this
+        "./typings/browser.d.ts"
     ]
 }
