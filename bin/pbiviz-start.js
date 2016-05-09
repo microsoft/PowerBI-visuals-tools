@@ -63,6 +63,7 @@ function stopServer() {
         builder.startWatcher();
         builder = null;
     }
+    process.exit(0);
 }
 
 process.on('SIGINT', stopServer);
