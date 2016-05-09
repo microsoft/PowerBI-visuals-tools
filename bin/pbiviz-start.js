@@ -18,7 +18,8 @@ let server, builder;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
     ConsoleWriter.info('Building visual...');
-    builder = new VisualBuilder(visualPackage, 'CustomVisual');
+    let buildOptions = {namespace: 'custom'};
+    builder = new VisualBuilder(visualPackage, buildOptions);
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
 

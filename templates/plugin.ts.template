@@ -3,7 +3,7 @@ module powerbi.visuals.plugins {
         name: '<%= visualGuid %>',
         displayName: '<%= visualDisplayName %>',
         class: '<%= visualClass %>',
-        capabilities: powerbi.extensibility.visual.<%= visualGuid %>.capabilities,
+        capabilities: (<any>powerbi.extensibility.visual.<%= visualGuid %>.<%= visualClass %>).__capabilities__,
         version: '<%= visualVersion %>',
         apiVersion: '<%= apiVersion %>',
         create: (options) => new powerbi.extensibility.visual.<%= visualGuid %>.<%= visualClass %>(options)
