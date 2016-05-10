@@ -6,6 +6,7 @@ module powerbi.visuals.plugins {
         capabilities: (<any>powerbi.extensibility.visual.<%= visualGuid %>.<%= visualClass %>).__capabilities__,
         version: '<%= visualVersion %>',
         apiVersion: '<%= apiVersion %>',
-        create: (options) => new powerbi.extensibility.visual.<%= visualGuid %>.<%= visualClass %>(options)
+        create: (options) => new powerbi.extensibility.visual.<%= visualGuid %>.<%= visualClass %>(options),
+        custom: true
     };
 }
