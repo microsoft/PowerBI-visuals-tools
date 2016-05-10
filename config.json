@@ -16,8 +16,8 @@
     "server": {
         "root": "webRoot",
         "assetsRoute": "/assets",
-        "privateKey":"certs/privatekey.key",
-        "certificate":"certs/certificate.crt",
+        "privateKey":"certs/PowerBICustomVisualTest_private.key",
+        "certificate":"certs/PowerBICustomVisualTest_public.crt",
         "port":"8080"
     }
 }
