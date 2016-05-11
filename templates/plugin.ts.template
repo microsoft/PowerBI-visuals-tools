@@ -1,6 +1,6 @@
 module powerbi.visuals.plugins {
     export var <%= pluginName %> = {
-        name: '<%= visualGuid %>',
+        name: '<%= pluginName %>',
         displayName: '<%= visualDisplayName %>',
         class: '<%= visualClass %>',
         capabilities: (<any>powerbi.extensibility.visual.<%= visualGuid %>.<%= visualClass %>).__capabilities__,
