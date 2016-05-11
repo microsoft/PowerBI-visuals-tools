@@ -6,6 +6,7 @@ This guide is meant to provide the quickest path to creating a custom visual.
 
 The easiest way to create custom visuals is by using the PowerBI command line tools which can be easily to installed via NPM.
 
+
 ####Dependencies
 
 Before you can run (or install) the command line tools you must install NodeJS.
