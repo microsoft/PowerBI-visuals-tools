@@ -1,0 +1,1 @@
+.visual-icon.<%= guid %>{ background-image: url(data:image/png;base64,<%= icon %>);}

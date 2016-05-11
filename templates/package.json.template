@@ -1,0 +1,25 @@
+{
+    "version": "1.0.0",
+    "author": <%= JSON.stringify(authorData) %>,
+    "resources": [
+        {
+            "resourceId": "rId0",
+            "sourceType": 0,
+            "file": "resources/visual.js"
+        },
+        {
+            "resourceId": "rId1",
+            "sourceType": 1,
+            "file": "resources/visual.css"
+        }
+    ],
+    "visual": <%= JSON.stringify(visualData) %>,
+    "code": {
+        "javaScript": {
+            "resourceId": "rId0"
+        },
+        "css": {
+            "resourceId": "rId1"
+        }
+    }
+}
