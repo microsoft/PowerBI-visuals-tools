@@ -30,7 +30,7 @@ pbiviz
 
 ##Creating your first visual
 
-You can create a new visual project with a single command
+You can create a new visual project with a single command.
 
 ```
 pbiviz new MyVisualName
