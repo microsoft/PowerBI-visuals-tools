@@ -6,11 +6,12 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 let PbivizBuilder = require('../lib/PbivizBuilder');
 let VisualBuilder = require('../lib/VisualBuilder');
 
-program.parse(process.argv);
+program
+.option('--debug', "debug")
+.parse(process.argv);
 
 let args = program.args;
 let cwd = process.cwd();
-
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
@@ -32,4 +33,5 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
+    
 });

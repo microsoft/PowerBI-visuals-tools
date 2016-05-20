@@ -3,8 +3,7 @@
         "visual": "templates/visual",
         "pbiviz": "templates/pbiviz.json.template",
         "plugin": "templates/plugin.ts.template",
-        "package": "templates/package.json.template",
-        "iconCss": "templates/icon.css.template"
+        "package": "templates/package.json.template"
     },
     "build": {
         "precompileFolder": ".tmp/precompile",
