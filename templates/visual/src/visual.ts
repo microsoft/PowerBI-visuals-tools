@@ -1,10 +1,5 @@
 module powerbi.extensibility.visual {
-
-    @VisualPlugin({
-        capabilities: capabilities
-    })
     export class Visual implements IVisual {
-        
         private target: HTMLElement;
         private updateCount: number;
         
@@ -19,6 +14,5 @@ module powerbi.extensibility.visual {
             console.log('Visual update', options);
             this.target.innerText = "Update count: " + (this.updateCount++);
         }
-        
     }
 }

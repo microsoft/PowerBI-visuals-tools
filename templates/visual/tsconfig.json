@@ -8,7 +8,6 @@
         "out": "./.bin/visual.js"
     },
     "files": [
-        "src/capabilities.ts",
         "src/visual.ts",
         "./typings/browser.d.ts"
     ]

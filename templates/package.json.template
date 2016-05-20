@@ -4,22 +4,14 @@
     "resources": [
         {
             "resourceId": "rId0",
-            "sourceType": 0,
-            "file": "resources/visual.js"
-        },
-        {
-            "resourceId": "rId1",
-            "sourceType": 1,
-            "file": "resources/visual.css"
+            "sourceType": 5,
+            "file": "resources/<%= guid %>.pbiviz.json"
         }
     ],
     "visual": <%= JSON.stringify(visualData) %>,
-    "code": {
-        "javaScript": {
+    "metadata": {
+        "pbivizjson": {
             "resourceId": "rId0"
-        },
-        "css": {
-            "resourceId": "rId1"
         }
-    }
+    },        
 }
