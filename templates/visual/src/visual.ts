@@ -12,7 +12,7 @@ module powerbi.extensibility.visual {
         
         public update(options: VisualUpdateOptions) {
             console.log('Visual update', options);
-            this.target.innerText = "Update count: " + (this.updateCount++);
+            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
         }
     }
 }
