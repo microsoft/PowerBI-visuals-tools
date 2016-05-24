@@ -43,13 +43,16 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             ConsoleWriter.info('Server listening on port ' + server.port + '.');
         }).catch(e => {
             ConsoleWriter.error('SERVER ERROR', e);
+            process.exit(1);
         });
     }).catch(e => {
         if (!program.mute) ConsoleWriter.beep();
         ConsoleWriter.formattedErrors(e);
+        process.exit(1);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
+    process.exit(1);
 });
 
 //clean up

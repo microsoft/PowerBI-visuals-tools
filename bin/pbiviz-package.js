@@ -27,11 +27,13 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             ConsoleWriter.done('packaging complete');
         }).catch(e => {
             ConsoleWriter.error('PACKAGE ERROR', e);
+            process.exit(1);
         });
     }).catch(e => {
         ConsoleWriter.formattedErrors(e);
+        process.exit(1);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
-    
+    process.exit(1);
 });

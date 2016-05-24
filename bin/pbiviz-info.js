@@ -19,4 +19,5 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     }
 }).catch((e) => {
     ConsoleWriter.error('LOAD ERROR', e);
+    process.exit(1);
 });

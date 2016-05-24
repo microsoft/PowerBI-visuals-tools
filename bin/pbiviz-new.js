@@ -29,4 +29,5 @@ VisualPackage.createVisualPackage(cwd, visualName, program.force).then(() => {
     ConsoleWriter.done('Visual creation complete');
 }).catch((e) => {
     ConsoleWriter.error('Unable to create visual.', e);
+    process.exit(1);
 });
