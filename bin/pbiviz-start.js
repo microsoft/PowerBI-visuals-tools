@@ -16,7 +16,7 @@ let cwd = process.cwd();
 let server, builder;
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-
+    
     ConsoleWriter.info('Building visual...');
     let buildOptions = {namespace: visualPackage.config.visual.guid + '_DEBUG'};
     builder = new VisualBuilder(visualPackage, buildOptions);
@@ -63,9 +63,9 @@ function stopServer() {
         server = null;
     }
     if (builder) {
-        builder.startWatcher();
+        builder.stopWatcher();
         builder = null;
-    }
+    }    
     process.exit(0);
 }
 
