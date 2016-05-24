@@ -2,13 +2,10 @@
 
 var fs = require('fs-extra');
 var path = require('path');
-var wrench = require('wrench');
-var _ = require('lodash');
 
 var FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
-const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
 
 describe("E2E - pbiviz info", function () {
