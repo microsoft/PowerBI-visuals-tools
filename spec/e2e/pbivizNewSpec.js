@@ -45,7 +45,7 @@ describe("E2E - pbiviz new", function () {
         expect(fileDiff.length).toBe(0);
 
         //check pbiviz.json config file
-        let visualConfig = require(path.join(visualPath, 'pbiviz.json')).visual;
+        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(visualConfig.name).toBe(visualName);
         expect(visualConfig.displayName).toBe(visualName);
         expect(visualConfig.guid).toBeDefined();
@@ -61,7 +61,7 @@ describe("E2E - pbiviz new", function () {
         let stat = fs.statSync(visualPath);
         expect(stat.isDirectory()).toBe(true);
         
-        let visualConfig = require(path.join(visualPath, 'pbiviz.json')).visual;
+        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(visualConfig.name).toBe(visualName);
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });

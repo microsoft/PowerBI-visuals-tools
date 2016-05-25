@@ -31,7 +31,7 @@ describe("E2E - pbiviz info", function () {
 
     it("Should output visual info", function () {
         var output = FileSystem.runPbiviz('info').toString();
-        var visualConfig = require(path.join(visualPath, 'pbiviz.json')).visual;
+        var visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(output).toContain(visualName);
         expect(output).toContain(visualConfig.guid);
     });
