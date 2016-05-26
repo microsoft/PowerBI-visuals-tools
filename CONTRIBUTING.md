@@ -12,7 +12,7 @@ If your issue is a question then please ask the question on Stack Overflow using
 
 TODO: more details about how to contribute code
 
-####Build and run from source
+####Build from source
 
 * Install dependencies
 * Fork this reporitory
@@ -21,6 +21,10 @@ TODO: more details about how to contribute code
 * Run `npm link` to link the module globally
 
 Note: If pbiviz isn't working globally you may need to restart your terminal.
+
+####Running and modifying
+
+Once the repository is linked you can run `pbiviz` anywhere on your computer and it will reference the repository version. This makes it easy to make modifications and test them instantly.
 
 **Dependencies**
 
