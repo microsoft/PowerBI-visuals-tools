@@ -5,7 +5,7 @@ To be access your visual through PowerBI you need to add a trusted certificate f
 ##Adding Certificate
 
 * [Windows](CertificateAddWindows.md)
-* [OSX]()
+* [OSX](CertificateAddOSX.md)
 
 ##Removing Certificate
 

@@ -57,6 +57,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
 //clean up
 function stopServer() {
+    ConsoleWriter.blank();
     ConsoleWriter.info("Stopping server...");
     if (server) {
         server.stop();
