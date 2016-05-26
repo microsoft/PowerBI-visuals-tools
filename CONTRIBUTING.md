@@ -18,6 +18,7 @@ TODO: more details about how to contribute code
 * Fork this reporitory
 * Clone your fork using git
 * Navigate into the repository directory
+* Run `npm install` to install all dependencies
 * Run `npm link` to link the module globally
 
 Note: If pbiviz isn't working globally you may need to restart your terminal.
