@@ -20,7 +20,8 @@ pbiviz --install-cert
 
 ![](images/mac0.png)
 
-* Enter "localhost" in the search box (top left corner)
+* If the lock (top left corner) is locked click it to unlock 
+* Enter "localhost" in the search box (top right corner)
 * Double click on the new certificate
 
 ----------
