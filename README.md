@@ -2,7 +2,7 @@
 
 This guide is meant to provide the quickest path to creating a custom visual.
 
-##Setup
+##Basic Setup
 
 The easiest way to create custom visuals is by using the PowerBI command line tools which can be easily to installed via NPM.
 
@@ -10,9 +10,8 @@ The easiest way to create custom visuals is by using the PowerBI command line to
 
 Before you can run (or install) the command line tools you must install NodeJS.
 
-[Download NodeJS](https://nodejs.org)
+* NodeJS 4.0+ Required (5.0 recommended) - [Download NodeJS](https://nodejs.org)
 
-**NodeJS 4.0+ Required (6.0 recommended)**
 
 ####Installation
 
@@ -28,29 +27,61 @@ To confirm it was installed correctly you can run the command without any pareme
 pbiviz
 ```
 
-##Creating your first visual
+-----------
+
+##Creating a new visual
 
 You can create a new visual project with a single command.
 
 ```
-pbiviz new MyVisualName
+pbiviz new My Visual Name
 ```
 
-Replace "MyVisualName" with the name of your visual. You can change this later by modifying the generated `pbiviz.json` file.
+Replace "My Visual Name" with the name of your visual. You can change this later by modifying the generated `pbiviz.json` file.
 
 This command will create a new folder in your current directory and generate a basic starter template for your visual. Once it finishes you can open the directory and use your favorite editor to start working on your new visual.
 
-[Learn more about writing custom visuals](https://github.com/microsoft/powerbi-visuals-contracts) 
+[Learn more about writing custom visuals](https://github.com/microsoft/powerbi-visuals-contracts/tree/master/Docs) 
 
-##Running your visual
+-----------
 
-To run your visual navigate to the root of your visual project (the directory containing `pbiviz.json`) and use the following command to start it.
+##Testing your visual in PowerBI
 
-```
-pbiviz start
-```
+You can easily test your visual live in reports and dashboards in the PowerBI service
+
+####Server certificate setup
+
+To enable live preview visual assets need to be served on a trusted https server so before you can start you need to install an ssl certificate which will allow visual asssets to load in your web browser. This is a one time setup.
+
+* [How to install the local SSL certificates](docs/CertificateAddWindows.md) 
+
+####Running your visual
+
+To run your visual navigate to the root of your visual project (the directory containing `pbiviz.json`) and type `pbiviz start` to build and serve the visual.
+
+![](docs/images/pbivizStart.png)
 
 This command will compile your [typescript](http://www.typescriptlang.org/) and [less](http://lesscss.org/) files and bundle them for testing. It also launches an https server that will serve your visual for testing in your favorite web browser.
+
+####Enable developer visual
+
+To view/test your visual in PowerBI you need to enable the development visual and then you can add it to any report.
+
+* [How to enable the developer visual in PowerBI](docs/DebugVisualSetup.md)
+
+####Viewing your visual in PowerBI
+
+![](docs/images/portalEnable4.png) 
+
+####Toolbar icons (left to right)
+
+* **Refresh Visual** - Manually the visual (if auto reload is off)
+* **Toggle Auto Reload** - When turned on the visual will automatically update every time you save a file
+* **Log DataView** - Outputs the dataview in it's current state to the browser's console
+* **Get Help** - Links to this documentation
+* **Send Feedback** - We're always trying to improve the experience so let us know about yours 
+
+-----------
 
 ##Packaging your Visual for distribution
 
@@ -62,4 +93,4 @@ To package your visual navigate to the root of your visual project (the director
 pbiviz package
 ```
 
-This command will create a pbiviz file in the `/build/` directory of your visual project. If there is already a pbiviz file (from previous package operations) it will be overwritten.
+This command will create a pbiviz file in the `dist/` directory of your visual project. If there is already a pbiviz file (from previous package operations) it will be overwritten.
