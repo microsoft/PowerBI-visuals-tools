@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 "use strict";
 
+let exec = require('child_process').execSync;
+let path = require('path');
+let os = require('os');
 let program = require('commander');
 let npmPackage = require('../package.json');
 let ConsoleWriter = require('../lib/ConsoleWriter');
+let config = require('../config.json');
 let args = process.argv;
 
 program
@@ -11,7 +15,8 @@ program
     .command('new [name]', 'Create a new visual')
     .command('info', 'Display info about the current visual')
     .command('start', 'Start the current visual')
-    .command('package', 'Package the current visual into a pbiviz file');
+    .command('package', 'Package the current visual into a pbiviz file')
+    .option('--install-cert', 'Install localhost certificate', openCertFile);
 
 //prepend logo to help screen
 if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
@@ -25,5 +30,25 @@ if(program.args.length > 0) {
     if(validCommands.indexOf(program.args[0]) === -1) {   
         ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
         process.exit(1);
+    }
+}
+
+
+function openCertFile() {
+    let certPath = path.join(__dirname, '..', config.server.certificate);
+    let openCmds = {
+        linux: 'xdg-open',
+        darwin: 'open',
+        win32: 'powershell start'  
+    };
+    let startCmd = openCmds[os.platform()];
+    if(startCmd) {
+        try{
+            exec(`${startCmd} "${certPath}"`);
+        } catch(e) {
+            console.log('Certificate path:',certPath);
+        }
+    } else {
+        console.log('Certificate path:',certPath);
     }
 }
