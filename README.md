@@ -102,3 +102,9 @@ pbiviz package
 ```
 
 This command will create a pbiviz file in the `dist/` directory of your visual project. If there is already a pbiviz file (from previous package operations) it will be overwritten.
+
+-------------
+
+##Contributing
+
+If you would like to contribute please see [How To Contribute](CONTRIBUTING.md).

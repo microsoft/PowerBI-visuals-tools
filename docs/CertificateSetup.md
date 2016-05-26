@@ -11,5 +11,5 @@ To be access your visual through PowerBI you need to add a trusted certificate f
 
 If you are no longer using the PowerBI Custom Visual CLI tools you should remove the certificate from your system.
 
-* [Windows]()
-* [OSX]()
+* [Windows](CertificateRemoveWindows.md)
+* [OSX](CertificateRemoveOSX.md)
