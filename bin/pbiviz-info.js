@@ -7,7 +7,6 @@ let fs = require('fs');
 
 program.parse(process.argv);
 
-let args = program.args;
 let cwd = process.cwd();
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {

@@ -11,7 +11,6 @@ program
     .option('-m, --mute', 'mute error sounds')
     .parse(process.argv);
 
-let args = program.args;
 let cwd = process.cwd();
 let server, builder;
 

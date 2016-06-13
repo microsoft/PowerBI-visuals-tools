@@ -7,14 +7,18 @@ let PbivizBuilder = require('../lib/PbivizBuilder');
 let VisualBuilder = require('../lib/VisualBuilder');
 
 program
-.option('--debug', "debug")
+.option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
+.option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
 .parse(process.argv);
 
-let args = program.args;
 let cwd = process.cwd();
 
-VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
+if(!program.pbiviz && !program.resources) {
+    ConsoleWriter.error('Nothing to build. Cannot use --no-pbiviz without --resources');
+    process.exit(1);
+}
 
+VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
     let builder = new VisualBuilder(visualPackage);
@@ -22,7 +26,10 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         ConsoleWriter.done('build complete');
         ConsoleWriter.blank();
         ConsoleWriter.info('Building visual...');
-        let packager = new PbivizBuilder(visualPackage);
+        let packager = new PbivizBuilder(visualPackage, {
+            resources: program.resources,
+            pbiviz: program.pbiviz
+        });
         packager.build().then(() => {
             ConsoleWriter.done('packaging complete');
         }).catch(e => {
