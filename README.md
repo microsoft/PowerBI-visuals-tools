@@ -8,7 +8,7 @@ The easiest way to create custom visuals is by using the PowerBI command line to
 * TypeScript compilation
 * Less compilation
 * Automatic live reload
-* pbiviz packaging (for distribution
+* pbiviz packaging (for distribution)
 
 ##Basic Setup
 
