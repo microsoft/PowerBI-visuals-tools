@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "ES5",
+        "sourceMap": true,
+        "out": "./.tmp/build/visual.js"
+    },
+    "files": [
+        "src/visualViewModel.ts",
+        "src/visualTransform.ts",
+        "src/visual.ts",
+        "./typings/index.d.ts"
+    ]
+}

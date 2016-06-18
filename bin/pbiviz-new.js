@@ -33,6 +33,7 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
+    .option('-t, --template [template]', 'use a specific template (default, table, barchart)')
     .parse(process.argv);
 
 let args = program.args;
@@ -51,7 +52,12 @@ if (program.force) {
     ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
 }
 
-VisualPackage.createVisualPackage(cwd, visualName, program.force).then(() => {
+let generateOptions = {
+    force: program.force,
+    template: program.template
+}
+
+VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
     ConsoleWriter.done('Visual creation complete');
 }).catch((e) => {
     ConsoleWriter.error('Unable to create visual.', e);

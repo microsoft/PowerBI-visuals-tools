@@ -2,17 +2,20 @@ module powerbi.extensibility.visual {
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
-        
-        constructor(options: VisualConstructorOptions) {   
+
+        constructor(options: VisualConstructorOptions) {
             console.log('Visual constructor', options);
-            
             this.target = options.element;
             this.updateCount = 0;
         }
-        
+
         public update(options: VisualUpdateOptions) {
             console.log('Visual update', options);
             this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
+        }
+
+        public destroy(): void {
+            //TODO: Perform any cleanup tasks here
         }
     }
 }
