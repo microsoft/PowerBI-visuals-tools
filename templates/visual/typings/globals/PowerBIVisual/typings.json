@@ -1,0 +1,7 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/Microsoft/PowerBI-visuals-contracts/index.d.ts",
+    "typings": "https://raw.githubusercontent.com/Microsoft/PowerBI-visuals-contracts/index.d.ts"
+  }
+}

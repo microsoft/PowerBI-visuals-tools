@@ -9,6 +9,6 @@
     },
     "files": [
         "src/visual.ts",
-        "./typings/browser.d.ts"
+        "./typings/index.d.ts"
     ]
 }
