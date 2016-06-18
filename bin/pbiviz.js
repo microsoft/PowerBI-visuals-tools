@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 /*
  *  Power BI Visual CLI
  *
