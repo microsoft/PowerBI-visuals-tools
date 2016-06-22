@@ -2402,6 +2402,8 @@ declare module powerbi.extensibility.visual {
     export interface IVisualHost extends extensibility.IVisualHost {
         createSelectionIdBuilder: () => visuals.ISelectionIdBuilder;
         createSelectionManager: () => ISelectionManager;
+        /** An array of default colors to be used by the visual */
+        colors: IColorInfo[];        
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
