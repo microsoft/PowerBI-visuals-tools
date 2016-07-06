@@ -8,7 +8,7 @@
         "out": "./.tmp/build/visual.js"
     },
     "files": [
-        "src/visual.ts",
-        "./typings/index.d.ts"
+        "APIs/PowerBI-visuals-v1.1.0.d.ts",
+        "src/visual.ts"
     ]
 }

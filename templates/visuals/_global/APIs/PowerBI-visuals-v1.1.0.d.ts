@@ -83,12 +83,10 @@ declare module powerbi {
 }
 
 
-
-
 declare module powerbi {
     export interface DragPayload {
     }
-}﻿
+}
 
 
 
@@ -97,9 +95,7 @@ declare module jsCommon {
         get(id: string): string;
         getOptional(id: string): string;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     /** 
@@ -242,9 +238,7 @@ declare module powerbi {
         type: PromiseResultType;
         value: T;
     }
-}﻿
-
-
+}
 
 declare module powerbi.visuals {
     export interface IRect {
@@ -254,8 +248,6 @@ declare module powerbi.visuals {
         height: number;
     }
 }
-
-
 
 declare module powerbi.visuals {
     import Selector = data.Selector;
@@ -277,178 +269,12 @@ declare module powerbi.visuals {
     }
 }
 
-
-
 declare module powerbi.visuals {
     export interface IPoint {
         x: number;
         y: number;
     }
 }
-
-// TODO(aafische, 2016.05.16) all methods here are copy-pasted from .\src\Clients\JsCommon\obj\utility.d.ts
-// Eventually, the powerbi.visuals namespace will be merged back into the powerbi namespace, at which point 
-// this here file will be obsolete and deleted.
-
-
-
-declare module powerbi.visuals.telemetry {
-    
-    interface ITelemetryService {
-        /** Log Telemetry event */
-        logEvent(eventFactory: ITelemetryEventFactory): ITelemetryEvent;
-        logEvent<T>(eventFactory: ITelemetryEventFactory1<T>, arg: T): ITelemetryEvent;
-        logEvent<T1, T2>(eventFactory: ITelemetryEventFactory2<T1, T2>, arg1: T1, arg2: T2): ITelemetryEvent;
-        logEvent<T1, T2, T3>(eventFactory: ITelemetryEventFactory3<T1, T2, T3>, arg1: T1, arg2: T2, arg3: T3): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4>(eventFactory: ITelemetryEventFactory4<T1, T2, T3, T4>, arg1: T1, arg2: T2, arg3: T3, arg4: T4): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4, T5>(eventFactory: ITelemetryEventFactory5<T1, T2, T3, T4, T5>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4, T5, T6>(eventFactory: ITelemetryEventFactory6<T1, T2, T3, T4, T5, T6>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4, T5, T6, T7>(eventFactory: ITelemetryEventFactory7<T1, T2, T3, T4, T5, T6, T7>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4, T5, T6, T7, T8>(eventFactory: ITelemetryEventFactory8<T1, T2, T3, T4, T5, T6, T7, T8>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4, T5, T6, T7, T8, T9>(eventFactory: ITelemetryEventFactory9<T1, T2, T3, T4, T5, T6, T7, T8, T9>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, arg9: T9): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(eventFactory: ITelemetryEventFactory10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, arg9: T9, arg10: T10): ITelemetryEvent;
-        logEvent<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(eventFactory: ITelemetryEventFactory11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, arg9: T9, arg10: T10, arg11: T11): ITelemetryEvent;        
-
-        /** Starts recording a timed event **/
-        startEvent(eventFactory: ITelemetryEventFactory): IDeferredTelemetryEvent;
-        startEvent<T>(eventFactory: ITelemetryEventFactory1<T>, arg: T): IDeferredTelemetryEvent;
-        startEvent<T1, T2>(eventFactory: ITelemetryEventFactory2<T1, T2>, arg1: T1, arg2, T2): IDeferredTelemetryEvent;
-        startEvent<T1, T2, T3>(eventFactory: ITelemetryEventFactory3<T1, T2, T3>, arg1: T1, arg2: T2, arg3: T3): IDeferredTelemetryEvent;
-        startEvent<T1, T2, T3, T4>(eventFactory: ITelemetryEventFactory4<T1, T2, T3, T4>, arg1: T1, arg2: T2, arg3: T3, arg4: T4): IDeferredTelemetryEvent;
-        startEvent<T1, T2, T3, T4, T5>(eventFactory: ITelemetryEventFactory5<T1, T2, T3, T4, T5>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5): IDeferredTelemetryEvent;
-        startEvent<T1, T2, T3, T4, T5, T6>(eventFactory: ITelemetryEventFactory6<T1, T2, T3, T4, T5, T6>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6): IDeferredTelemetryEvent;
-        startEvent<T1, T2, T3, T4, T5, T6, T7>(eventFactory: ITelemetryEventFactory7<T1, T2, T3, T4, T5, T6, T7>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7): IDeferredTelemetryEvent;
-        startEvent<T1, T2, T3, T4, T5, T6, T7, T8>(eventFactory: ITelemetryEventFactory8<T1, T2, T3, T4, T5, T6, T7, T8>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8): IDeferredTelemetryEvent;
-        startEvent<T1, T2, T3, T4, T5, T6, T7, T8, T9>(eventFactory: ITelemetryEventFactory9<T1, T2, T3, T4, T5, T6, T7, T8, T9>, arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, arg9: T9): IDeferredTelemetryEvent;
-     }
-    
-    interface ITelemetryEvent {
-        name: string;
-        category?: TelemetryCategory;
-        id: string;
-        loggers?: number;
-        time: number;
-        getFormattedInfoObject(): any;
-        info: any;
-        privateFields: string[];
-        orgInfoFields: string[];
-    }
-
-    interface ITelemetryEventFactory {
-        (parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory1<T> {
-        (arg: T, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory2<T1, T2> {
-        (arg1: T1, arg2: T2, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory3<T1, T2, T3> {
-        (arg1: T1, arg2: T2, arg3: T3, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory4<T1, T2, T3, T4> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory5<T1, T2, T3, T4, T5> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory6<T1, T2, T3, T4, T5, T6> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory7<T1, T2, T3, T4, T5, T6, T7> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory8<T1, T2, T3, T4, T5, T6, T7, T8> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory9<T1, T2, T3, T4, T5, T6, T7, T8, T9> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, arg9: T9, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, arg9: T9, arg10: T10, parentId: string): ITelemetryEvent;
-    }
-    interface ITelemetryEventFactory11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> {
-        (arg1: T1, arg2: T2, arg3: T3, arg4: T4, arg5: T5, arg6: T6, arg7: T7, arg8: T8, arg9: T9, arg10: T10, arg11: T11, parentId: string): ITelemetryEvent;
-    }
-    
-    interface IBaseEvent {
-        parentId: string;
-        isError: boolean;
-        errorSource: ErrorSource;
-        errorCode: string;
-    }
-    
-    interface ICustomerAction extends IBaseEvent {
-    }
-    
-    /** Identifies a long-running telemetry event. */
-    interface IDeferredTelemetryEvent {
-        /** The event being recorded. */
-        event: ITelemetryEvent;
-        /** Marks the telemetry event as complete. */
-        resolve(): any;
-        /** Marks the telemetry event as failed. Can specify additional error details if we know the source of the error and/or the error code. */
-        reject(errorDetails?: TelemetryErrorDetails): any;
-    }
-    interface IDeferredTelemetryEventArgs {
-        /** Parent event started by the invoker and passed to the event handler */
-        parentEvent: IDeferredTelemetryEvent;
-    }
-    interface TelemetryErrorDetails {
-        errorSource?: telemetry.ErrorSource;
-        errorCode: string;
-    }    
-}
-
-declare module powerbi {
-    interface ITelemetryService { }
-}
-
-
-
-
-
-declare module powerbi.visuals.telemetry {
-    
-    export interface ITelemetryEventI<T> extends ITelemetryEvent {
-        info: T;
-    }
-    
-    interface IErrorWithStackTraceAndSourceDetails extends IErrorWithStackTrace {
-        source: string;
-        lineNumber: number;
-        columnNumber: number;
-    }
-        
-    export interface IErrorWithStackTrace extends IError {
-    	stack: string;
-    }
-    
-    export interface IError {
-    	message: string;
-    }    
-    
-    export interface IPBIVisualException extends IErrorWithStackTraceAndSourceDetails {
-    	visualType: string;
-    	isCustom: boolean;
-    	apiVersion: string;
-    }
-
-    export interface IPBIExtensibilityVisualApiUsage extends ICustomerAction {
-    	name: string;
-    	apiVersion: string;
-    	custom: boolean;
-    }
-    
-    export interface VisualTelemetryInfo {
-        name: string;
-        apiVersion: string;
-        custom: boolean;
-    }
-    
-}﻿
-
-
 
 declare module powerbi.data {
     export interface CompiledDataViewMapping {
@@ -567,18 +393,14 @@ declare module powerbi.data {
         type?: ValueTypeDescriptor;
         joinPredicate?: JoinPredicateBehavior;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     export const enum SortDirection {
         Ascending = 1,
         Descending = 2,
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     /** Represents views of a data set. */
@@ -877,7 +699,7 @@ declare module powerbi {
     export interface DataViewScriptResultData {
         imageBase64: string;
     }
-}﻿
+}
 
 
 
@@ -1062,9 +884,7 @@ declare module powerbi {
         min?: boolean;
         max?: boolean;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     /** Represents evaluated, named, custom objects in a DataView. */
@@ -1090,9 +910,7 @@ declare module powerbi {
     export type DataViewObjectMap = DataViewObjectWithId[];
 
     export type DataViewPropertyValue = PrimitiveValue | StructuralObjectValue;
-}﻿
-
-
+}
 
 declare module powerbi.data {
     export interface DataViewObjectDescriptors {
@@ -1143,9 +961,7 @@ declare module powerbi.data {
         selector: string[];
     }
     
-}﻿
-
-
+}
 
 declare module powerbi.data {
     /** Defines a match against all instances of given roles. */
@@ -1153,9 +969,7 @@ declare module powerbi.data {
         roles: string[];
         key: string;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     /** Encapsulates the identity of a data scope in a DataView. */
@@ -1166,9 +980,7 @@ declare module powerbi {
         /** Key string that identifies the DataViewScopeIdentity to a string, which can be used for equality comparison. */
         key: string;
     }
-}﻿
-
-
+}
 
 declare module powerbi.data {
     /** Defines a match against all instances of a given DataView scope. */
@@ -1176,17 +988,13 @@ declare module powerbi.data {
         exprs: ISQExpr[];
         key: string;
     }
-}﻿
-
-
+}
 
 declare module powerbi.data {
     import IStringResourceProvider = jsCommon.IStringResourceProvider;
 
     export type DisplayNameGetter = ((resourceProvider: IStringResourceProvider) => string) | string;
-}﻿
-
-
+}
 
 declare module powerbi.data {
     export interface ScriptInputColumn {
@@ -1201,9 +1009,7 @@ declare module powerbi.data {
         VariableName?: string;
         Columns?: ScriptInputColumn[];
     }
-}﻿
-
-
+}
 
 declare module powerbi.data {
     /** Defines a selector for content, including data-, metadata, and user-defined repetition. */
@@ -1219,9 +1025,7 @@ declare module powerbi.data {
     }
 
     export type DataRepetitionSelector = DataViewScopeIdentity | DataViewScopeWildcard | DataViewRoleWildcard; 
-}﻿
-
-
+}
 
 declare module powerbi.data {
     //intentionally blank interfaces since this is not part of the public API
@@ -1232,18 +1036,14 @@ declare module powerbi.data {
 
     export interface ISQConstantExpr extends ISQExpr { }
 
-}﻿
-
-
+}
 
 declare module powerbi {
     export interface IViewport {
         height: number;
         width: number;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     import DisplayNameGetter = powerbi.data.DisplayNameGetter;
@@ -1277,9 +1077,7 @@ declare module powerbi {
     export interface RoleCondition extends NumberRange {
         kind?: VisualDataRoleKind;
     }
-}﻿
-
-
+}
 
 declare module powerbi {   
     
@@ -1319,9 +1117,7 @@ declare module powerbi {
     export interface IPositionErrorCallback {
         (error: PositionError): void;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     export interface DefaultValueDefinition {
@@ -1333,8 +1129,6 @@ declare module powerbi {
         defaultValue: boolean;
     }
 }
-
-
 
 declare module powerbi {
     import DisplayNameGetter = powerbi.data.DisplayNameGetter;
@@ -1352,9 +1146,7 @@ declare module powerbi {
         members(validMembers?: EnumMemberValue[]): IEnumMember[];
     }
     
-}﻿
-
-
+}
 
 declare module powerbi {
     export interface Fill {
@@ -1391,9 +1183,7 @@ declare module powerbi {
         /** Indicates whether the color value may be nullable, and a 'no fill' option is appropriate. */
         nullable: boolean;
     }  
-}﻿
-
-
+}
 
 declare module powerbi {
     export interface FillRule extends FillRuleGeneric<string, number> {
@@ -1425,15 +1215,13 @@ declare module powerbi {
         color: TColor;
         value?: TValue;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     export interface FilterTypeDescriptor {
         selfFilter?: boolean;
     }
-}﻿
+}
 
 declare module powerbi {
     export type GeoJson = GeoJsonDefinitionGeneric<string>;
@@ -1445,9 +1233,7 @@ declare module powerbi {
     }
 
     export interface GeoJsonTypeDescriptor { }
-}﻿
-
-
+}
 
 declare module powerbi {
     export type ImageValue = ImageDefinitionGeneric<string>;
@@ -1459,10 +1245,7 @@ declare module powerbi {
     }
 
     export interface ImageTypeDescriptor { }
-
-}﻿
-
-
+}
 
 declare module powerbi {
     export type Paragraphs = Paragraph[];
@@ -1487,9 +1270,7 @@ declare module powerbi {
         url?: string;
         value: string;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     import SemanticFilter = data.ISemanticFilter;
@@ -1517,9 +1298,7 @@ declare module powerbi {
         //border?: BorderTypeDescriptor;
         //etc.
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     /** Describes a data value type in the client type system. Can be used to get a concrete ValueType instance. */
@@ -1589,9 +1368,7 @@ declare module powerbi {
 
     /** Describes instances of value type objects. */
     export type PrimitiveValue = string | number | boolean | Date;
-}﻿
-
-
+}
 
 declare module powerbi {
     export interface IVisualStyle{
@@ -1670,9 +1447,7 @@ declare module powerbi {
     export interface IStyleInfo {
         className?: string;
     }
-}﻿
-
-
+}
 
 declare module powerbi {
     import DataViewObjectDescriptor = powerbi.data.DataViewObjectDescriptor;
@@ -1683,56 +1458,6 @@ declare module powerbi {
     import ISQExpr = powerbi.data.ISQExpr;
     import IStringResourceProvider = jsCommon.IStringResourceProvider;
     import IRect = powerbi.visuals.IRect;
-
-    /**
-     * Represents a visualization displayed within an application (PowerBI dashboards, ad-hoc reporting, etc.).
-     * This interface does not make assumptions about the underlying JS/HTML constructs the visual uses to render itself.
-     */
-    export interface IVisual {
-        /**
-         * Initializes an instance of the IVisual.
-         *
-         * @param options Initialization options for the visual.
-         */
-        init(options: VisualInitOptions): void;
-
-        /** Notifies the visual that it is being destroyed, and to do any cleanup necessary (such as unsubscribing event handlers). */
-        destroy?(): void;
-
-        /**
-         * Notifies the IVisual of an update (data, viewmode, size change).
-         */
-        update?(options: VisualUpdateOptions): void;
-
-        /**
-         * Notifies the IVisual to resize.
-         *
-         * @param finalViewport This is the viewport that the visual will eventually be resized to.
-         * @param resized true on on final call when resizing is complete.
-         */
-        onResizing?(finalViewport: IViewport, resizeMode?: ResizeMode): void;
-
-        /**
-         * Notifies the IVisual of new data being provided.
-         * This is an optional method that can be omitted if the visual is in charge of providing its own data.
-         */
-        onDataChanged?(options: VisualDataChangedOptions): void;
-
-        /** Notifies the IVisual to change view mode if applicable. */
-        onViewModeChanged?(viewMode: ViewMode): void;
-
-        /** Notifies the IVisual to clear any selection. */
-        onClearSelection?(): void;
-
-        /** Gets a value indicating whether the IVisual can be resized to the given viewport. */
-        canResizeTo?(viewport: IViewport): boolean;
-
-        /** Gets the set of objects that the visual is currently displaying. */
-        enumerateObjectInstances?(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration;
-
-        /** Gets the set of object repetitions that the visual can display. */
-        enumerateObjectRepetition?(): VisualObjectRepetition[];
-    }
 
     /** Parameters available to a CustomizeQueryMethod */
     export interface CustomizeQueryOptions {
@@ -1846,27 +1571,6 @@ declare module powerbi {
     export interface VisualImplicitSortingClause {
         role: string;
         direction: SortDirection;
-    }
-
-    /** Defines the capabilities of an IVisual. */
-    export interface VisualInitOptions {
-        /** The DOM element the visual owns. */
-        element: JQuery;
-
-        /** The set of services provided by the visual hosting layer. */
-        host: IVisualHostServices;
-
-        /** Style information. */
-        style: IVisualStyle;
-
-        /** The initial viewport size. */
-        viewport: IViewport;
-
-        /** Animation options. */
-        animation?: AnimationOptions;
-
-        /** Interactivity options. */
-        interactivity?: InteractivityOptions;
     }
 
     export interface VisualUpdateOptions {
@@ -2057,99 +1761,12 @@ declare module powerbi {
         filter: ISemanticFilter;
     }
 
-    /** Defines behavior for IVisual interaction with the host environment. */
-    export interface IVisualHostServices {
-        /** Returns the localized form of a string. */
-        getLocalizedString(stringId: string): string;
-
-        /** Notifies of a DragStart event. */
-        onDragStart(args: DragEventArgs): void;
-
-        ///** Indicates whether the drag payload is compatible with the IVisual's data role.  This is useful when dropping to a particular drop area within the visual (e.g., dropping on a legend). */
-        //canDropAs(payload: DragPayload, dataRole?: string): boolean;
-
-        ///** Notifies of a Drop event. */
-        //onDrop(args: DragEventArgs, dataRole?: string);
-
-        /** Gets a value indicating whether the given selection is valid. */
-        canSelect(args: SelectEventArgs): boolean;
-
-        /** Notifies of a data point being selected. */
-        onSelect(args: SelectEventArgs): void;  // TODO: Revisit onSelect vs. onSelectObject.
-
-        /** Notifies of a request for a context menu. */
-        onContextMenu(args: ContextMenuArgs): void;
-
-        /** Check if selection is sticky or otherwise. */
-        shouldRetainSelection(): boolean;
-
-        /** Notifies of a visual object being selected. */
-        onSelectObject?(args: SelectObjectEventArgs): void;  // TODO: make this mandatory, not optional.
-
-        /** Notifies that properties of the IVisual have changed. */
-        persistProperties(changes: VisualObjectInstance[]): void;
-        persistProperties(changes: VisualObjectInstancesToPersist): void;
-
-        ///** This information will be part of the query. */
-        //onDataRangeChanged(range: {
-        //    categorical: { // TODO: this structure is affected by the reduction algorithm as well as the data view type
-        //        categories?: {
-        //            /** Index of the category. */
-        //            index: number;
-        //            lower?: DataViewScopeIdentity;
-        //            upper?: DataViewScopeIdentity;
-        //        }[]
-        //    }
-        // });
-
-        ///** Notifies of a drill down on the specified data point. */
-        //onDrillDown(data: DataViewScopeIdentity): void;
-
-        /** Requests more data to be loaded. */
-        loadMoreData(): void;
-
-        /** Notification to sort on the specified column */
-        onCustomSort(args: CustomSortEventArgs): void;
-
-        /** Indicates which view mode the host is in. */
-        getViewMode(): ViewMode;
-
-        /** Notify any warning that happened during update of the visual. */
-        setWarnings(clientWarnings: IVisualWarning[]): void;
-
-        /** Sets a toolbar on the host. */
-        setToolbar($selector: JQuery): void;
-
-        /** Gets Geocoding Service. */
-        geocoder(): IGeocoder;
-
-        /** Gets IGeolocation Service */
-        geolocation(): IGeolocation;
-
-        /** Gets the locale string */
-        locale?(): string;
-
-        /** Gets the promise factory. */
-        promiseFactory(): IPromiseFactory;
-
-        /** Gets filter analyzer */
-        analyzeFilter(options: FilterAnalyzerOptions): AnalyzedFilter;
-
-        /** Gets display name for the identities */
-        getIdentityDisplayNames(identities: DataViewScopeIdentity[]): DisplayNameIdentityPair[];
-
-        /** Set the display names for their corresponding DataViewScopeIdentity */
-        setIdentityDisplayNames(displayNamesIdentityPairs: DisplayNameIdentityPair[]): void;
-        
-        visualCapabilitiesChanged?(): void;
-    }
-
     export interface DisplayNameIdentityPair {
         displayName: string;
         identity: DataViewScopeIdentity;
     }
 }
-﻿
+
 
 
 
@@ -2210,9 +1827,6 @@ declare module powerbi {
     }
 }
 
-
-
-
 declare module powerbi {
     import Selector = powerbi.data.Selector;
 
@@ -2231,65 +1845,6 @@ declare module powerbi {
         formattingProperties?: string[];
     }
 }
-﻿
-
-
-
-declare module powerbi {
-
-    export interface IVisualPlugin {
-        /** The name of the plugin.  Must match the property name in powerbi.visuals. */
-        name: string;
-
-        /** The key for the watermark style of this visual. Must match the id name in ExploreUI/views/svg/visualsWatermarks.svg */
-        watermarkKey?: string;
-
-        /** Declares the capabilities for this IVisualPlugin type. */
-        capabilities?: VisualCapabilities;
-
-        /** Function to call to create the visual. */
-        create: (options?: extensibility.VisualConstructorOptions) => IVisual;
-
-        /** 
-         * Function to allow the visual to influence query generation. Called each time a query is generated
-        * so the visual can translate its state into options understood by the query generator. 
-        */
-        customizeQuery?: CustomizeQueryMethod;
-
-        /** Funation to allow the visual to provide additional information for telemetry. */
-        getAdditionalTelemetry?: GetAdditionalTelemetryMethod;
-
-        /** The class of the plugin.  At the moment it is only used to have a way to indicate the class name that a custom visual has. */
-        class?: string;
-
-        /** The url to the icon to display within the visualization pane. */
-        iconUrl?: string;
-
-        /** Check if a visual is custom */
-        custom?: boolean;
-
-        /** Function to get the list of sortable roles */
-        getSortableRoles?: (visualSortableOptions?: VisualSortableOptions) => string[];
-        
-        /** The version of the api that this plugin should be run against */
-        apiVersion?: string;
-        
-        /** Human readable plugin name displayed to users */
-        displayName?: string;
-    }
-
-    /** Method for gathering addition information from the visual for telemetry. */
-    export interface GetAdditionalTelemetryMethod {
-        (dataView: DataView): any;
-    }
-
-    /** Factory method for an IVisual.  This factory method should be registered on the powerbi.visuals object. */
-    export interface IVisualFactoryMethod {
-        (): powerbi.IVisual;
-    }
-}
-
-
 
 declare module powerbi.extensibility {
     import DataViewObjectDescriptors = powerbi.data.DataViewObjectDescriptors;
@@ -2311,9 +1866,7 @@ declare module powerbi.extensibility {
         /** Indicates whether sorting is supported by the visual. This is useful for query generation */
         sorting?: VisualSortingCapabilities;        
     }
-}﻿
-
-
+}
 
 declare module powerbi.extensibility {
 
@@ -2343,9 +1896,6 @@ declare module powerbi.extensibility {
     export interface VisualConstructorOptions { }
 }
 
-
-
-
 declare module powerbi.extensibility {
 
     export interface VisualVersionOverloads {
@@ -2356,33 +1906,11 @@ declare module powerbi.extensibility {
         (visual: powerbi.extensibility.IVisual): VisualVersionOverloads;
     }
 
-    export interface VisualHostAdapter {
-        (host: powerbi.IVisualHostServices): IVisualHost;
-    }
-
-    export interface VisualVersion {
-        version: string;
-        overloads?: VisualVersionOverloadFactory;
-        hostAdapter: VisualHostAdapter;
-    }
-
-    /**
-     * Extends the interface of a visual wrapper (IVisual) to include
-     * the unwrap method which returns a direct reference to the wrapped visual. 
-     * Used in SafeExecutionWrapper and VisualAdapter
-     */
-    export interface WrappedVisual {
-        /** Returns this visual inside of this wrapper */
-        unwrap: () => powerbi.IVisual;
-    }
 }
 
 /**
  * Change Log Version 1.1.0
  */
-
-
-
 declare module powerbi.extensibility.visual {
     /**
      * Represents a visualization displayed within an application (PowerBI dashboards, ad-hoc reporting, etc.).
@@ -2419,9 +1947,6 @@ declare module powerbi.extensibility.visual {
     }
 }
 
-
-
-
 declare module powerbi.extensibility {
     interface ISelectionManager {
         select(selectionId: ISelectionId, multiSelect?: boolean): IPromise<ISelectionId[]>;
@@ -2430,8 +1955,6 @@ declare module powerbi.extensibility {
         getSelectionIds(): ISelectionId[];
     }
 }
-
-
 
 declare module powerbi.extensibility {
     export interface ISelectionId { }
