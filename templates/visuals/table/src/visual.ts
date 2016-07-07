@@ -33,11 +33,11 @@ module powerbi.extensibility.visual {
 
             thSelection.exit().remove();
 
-            let trSelection = this.tBody.selectAll("tr").data(transposedSeries);
+            let trSelection = this.tBody.selectAll('tr').data(transposedSeries);
 
-            let tr = trSelection.enter().append("tr");
+            let tr = trSelection.enter().append('tr');
 
-            tr.selectAll("td").data(d => d).enter().append("td")
+            tr.selectAll('td').data(d => d).enter().append('td')
                 .attr('data-th', (d, i) => viewModel.categories[i].value)
                 .text(d => this.format(<number>d));
 
