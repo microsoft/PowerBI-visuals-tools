@@ -20,7 +20,6 @@ Before you can run (or install) the command line tools you must install NodeJS.
 
 * NodeJS 4.0+ Required (5.0 recommended) - [Download NodeJS](https://nodejs.org)
 
-
 ####Installation
 
 To install the command line tools simply run the following command
@@ -29,7 +28,7 @@ To install the command line tools simply run the following command
 npm install -g powerbi-visuals-tools
 ```
 
-To confirm it was installed correctly you can run the command without any paremeters which should display the help screen.
+To confirm it was installed correctly you can run the command without any parameters which should display the help screen.
 
 ```
 pbiviz
