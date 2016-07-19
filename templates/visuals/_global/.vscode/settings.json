@@ -1,82 +1,31 @@
 {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "files.eol": "\n",
     "files.watcherExclude": {
         "**/.git/objects/**": true,
-        "**/node_modules/**": true
+        "**/node_modules/**": true,
+        ".tmp": true
+    },
+    "files.exclude": {
+        ".tmp": true
+    },
+    "search.exclude": {
+        ".tmp": true,
+        "typings": true
     },
     "json.schemas": [
         {
             "fileMatch": [
-                "/*.pbiviz.json"
-            ],
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "version": {
-                        "type": "string",
-                        "description": "Version of the pbiviz schema"
-                    },
-                    "apiVersion": {
-                        "type": "string",
-                        "description": "Version of the IVisual API"
-                    },
-                    "author": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "email": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "visual": {
-                        "type": "object",
-                        "properties": {
-                            "description": {
-                                "type": "string",
-                                "description": "What does this visual do?"
-                            },
-                            "name": {
-                                "type": "string",
-                                "description": "Internal visual name"
-                            },                            
-                            "displayName": {
-                                "type": "string",
-                                "description": "A friendly name"
-                            },
-                            "externals": {
-                                "type": "array",
-                                "description": "External files (such as JavaScript) that you would like to include"
-                            },
-                            "guid": {
-                                "type": "string",
-                                "description": "Unique identifier for the visual"
-                            },
-                            "visualClassName": {
-                                "type": "string",
-                                "description": "Class of your IVisual"
-                            },
-                            "icon": {
-                                "type": "string",
-                                "description": "Icon path"
-                            },
-                            "version": {
-                                "type": "string",
-                                "description": "Visual version"
-                            },
-                            "gitHubUrl": {
-                                "type": "string",
-                                "description": "Url to the github repository for this visual"
-                            },
-                            "supportUrl": {
-                                "type": "string",
-                                "description": "Url to the support page for this visual"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    ]
+                "/pbiviz.json"
+            ],            
+            "url": "./APIs/v1.1.0/schema.pbiviz.json"
+        },
+        {
+            "fileMatch": [
+                "/capabilities.json"
+            ],            
+            "url": "./APIs/v1.1.0/schema.capabilities.json"
+        }        
+    ]    
 }

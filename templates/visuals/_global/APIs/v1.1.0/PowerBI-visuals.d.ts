@@ -1,5 +1,5 @@
 /*
- *  Power BI Visual CLI
+ *  Power BI Visual CLI - Visual API v1.1.0 
  *
  *  Copyright (c) Microsoft Corporation
  *  All rights reserved.
