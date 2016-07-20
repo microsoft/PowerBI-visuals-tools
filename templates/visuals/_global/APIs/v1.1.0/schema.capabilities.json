@@ -27,15 +27,15 @@
     "definitions": {
         "dataRole": {
             "type": "object",
-            "description": "dataRole - Defines the name, displayName, and kind of a dataRole",
+            "description": "dataRole - Defines the name, displayName, and kind of a data role",
             "properties": {
                 "name": {
                     "type": "string",
-                    "description": "The internal name for this dataRole used for all references to this role"
+                    "description": "The internal name for this data role used for all references to this role"
                 },
                 "displayName": {
                     "type": "string",
-                    "description": "The name of this dataRole that is shown to the user"
+                    "description": "The name of this data role that is shown to the user"
                 },
                 "kind": {
                     "type": "string",
@@ -56,28 +56,18 @@
         },
         "dataViewMapping": {
             "type": "object",
-            "description": "dataMapping - Defines how data is mapped to dataRoles",
+            "description": "dataMapping - Defines how data is mapped to data roles",
             "properties": {
                 "conditions": {
                     "type": "array",
-                    "description": "List of conditions that must be met for this dataMapping",
+                    "description": "List of conditions that must be met for this data mapping",
                     "items": {
                         "type": "object",
-                        "description": "condition - Defines conditions for a dataMapping (each key needs to be a valid dataRole)",
+                        "description": "condition - Defines conditions for a data mapping (each key needs to be a valid data role)",
                         "patternProperties": {
                             "^\\w+$": {
-                                "type": "object",
-                                "description": "dataRole to apply the contained conditions",
-                                "properties": {
-                                    "min": {
-                                        "type": "number",
-                                        "description": "Minimum number of fields for this dataRole"
-                                    },
-                                    "max": {
-                                        "type": "number",
-                                        "description": "Maximum number of fields for this dataRole"
-                                    }
-                                }
+                                "description": "Specifies the number of values that can be assigned to this data role in this mapping",
+                                "$ref": "#/definitions/dataViewMapping.numberRange"
                             }
                         },
                         "additionalProperties": false
@@ -94,9 +84,6 @@
                 },
                 "matrix": {
                     "$ref": "#/definitions/dataViewMapping.matrix"
-                },
-                "tree": {
-                    "$ref": "#/definitions/dataViewMapping.tree"
                 }
             },
             "oneOf": [
@@ -119,106 +106,40 @@
                     "required": [
                         "matrix"
                     ]
-                },
-                {
-                    "required": [
-                        "tree"
-                    ]
                 }
             ],
             "additionalProperties": false
         },
         "dataViewMapping.single": {
             "type": "object",
-            "description": "single - Defines a single dataMapping",
+            "description": "single - Defines a single data mapping",
             "properties": {
-                "bind": {
-                    "$ref": "#/definitions/dataViewMapping.BindTo"
+                "role": {
+                    "type": "string",
+                    "description": "The data role to bind to this mapping"
                 }
             },
             "required": [
-                "bind"
+                "role"
             ],
             "additionalProperties": false
         },
         "dataViewMapping.categorical": {
             "type": "object",
-            "description": "categorical - Defines a categorical dataMapping",
+            "description": "categorical - Defines a categorical data mapping",
             "properties": {
                 "categories": {
                     "type": "object",
-                    "description": "Defines dataRoles to be used as categories",
+                    "description": "Defines data roles to be used as categories",
                     "properties": {
                         "bind": {
-                            "$ref": "#/definitions/dataViewMapping.BindTo"
+                            "$ref": "#/definitions/dataViewMapping.bindTo"
                         },
                         "for": {
-                            "$ref": "#/definitions/dataViewMapping.ForIn"
+                            "$ref": "#/definitions/dataViewMapping.forIn"
                         },
                         "dataReductionAlgorithm": {
-                            "type": "object",
-                            "description": "Describes how to reduce the amount of data exposed to the visual",
-                            "properties": {
-                                "top": {
-                                    "type": "object",
-                                    "description": "Reduce the data to the Top count items",
-                                    "properties": {
-                                        "count": {
-                                            "type": "number"
-                                        }
-                                    }
-                                },
-                                "bottom": {
-                                    "type": "object",
-                                    "description": "Reduce the data to the Bottom count items",
-                                    "properties": {
-                                        "count": {
-                                            "type": "number"
-                                        }
-                                    }
-                                },
-                                "sample": {
-                                    "type": "object",
-                                    "description": "Reduce the data using a simple Sample of count items",
-                                    "properties": {
-                                        "count": {
-                                            "type": "number"
-                                        }
-                                    }
-                                },
-                                "window": {
-                                    "type": "object",
-                                    "description": "Allow the data to be loaded one window, containing count items, at a time",
-                                    "properties": {
-                                        "count": {
-                                            "type": "number"
-                                        }
-                                    }
-                                }
-                            },
-                            "additionalProperties": false,
-                            "oneOf": [
-                                {
-                                    "required": [
-                                        "top"
-                                    ]
-                                },
-                                {
-                                    "required": [
-                                        "bottom"
-                                    ]
-                                },
-                                {
-                                    "required": [
-                                        "sample"
-                                    ]
-                                },
-                                {
-                                    "required": [
-                                        "window"
-                                    ]
-                                }
-                            ]
+                            "$ref": "#/definitions/dataViewMapping.dataReductionAlgorithm"
                         }
                     },
                     "oneOf": [
@@ -236,40 +157,37 @@
                 },
                 "values": {
                     "type": "object",
-                    "description": "Defines dataRoles to be used as values",
+                    "description": "Defines data roles to be used as values",
                     "properties": {
                         "bind": {
-                            "$ref": "#/definitions/dataViewMapping.BindTo"
+                            "$ref": "#/definitions/dataViewMapping.bindTo"
                         },
                         "for": {
-                            "$ref": "#/definitions/dataViewMapping.ForIn"
+                            "$ref": "#/definitions/dataViewMapping.forIn"
                         },
                         "select": {
-                            "type": "array",
-                            "description": "Defines a list of properties to bind",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "bind": {
-                                        "$ref": "#/definitions/dataViewMapping.BindTo"
-                                    },
-                                    "for": {
-                                        "$ref": "#/definitions/dataViewMapping.ForIn"
-                                    }
+                            "$ref": "#/definitions/dataViewMapping.select"
+                        },
+                        "group": {
+                            "type": "object",
+                            "description": "Groups on a a specific data role",
+                            "properties": {
+                                "by": {
+                                    "description": "Specifies a data role to use for grouping",
+                                    "type": "string"
                                 },
-                                "oneOf": [
-                                    {
-                                        "required": [
-                                            "for"
-                                        ]
-                                    },
-                                    {
-                                        "required": [
-                                            "bind"
-                                        ]
-                                    }
-                                ]
-                            }
+                                "select": {
+                                    "$ref": "#/definitions/dataViewMapping.select"
+                                },
+                                "dataReductionAlgorithm": {
+                                    "$ref": "#/definitions/dataViewMapping.dataReductionAlgorithm"
+                                }
+                            },
+                            "required": [
+                                "by",
+                                "select",
+                                "dataReductionAlgorithm"
+                            ]
                         }
                     },
                     "oneOf": [
@@ -295,17 +213,135 @@
         },
         "dataViewMapping.table": {
             "type": "object",
-            "description": "table - Defines a table dataMapping"
+            "description": "table - Defines a table data mapping",
+            "properties": {
+                "rows": {
+                    "type": "object",
+                    "description": "Rows to use for the table",
+                    "properties": {
+                        "bind": {
+                            "$ref": "#/definitions/dataViewMapping.bindTo"
+                        },
+                        "for": {
+                            "$ref": "#/definitions/dataViewMapping.forIn"
+                        },
+                        "select": {
+                            "$ref": "#/definitions/dataViewMapping.select"
+                        },
+                        "dataReductionAlgorithm": {
+                            "$ref": "#/definitions/dataViewMapping.dataReductionAlgorithm"
+                        }
+                    },
+                    "oneOf": [
+                        {
+                            "required": [
+                                "for"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "bind"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "select"
+                            ]
+                        }
+                    ]
+                },
+                "rowCount": {
+                    "type": "object",
+                    "description": "Specifies a constraint on the number of data rows supported by the visual",
+                    "properties": {
+                        "preferred": {
+                            "description": "Specifies a preferred range of values for the constraint",
+                            "$ref": "#/definitions/dataViewMapping.numberRange"
+                        },
+                        "supported": {
+                            "description": "Specifies a supported range of values for the constraint. Defaults to preferred if not specified.",
+                            "$ref": "#/definitions/dataViewMapping.numberRange"
+                        }
+                    }
+                }
+            },
+            "requires": [
+                "rows"
+            ]
         },
         "dataViewMapping.matrix": {
             "type": "object",
-            "description": "matrix - Defines a matrix dataMapping"
+            "description": "matrix - Defines a matrix data mapping",
+            "properties": {
+                "rows": {
+                    "type": "object",
+                    "description": "Defines the rows used for the matrix",
+                    "properties": {
+                        "for": {
+                            "$ref": "#/definitions/dataViewMapping.forIn"
+                        },
+                        "select": {
+                            "$ref": "#/definitions/dataViewMapping.select"
+                        },
+                        "dataReductionAlgorithm": {
+                            "$ref": "#/definitions/dataViewMapping.dataReductionAlgorithm"
+                        }
+                    },
+                    "oneOf": [
+                        {
+                            "required": [
+                                "for"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "select"
+                            ]
+                        }
+                    ]
+                },
+                "columns": {
+                    "type": "object",
+                    "description": "Defines the columns used for the matrix",
+                    "properties": {
+                        "for": {
+                            "$ref": "#/definitions/dataViewMapping.forIn"
+                        },
+                        "dataReductionAlgorithm": {
+                            "$ref": "#/definitions/dataViewMapping.dataReductionAlgorithm"
+                        }
+                    },
+                    "required": [
+                        "for"
+                    ]
+                },
+                "values": {
+                    "type": "object",
+                    "description": "Defines the values used for the matrix",
+                    "properties": {
+                        "for": {
+                            "$ref": "#/definitions/dataViewMapping.forIn"
+                        },
+                        "select": {
+                            "$ref": "#/definitions/dataViewMapping.select"
+                        }
+                    },
+                    "oneOf": [
+                        {
+                            "required": [
+                                "for"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "select"
+                            ]
+                        }
+                    ]
+                }
+            }
         },
-        "dataViewMapping.tree": {
-            "type": "object",
-            "description": "tree - Defines a tree dataMapping"
-        },
-        "dataViewMapping.BindTo": {
+        "dataViewMapping.bindTo": {
             "type": "object",
             "description": "Binds this data mapping to a single value",
             "properties": {
@@ -319,7 +355,113 @@
                 "to"
             ]
         },
-        "dataViewMapping.ForIn": {
+        "dataViewMapping.numberRange": {
+            "type": "object",
+            "description": "A number range from min to max",
+            "properties": {
+                "min": {
+                    "type": "number",
+                    "description": "Minimum value supported"
+                },
+                "max": {
+                    "type": "number",
+                    "description": "Maximum value supported"
+                }
+            }
+        },
+        "dataViewMapping.select": {
+            "type": "array",
+            "description": "Defines a list of properties to bind",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "bind": {
+                        "$ref": "#/definitions/dataViewMapping.bindTo"
+                    },
+                    "for": {
+                        "$ref": "#/definitions/dataViewMapping.forIn"
+                    }
+                },
+                "oneOf": [
+                    {
+                        "required": [
+                            "for"
+                        ]
+                    },
+                    {
+                        "required": [
+                            "bind"
+                        ]
+                    }
+                ]
+            }
+        },
+        "dataViewMapping.dataReductionAlgorithm": {
+            "type": "object",
+            "description": "Describes how to reduce the amount of data exposed to the visual",
+            "properties": {
+                "top": {
+                    "type": "object",
+                    "description": "Reduce the data to the Top count items",
+                    "properties": {
+                        "count": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "bottom": {
+                    "type": "object",
+                    "description": "Reduce the data to the Bottom count items",
+                    "properties": {
+                        "count": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "sample": {
+                    "type": "object",
+                    "description": "Reduce the data using a simple Sample of count items",
+                    "properties": {
+                        "count": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "window": {
+                    "type": "object",
+                    "description": "Allow the data to be loaded one window, containing count items, at a time",
+                    "properties": {
+                        "count": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "oneOf": [
+                {
+                    "required": [
+                        "top"
+                    ]
+                },
+                {
+                    "required": [
+                        "bottom"
+                    ]
+                },
+                {
+                    "required": [
+                        "sample"
+                    ]
+                },
+                {
+                    "required": [
+                        "window"
+                    ]
+                }
+            ]
+        },
+        "dataViewMapping.forIn": {
             "type": "object",
             "description": "Binds this data mapping for all items in a collection",
             "properties": {
@@ -514,7 +656,7 @@
         },
         "sorting": {
             "type": "object",
-            "description": "sorting!!!",
+            "description": "Specifies the default sorting behavior for the visual",
             "properties": {
                 "default": {
                     "type": "object",
@@ -526,7 +668,7 @@
                 },
                 "implicit": {
                     "type": "object",
-                    "description":"implicit sort",
+                    "description": "implicit sort",
                     "properties": {
                         "clauses": {
                             "type": "array",
@@ -539,8 +681,11 @@
                                     "direction": {
                                         "type": "number",
                                         "description": "Determines sort direction (1 = Ascending, 2 = Descending)",
-                                        "enum": [1, 2]
-                                    }                                    
+                                        "enum": [
+                                            1,
+                                            2
+                                        ]
+                                    }
                                 },
                                 "additionalProperties": false
                             }
