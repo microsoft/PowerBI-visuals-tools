@@ -185,8 +185,7 @@
                             },
                             "required": [
                                 "by",
-                                "select",
-                                "dataReductionAlgorithm"
+                                "select"
                             ]
                         }
                     },
@@ -204,6 +203,11 @@
                         {
                             "required": [
                                 "select"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "group"
                             ]
                         }
                     ]
