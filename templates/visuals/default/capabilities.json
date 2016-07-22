@@ -3,12 +3,12 @@
         {
             "displayName": "Category Data",
             "name": "category",
-            "kind": "Grouping"
+            "kind": 0
         },
         {
             "displayName": "Measure Data",
             "name": "measure",
-            "kind": "Measure"
+            "kind": 1
         }
     ],
     "dataViewMappings": [
