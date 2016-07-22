@@ -33,13 +33,14 @@ let PbivizBuilder = require('../lib/PbivizBuilder');
 let VisualBuilder = require('../lib/VisualBuilder');
 
 program
-.option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
-.option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
-.parse(process.argv);
+    .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
+    .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
+    .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
+    .parse(process.argv);
 
 let cwd = process.cwd();
 
-if(!program.pbiviz && !program.resources) {
+if (!program.pbiviz && !program.resources) {
     ConsoleWriter.error('Nothing to build. Cannot use --no-pbiviz without --resources');
     process.exit(1);
 }
@@ -47,7 +48,10 @@ if(!program.pbiviz && !program.resources) {
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
-    let builder = new VisualBuilder(visualPackage);
+    let buildOptions = {
+        minify: program.minify
+    };
+    let builder = new VisualBuilder(visualPackage, buildOptions);
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
         ConsoleWriter.blank();

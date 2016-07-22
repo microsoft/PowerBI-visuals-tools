@@ -41,9 +41,9 @@ let cwd = process.cwd();
 let server, builder;
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    
+
     ConsoleWriter.info('Building visual...');
-    let buildOptions = {namespace: visualPackage.config.visual.guid + '_DEBUG'};
+    let buildOptions = { namespace: visualPackage.config.visual.guid + '_DEBUG', minify: false };
     builder = new VisualBuilder(visualPackage, buildOptions);
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
@@ -91,7 +91,7 @@ function stopServer() {
     if (builder) {
         builder.stopWatcher();
         builder = null;
-    }    
+    }
     process.exit(0);
 }
 
