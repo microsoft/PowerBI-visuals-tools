@@ -5,10 +5,12 @@
   "main": "./lib/VisualPackage.js",
   "scripts": {
     "start": "node ./bin/pbiviz.js",
-    "test": "jasmine"
+    "test": "npm run jscs && npm run jshint && jasmine",
+    "jscs": "jscs bin lib spec",
+    "jshint": "jshint lib bin spec"
   },
   "bin": {
-    "pbiviz": "./bin/pbiviz.js"
+    "pbiviz": "./bin/pbiviz.js ./bin/*.js --verbose"
   },
   "repository": {
     "type": "git",
@@ -38,6 +40,9 @@
   "devDependencies": {
     "async": "^2.0.1",
     "jasmine": "^2.4.1",
+    "jscs": "^3.0.7",
+    "jshint": "^2.9.2",
+    "request": "^2.74.0",
     "wrench": "^1.5.9"
   }
 }

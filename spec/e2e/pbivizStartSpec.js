@@ -55,7 +55,7 @@ describe("E2E - pbiviz start", () => {
             pbivizProc.stderr.on('data', (data) => {
                 throw new Error(data.toString());
             });
-        })
+        });
 
         it("Should build visual and generate resources in drop folder", (done) => {
             let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
@@ -133,7 +133,7 @@ describe("E2E - pbiviz start", () => {
             let jsonChangeCount = 0;
 
             function getStatus() {
-                return fs.readFileSync(statusPath)
+                return fs.readFileSync(statusPath);
             }
 
             pbivizProc.stdout.on('data', (data) => {

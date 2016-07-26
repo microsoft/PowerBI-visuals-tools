@@ -158,7 +158,7 @@ describe("E2E - pbiviz package", () => {
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
         let resourcesPath = path.join(visualPath, 'dist', 'resources');
-        let pbivizPath = path.join(resourcesPath,'pbiviz.json');
+        let pbivizPath = path.join(resourcesPath, 'pbiviz.json');
 
         expect(fs.statSync(resourcesPath).isDirectory()).toBe(true);
         expect(fs.statSync(path.join(resourcesPath, 'visual.prod.js')).isFile()).toBe(true);
@@ -170,7 +170,7 @@ describe("E2E - pbiviz package", () => {
         expect(pbiviz.capabilities).toEqual(visualCapabilities);
         expect(pbiviz.content.js).toBeDefined();
         expect(pbiviz.content.css).toBeDefined();
-        expect(pbiviz.content.iconBase64).toBeDefined();        
+        expect(pbiviz.content.iconBase64).toBeDefined();
     });
 
     it("Should minify assets by default", () => {
@@ -184,7 +184,7 @@ describe("E2E - pbiviz package", () => {
 
         expect(js.size).toBeGreaterThan(prodJs.size);
         expect(css.size).toBeGreaterThan(prodCss.size);
-    });    
+    });
 
     it("Should skip minification with --no-minify flag", () => {
         FileSystem.runPbiviz('package', false, '--no-minify');

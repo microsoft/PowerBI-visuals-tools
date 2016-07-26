@@ -51,9 +51,9 @@ if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
 
 program.parse(args);
 
-if(program.args.length > 0) {
-    let validCommands = program.commands.map(c => c.name())
-    if(validCommands.indexOf(program.args[0]) === -1) {   
+if (program.args.length > 0) {
+    let validCommands = program.commands.map(c => c.name());
+    if (validCommands.indexOf(program.args[0]) === -1) {
         ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
         process.exit(1);
     }
@@ -64,16 +64,16 @@ function openCertFile() {
     let openCmds = {
         linux: 'xdg-open',
         darwin: 'open',
-        win32: 'powershell start'  
+        win32: 'powershell start'
     };
     let startCmd = openCmds[os.platform()];
-    if(startCmd) {
-        try{
+    if (startCmd) {
+        try {
             exec(`${startCmd} "${certPath}"`);
-        } catch(e) {
-            ConsoleWriter.info('Certificate path:',certPath);
+        } catch (e) {
+            ConsoleWriter.info('Certificate path:', certPath);
         }
     } else {
-        ConsoleWriter.info('Certificate path:',certPath);
+        ConsoleWriter.info('Certificate path:', certPath);
     }
 }

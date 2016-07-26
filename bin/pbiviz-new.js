@@ -55,7 +55,7 @@ if (program.force) {
 let generateOptions = {
     force: program.force,
     template: program.template
-}
+};
 
 VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
     ConsoleWriter.done('Visual creation complete');
