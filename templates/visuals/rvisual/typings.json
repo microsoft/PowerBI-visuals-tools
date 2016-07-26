@@ -1,0 +1,7 @@
+{
+  "name": "visual",
+  "dependencies": {},
+  "globalDependencies": {
+    "d3": "registry:dt/d3#0.0.0+20160628065019"
+  }
+}
