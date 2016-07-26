@@ -1,33 +1,33 @@
 "use strict";
 
-var fs = require('fs-extra');
-var path = require('path');
-var wrench = require('wrench');
-var _ = require('lodash');
+let fs = require('fs-extra');
+let path = require('path');
+let wrench = require('wrench');
+let _ = require('lodash');
 
-var FileSystem = require('../helpers/FileSystem.js');
+let FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
 
-describe("E2E - pbiviz new", function () {
+describe("E2E - pbiviz new", () => {
 
-    beforeEach(function () {
+    beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
     });
 
-    afterEach(function () {
+    afterEach(() => {
         process.chdir(startPath);
     });
 
-    afterAll(function () {
+    afterAll(() => {
         process.chdir(startPath);
         FileSystem.deleteTempDirectory();
     });
 
-    it("Should generate new visual with default template", function () {
+    it("Should generate new visual with default template", () => {
         let visualName = 'visualname';
         let template = 'default';
         let visualPath = path.join(tempPath, visualName);
@@ -54,7 +54,7 @@ describe("E2E - pbiviz new", function () {
         expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
     });
 
-    it("Should generate new visual using specified template", function () {
+    it("Should generate new visual using specified template", () => {
         let visualName = 'visualname';
         let template = 'table';
         let visualPath = path.join(tempPath, visualName);
@@ -79,9 +79,9 @@ describe("E2E - pbiviz new", function () {
         expect(visualConfig.displayName).toBe(visualName);
         expect(visualConfig.guid).toBeDefined();
         expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
-    });    
+    });
 
-    it("Should convert multi-word visual name to camelCase", function () {
+    it("Should convert multi-word visual name to camelCase", () => {
         let visualDisplayName = 'My Visual Name here';
         let visualName = 'myVisualNameHere';
         FileSystem.runPbiviz('new', visualDisplayName);
@@ -95,9 +95,9 @@ describe("E2E - pbiviz new", function () {
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });
 
-    it("Should throw error if the visual already exists", function () {
+    it("Should throw error if the visual already exists", () => {
         let visualName = 'visualname';
-        var error;
+        let error;
 
         FileSystem.runPbiviz('new', visualName);
 
@@ -111,7 +111,7 @@ describe("E2E - pbiviz new", function () {
         expect(error.status).toBe(1);
     });
 
-    it("Should overwrite existing visual with force flag", function () {
+    it("Should overwrite existing visual with force flag", () => {
         let visualName = 'visualname';
         let stat1, stat2, error;
 

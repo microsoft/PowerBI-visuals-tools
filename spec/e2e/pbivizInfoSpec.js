@@ -1,45 +1,38 @@
 "use strict";
 
-var fs = require('fs-extra');
-var path = require('path');
+let fs = require('fs-extra');
+let path = require('path');
 
-var FileSystem = require('../helpers/FileSystem.js');
+let FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
-describe("E2E - pbiviz info", function () {
+describe("E2E - pbiviz info", () => {
 
     let visualName = 'myuniquevisualnamegoeshere';
     let visualPath = path.join(tempPath, visualName);
 
-    beforeEach(function () {
+    beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
     });
 
-    afterEach(function () {
+    afterEach(() => {
         process.chdir(startPath);
     });
 
-    afterAll(function () {
+    afterAll(() => {
         process.chdir(startPath);
         FileSystem.deleteTempDirectory();
     });
 
-    it("Should output visual info", function () {
-        var output = FileSystem.runPbiviz('info').toString();
-        var visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        expect(output).toContain(visualName);
-        expect(output).toContain(visualConfig.guid);
-    });
-    
-    it("Should throw error if not in the visual root", function () {
-        var error;
+    it("Should throw error if not in the visual root", () => {
+        let error;
         process.chdir(tempPath);
-        
+
         try {
             FileSystem.runPbiviz('info');
         } catch (e) {
@@ -48,6 +41,13 @@ describe("E2E - pbiviz info", function () {
 
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
-    });    
+        expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
+    });
 
+    it("Should output visual info", () => {
+        let output = FileSystem.runPbiviz('info').toString();
+        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        expect(output).toContain(visualName);
+        expect(output).toContain(visualConfig.guid);
+    });
 });

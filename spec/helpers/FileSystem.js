@@ -2,7 +2,7 @@
 
 var fs = require('fs-extra');
 var path = require('path');
-var exec = require('child_process').execSync;
+var childProcess = require('child_process');
 
 const TEMP_DIR = path.join(__dirname, '..', '.tmp');
 const BIN_PATH = path.join(__dirname, '..', '..', 'bin', 'pbiviz.js');
@@ -44,15 +44,22 @@ class FileSystem {
      * @param {string} command - the command to be executed
      * @param {string} [arguments=''] - arguments for the command
      * @param {string} [flags=''] - command line flags
-     * @param {boolean} [verbose = false] - the command to be executed
+     * @param {boolean} [verbose = false] - enables verbose output
+     * @param {boolean} [async = false] - should be run async 
      */
-    static runPbiviz(command, args, flags, verbose) {
+    static runPbiviz(command, args, flags, verbose, async) {
         let opts = verbose ? undefined : { stdio: [] };
         flags = flags ? ' ' + flags : '';
         args = args ? ' ' + args : '';
         if(verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + command + args + flags);
         
-        return exec('node ' + BIN_PATH + ' ' + command + args + flags, opts);
+        let pbivizCmd = command + args + flags;
+        if(async) {
+            return childProcess.spawn('node', [BIN_PATH, pbivizCmd], opts);
+        } else {
+            return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
+        }
+        
     }
     
 }
