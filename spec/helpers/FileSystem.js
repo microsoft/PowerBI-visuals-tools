@@ -36,31 +36,41 @@ class FileSystem {
     static deleteTempDirectory() {
         try {
             fs.removeSync(TEMP_DIR);
-        } catch (e) { }        
+        } catch (e) {
+            console.log('DELETE ERROR', e);
+        }        
     }
     
     /**
      * Executes the pbiviz CLI
      * @param {string} command - the command to be executed
-     * @param {string} [arguments=''] - arguments for the command
+     * @param {string} [args=''] - arguments for the command
      * @param {string} [flags=''] - command line flags
      * @param {boolean} [verbose = false] - enables verbose output
-     * @param {boolean} [async = false] - should be run async 
      */
-    static runPbiviz(command, args, flags, verbose, async) {
+    static runPbiviz(command, args, flags, verbose) {
         let opts = verbose ? undefined : { stdio: [] };
-        flags = flags ? ' ' + flags : '';
-        args = args ? ' ' + args : '';
         if(verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + command + args + flags);
-        
+
+        flags = flags ? ' ' + flags : '';
+        args = args ? ' ' + args : '';            
         let pbivizCmd = command + args + flags;
-        if(async) {
-            return childProcess.spawn('node', [BIN_PATH, pbivizCmd], opts);
-        } else {
-            return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
-        }
-        
+        return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
     }
+
+    /**
+     * Executes the pbiviz CLI
+     * @param {string} command - the command to be executed
+     * @param {array} [args = []] - arguments for the command
+     * @param {boolean} [verbose = false] - enables verbose output
+     */
+    static runPbivizAsync(command, args, verbose) {
+        if(verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + command, args || '');
+        
+        let spawnCmd = [BIN_PATH, command];
+        if(args) spawnCmd = spawnCmd.concat(args);
+        return childProcess.spawn('node', spawnCmd);
+    }    
     
 }
 

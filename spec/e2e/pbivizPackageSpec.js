@@ -8,7 +8,6 @@ let JSZip = require('jszip');
 let FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
-const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
 
 describe("E2E - pbiviz package", () => {

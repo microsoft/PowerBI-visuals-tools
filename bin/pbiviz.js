@@ -71,9 +71,9 @@ function openCertFile() {
         try{
             exec(`${startCmd} "${certPath}"`);
         } catch(e) {
-            console.log('Certificate path:',certPath);
+            ConsoleWriter.info('Certificate path:',certPath);
         }
     } else {
-        console.log('Certificate path:',certPath);
+        ConsoleWriter.info('Certificate path:',certPath);
     }
 }
