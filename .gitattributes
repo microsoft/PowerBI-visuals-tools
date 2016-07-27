@@ -1,3 +1,4 @@
-*   text=auto
-*   eol=lf
-
+*       text=auto
+*       eol=lf
+*.jpg   -text
+*.png   -text
