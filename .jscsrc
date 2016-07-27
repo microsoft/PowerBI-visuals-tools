@@ -97,7 +97,8 @@
     "disallowMultipleLineBreaks": true,
     "disallowNewlineBeforeBlockStatements": true,
     "disallowKeywords": [
-        "with"
+        "with",
+        "var"
     ],
     "disallowSpacesInFunctionDeclaration": {
         "beforeOpeningRoundBrace": true

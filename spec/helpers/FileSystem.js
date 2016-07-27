@@ -1,8 +1,8 @@
 "use strict";
 
-var fs = require('fs-extra');
-var path = require('path');
-var childProcess = require('child_process');
+let fs = require('fs-extra');
+let path = require('path');
+let childProcess = require('child_process');
 
 const TEMP_DIR = path.join(__dirname, '..', '.tmp');
 const BIN_PATH = path.join(__dirname, '..', '..', 'bin', 'pbiviz.js');
