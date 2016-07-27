@@ -141,12 +141,12 @@ declare module powerbi {
          * Rejects immediately if any of the promises fail
          */
         all(promises: IPromise2<any, any>[]): IPromise<any[]>;
-        
+
         /**
          * Combines multiple promises into a single promise that is resolved when all of the input promises are resolved.
          * Does not resolve until all promises finish (success or failure).
          */
-        allSettled<T>(promises: IPromise2<any, any>[]): IPromise<IPromiseResult<T>[]>;        
+        allSettled<T>(promises: IPromise2<any, any>[]): IPromise<IPromiseResult<T>[]>;
 
         /**
          * Wraps an object that might be a value or a then-able promise into a promise. 
@@ -233,7 +233,7 @@ declare module powerbi {
     export interface IResultCallback<T> {
         (result: T, done: boolean): void;
     }
-    
+
     export interface IPromiseResult<T> {
         type: PromiseResultType;
         value: T;
@@ -258,7 +258,7 @@ declare module powerbi.visuals {
         withMeasure(measureId: string): this;
         createSelectionId(): ISelectionId;
     }
-    
+
     export interface ISelectionId {
         equals(other: ISelectionId): boolean;
         includes(other: ISelectionId, ignoreHighlight?: boolean): boolean;
@@ -564,7 +564,7 @@ declare module powerbi {
          * If this node represents a composite group node in matrix, this property will be undefined.
          */
         value?: any;
-      
+
         /** 
          * This property contains all the values in this node. 
          * The key of each of the key-value-pair in this dictionary is the position of the column in the 
@@ -624,8 +624,8 @@ declare module powerbi {
 
         children?: DataViewMatrixNode[];
 
-         
-        values?: { [id: number]: DataViewMatrixNodeValue };         
+
+        values?: { [id: number]: DataViewMatrixNodeValue };
 
         /**
          * Indicates the source metadata index on the node's level. Its value is 0 if omitted.
@@ -759,7 +759,7 @@ declare module powerbi {
         values?: DataViewRoleForMapping;
 
         /** Specifies a constraint on the depth of the tree supported by the visual. */
-	    depth?: AcceptabilityNumberRange;
+        depth?: AcceptabilityNumberRange;
     }
 
     export interface DataViewMatrixMapping extends HasDataVolume {
@@ -768,10 +768,10 @@ declare module powerbi {
         values?: DataViewRoleForMapping | DataViewListRoleMapping;
     }
 
-    
+
     export type DataViewRoleMapping = DataViewRoleBindMapping | DataViewRoleForMapping;
 
-    
+
 
     export interface DataViewRoleBindMapping {
         /**
@@ -780,7 +780,7 @@ declare module powerbi {
          */
         bind: {
             to: string;
-            
+
             /** Requests aggregates for the visual.  When specified, only the aggregates are requested. */
             aggregates?: DataViewMappingRoleProjectionAggregates;
         };
@@ -937,10 +937,10 @@ declare module powerbi.data {
         description?: DisplayNameGetter;
         placeHolderText?: DisplayNameGetter;
         type: DataViewObjectPropertyTypeDescriptor;
-        rule?: DataViewObjectPropertyRuleDescriptor;        
+        rule?: DataViewObjectPropertyRuleDescriptor;
 
         /** Indicates whether the Format Painter should ignore this property. */
-        suppressFormatPainterCopy?: boolean;   
+        suppressFormatPainterCopy?: boolean;
     }
 
     export type DataViewObjectPropertyTypeDescriptor = ValueTypeDescriptor | StructuralTypeDescriptor;
@@ -960,7 +960,7 @@ declare module powerbi.data {
         /** Names roles that define the selector for the output properties. */
         selector: string[];
     }
-    
+
 }
 
 declare module powerbi.data {
@@ -998,8 +998,8 @@ declare module powerbi.data {
 
 declare module powerbi.data {
     export interface ScriptInputColumn {
-        /** The queryName of the corresponding Select from the associated SemanticQuery providing the data for this column. */ 
-        QueryName: string; 
+        /** The queryName of the corresponding Select from the associated SemanticQuery providing the data for this column. */
+        QueryName: string;
 
         /** The name of this column expected by the script. */
         Name: string;
@@ -1016,7 +1016,7 @@ declare module powerbi.data {
     export interface Selector {
         /** Data-bound repetition selection. */
         data?: DataRepetitionSelector[];
-	
+
         /** Metadata-bound repetition selection.  Refers to a DataViewMetadataColumn queryName. */
         metadata?: string;
 
@@ -1024,7 +1024,7 @@ declare module powerbi.data {
         id?: string;
     }
 
-    export type DataRepetitionSelector = DataViewScopeIdentity | DataViewScopeWildcard | DataViewRoleWildcard; 
+    export type DataRepetitionSelector = DataViewScopeIdentity | DataViewScopeWildcard | DataViewRoleWildcard;
 }
 
 declare module powerbi.data {
@@ -1079,8 +1079,8 @@ declare module powerbi {
     }
 }
 
-declare module powerbi {   
-    
+declare module powerbi {
+
     /**
      * Interface that provides scripted access to geographical location information associated with the hosting device
      * The Interface is similar to W3 Geolocation API Specification {@link https://dev.w3.org/geo/api/spec-source.html}
@@ -1113,7 +1113,7 @@ declare module powerbi {
     export interface IPositionCallback {
         (position: Position): void;
     }
-    
+
     export interface IPositionErrorCallback {
         (error: PositionError): void;
     }
@@ -1145,7 +1145,7 @@ declare module powerbi {
         /** Gets the members of the enumeration, limited to the validMembers, if appropriate. */
         members(validMembers?: EnumMemberValue[]): IEnumMember[];
     }
-    
+
 }
 
 declare module powerbi {
@@ -1182,7 +1182,7 @@ declare module powerbi {
     export interface FillSolidColorAdvancedTypeDescriptor {
         /** Indicates whether the color value may be nullable, and a 'no fill' option is appropriate. */
         nullable: boolean;
-    }  
+    }
 }
 
 declare module powerbi {
@@ -1284,7 +1284,7 @@ declare module powerbi {
         ImageValue |
         Paragraphs |
         GeoJson;
-    
+
     /** Describes a structural type in the client type system. Leaf properties should use ValueType. */
     export interface StructuralTypeDescriptor {
         fill?: FillTypeDescriptor;
@@ -1371,7 +1371,7 @@ declare module powerbi {
 }
 
 declare module powerbi {
-    export interface IVisualStyle{
+    export interface IVisualStyle {
         colorPalette: IColorPalette;
         isHighContrast: boolean;
         titleText: ITextStyle;
@@ -1471,7 +1471,7 @@ declare module powerbi {
          * Visual should prefer to request a higher volume of data.
          */
         preferHigherDataVolume?: boolean;
-        
+
         /**
          * Whether the load more data feature (paging of data) for Cartesian charts should be enabled.
          */
@@ -1480,7 +1480,7 @@ declare module powerbi {
 
     /** Parameters available to a sortable visual candidate */
     export interface VisualSortableOptions {
-        
+
         dataViewMappings: data.CompiledDataViewMapping[];
     }
 
@@ -1772,7 +1772,7 @@ declare module powerbi {
 
 declare module powerbi {
     import Selector = powerbi.data.Selector;
-    
+
     export interface VisualObjectInstance {
         /** The name of the object (as defined in VisualCapabilities). */
         objectName: string;
@@ -1821,7 +1821,7 @@ declare module powerbi {
         /** Instances which should be deleted from the existing instances. */
         remove?: VisualObjectInstance[];
     }
-    
+
     export interface EnumerateVisualObjectInstancesOptions {
         objectName: string;
     }
@@ -1862,9 +1862,9 @@ declare module powerbi.extensibility {
 
         /** Indicates whether cross-highlight is supported by the visual. This is useful for query generation. */
         supportsHighlight?: boolean;
-        
+
         /** Indicates whether sorting is supported by the visual. This is useful for query generation */
-        sorting?: VisualSortingCapabilities;        
+        sorting?: VisualSortingCapabilities;
     }
 }
 
@@ -1878,11 +1878,11 @@ declare module powerbi.extensibility {
 
     export interface IVisualConstructor {
         __transform__?: IVisualDataViewTransform;
-    }   
-    
+    }
+
     export interface IVisualDataViewTransform {
         <T>(dataview: DataView[]): T;
-    } 
+    }
 
     // These are the base interfaces. These should remain empty
     // All visual versions should extend these for type compatability
@@ -1931,7 +1931,7 @@ declare module powerbi.extensibility.visual {
         createSelectionIdBuilder: () => visuals.ISelectionIdBuilder;
         createSelectionManager: () => ISelectionManager;
         /** An array of default colors to be used by the visual */
-        colors: IColorInfo[];        
+        colors: IColorInfo[];
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
@@ -1957,7 +1957,16 @@ declare module powerbi.extensibility {
 }
 
 declare module powerbi.extensibility {
-    export interface ISelectionId { }
+    export interface Selector { }
+
+    export interface ISelectionId {
+        equals(other: ISelectionId): boolean;
+        includes(other: ISelectionId, ignoreHighlight?: boolean): boolean;
+        getKey(): string;
+        getSelector(): Selector;
+        getSelectorsByColumn(): Selector;
+        hasIdentity(): boolean;
+    }
 
     export interface ISelectionIdBuilder {
         withCategory(categoryColumn: DataViewCategoryColumn, index: number): this;
