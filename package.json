@@ -5,7 +5,8 @@
   "main": "./lib/VisualPackage.js",
   "scripts": {
     "start": "node ./bin/pbiviz.js",
-    "test": "npm run jscs && npm run jshint && jasmine",
+    "test": "npm run jscs && npm run jshint && npm run jasmine",
+    "jasmine": "node spec/jasmine-runner.js",
     "jscs": "jscs bin lib spec",
     "jshint": "jshint lib bin spec"
   },
@@ -40,6 +41,7 @@
   "devDependencies": {
     "async": "^2.0.1",
     "jasmine": "^2.4.1",
+    "jasmine-spec-reporter": "^2.5.0",
     "jscs": "^3.0.7",
     "jshint": "^2.9.2",
     "request": "^2.74.0",
