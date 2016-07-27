@@ -95,6 +95,7 @@
     "disallowSpacesInsideArrayBrackets": "all",
     "disallowSpacesInsideParentheses": true,
     "disallowMultipleLineBreaks": true,
+    "validateLineBreaks": "LF",
     "disallowNewlineBeforeBlockStatements": true,
     "disallowKeywords": [
         "with",

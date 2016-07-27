@@ -8,7 +8,7 @@
     "test": "npm run jscs && npm run jshint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jscs": "jscs bin lib spec",
-    "jshint": "jshint lib bin spec"
+    "jshint": "jshint bin lib spec"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js ./bin/*.js --verbose"
