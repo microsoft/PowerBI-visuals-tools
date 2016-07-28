@@ -80,16 +80,16 @@ class FileSystem {
     /**
      * Kills a process on any platform
      * 
-     * @param {object} process - id of the process to kill
+     * @param {object} childProcess - child process to kill
      * @param {string} [signal] - signal to send ot the process
      * @param {function} [callback] - callback called after all processes are terminated
      */
-    static killProcess(process, signal, callback) {
+    static killProcess(childProcess, signal, callback) {
         if (platform === 'win32') {
-            process.kill(signal);
+            childProcess.kill(signal);
             if (callback) callback();
         } else {
-            let pid = process.pid || process.PID;
+            let pid = childProcess.pid || childProcess.PID;
             psTree(pid, (error, children) => {
                 async.each(children, (child, next) => {
                     FileSystem.killProcess(child, signal, next);
