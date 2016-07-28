@@ -47,3 +47,6 @@ install:
 
 test_script:
   - npm test
+
+# Don't actually build.
+build: off
