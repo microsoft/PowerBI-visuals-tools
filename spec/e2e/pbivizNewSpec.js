@@ -118,7 +118,7 @@ describe("E2E - pbiviz new", () => {
         FileSystem.runPbiviz('new', visualName);
         stat1 = fs.statSync(path.join(tempPath, visualName));
 
-        //wait 1/10 of a second to avoid failure on fast computers
+        //wait 1/2 a second to avoid failure on fast computers
         setTimeout(() => {
             FileSystem.runPbiviz('new', visualName, '-f');
             stat2 = fs.statSync(path.join(tempPath, visualName));
@@ -127,7 +127,7 @@ describe("E2E - pbiviz new", () => {
             expect(stat2).toBeDefined();
             expect(stat1.mtime.getTime()).not.toBe(stat2.mtime.getTime());
             done();
-        }, 100);
+        }, 500);
     });
 
 });
