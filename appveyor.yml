@@ -46,7 +46,10 @@ install:
 #---------------------------------#
 
 test_script:
+  - node --version
+  - npm --version
   - npm test
+  
 
 # Don't actually build.
 build: off
