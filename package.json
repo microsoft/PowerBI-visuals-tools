@@ -11,7 +11,7 @@
     "jshint": "jshint bin lib spec"
   },
   "bin": {
-    "pbiviz": "./bin/pbiviz.js ./bin/*.js --verbose"
+    "pbiviz": "./bin/pbiviz.js"
   },
   "repository": {
     "type": "git",
