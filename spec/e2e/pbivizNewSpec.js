@@ -111,23 +111,22 @@ describe("E2E - pbiviz new", () => {
         expect(error.status).toBe(1);
     });
 
-    it("Should overwrite existing visual with force flag", (done) => {
+    it("Should overwrite existing visual with force flag", () => {
         let visualName = 'visualname';
         let stat1, stat2, error;
 
         FileSystem.runPbiviz('new', visualName);
         stat1 = fs.statSync(path.join(tempPath, visualName));
 
-        //wait 1/2 a second to avoid failure on fast computers
-        setTimeout(() => {
-            FileSystem.runPbiviz('new', visualName, '-f');
-            stat2 = fs.statSync(path.join(tempPath, visualName));
+        FileSystem.runPbiviz('new', visualName, '-f');
+        stat2 = fs.statSync(path.join(tempPath, visualName));
 
-            expect(error).not.toBeDefined();
-            expect(stat2).toBeDefined();
-            expect(stat1.mtime.getTime()).not.toBe(stat2.mtime.getTime());
-            done();
-        }, 500);
+        expect(error).not.toBeDefined();
+        expect(stat1).toBeDefined();
+        expect(stat2).toBeDefined();
+        expect(stat1.ino).toBeTruthy();
+        expect(stat2.ino).toBeTruthy();        
+        expect(stat1.ino).not.toBe(stat2.ino);
     });
 
 });
