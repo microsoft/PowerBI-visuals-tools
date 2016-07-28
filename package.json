@@ -5,10 +5,11 @@
   "main": "./lib/VisualPackage.js",
   "scripts": {
     "start": "node ./bin/pbiviz.js",
-    "test": "npm run jscs && npm run jshint && npm run jasmine",
+    "test": "npm run clean-tests && npm run jscs && npm run jshint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jscs": "jscs bin lib spec",
-    "jshint": "jshint bin lib spec"
+    "jshint": "jshint bin lib spec",
+    "clean-tests": "node spec/clean-tests.js" 
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
@@ -45,6 +46,7 @@
     "jscs": "^3.0.7",
     "jshint": "^2.9.2",
     "request": "^2.74.0",
+    "ps-tree": "^1.1.0",
     "wrench": "^1.5.9"
   }
 }

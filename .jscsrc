@@ -113,7 +113,7 @@
     "validateParameterSeparator": ", ",
     "requireSpaceBetweenArguments": true,
     "jsDoc": {
-        "checkAnnotations": "closurecompiler",
+        "checkAnnotations": "jsdoc3",
         "checkParamNames": true,
         "requireParamTypes": true,
         "checkRedundantParams": true,

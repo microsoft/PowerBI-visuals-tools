@@ -79,7 +79,7 @@ describe("E2E - pbiviz start", () => {
                     expect(pbiviz.content.js).toBeDefined();
                     expect(pbiviz.content.css).toBeDefined();
                     expect(pbiviz.content.iconBase64).toBeDefined();
-                    pbivizProc.kill('SIGTERM');
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM');
                 }
 
                 pbivizProc.on('close', (error, message) => {
@@ -111,7 +111,7 @@ describe("E2E - pbiviz start", () => {
                         },
                         error => {
                             if (error) throw error;
-                            pbivizProc.kill('SIGTERM');
+                            FileSystem.killProcess(pbivizProc, 'SIGTERM');
                         }
                     );
 
@@ -190,7 +190,7 @@ describe("E2E - pbiviz start", () => {
                     lastStatus = status;
 
                     //the end
-                    pbivizProc.kill('SIGTERM');                    
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM');                    
                 }                      
             });
 
@@ -229,7 +229,7 @@ describe("E2E - pbiviz start", () => {
                     },
                     error => {
                         if (error) throw error;
-                        pbivizProc.kill('SIGTERM');
+                        FileSystem.killProcess(pbivizProc, 'SIGTERM');
                     }
                 );
 

@@ -3,6 +3,9 @@
 let fs = require('fs-extra');
 let path = require('path');
 let childProcess = require('child_process');
+let psTree = require('ps-tree');
+let async = require('async');
+let platform = require('os').platform();
 
 const TEMP_DIR = path.join(__dirname, '..', '.tmp');
 const BIN_PATH = path.join(__dirname, '..', '..', 'bin', 'pbiviz.js');
@@ -43,6 +46,7 @@ class FileSystem {
 
     /**
      * Executes the pbiviz CLI
+     * 
      * @param {string} command - the command to be executed
      * @param {string} [args=''] - arguments for the command
      * @param {string} [flags=''] - command line flags
@@ -60,6 +64,7 @@ class FileSystem {
 
     /**
      * Executes the pbiviz CLI
+     * 
      * @param {string} command - the command to be executed
      * @param {array} [args = []] - arguments for the command
      * @param {boolean} [verbose = false] - enables verbose output
@@ -70,6 +75,30 @@ class FileSystem {
         let spawnCmd = [BIN_PATH, command];
         if (args) spawnCmd = spawnCmd.concat(args);
         return childProcess.spawn('node', spawnCmd);
+    }
+
+    /**
+     * Kills a process on any platform
+     * 
+     * @param {object} process - id of the process to kill
+     * @param {string} [signal] - signal to send ot the process
+     * @param {function} [callback] - callback called after all processes are terminated
+     */
+    static killProcess(process, signal, callback) {
+        if (platform === 'win32') {
+            process.kill(signal);
+            if (callback) callback();
+        } else {
+            let pid = process.pid || process.PID;
+            psTree(pid, (error, children) => {
+                async.each(children, (child, next) => {
+                    FileSystem.killProcess(child, signal, next);
+                }, (error) => {
+                    process.kill(pid, signal);
+                    if (callback) callback();
+                });
+            });
+        }
     }
 
 }
