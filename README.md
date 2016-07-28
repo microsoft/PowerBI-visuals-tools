@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/Microsoft/PowerBI-visuals-tools.svg?branch=master)](https://travis-ci.org/Microsoft/PowerBI-visuals-tools)
+[![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
+
 #PowerBI Visual Tools (pbiviz)
 
 The easiest way to create custom visuals is by using the PowerBI command line tools which can be easily to installed via NPM. The command line tools provide everything you need to develop visuals and test them in live PowerBI reports and dashboards. 
