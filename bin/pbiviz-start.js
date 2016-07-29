@@ -48,28 +48,30 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
 
-        builder.startWatcher();
-        builder.on('watch_change', changeType => {
+        builder.startWatcher().then(() => {
+            builder.on('watch_change', changeType => {
+                ConsoleWriter.blank();
+                ConsoleWriter.info(changeType + ' change detected. Rebuilding...');
+            });
+            builder.on('watch_complete', changeType => {
+                ConsoleWriter.done(changeType + ' build complete');
+            });
+            builder.on('watch_error', errors => {
+                if (!program.mute) ConsoleWriter.beep();
+                ConsoleWriter.formattedErrors(errors);
+            });
+
             ConsoleWriter.blank();
-            ConsoleWriter.info(changeType + ' change detected. Rebuilding...');
-        });
-        builder.on('watch_complete', changeType => {
-            ConsoleWriter.done(changeType + ' build complete');
-        });
-        builder.on('watch_error', errors => {
-            if (!program.mute) ConsoleWriter.beep();
-            ConsoleWriter.formattedErrors(errors);
+            ConsoleWriter.info('Starting server...');
+            server = new VisualServer(visualPackage, program.port);
+            server.start().then(() => {
+                ConsoleWriter.info('Server listening on port ' + server.port + '.');
+            }).catch(e => {
+                ConsoleWriter.error('SERVER ERROR', e);
+                process.exit(1);
+            });
         });
 
-        ConsoleWriter.blank();
-        ConsoleWriter.info('Starting server...');
-        server = new VisualServer(visualPackage, program.port);
-        server.start().then(() => {
-            ConsoleWriter.info('Server listening on port ' + server.port + '.');
-        }).catch(e => {
-            ConsoleWriter.error('SERVER ERROR', e);
-            process.exit(1);
-        });
     }).catch(e => {
         if (!program.mute) ConsoleWriter.beep();
         ConsoleWriter.formattedErrors(e);
