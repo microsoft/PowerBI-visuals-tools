@@ -36,6 +36,9 @@ let FileSystem = require('../helpers/FileSystem.js');
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
+//these tests can take a bit longer
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
 describe("E2E - pbiviz start", () => {
 
     let visualName = 'visualname';
@@ -163,7 +166,6 @@ describe("E2E - pbiviz start", () => {
 
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-
                 if (dataStr.indexOf("Server listening on port 8080") !== -1) {
                     expect(tsChangeCount).toBe(0);
                     expect(lessChangeCount).toBe(0);
