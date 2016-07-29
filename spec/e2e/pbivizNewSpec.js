@@ -146,22 +146,22 @@ describe("E2E - pbiviz new", () => {
         fs.writeFileSync(visualTestFilePath, 'hello!!');
 
         try {
-            let stater = fs.statSync(visualTestFilePath)
-        } catch(e) {
+            let stater = fs.statSync(visualTestFilePath);
+        } catch (e) {
             testFileError1 = e;
-        }          
+        }
 
         try {
             FileSystem.runPbiviz('new', visualName, '-f');
-        } catch(e) {
+        } catch (e) {
             visualNewError = e;
         }
 
         try {
-            fs.statSync(visualTestFilePath)
-        } catch(e) {
+            fs.statSync(visualTestFilePath);
+        } catch (e) {
             testFileError2 = e;
-        }        
+        }
 
         expect(visualNewError).not.toBeDefined();
         expect(testFileError1).not.toBeDefined();
