@@ -138,20 +138,35 @@ describe("E2E - pbiviz new", () => {
 
     it("Should overwrite existing visual with force flag", () => {
         let visualName = 'visualname';
-        let stat1, stat2, error;
+        let visualPath = path.join(tempPath, visualName);
+        let visualTestFilePath = path.join(visualPath, 'testFile.txt');
+        let visualNewError, testFileError1, testFileError2;
 
         FileSystem.runPbiviz('new', visualName);
-        stat1 = fs.statSync(path.join(tempPath, visualName));
+        fs.writeFileSync(visualTestFilePath, 'hello!!');
 
-        FileSystem.runPbiviz('new', visualName, '-f');
-        stat2 = fs.statSync(path.join(tempPath, visualName));
+        try {
+            let stater = fs.statSync(visualTestFilePath)
+        } catch(e) {
+            testFileError1 = e;
+        }          
 
-        expect(error).not.toBeDefined();
-        expect(stat1).toBeDefined();
-        expect(stat2).toBeDefined();
-        expect(stat1.ino).toBeTruthy();
-        expect(stat2.ino).toBeTruthy();        
-        expect(stat1.ino).not.toBe(stat2.ino);
+        try {
+            FileSystem.runPbiviz('new', visualName, '-f');
+        } catch(e) {
+            visualNewError = e;
+        }
+
+        try {
+            fs.statSync(visualTestFilePath)
+        } catch(e) {
+            testFileError2 = e;
+        }        
+
+        expect(visualNewError).not.toBeDefined();
+        expect(testFileError1).not.toBeDefined();
+        expect(testFileError2).toBeDefined();
+        expect(testFileError2.code).toBe('ENOENT');
     });
 
 });
