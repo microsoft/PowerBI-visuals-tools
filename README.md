@@ -39,6 +39,9 @@ To confirm it was installed correctly you can run the command without any parame
 pbiviz
 ```
 
+##How to build a visual?
+Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-visuals-docs)
+
 ##Usage
 
 Learn more about using these tools in the [Usage Guide](https://github.com/Microsoft/PowerBI-visuals-docs/tree/master/tools)
