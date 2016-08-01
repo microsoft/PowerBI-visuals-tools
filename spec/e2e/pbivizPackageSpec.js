@@ -225,3 +225,90 @@ describe("E2E - pbiviz package", () => {
     });
 
 });
+
+describe("E2E - pbiviz package for R Visual template", () => {
+
+    let visualName = 'visualname';
+    let visualPath = path.join(tempPath, visualName);
+
+    beforeEach(() => {
+        FileSystem.resetTempDirectory();
+        process.chdir(tempPath);
+        FileSystem.runPbiviz('new', visualName, '--template rvisual');
+        process.chdir(visualPath);
+    });
+
+    afterEach(() => {
+        process.chdir(startPath);
+    });
+
+    afterAll(() => {
+        process.chdir(startPath);
+        FileSystem.deleteTempDirectory();
+    });
+
+    it("Should throw error if script.r file is missing", () => {
+        let error;
+        fs.unlinkSync('script.R');
+
+        try {
+            FileSystem.runPbiviz('package');
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeDefined();
+        expect(error.status).toBe(1);
+        expect(error.message).toContain("Failed reading the script file");
+    });
+
+    it("Should correctly generate pbiviz file for R Visual template", (done) => {
+        FileSystem.runPbiviz('package');
+
+        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
+        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+        let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
+
+        visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault = 
+            fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+
+        let zipContents = fs.readFileSync(pbivizPath);
+        let jszip = new JSZip();
+        jszip.loadAsync(zipContents)
+            .then((zip) => {
+                async.parallel([
+                    //check package.json
+                    (next) => {
+                        zip.file('package.json').async('string')
+                            .then((content) => {
+                                let data = JSON.parse(content);
+                                expect(data.resources.length).toBe(1);
+                                expect(data.resources[0].file).toBe(pbivizResourcePath);
+                                expect(data.visual).toEqual(visualConfig);
+                                next();
+                            })
+                            .catch(next);
+                    },
+                    //check pbiviz
+                    (next) => {
+                        zip.file(pbivizResourcePath).async('string')
+                            .then((content) => {
+                                let data = JSON.parse(content);
+                                expect(data.visual).toEqual(visualConfig);
+                                expect(data.capabilities).toEqual(visualCapabilities);
+                                expect(data.content.js).toBeDefined();
+                                expect(data.content.css).toBeDefined();
+                                expect(data.content.iconBase64).toBeDefined();
+                                next();
+                            })
+                            .catch(next);
+                    },
+                ], error => {
+                    if (error) throw error;
+                    done();
+                });
+
+            });
+    });
+
+});

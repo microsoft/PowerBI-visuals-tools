@@ -1,0 +1,52 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Values",
+      "kind": 2,
+      "name": "Values"
+    }
+  ],
+  "dataViewMappings": [
+    {
+      "scriptResult": {
+        "dataInput": {
+          "table": {
+            "rows": {
+              "for": {
+                "in": "Values"
+              },
+              "dataReductionAlgorithm": {
+                "top": { }
+              }
+            }
+          }
+        },
+        "script": {
+          "scriptProviderDefault": "R",
+          "source": {
+            "objectName": "script",
+            "propertyName": "source"
+          },
+          "provider": {
+            "objectName": "script",
+            "propertyName": "provider"
+          }
+        }
+      }
+    }
+  ],
+  "objects": {
+    "script": {
+      "properties": {
+        "provider": {
+          "type": { "text": true }
+        },
+        "source": {
+          "type": {
+            "scripting": { "source": true }
+          }
+        }
+      }
+    }
+  }
+}

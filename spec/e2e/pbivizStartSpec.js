@@ -271,3 +271,77 @@ describe("E2E - pbiviz start", () => {
     });
 
 });
+
+describe("E2E - pbiviz start for R Visuals", () => {
+
+    let visualName = 'visualname';
+    let visualPath = path.join(tempPath, visualName);
+    let dropPath = path.join(visualPath, '.tmp', 'drop');
+    let assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
+
+    beforeEach(() => {
+        FileSystem.resetTempDirectory();
+        process.chdir(tempPath);
+        FileSystem.runPbiviz('new', visualName, '--template rvisual');
+    });
+
+    afterEach(() => {
+        process.chdir(startPath);
+    });
+
+    afterAll(() => {
+        process.chdir(startPath);
+        FileSystem.deleteTempDirectory();
+    });
+
+    describe("Build and Server for R Visuals", () => {
+        let pbivizProc;
+
+        beforeEach(() => {
+            process.chdir(visualPath);
+            pbivizProc = FileSystem.runPbivizAsync('start');
+            pbivizProc.stderr.on('data', (data) => {
+                throw new Error(data.toString());
+            });
+        });
+
+        it("Should rebuild files on change and update status for R Visuals", (done) => {
+            let statusPath = path.join(dropPath, 'status');
+            let lastStatus;
+            let rChangeCount = 0;
+
+            function getStatus() {
+                return fs.readFileSync(statusPath);
+            }
+
+            pbivizProc.stdout.on('data', (data) => {
+                let dataStr = data.toString();
+                if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                    expect(rChangeCount).toBe(0);
+                    lastStatus = getStatus();
+
+                    //trigger r change
+                    let rScriptPath = path.join(visualPath, 'script.r');
+                    fs.appendFileSync(rScriptPath, '// appended to R file');
+                }
+
+                if (dataStr.indexOf('RScript build complete') !== -1) {
+                    rChangeCount++;
+                    expect(rChangeCount).toBe(1);
+                    let status = getStatus();
+                    expect(status).not.toBe(lastStatus);
+                    lastStatus = status;
+
+                    //the end
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM');    
+                }
+            });
+
+            pbivizProc.on('close', (error, message) => {
+                if (error) throw error;
+                expect(message).toBe('SIGTERM');
+                done();
+            });
+        });
+    });
+});
