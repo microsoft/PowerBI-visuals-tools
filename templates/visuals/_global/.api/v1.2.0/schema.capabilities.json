@@ -21,6 +21,10 @@
         },
         "sorting": {
             "$ref": "#/definitions/sorting"
+        },
+        "suppressDefaultTitle": {
+            "type": "boolean",
+            "description": "Indicates whether the visual should show a default title"
         }
     },
     "additionalProperties": false,
