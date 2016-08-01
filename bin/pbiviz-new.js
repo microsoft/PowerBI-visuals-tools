@@ -33,7 +33,7 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .option('-t, --template [template]', 'use a specific template (default, table)')
+    .option('-t, --template [template]', 'use a specific template (default, table, rvisual)')
     .parse(process.argv);
 
 let args = program.args;
