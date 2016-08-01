@@ -2,7 +2,7 @@
 [![Npm Downloads](https://img.shields.io/npm/dm/powerbi-visuals-tools.svg?style=flat)](https://www.npmjs.com/package/powerbi-visuals-tools)
 [![Build Status](https://travis-ci.org/Microsoft/PowerBI-visuals-tools.svg?branch=master)](https://travis-ci.org/Microsoft/PowerBI-visuals-tools)
 [![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
-
+[![Code Climate](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools/badges/gpa.svg)](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools)
 #PowerBI Visual Tools (pbiviz)
 
 The easiest way to create custom visuals is by using the PowerBI command line tools which can be easily to installed via NPM. The command line tools provide everything you need to develop visuals and test them in live PowerBI reports and dashboards. 
@@ -38,6 +38,9 @@ To confirm it was installed correctly you can run the command without any parame
 ```
 pbiviz
 ```
+
+##How to build a visual?
+Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-visuals-docs)
 
 ##Usage
 
