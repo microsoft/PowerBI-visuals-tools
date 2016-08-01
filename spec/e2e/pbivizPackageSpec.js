@@ -249,7 +249,7 @@ describe("E2E - pbiviz package for R Visual template", () => {
 
     it("Should throw error if script.r file is missing", () => {
         let error;
-        fs.unlinkSync('script.R');
+        fs.unlinkSync('script.r');
 
         try {
             FileSystem.runPbiviz('package');
