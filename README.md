@@ -46,7 +46,7 @@ Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-vis
 
 Learn more about using these tools in the [Usage Guide](https://github.com/Microsoft/PowerBI-visuals-docs/tree/master/tools)
 
--------------
+##[Roadmap](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Roadmap/README.md)
 
 ##Contributing
 
