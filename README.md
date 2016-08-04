@@ -1,7 +1,7 @@
 [![Npm Version](https://img.shields.io/npm/v/powerbi-visuals-tools.svg?style=flat)](https://www.npmjs.com/package/powerbi-visuals-tools)
 [![Npm Downloads](https://img.shields.io/npm/dm/powerbi-visuals-tools.svg?style=flat)](https://www.npmjs.com/package/powerbi-visuals-tools)
 [![Build Status](https://travis-ci.org/Microsoft/PowerBI-visuals-tools.svg?branch=master)](https://travis-ci.org/Microsoft/PowerBI-visuals-tools)
-[![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
+[![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs/branch/master?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
 [![Code Climate](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools/badges/gpa.svg)](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools)
 #PowerBI Visual Tools (pbiviz)
 
