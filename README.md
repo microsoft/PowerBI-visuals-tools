@@ -46,7 +46,14 @@ Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-vis
 
 Learn more about using these tools in the [Installation Guide](https://github.com/Microsoft/PowerBI-visuals-docs/tree/master/tools) and [Usage Guide](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/tools/usage.md)
 
-##[Roadmap](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Roadmap/README.md)
+##PowerBI Visuals Tools Changes
+
+* [Changelog](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Changelog.md)
+
+##Visuals API Changes
+
+* [API Roadmap](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Roadmap/README.md)
+* [API Changelog](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Changelog.md)
 
 ##Contributing
 
