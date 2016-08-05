@@ -1,4 +1,4 @@
-#PowerBI Visual Tools (pbiviz) Changelog
+#Change Log - PowerBI Visual Tools (pbiviz) 
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz). 
 
