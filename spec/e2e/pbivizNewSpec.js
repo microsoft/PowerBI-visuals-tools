@@ -86,24 +86,37 @@ describe("E2E - pbiviz new", () => {
 
         FileSystem.runPbiviz('new', visualName, '--template table');
 
-        //check base dir
+        //check base dir exists
         let stat = fs.statSync(visualPath);
         expect(stat.isDirectory()).toBe(true);
 
-        //check contents
+        //read pbiviz json generated in visual
+        let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
+        let version = 'v' + pbivizJson.apiVersion;
+
+        //check that all files were created
+        let versionBasePath = path.join('.api', version);
         let expectedFiles = wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
-        expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
-        expectedFiles.push('pbiviz.json');
+        expectedFiles = expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
+        expectedFiles.push(
+            'pbiviz.json',
+            '.api',
+            versionBasePath,
+            path.join(versionBasePath, 'PowerBI-visuals.d.ts'),
+            path.join(versionBasePath, 'schema.capabilities.json'),
+            path.join(versionBasePath, 'schema.pbiviz.json')
+        );
         let visualFiles = wrench.readdirSyncRecursive(visualPath);
-        let fileDiff = _.difference(expectedFiles, visualFiles);
+        let fileDiff = _.xor(visualFiles, expectedFiles);
         expect(fileDiff.length).toBe(0);
 
         //check pbiviz.json config file
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        let visualConfig = pbivizJson.visual;
         expect(visualConfig.name).toBe(visualName);
         expect(visualConfig.displayName).toBe(visualName);
         expect(visualConfig.guid).toBeDefined();
         expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
+
     });
 
     it("Should convert multi-word visual name to camelCase", () => {
@@ -169,4 +182,54 @@ describe("E2E - pbiviz new", () => {
         expect(testFileError2.code).toBe('ENOENT');
     });
 
+    describe("--api-version flag", () => {
+        it("Should generate new visual with specified version", () => {
+            let visualName = 'visualname';
+            let visualPath = path.join(tempPath, visualName);
+
+            FileSystem.runPbiviz('new', visualName, '--api-version 1.0.0');
+
+            //api version file should've been created
+            let stat = fs.statSync(path.join(visualPath, '.api', 'v1.0.0'));
+            expect(stat.isDirectory()).toBe(true);
+
+            //pbiviz version number should've been updated
+            let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
+            expect(pbivizJson.apiVersion).toBe('1.0.0');  
+
+            //tsconfig should've been updated
+            let tsConfig = fs.readJsonSync(path.join(visualPath, 'tsconfig.json'));
+            let typeDefIndex = _.findIndex(tsConfig.files, i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
+            expect(tsConfig.files[typeDefIndex]).toBe('.api/v1.0.0/PowerBI-visuals.d.ts');
+
+            //.vscode/settings.json should've been set to the correct schemas
+            let vsCodeSettings = fs.readJsonSync(path.join(visualPath, '.vscode', 'settings.json'));
+            let vsCodeMatches = 0;
+            vsCodeSettings['json.schemas'].forEach((item, idx) => {
+                if (item.url.match(/.api\/.+\/schema.pbiviz.json$/)) {
+                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.pbiviz.json');
+                    vsCodeMatches++;
+                } else if (item.url.match(/.api\/.+\/schema.capabilities.json$/)) {
+                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.capabilities.json');
+                    vsCodeMatches++;
+                }
+            });  
+            expect(vsCodeMatches).toBe(2);   
+        });
+
+        it("Should fail with invalid version number", () => {
+            let visualName = 'visualname';
+
+            let error;
+
+            try {
+                FileSystem.runPbiviz('new', visualName, '--api-version 99.99.99');
+            } catch (e) {
+                error = e;
+            }
+            expect(error).toBeDefined();
+            expect(error.status).toBe(1);
+            expect(error.message).toContain("Invalid API version: 99.99.99");
+        });
+    });
 });

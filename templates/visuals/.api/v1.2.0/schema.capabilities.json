@@ -38,7 +38,12 @@
                     "description": "The name of this data role that is shown to the user"
                 },
                 "kind": {
-                    "type": "number",
+                    "type": "string",
+                    "enum": [
+                        "Grouping",
+                        "Measure",
+                        "GroupingOrMeasure"
+                    ],
                     "description": "The kind of data that can be bound do this role"
                 }
             },
@@ -206,7 +211,10 @@
                             ]
                         }
                     ]
-                }
+                },
+                "dataVolume": {
+                    "$ref": "#/definitions/dataViewMapping.dataVolume"
+                }                
             },
             "additionalProperties": false
         },
@@ -262,6 +270,9 @@
                             "$ref": "#/definitions/dataViewMapping.numberRange"
                         }
                     }
+                },
+                "dataVolume": {
+                    "$ref": "#/definitions/dataViewMapping.dataVolume"
                 }
             },
             "requires": [
@@ -337,6 +348,9 @@
                             ]
                         }
                     ]
+                },
+                "dataVolume": {
+                    "$ref": "#/definitions/dataViewMapping.dataVolume"
                 }
             }
         },
@@ -459,6 +473,11 @@
                     ]
                 }
             ]
+        },
+        "dataViewMapping.dataVolume": {
+            "description":"Specifies the volume of data the query should return (1-6)",
+            "type": "number",
+            "enum":[1, 2, 3, 4, 5, 6]
         },
         "dataViewMapping.forIn": {
             "type": "object",
@@ -646,6 +665,11 @@
                         {
                             "required": [
                                 "numeric"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "text"
                             ]
                         }
                     ]
