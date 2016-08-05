@@ -48,12 +48,12 @@ Learn more about using these tools in the [Installation Guide](https://github.co
 
 ##PowerBI Visuals Tools Changes
 
-* [Changelog](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Changelog.md)
+* [Changelog](https://github.com/Microsoft/PowerBI-visuals-tools/blob/master/Changelog.md)
 
 ##Visuals API Changes
 
 * [API Roadmap](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Roadmap/README.md)
-* [API Changelog](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Changelog.md)
+* [API Changelog](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/ChangeLog.md)
 
 ##Contributing
 
