@@ -1,3 +1,4 @@
+
 /*
  *  Power BI Visual CLI
  *
@@ -26,51 +27,29 @@
 
 "use strict";
 
-let path = require('path');
 let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let VisualGenerator = require('../lib/VisualGenerator');
 let ConsoleWriter = require('../lib/ConsoleWriter');
+let fs = require('fs');
 
-program
-    .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .option('-t, --template [template]', 'use a specific template (default, table)')
-    .option('--api-version [version]', 'use a specific api version (1.0.0, 1.1.0, 1.2.0, ...)')
-    .parse(process.argv);
+program.parse(process.argv);
 
 let args = program.args;
 
-if (!args || args.length < 1) {
-    ConsoleWriter.error("You must enter a visual name");
-    process.exit(1);
-}
-
-//pre-check API version before we create anything
-if (program.apiVersion) {
-    if (!VisualGenerator.checkApiVersion(program.apiVersion)) {
-        ConsoleWriter.error('Invalid API version: ' + program.apiVersion);
-        process.exit(1);
-    }
-}
-
-let visualName = args.join(' ');
 let cwd = process.cwd();
 
-ConsoleWriter.info('Creating new visual');
-
-if (program.force) {
-    ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
-}
-
-let generateOptions = {
-    force: program.force,
-    template: program.template,
-    apiVersion: program.apiVersion
-};
-
-VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
-    ConsoleWriter.done('Visual creation complete');
+VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
+    let apiVersion = args.length > 0 ? args[0] : visualPackage.config.apiVersion;
+    let visualPath = visualPackage.buildPath();
+    VisualGenerator.updateApi(visualPath, apiVersion)
+        .then(() => visualPackage.config.apiVersion === apiVersion ? false : VisualGenerator.setApiVersion(visualPath, apiVersion))
+        .then(() => ConsoleWriter.info(`Visual api ${apiVersion} updated`))
+        .catch(e => {
+            ConsoleWriter.error('UPDATE ERROR', e);
+            process.exit(1);
+        });
 }).catch((e) => {
-    ConsoleWriter.error('Unable to create visual.', e);
+    ConsoleWriter.error('LOAD ERROR', e);
     process.exit(1);
 });

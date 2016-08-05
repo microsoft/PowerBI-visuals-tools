@@ -1,9 +1,12 @@
 {
     "templates": {
-        "visual": "templates/visual",
+        "visuals": "templates/visuals",
         "pbiviz": "templates/pbiviz.json.template",
         "plugin": "templates/plugin.ts.template",
         "package": "templates/package.json.template"
+    },
+    "generate": {
+        "apiVersion": "1.1.0"
     },
     "build": {
         "precompileFolder": ".tmp/precompile",
