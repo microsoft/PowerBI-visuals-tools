@@ -4,7 +4,6 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "target": "ES5",
-        "noLib": false,
         "sourceMap": true,
         "out": "./.tmp/build/visual.js"
     },
