@@ -21,6 +21,10 @@
         },
         "sorting": {
             "$ref": "#/definitions/sorting"
+        },
+        "suppressDefaultTitle": {
+            "type": "boolean",
+            "description": "Indicates whether the visual should show a default title"
         }
     },
     "additionalProperties": false,
@@ -84,6 +88,9 @@
                 },
                 "matrix": {
                     "$ref": "#/definitions/dataViewMapping.matrix"
+                },
+                "scriptResult": {
+                    "$ref": "#/definitions/dataViewMapping.scriptResult"
                 }
             },
             "oneOf": [
@@ -105,6 +112,11 @@
                 {
                     "required": [
                         "matrix"
+                    ]
+                },
+                {
+                    "required": [
+                        "scriptResult"
                     ]
                 }
             ],
@@ -351,6 +363,59 @@
                 },
                 "dataVolume": {
                     "$ref": "#/definitions/dataViewMapping.dataVolume"
+                }
+            }
+        },
+        "dataViewMapping.scriptResult": {
+            "type": "object",
+            "description": "scriptResult - Defines a scriptResult data mapping",
+            "properties": {
+                "dataInput": {
+                    "type": "object",
+                    "description": "dataInput - Defines how data is mapped to data roles",
+                    "properties": {
+                        "table": {
+                            "$ref": "#/definitions/dataViewMapping.table"
+                        }
+                    }
+                },
+                "script": {
+                    "type": "object",
+                    "description": "script - Defines where the script text and provider are stored",
+                    "properties": {
+                        "scriptSourceDefault": {
+                            "type": "string",
+                            "description": "scriptSourceDefault - Defines the default script source value to be used when no script object is defined"
+                        },
+                        "scriptProviderDefault": {
+                            "type": "string",
+                            "description": "scriptProviderDefault - Defines the default script provider value to be used when no provider object is defined"
+                        },
+                        "scriptOutputType": {
+                            "type": "string",
+                            "description": "scriptOutputType - Defines the output type that the R script will generate"
+                        },
+                        "source": {
+                            "$ref": "#/definitions/dataViewObjectPropertyIdentifier"
+                        },
+                        "provider": {
+                            "$ref": "#/definitions/dataViewObjectPropertyIdentifier"
+                        }
+                    }
+                }
+            }
+        },
+        "dataViewObjectPropertyIdentifier": {
+            "type": "object",
+            "description": "Points to an object property",
+            "properties": {
+                "objectName": {
+                    "type": "string",
+                    "description": "The name of a object"
+                },
+                "propertyName": {
+                    "type": "string",
+                    "description": "The name of a property inside the object"
                 }
             }
         },
@@ -638,6 +703,16 @@
                         "text": {
                             "type": "boolean",
                             "description": "A text value that will be displayed to the user as a text input"
+                        },
+                        "scripting": {
+                            "type": "object",
+                            "description": "A text value that will be displayed to the user as a script",
+                            "properties": {
+                                "source": {
+                                    "type": "boolean",
+                                    "description": "A source code"
+                                }
+                            }
                         }
                     },
                     "additionalProperties": false,
@@ -670,6 +745,11 @@
                         {
                             "required": [
                                 "text"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "scripting"
                             ]
                         }
                     ]
