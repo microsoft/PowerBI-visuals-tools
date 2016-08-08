@@ -2,7 +2,7 @@
   "dataRoles": [
     {
       "displayName": "Values",
-      "kind": 2,
+      "kind": "GroupingOrMeasure",
       "name": "Values"
     }
   ],
