@@ -377,6 +377,10 @@
                             "type": "string",
                             "description": "scriptProviderDefault - Defines the default script provider value to be used when no provider object is defined"
                         },
+                        "scriptOutputType": {
+                            "type": "string",
+                            "description": "scriptOutputType - Defines the output type that the R script will generate"
+                        },
                         "source": {
                             "$ref": "#/definitions/dataViewObjectPropertyIdentifier"
                         },

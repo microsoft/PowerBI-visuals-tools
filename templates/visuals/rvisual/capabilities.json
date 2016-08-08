@@ -23,6 +23,7 @@
         },
         "script": {
           "scriptProviderDefault": "R",
+          "scriptOutputType": "png",
           "source": {
             "objectName": "script",
             "propertyName": "source"

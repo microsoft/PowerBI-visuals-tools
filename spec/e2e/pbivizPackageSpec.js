@@ -258,7 +258,7 @@ describe("E2E - pbiviz package for R Visual template", () => {
         }
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
-        expect(error.message).toContain("Failed reading the script file");
+        expect(error.message).toContain("Failed updating visual capabilities");
     });
 
     it("Should correctly generate pbiviz file for R Visual template", (done) => {
