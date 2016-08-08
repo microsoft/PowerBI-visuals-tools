@@ -79,11 +79,11 @@ class FileSystem {
      */
     static runPbiviz(command, args, flags, verbose) {
         let opts = verbose ? undefined : { stdio: [] };
-        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + command + args + flags);
 
         flags = flags ? ' ' + flags : '';
         args = args ? ' ' + args : '';
         let pbivizCmd = command + args + flags;
+        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd);        
         return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
     }
 

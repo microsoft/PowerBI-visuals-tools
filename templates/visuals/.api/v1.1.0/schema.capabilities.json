@@ -647,6 +647,11 @@
                             "required": [
                                 "numeric"
                             ]
+                        },
+                        {
+                            "required": [
+                                "text"
+                            ]
                         }
                     ]
                 }
