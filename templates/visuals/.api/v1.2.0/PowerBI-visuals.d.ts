@@ -697,6 +697,7 @@ declare module powerbi {
     }
 
     export interface DataViewScriptResultData {
+        payloadBase64: string;
     }
 }
 
