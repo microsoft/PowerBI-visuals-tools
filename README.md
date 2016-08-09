@@ -44,7 +44,11 @@ Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-vis
 
 ##Usage
 
-Learn more about using these tools in the [Installation Guide](https://github.com/Microsoft/PowerBI-visuals-docs/tree/master/tools) and [Usage Guide](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/tools/usage.md)
+You can learn more about using these tools in the following guides
+
+* [Installation Guide](https://github.com/Microsoft/PowerBI-visuals-docs/tree/master/tools)
+* [Usage Guide](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/tools/usage.md)
+* [Debugging Guide](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/tools/debugging.md)
 
 ##PowerBI Visuals Tools Changes
 
