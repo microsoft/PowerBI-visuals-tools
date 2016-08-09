@@ -25,11 +25,11 @@
           "scriptProviderDefault": "R",
           "scriptOutputType": "png",
           "source": {
-            "objectName": "script",
+            "objectName": "rcv_script",
             "propertyName": "source"
           },
           "provider": {
-            "objectName": "script",
+            "objectName": "rcv_script",
             "propertyName": "provider"
           }
         }
@@ -37,7 +37,7 @@
     }
   ],
   "objects": {
-    "script": {
+    "rcv_script": {
       "properties": {
         "provider": {
           "type": { "text": true }
