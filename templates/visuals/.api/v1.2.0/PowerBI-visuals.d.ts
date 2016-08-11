@@ -1909,7 +1909,7 @@ declare module powerbi.extensibility {
 }
 
 /**
- * Change Log Version 1.1.0
+ * Change Log Version 1.2.0
  */
 declare module powerbi.extensibility.visual {
     /**
@@ -1932,6 +1932,7 @@ declare module powerbi.extensibility.visual {
         createSelectionManager: () => ISelectionManager;
         /** An array of default colors to be used by the visual */
         colors: IColorInfo[];
+        persistProperties: (changes: VisualObjectInstancesToPersist) => void;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
