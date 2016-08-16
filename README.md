@@ -40,15 +40,15 @@ pbiviz
 ```
 
 ##How to build a visual?
-Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-visuals-docs)
+Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-visuals)
 
 ##Usage
 
 You can learn more about using these tools in the following guides
 
-* [Installation Guide](https://github.com/Microsoft/PowerBI-visuals-docs/tree/master/tools)
-* [Usage Guide](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/tools/usage.md)
-* [Debugging Guide](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/tools/debugging.md)
+* [Installation Guide](https://github.com/Microsoft/PowerBI-visuals/tree/master/tools)
+* [Usage Guide](https://github.com/Microsoft/PowerBI-visuals/blob/master/tools/usage.md)
+* [Debugging Guide](https://github.com/Microsoft/PowerBI-visuals/blob/master/tools/debugging.md)
 
 ##PowerBI Visuals Tools Changes
 
@@ -56,8 +56,8 @@ You can learn more about using these tools in the following guides
 
 ##Visuals API Changes
 
-* [API Roadmap](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/Roadmap/README.md)
-* [API Change Log](https://github.com/Microsoft/PowerBI-visuals-docs/blob/master/ChangeLog.md)
+* [API Roadmap](https://github.com/Microsoft/PowerBI-visuals/blob/master/Roadmap/README.md)
+* [API Change Log](https://github.com/Microsoft/PowerBI-visuals/blob/master/ChangeLog.md)
 
 ##Contributing
 
