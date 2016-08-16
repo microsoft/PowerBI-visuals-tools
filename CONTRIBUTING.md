@@ -8,7 +8,8 @@ First, please do a search in open issues to see if the issue or feature request 
 
 If your issue is a question then please ask the question on Stack Overflow using the tags `PowerBI` and `pbiviz`.
 
-If your issue is specifically pertaining to these tools report it on the [PowerBI-visuals-tools issue page](https://github.com/Microsoft/PowerBI-visuals-tools/issues) if it has to do with the PowerBI platform or custom visual API report it on the main [PowerBI-visuals issue page](https://github.com/Microsoft/PowerBI-visuals/issues)
+* [PowerBI-visuals-tools issue page](https://github.com/Microsoft/PowerBI-visuals-tools/issues) - Issues related to the CLI tools specifically
+* [PowerBI-visuals issue page](https://github.com/Microsoft/PowerBI-visuals/issues) - Any other issues related to Power BI visuals
 
 ##Contributing Code
 
