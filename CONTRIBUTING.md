@@ -6,7 +6,9 @@ If you would like to contribute to the PowerBI Custom Visuals CLI Tools there ar
 
 First, please do a search in open issues to see if the issue or feature request has already been filed. If there is an issue add your comments to this issue.
 
-If your issue is a question then please ask the question on Stack Overflow using the tags `PowerBI` and `pbiviz`
+If your issue is a question then please ask the question on Stack Overflow using the tags `PowerBI` and `pbiviz`.
+
+If your issue is specifically pertaining to these tools report it on the [PowerBI-visuals-tools issue page](https://github.com/Microsoft/PowerBI-visuals-tools/issues) if it has to do with the PowerBI platform or custom visual API report it on the main [PowerBI-visuals issue page](https://github.com/Microsoft/PowerBI-visuals/issues)
 
 ##Contributing Code
 
