@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v1.1.0",
+    "PBI_API_VERSION": "v1.2.0",
     "type": "object",
     "properties": {
         "dataRoles": {
@@ -25,6 +25,10 @@
         "suppressDefaultTitle": {
             "type": "boolean",
             "description": "Indicates whether the visual should show a default title"
+        },
+        "supportsHighlight": {
+            "type": "boolean",
+            "description": "Tells the host to include highlight data"
         }
     },
     "additionalProperties": false,

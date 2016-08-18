@@ -21,6 +21,10 @@
         },
         "sorting": {
             "$ref": "#/definitions/sorting"
+        },
+        "supportsHighlight": {
+            "type": "boolean",
+            "description": "Tells the host to include highlight data"
         }
     },
     "additionalProperties": false,
