@@ -1930,8 +1930,7 @@ declare module powerbi.extensibility.visual {
     export interface IVisualHost extends extensibility.IVisualHost {
         createSelectionIdBuilder: () => visuals.ISelectionIdBuilder;
         createSelectionManager: () => ISelectionManager;
-        /** An array of default colors to be used by the visual */
-        colors: IColorInfo[];
+        colorPalette: IColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
     }
 
@@ -1974,5 +1973,11 @@ declare module powerbi.extensibility {
         withSeries(seriesColumn: DataViewValueColumns, valueColumn: DataViewValueColumn | DataViewValueColumnGroup): this;
         withMeasure(measureId: string): this;
         createSelectionId(): ISelectionId;
+    }
+}
+
+declare module powerbi.extensibility {
+    export interface IColorPalette {
+        getColor(key: string): IColorInfo;
     }
 }
