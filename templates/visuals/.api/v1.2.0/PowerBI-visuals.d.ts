@@ -1183,3 +1183,4 @@ declare module powerbi.extensibility.visual {
         host: IVisualHost;
     }
 }
+
