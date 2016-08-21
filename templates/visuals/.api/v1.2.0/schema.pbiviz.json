@@ -45,6 +45,10 @@
             "type": "string",
             "description": "Relative path to the visual capabilities json file"
         },
+        "dependencies": {
+            "type": "string",
+            "description": "Relative path to the visual dependencies json file"
+        },
         "visual": {
             "type": "object",
             "description": "Details about this visual",
