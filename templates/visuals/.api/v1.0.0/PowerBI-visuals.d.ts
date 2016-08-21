@@ -1,5 +1,5 @@
 /*
- *  Power BI Visual CLI - Visual API v1.0.0
+ *  Power BI Visual CLI
  *
  *  Copyright (c) Microsoft Corporation
  *  All rights reserved.
@@ -23,7 +23,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 declare module powerbi {
     enum VisualDataRoleKind {
         /** Indicates that the role should be bound to something that evaluates to a grouping of values. */
@@ -54,23 +53,11 @@ declare module powerbi {
     const enum ViewMode {
         View = 0,
         Edit = 1,
+        InFocusEdit = 2,
     }
     const enum ResizeMode {
         Resizing = 1,
         Resized = 2,
-    }
-    module visuals.telemetry {
-        const enum TelemetryCategory {
-            Verbose = 0,
-            CustomerAction = 1,
-            CriticalError = 2,
-            Trace = 3,
-        }
-        enum ErrorSource {
-            PowerBI = 0,
-            External = 1,
-            User = 2,
-        }
     }
     const enum JoinPredicateBehavior {
         /** Prevent items in this role from acting as join predicates. */
@@ -80,13 +67,47 @@ declare module powerbi {
         Success = 0,
         Failure = 1,
     }
-}
-
-
-declare module powerbi {
-    export interface DragPayload {
+    /**
+     * Defines actions to be taken by the visual in response to a selection.
+     *
+     * An undefined/null VisualInteractivityAction should be treated as Selection,
+     * as that is the default action.
+     */
+    const enum VisualInteractivityAction {
+        /** Normal selection behavior which should call onSelect */
+        Selection = 0,
+        /** No additional action or feedback from the visual is needed */
+        None = 1,
     }
 }
+﻿
+
+
+
+declare module powerbi.visuals.plugins {
+    /** This IVisualPlugin interface is only used by the CLI tools when compiling */
+    export interface IVisualPlugin {
+        /** The name of the plugin.  Must match the property name in powerbi.visuals. */
+        name: string;
+
+        /** Function to call to create the visual. */
+        create: (options?: extensibility.VisualConstructorOptions) => extensibility.IVisual;
+
+        /** The class of the plugin.  At the moment it is only used to have a way to indicate the class name that a custom visual has. */
+        class: string;
+
+        /** Check if a visual is custom */
+        custom: boolean;
+
+        /** The version of the api that this plugin should be run against */
+        apiVersion: string;
+        
+        /** Human readable plugin name displayed to users */
+        displayName: string;
+
+    }
+}
+﻿
 
 
 
@@ -95,7 +116,9 @@ declare module jsCommon {
         get(id: string): string;
         getOptional(id: string): string;
     }
-}
+}﻿
+
+
 
 declare module powerbi {
     /** 
@@ -240,14 +263,7 @@ declare module powerbi {
     }
 }
 
-declare module powerbi.visuals {
-    export interface IRect {
-        left: number;
-        top: number;
-        width: number;
-        height: number;
-    }
-}
+
 
 declare module powerbi.visuals {
     import Selector = data.Selector;
@@ -267,140 +283,18 @@ declare module powerbi.visuals {
         getSelectorsByColumn(): Selector;
         hasIdentity(): boolean;
     }
-}
+}﻿
 
-declare module powerbi.visuals {
-    export interface IPoint {
-        x: number;
-        y: number;
-    }
-}
 
-declare module powerbi.data {
-    export interface CompiledDataViewMapping {
-        metadata: CompiledDataViewMappingMetadata;
-        categorical?: CompiledDataViewCategoricalMapping;
-        table?: CompiledDataViewTableMapping;
-        single?: CompiledDataViewSingleMapping;
-        tree?: CompiledDataViewTreeMapping;
-        matrix?: CompiledDataViewMatrixMapping;
-        scriptResult?: CompiledDataViewScriptResultMapping;
-        usage?: DataViewMappingUsage;
-    }
-
-    export interface CompiledDataViewMappingScriptDefinition {
-        source: DataViewObjectPropertyIdentifier;
-        provider: DataViewObjectPropertyIdentifier;
-        imageFormat?: string;
-        scriptInput?: ScriptInput;
-    }
-
-    export interface CompiledDataViewScriptResultMapping {
-        dataInput: CompiledDataViewMapping;
-        script: CompiledDataViewMappingScriptDefinition;
-    }
-
-    export interface CompiledDataViewMappingMetadata {
-        /** The metadata repetition objects. */
-        objects?: DataViewObjects;
-    }
-
-    export interface CompiledDataViewCategoricalMapping extends HasDataVolume, HasReductionAlgorithm {
-        categories?: CompiledDataViewRoleMappingWithReduction | CompiledDataViewListRoleMappingWithReduction;
-        values?: CompiledDataViewRoleMapping | CompiledDataViewGroupedRoleMapping | CompiledDataViewListRoleMapping;
-        includeEmptyGroups?: boolean;
-    }
-
-    export interface CompiledDataViewGroupingRoleMapping {
-        role: CompiledDataViewRole;
-    }
-
-    export interface CompiledDataViewSingleMapping {
-        role: CompiledDataViewRole;
-    }
-
-    export interface CompiledDataViewTableMapping extends HasDataVolume {
-        rows: CompiledDataViewRoleMappingWithReduction | CompiledDataViewListRoleMappingWithReduction;
-    }
-
-    export interface CompiledDataViewTreeMapping extends HasDataVolume {
-        nodes?: CompiledDataViewRoleForMappingWithReduction;
-        values?: CompiledDataViewRoleForMapping;
-    }
-
-    export interface CompiledDataViewMatrixMapping extends HasDataVolume {
-        rows?: CompiledDataViewRoleForMappingWithReduction | CompiledDataViewListRoleMappingWithReduction;
-        columns?: CompiledDataViewRoleForMappingWithReduction;
-        values?: CompiledDataViewRoleForMapping | CompiledDataViewListRoleMapping;
-    }
-
-    export type CompiledDataViewRoleMapping = CompiledDataViewRoleBindMapping | CompiledDataViewRoleForMapping;
-
-    export interface CompiledDataViewRoleBindMapping {
-        bind: {
-            to: CompiledDataViewRole;
-        };
-    }
-
-    export interface CompiledDataViewRoleForMapping {
-        for: {
-            in: CompiledDataViewRole;
-        };
-    }
-
-    export type CompiledDataViewRoleMappingWithReduction = CompiledDataViewRoleBindMappingWithReduction | CompiledDataViewRoleForMappingWithReduction;
-
-    export interface CompiledDataViewRoleBindMappingWithReduction extends CompiledDataViewRoleBindMapping, HasReductionAlgorithm {
-    }
-
-    export interface CompiledDataViewRoleForMappingWithReduction extends CompiledDataViewRoleForMapping, HasReductionAlgorithm {
-    }
-
-    export interface CompiledDataViewGroupedRoleMapping {
-        group: CompiledDataViewGroupedRoleGroupItemMapping;
-    }
-
-    export interface CompiledDataViewGroupedRoleGroupItemMapping extends HasReductionAlgorithm {
-        by: CompiledDataViewRole;
-        select: CompiledDataViewRoleMapping[];
-    }
-
-    export interface CompiledDataViewListRoleMapping {
-        select: CompiledDataViewRoleMapping[];
-    }
-
-    export interface CompiledDataViewListRoleMappingWithReduction extends CompiledDataViewListRoleMapping, HasReductionAlgorithm {
-    }
-
-    export const enum CompiledSubtotalType {
-        None = 0,
-        Before = 1,
-        After = 2
-    }
-
-    export interface CompiledDataViewRole {
-        role: string;
-        items: CompiledDataViewRoleItem[];
-        subtotalType?: CompiledSubtotalType;
-        showAll?: boolean;
-        activeItems?: string[];
-        aggregates?: DataViewMappingRoleProjectionAggregates;
-    }
-
-    export interface CompiledDataViewRoleItem {
-        queryName: string;
-        //changed to descriptor to not need to depend on ValueType class
-        type?: ValueTypeDescriptor;
-        joinPredicate?: JoinPredicateBehavior;
-    }
-}
 
 declare module powerbi {
     export const enum SortDirection {
         Ascending = 1,
         Descending = 2,
     }
-}
+}﻿
+
+
 
 declare module powerbi {
     /** Represents views of a data set. */
@@ -450,7 +344,7 @@ declare module powerbi {
         objects?: DataViewObjects;
 
         /** The name of the containing group. */
-        groupName?: string;
+        groupName?: PrimitiveValue;
 
         /** The sort direction of this column. */
         sort?: SortDirection;
@@ -475,6 +369,8 @@ declare module powerbi {
         subtotal?: PrimitiveValue;
         max?: PrimitiveValue;
         min?: PrimitiveValue;
+        average?: PrimitiveValue;
+        median?: PrimitiveValue;
         count?: number;
         percentiles?: DataViewColumnPercentileAggregate[];
 
@@ -498,7 +394,7 @@ declare module powerbi {
 
     export interface DataViewCategoricalColumn {
         source: DataViewMetadataColumn;
-        values: any[];
+        values: PrimitiveValue[];
 
         /** The data repetition objects. */
         objects?: DataViewObjects[];
@@ -521,11 +417,11 @@ declare module powerbi {
         /** The data repetition objects. */
         objects?: DataViewObjects;
 
-        name?: string;
+        name?: PrimitiveValue;
     }
 
     export interface DataViewValueColumn extends DataViewCategoricalColumn {
-        highlights?: any[];
+        highlights?: PrimitiveValue[];
         identity?: DataViewScopeIdentity;
     }
 
@@ -542,7 +438,7 @@ declare module powerbi {
     }
 
     export interface DataViewSingle {
-        value: any;
+        value: PrimitiveValue;
     }
 
     export interface DataViewTree {
@@ -550,7 +446,7 @@ declare module powerbi {
     }
 
     export interface DataViewTreeNode {
-        name?: string;
+        name?: PrimitiveValue;
 
         /**
          * When used under the context of DataView.tree, this value is one of the elements in the values property.
@@ -563,7 +459,7 @@ declare module powerbi {
          * New visuals code should consume the new property levelValues on DataViewMatrixNode instead.
          * If this node represents a composite group node in matrix, this property will be undefined.
          */
-        value?: any;
+        value?: PrimitiveValue;
       
         /** 
          * This property contains all the values in this node. 
@@ -583,15 +479,15 @@ declare module powerbi {
     }
 
     export interface DataViewTreeNodeValue {
-        value?: any;
+        value?: PrimitiveValue;
     }
 
     export interface DataViewTreeNodeMeasureValue extends DataViewTreeNodeValue, DataViewColumnAggregates {
-        highlight?: any;
+        highlight?: PrimitiveValue;
     }
 
     export interface DataViewTreeNodeGroupValue extends DataViewTreeNodeValue {
-        count?: any;
+        count?: PrimitiveValue;
     }
 
     export interface DataViewTable {
@@ -604,10 +500,10 @@ declare module powerbi {
 
         rows?: DataViewTableRow[];
 
-        totals?: any[];
+        totals?: PrimitiveValue[];
     }
 
-    export interface DataViewTableRow extends Array<any> {
+    export interface DataViewTableRow extends Array<PrimitiveValue> {
         /** The metadata repetition objects. */
         objects?: DataViewObjects[];
     }
@@ -673,7 +569,7 @@ declare module powerbi {
 
     /** Represents a value at the matrix intersection, used in the values property on DataViewMatrixNode (inherited from DataViewTreeNode). */
     export interface DataViewMatrixNodeValue extends DataViewTreeNodeValue {
-        highlight?: any;
+        highlight?: PrimitiveValue;
 
         /** Indicates the index of the corresponding measure (held by DataViewMatrix.valueSources). Its value is 0 if omitted. */
         valueSourceIndex?: number;
@@ -697,204 +593,25 @@ declare module powerbi {
     }
 
     export interface DataViewScriptResultData {
-        imageBase64: string;
+        payloadBase64: string;
     }
-}
+}﻿
 
 
-
-declare module powerbi {
-    export interface DataViewMapping {
-        /**
-         * Defines set of conditions, at least one of which must be satisfied for this mapping to be used.
-         * Any roles not specified in the condition accept any number of items.
-         */
-        conditions?: DataViewMappingCondition[];
-        requiredProperties?: DataViewObjectPropertyIdentifier[];
-
-        categorical?: DataViewCategoricalMapping;
-        table?: DataViewTableMapping;
-        single?: DataViewSingleMapping;
-        tree?: DataViewTreeMapping;
-        matrix?: DataViewMatrixMapping;
-        scriptResult?: DataViewScriptResultMapping;
-        usage?: DataViewMappingUsage;
-    }
-
-    /** Describes whether a particular mapping is fits the set of projections. */
-    export interface DataViewMappingCondition {
-        [dataRole: string]: RoleCondition;
-    }
-
-    /** Describes a mapping which supports a data volume level. */
-    export interface HasDataVolume {
-        dataVolume?: number;
-    }
-
-    export interface DataViewCategoricalMapping extends HasDataVolume, HasReductionAlgorithm {
-        categories?: DataViewRoleMappingWithReduction | DataViewListRoleMappingWithReduction;
-        values?: DataViewRoleMapping | DataViewGroupedRoleMapping | DataViewListRoleMapping;
-
-        /** Specifies a constraint on the number of data rows supported by the visual. */
-        rowCount?: AcceptabilityNumberRange;
-
-        /** Indicates whether the data rows include empty groups  */
-        includeEmptyGroups?: boolean;
-    }
-
-    export interface DataViewSingleMapping {
-        /** Indicates the role which is bound to this structure. */
-        role: string;
-    }
-
-    export interface DataViewTableMapping extends HasDataVolume {
-        rows: DataViewRoleMappingWithReduction | DataViewListRoleMappingWithReduction;
-
-        /** Specifies a constraint on the number of data rows supported by the visual. */
-        rowCount?: AcceptabilityNumberRange;
-    }
-
-    export interface DataViewTreeMapping extends HasDataVolume {
-        nodes?: DataViewRoleForMappingWithReduction;
-        values?: DataViewRoleForMapping;
-
-        /** Specifies a constraint on the depth of the tree supported by the visual. */
-	    depth?: AcceptabilityNumberRange;
-    }
-
-    export interface DataViewMatrixMapping extends HasDataVolume {
-        rows?: DataViewRoleForMappingWithReduction | DataViewListRoleMappingWithReduction;
-        columns?: DataViewRoleForMappingWithReduction;
-        values?: DataViewRoleForMapping | DataViewListRoleMapping;
-    }
-
-    
-    export type DataViewRoleMapping = DataViewRoleBindMapping | DataViewRoleForMapping;
-
-    
-
-    export interface DataViewRoleBindMapping {
-        /**
-         * Indicates evaluation of a single-valued data role.
-         * Equivalent to for, without support for multiple items.
-         */
-        bind: {
-            to: string;
-            
-            /** Requests aggregates for the visual.  When specified, only the aggregates are requested. */
-            aggregates?: DataViewMappingRoleProjectionAggregates;
-        };
-    }
-
-    export interface DataViewRoleForMapping {
-        /** Indicates iteration of the in data role, as an array. */
-        for: {
-            in: string;
-        };
-    }
-
-    export type DataViewRoleMappingWithReduction = DataViewRoleBindMappingWithReduction | DataViewRoleForMappingWithReduction;
-
-    export interface DataViewRoleBindMappingWithReduction extends DataViewRoleBindMapping, HasReductionAlgorithm {
-    }
-
-    export interface DataViewRoleForMappingWithReduction extends DataViewRoleForMapping, HasReductionAlgorithm {
-    }
-
-    export interface DataViewGroupedRoleMapping {
-        group: {
-            by: string;
-            select: DataViewRoleMapping[];
-            dataReductionAlgorithm?: ReductionAlgorithm;
-        };
-    }
-
-    export interface DataViewListRoleMapping {
-        select: DataViewRoleMapping[];
-    }
-
-    export interface DataViewListRoleMappingWithReduction extends DataViewListRoleMapping, HasReductionAlgorithm {
-    }
-
-    export interface HasReductionAlgorithm {
-        dataReductionAlgorithm?: ReductionAlgorithm;
-    }
-
-    /** Describes how to reduce the amount of data exposed to the visual. */
-    export interface ReductionAlgorithm {
-        top?: DataReductionTop;
-        bottom?: DataReductionBottom;
-        sample?: DataReductionSample;
-        window?: DataReductionWindow;
-    }
-
-    /** Reduce the data to the Top(count) items. */
-    export interface DataReductionTop {
-        count?: number;
-    }
-
-    /** Reduce the data to the Bottom count items. */
-    export interface DataReductionBottom {
-        count?: number;
-    }
-
-    /** Reduce the data using a simple Sample of count items. */
-    export interface DataReductionSample {
-        count?: number;
-    }
-
-    /** Allow the data to be loaded one window, containing count items, at a time. */
-    export interface DataReductionWindow {
-        count?: number;
-    }
-
-    export interface AcceptabilityNumberRange {
-        /** Specifies a preferred range of values for the constraint. */
-        preferred?: NumberRange;
-
-        /** Specifies a supported range of values for the constraint. Defaults to preferred if not specified. */
-        supported?: NumberRange;
-    }
-
-    /** Defines the acceptable values of a number. */
-    export interface NumberRange {
-        min?: number;
-        max?: number;
-    }
-
-    export interface DataViewMappingScriptDefinition {
-        source: DataViewObjectPropertyIdentifier;
-        provider: DataViewObjectPropertyIdentifier;
-        imageFormat?: string;
-    }
-
-    export interface DataViewScriptResultMapping {
-        dataInput: DataViewMapping;
-        script: DataViewMappingScriptDefinition;
-    }
-
-    /** Defines how the mapping will be used. The set of objects in this interface can modify the usage. */
-    export interface DataViewMappingUsage {
-        regression: {
-            [propertyName: string]: DataViewObjectPropertyIdentifier;
-        };
-    }
-
-    export interface DataViewMappingRoleProjectionAggregates {
-        min?: boolean;
-        max?: boolean;
-    }
-}
 
 declare module powerbi {
     /** Represents evaluated, named, custom objects in a DataView. */
     export interface DataViewObjects {
-        [name: string]: DataViewObject | DataViewObjectMap;
+        [name: string]: DataViewObject;
     }
 
     /** Represents an object (name-value pairs) in a DataView. */
     export interface DataViewObject {
+        /** Map of property name to property value. */
         [propertyName: string]: DataViewPropertyValue;
+
+        /** Instances of this object. When there are multiple instances with the same object name they will appear here. */
+        $instances?: DataViewObjectMap;
     }
 
     export interface DataViewObjectWithId {
@@ -907,61 +624,12 @@ declare module powerbi {
         propertyName: string;
     }
 
-    export type DataViewObjectMap = DataViewObjectWithId[];
+    export type DataViewObjectMap = { [id: string]: DataViewObject };
 
     export type DataViewPropertyValue = PrimitiveValue | StructuralObjectValue;
-}
+}﻿
 
-declare module powerbi.data {
-    export interface DataViewObjectDescriptors {
-        /** Defines general properties for a visualization. */
-        general?: DataViewObjectDescriptor;
 
-        [objectName: string]: DataViewObjectDescriptor;
-    }
-
-    /** Defines a logical object in a visualization. */
-    export interface DataViewObjectDescriptor {
-        displayName?: DisplayNameGetter;
-        description?: DisplayNameGetter;
-        properties: DataViewObjectPropertyDescriptors;
-    }
-
-    export interface DataViewObjectPropertyDescriptors {
-        [propertyName: string]: DataViewObjectPropertyDescriptor;
-    }
-
-    /** Defines a property of a DataViewObjectDefinition. */
-    export interface DataViewObjectPropertyDescriptor {
-        displayName?: DisplayNameGetter;
-        description?: DisplayNameGetter;
-        placeHolderText?: DisplayNameGetter;
-        type: DataViewObjectPropertyTypeDescriptor;
-        rule?: DataViewObjectPropertyRuleDescriptor;        
-
-        /** Indicates whether the Format Painter should ignore this property. */
-        suppressFormatPainterCopy?: boolean;   
-    }
-
-    export type DataViewObjectPropertyTypeDescriptor = ValueTypeDescriptor | StructuralTypeDescriptor;
-
-    export interface DataViewObjectPropertyRuleDescriptor {
-        /** For rule typed properties, defines the input visual role name. */
-        inputRole?: string;
-
-        /** Defines the output for rule-typed properties. */
-        output?: DataViewObjectPropertyRuleOutputDescriptor;
-    }
-
-    export interface DataViewObjectPropertyRuleOutputDescriptor {
-        /** Name of the target property for rule output. */
-        property: string;
-
-        /** Names roles that define the selector for the output properties. */
-        selector: string[];
-    }
-    
-}
 
 declare module powerbi.data {
     /** Defines a match against all instances of given roles. */
@@ -969,7 +637,9 @@ declare module powerbi.data {
         roles: string[];
         key: string;
     }
-}
+}﻿
+
+
 
 declare module powerbi {
     /** Encapsulates the identity of a data scope in a DataView. */
@@ -980,7 +650,9 @@ declare module powerbi {
         /** Key string that identifies the DataViewScopeIdentity to a string, which can be used for equality comparison. */
         key: string;
     }
-}
+}﻿
+
+
 
 declare module powerbi.data {
     /** Defines a match against all instances of a given DataView scope. */
@@ -988,28 +660,17 @@ declare module powerbi.data {
         exprs: ISQExpr[];
         key: string;
     }
-}
+}﻿
+
+
 
 declare module powerbi.data {
     import IStringResourceProvider = jsCommon.IStringResourceProvider;
 
     export type DisplayNameGetter = ((resourceProvider: IStringResourceProvider) => string) | string;
-}
+}﻿
 
-declare module powerbi.data {
-    export interface ScriptInputColumn {
-        /** The queryName of the corresponding Select from the associated SemanticQuery providing the data for this column. */ 
-        QueryName: string; 
 
-        /** The name of this column expected by the script. */
-        Name: string;
-    }
-
-    export interface ScriptInput {
-        VariableName?: string;
-        Columns?: ScriptInputColumn[];
-    }
-}
 
 declare module powerbi.data {
     /** Defines a selector for content, including data-, metadata, and user-defined repetition. */
@@ -1025,7 +686,9 @@ declare module powerbi.data {
     }
 
     export type DataRepetitionSelector = DataViewScopeIdentity | DataViewScopeWildcard | DataViewRoleWildcard; 
-}
+}﻿
+
+
 
 declare module powerbi.data {
     //intentionally blank interfaces since this is not part of the public API
@@ -1036,88 +699,9 @@ declare module powerbi.data {
 
     export interface ISQConstantExpr extends ISQExpr { }
 
-}
+}﻿
 
-declare module powerbi {
-    export interface IViewport {
-        height: number;
-        width: number;
-    }
-}
 
-declare module powerbi {
-    import DisplayNameGetter = powerbi.data.DisplayNameGetter;
-
-    /** Defines the data roles understood by the IVisual. */
-    export interface VisualDataRole {
-        /** Unique name for the VisualDataRole. */
-        name: string;
-
-        /** Indicates the kind of role.  This value is used to build user interfaces, such as a field well. */
-        kind: VisualDataRoleKind;
-
-        displayName?: DisplayNameGetter;
-
-        /** The tooltip text */
-        description?: DisplayNameGetter;
-
-        /** Indicates the preferred ValueTypes to be used in this data role.  This is used by authoring tools when adding fields into the visual. */
-        preferredTypes?: ValueTypeDescriptor[];
-
-        /** Indicates the required ValueTypes for this data role. Any values which do not match one of the ValueTypes specified will be null'd out */
-        requiredTypes?: ValueTypeDescriptor[];
-
-        /** Indicates the cartesian role for the visual role */
-        cartesianKind?: CartesianRoleKind;
-
-        /** Indicates the join predicate behavior of items in this role. */
-        joinPredicate?: JoinPredicateBehavior;
-    }
-
-    export interface RoleCondition extends NumberRange {
-        kind?: VisualDataRoleKind;
-    }
-}
-
-declare module powerbi {   
-    
-    /**
-     * Interface that provides scripted access to geographical location information associated with the hosting device
-     * The Interface is similar to W3 Geolocation API Specification {@link https://dev.w3.org/geo/api/spec-source.html}
-     */
-    export interface IGeolocation {
-        /**
-         * Request repeated updates
-         * 
-         * @param successCallback invoked when current location successfully obtained
-         * @param errorCallback invoked when attempt to obtain the current location fails
-         * 
-         * @return a number value that uniquely identifies a watch operation
-         */
-        watchPosition(successCallback: IPositionCallback, errorCallback?: IPositionErrorCallback): number;
-        /**
-         * Cancel the updates
-         * 
-         * @param watchId  a number returned from {@link IGeolocation#watchPosition}
-         */
-        clearWatch(watchId: number): void;
-        /**
-         * One-shot position request.
-         * 
-         * @param successCallback invoked when current location successfully obtained
-         * @param errorCallback invoked when attempt to obtain the current location fails
-         */
-        getCurrentPosition(successCallback: IPositionCallback, errorCallback?: IPositionErrorCallback): void;
-    }
-
-    export interface IPositionCallback {
-        (position: Position): void;
-    }
-    
-    export interface IPositionErrorCallback {
-        (error: PositionError): void;
-    }
-}
 
 declare module powerbi {
     export interface DefaultValueDefinition {
@@ -1129,6 +713,8 @@ declare module powerbi {
         defaultValue: boolean;
     }
 }
+
+
 
 declare module powerbi {
     import DisplayNameGetter = powerbi.data.DisplayNameGetter;
@@ -1146,7 +732,9 @@ declare module powerbi {
         members(validMembers?: EnumMemberValue[]): IEnumMember[];
     }
     
-}
+}﻿
+
+
 
 declare module powerbi {
     export interface Fill {
@@ -1183,7 +771,9 @@ declare module powerbi {
         /** Indicates whether the color value may be nullable, and a 'no fill' option is appropriate. */
         nullable: boolean;
     }  
-}
+}﻿
+
+
 
 declare module powerbi {
     export interface FillRule extends FillRuleGeneric<string, number> {
@@ -1215,13 +805,15 @@ declare module powerbi {
         color: TColor;
         value?: TValue;
     }
-}
+}﻿
+
+
 
 declare module powerbi {
     export interface FilterTypeDescriptor {
         selfFilter?: boolean;
     }
-}
+}﻿
 
 declare module powerbi {
     export type GeoJson = GeoJsonDefinitionGeneric<string>;
@@ -1233,7 +825,9 @@ declare module powerbi {
     }
 
     export interface GeoJsonTypeDescriptor { }
-}
+}﻿
+
+
 
 declare module powerbi {
     export type ImageValue = ImageDefinitionGeneric<string>;
@@ -1245,7 +839,10 @@ declare module powerbi {
     }
 
     export interface ImageTypeDescriptor { }
-}
+
+}﻿
+
+
 
 declare module powerbi {
     export type Paragraphs = Paragraph[];
@@ -1270,7 +867,9 @@ declare module powerbi {
         url?: string;
         value: string;
     }
-}
+}﻿
+
+
 
 declare module powerbi {
     import SemanticFilter = data.ISemanticFilter;
@@ -1298,7 +897,9 @@ declare module powerbi {
         //border?: BorderTypeDescriptor;
         //etc.
     }
-}
+}﻿
+
+
 
 declare module powerbi {
     /** Describes a data value type in the client type system. Can be used to get a concrete ValueType instance. */
@@ -1329,7 +930,10 @@ declare module powerbi {
 
     export interface TemporalTypeDescriptor {
         year?: boolean;
+        quarter?: boolean;
         month?: boolean;
+        day?: boolean;
+        paddedDateTableDate?: boolean;
     }
 
     export interface GeographyTypeDescriptor {
@@ -1368,405 +972,16 @@ declare module powerbi {
 
     /** Describes instances of value type objects. */
     export type PrimitiveValue = string | number | boolean | Date;
-}
+}﻿
+
+
 
 declare module powerbi {
-    export interface IVisualStyle{
-        colorPalette: IColorPalette;
-        isHighContrast: boolean;
-        titleText: ITextStyle;
-        subTitleText: ITextStyle;
-        labelText: ITextStyle;
-        // TODO 4486317: This is a host-specific property that should be exposed through DataViewObjects.
-        maxMarginFactor?: number;
+    export interface IViewport {
+        height: number;
+        width: number;
     }
-
-    export interface ITextStyle extends IStyleInfo {
-        fontFace?: string;
-        fontSize?: string;
-        fontWeight?: string;
-        color: IColorInfo;
-    }
-
-    export interface IColorPalette {
-        background?: IColorInfo;
-        foreground?: IColorInfo;
-
-        positive?: IColorInfo;
-        neutral?: IColorInfo;
-        negative?: IColorInfo;
-        separator?: IColorInfo;
-        selection?: IColorInfo;
-
-        dataColors: IDataColorPalette;
-    }
-
-    export interface IDataColorPalette {
-        /** Gets the color scale associated with the given key. */
-        getColorScaleByKey(scaleKey: string): IColorScale;
-
-        /** Gets a fresh color scale with no colors allocated. */
-        getNewColorScale(): IColorScale;
-
-        /** Gets the nth color in the palette. */
-        getColorByIndex(index: number): IColorInfo;
-
-        /**
-         * Gets the set of sentiment colors used for visuals such as KPIs
-         * Note: This is only a temporary API so that we can have reasonable color schemes for KPIs
-         * and gauges until the conditional formatting feature is implemented.
-         */
-        getSentimentColors(): IColorInfo[];
-
-        getBasePickerColors(): IColorInfo[];
-
-        /** Gets all the colors for the color palette **/
-        getAllColors?(): IColorInfo[];
-    }
-
-    export interface IColorScale {
-        /** Gets the color associated with the given key. */
-        getColor(key: any): IColorInfo;
-
-        /**
-         * Clears the current scale, but rotates the colors such that the first color allocated will
-         * the be first color that would have been allocated before clearing the scale. 
-         */
-        clearAndRotateScale(): void;
-
-        /** Returns a copy of the current scale. */
-        clone(): IColorScale;
-
-        getDomain(): any[];
-    }
-
-    export interface IColorInfo extends IStyleInfo {
-        value: string;
-    }
-
-    export interface IStyleInfo {
-        className?: string;
-    }
-}
-
-declare module powerbi {
-    import DataViewObjectDescriptor = powerbi.data.DataViewObjectDescriptor;
-    import DataViewObjectDescriptors = powerbi.data.DataViewObjectDescriptors;
-    import Selector = powerbi.data.Selector;
-    import IPoint = powerbi.visuals.IPoint;
-    import ISemanticFilter = powerbi.data.ISemanticFilter;
-    import ISQExpr = powerbi.data.ISQExpr;
-    import IStringResourceProvider = jsCommon.IStringResourceProvider;
-    import IRect = powerbi.visuals.IRect;
-
-    /** Parameters available to a CustomizeQueryMethod */
-    export interface CustomizeQueryOptions {
-        /**
-         * The data view mapping for this visual with some additional information. CustomizeQueryMethod implementations
-         * are expected to edit this in-place.
-         */
-        dataViewMappings: data.CompiledDataViewMapping[];
-
-        /**
-         * Visual should prefer to request a higher volume of data.
-         */
-        preferHigherDataVolume?: boolean;
-        
-        /**
-         * Whether the load more data feature (paging of data) for Cartesian charts should be enabled.
-         */
-        cartesianLoadMoreEnabled?: boolean;
-    }
-
-    /** Parameters available to a sortable visual candidate */
-    export interface VisualSortableOptions {
-        
-        dataViewMappings: data.CompiledDataViewMapping[];
-    }
-
-    /** An imperative way for a visual to influence query generation beyond just its declared capabilities. */
-    export interface CustomizeQueryMethod {
-        (options: CustomizeQueryOptions): void;
-    }
-
-    /** Defines the visual filtering capability for a particular filter kind. */
-    export interface VisualFilterMapping {
-        /** Specifies what data roles are used to control the filter semantics for this filter kind. */
-        targetRoles: string[];
-    }
-
-    /**
-     * Defines the visual filtering capabilities for various filter kinds.
-     * By default all visuals support attribute filters and measure filters in their innermost scope.
-     */
-    export interface VisualFilterMappings {
-        measureFilter?: VisualFilterMapping;
-    }
-
-    /** Defines the capabilities of an IVisual. */
-    export interface VisualCapabilities {
-        /** Defines what roles the visual expects, and how those roles should be populated.  This is useful for visual generation/editing. */
-        dataRoles?: VisualDataRole[];
-
-        /** Defines the set of objects supported by this IVisual. */
-        objects?: DataViewObjectDescriptors;
-
-        /** Defines how roles that the visual understands map to the DataView.  This is useful for query generation. */
-        dataViewMappings?: DataViewMapping[];
-
-        /** Defines how filters are understood by the visual. This is used by query generation */
-        filterMappings?: VisualFilterMappings;
-
-        /** Indicates whether cross-highlight is supported by the visual. This is useful for query generation. */
-        supportsHighlight?: boolean;
-
-        /** Indicates whether the visual uses onSelected function for data selections.  Default is true. */
-        supportsSelection?: boolean;
-
-        /** Indicates whether sorting is supported by the visual. This is useful for query generation */
-        sorting?: VisualSortingCapabilities;
-
-        /** Indicates whether a default title should be displayed.  Visuals with self-describing layout can omit this. */
-        suppressDefaultTitle?: boolean;
-
-        /** Indicates whether a default padding should be applied. */
-        suppressDefaultPadding?: boolean;
-
-        /** Indicates whether drilling is supported by the visual. */
-        drilldown?: VisualDrillCapabilities;
-
-        /** Indicates whether rotating is supported by the visual. */
-        canRotate?: boolean;
-
-        /** Indicates whether showing the data underlying this visual would be helpful.  Visuals that already show raw data can specify this. */
-        disableVisualDetails?: boolean;
-
-        /** Indicates whether focus mode is supported for the visual. Visuals that would not benefit from focus mode (such as non-data-bound ones) can set it to true.  */
-        disableFocusMode?: boolean;
-    }
-
-    /** Defines the visual sorting capability. */
-    export interface VisualSortingCapabilities {
-        /** When specified, indicates that the IVisual wants default sorting behavior. */
-        default?: {};
-
-        /** When specified, indicates that the IVisual wants to control sort interactivity. */
-        custom?: {};
-
-        /** When specified, indicates sorting that is inherently implied by the IVisual.  This is useful to automatically sort. */
-        implicit?: VisualImplicitSorting;
-    }
-
-    /** Defines the visual's drill capability. */
-    export interface VisualDrillCapabilities {
-        /** Returns the drillable role names for this visual **/
-        roles?: string[];
-    }
-
-    /** Defines implied sorting behaviour for an IVisual. */
-    export interface VisualImplicitSorting {
-        clauses: VisualImplicitSortingClause[];
-    }
-
-    export interface VisualImplicitSortingClause {
-        role: string;
-        direction: SortDirection;
-    }
-
-    export interface VisualUpdateOptions {
-        viewport: IViewport;
-        dataViews: DataView[];
-        suppressAnimations?: boolean;
-        viewMode?: ViewMode;
-        resizeMode?: ResizeMode;
-        type?: VisualUpdateType;
-        /** Indicates what type of update has been performed on the data.
-        The default operation kind is Create.*/
-        operationKind?: VisualDataChangeOperationKind;
-    }
-
-    export interface VisualDataChangedOptions {
-        dataViews: DataView[];
-
-        /** Optionally prevent animation transitions */
-        suppressAnimations?: boolean;
-
-        /** Indicates what type of update has been performed on the data.
-        The default operation kind is Create.*/
-        operationKind?: VisualDataChangeOperationKind;
-    }
-
-    export interface CustomSortEventArgs {
-        sortDescriptors: SortableFieldDescriptor[];
-    }
-
-    export interface SortableFieldDescriptor {
-        queryName: string;
-        sortDirection?: SortDirection;
-    }
-
-    export interface IVisualErrorMessage {
-        message: string;
-        title: string;
-        detail: string;
-    }
-
-    export interface IVisualWarning {
-        code: string;
-        getMessages(resourceProvider: IStringResourceProvider): IVisualErrorMessage;
-    }
-
-    /** Animation options for visuals. */
-    export interface AnimationOptions {
-        /** Indicates whether all transition frames should be flushed immediately, effectively "disabling" any visual transitions. */
-        transitionImmediate: boolean;
-    }
-
-    /** Interactivity options for visuals. */
-    export interface InteractivityOptions {
-        /** Indicates that dragging of data points should be permitted. */
-        dragDataPoint?: boolean;
-
-        /** Indicates that data points should be selectable. */
-        selection?: boolean;
-
-        /** Indicates that the chart and the legend are interactive */
-        isInteractiveLegend?: boolean;
-
-        /** Indicates overflow behavior. Values are CSS oveflow strings */
-        overflow?: string;
-    }
-
-    export interface VisualDragPayload extends DragPayload {
-        data?: Selector;
-        field?: {};
-    }
-
-    export interface DragEventArgs {
-        event: DragEvent;
-        data: VisualDragPayload;
-    }
-
-    /** Defines geocoding services. */
-    export interface GeocodeOptions {
-        /** promise that should abort the request when resolved */
-        timeout?: IPromise<any>;
-    }
-
-    export interface IGeocoder {
-        geocode(query: string, category?: string, options?: GeocodeOptions): IPromise<IGeocodeCoordinate>;
-        geocodeBoundary(latitude: number, longitude: number, category: string, levelOfDetail?: number, maxGeoData?: number, options?: GeocodeOptions): IPromise<IGeocodeBoundaryCoordinate>;
-        geocodePoint(latitude: number, longitude: number, options?: GeocodeOptions): IPromise<IGeocodeResource>;
-
-        /** returns data immediately if it is locally available (e.g. in cache), null if not in cache */
-        tryGeocodeImmediate(query: string, category?: string): IGeocodeCoordinate;
-        tryGeocodeBoundaryImmediate(latitude: number, longitude: number, category: string, levelOfDetail?: number, maxGeoData?: number): IGeocodeBoundaryCoordinate;
-    }
-
-    export interface IGeocodeCoordinate {
-        latitude: number;
-        longitude: number;
-    }
-
-    export interface IGeocodeBoundaryCoordinate {
-        latitude?: number;
-        longitude?: number;
-        locations?: IGeocodeBoundaryPolygon[]; // one location can have multiple boundary polygons
-    }
-
-    export interface IGeocodeResource extends IGeocodeCoordinate {
-        addressLine: string;
-        locality: string;
-        neighborhood: string;
-        adminDistrict: string;
-        adminDistrict2: string;
-        formattedAddress: string;
-        postalCode: string;
-        countryRegionIso2: string;
-        countryRegion: string;
-        landmark: string;
-        name: string;
-    }
-
-    export interface IGeocodeBoundaryPolygon {
-        nativeBing: string;
-
-        /** array of lat/long pairs as [lat1, long1, lat2, long2,...] */
-        geographic?: Float64Array;
-
-        /** array of absolute pixel position pairs [x1,y1,x2,y2,...]. It can be used by the client for cache the data. */
-        absolute?: Float64Array;
-        absoluteBounds?: IRect;
-
-        /** string of absolute pixel position pairs "x1 y1 x2 y2...". It can be used by the client for cache the data. */
-        absoluteString?: string;
-    }
-
-    export interface SelectorForColumn {
-        [queryName: string]: data.DataRepetitionSelector;
-    }
-
-    export interface SelectorsByColumn {
-        /** Data-bound repetition selection. */
-        dataMap?: SelectorForColumn;
-
-        /** Metadata-bound repetition selection.  Refers to a DataViewMetadataColumn queryName. */
-        metadata?: string;
-
-        /** User-defined repetition selection. */
-        id?: string;
-    }
-
-    // TODO: Consolidate these two into one object and add a method to transform SelectorsByColumn[] into Selector[] for components that need that structure
-    export interface SelectEventArgs {
-        data: Selector[];
-        data2?: SelectorsByColumn[];
-    }
-
-    export interface ContextMenuArgs {
-        data: SelectorsByColumn[];
-
-        /** Absolute coordinates for the top-left anchor of the context menu. */
-        position: IPoint;
-    }
-
-    export interface SelectObjectEventArgs {
-        object: DataViewObjectDescriptor;
-    }
-
-    export interface FilterAnalyzerOptions {
-        dataView: DataView;
-
-        /** The DataViewObjectPropertyIdentifier for default value */
-        defaultValuePropertyId: DataViewObjectPropertyIdentifier;
-
-        /** The filter that will be analyzed */
-        filter: ISemanticFilter;
-
-        /** The field SQExprs used in the filter */
-        fieldSQExprs: ISQExpr[];
-    }
-
-    export interface AnalyzedFilter {
-        /** The default value of the slicer selected item and it can be undefined if there is no default value */
-        defaultValue?: DefaultValueDefinition;
-
-        /** Indicates the filter has Not condition. */
-        isNotFilter: boolean;
-
-        /** The selected filter values. */
-        selectedIdentities: DataViewScopeIdentity[];
-
-        /** The filter after analyzed. It will be the default filter if it has defaultValue and the pre-analyzed filter is undefined. */
-        filter: ISemanticFilter;
-    }
-
-    export interface DisplayNameIdentityPair {
-        displayName: string;
-        identity: DataViewScopeIdentity;
-    }
-}
-
+}﻿
 
 
 
@@ -1820,12 +1035,18 @@ declare module powerbi {
 
         /** Instances which should be deleted from the existing instances. */
         remove?: VisualObjectInstance[];
+
+        /** Instances which should be deleted from the existing objects. */
+        removeObject?: VisualObjectInstance[];
     }
     
     export interface EnumerateVisualObjectInstancesOptions {
         objectName: string;
     }
 }
+
+
+
 
 declare module powerbi {
     import Selector = powerbi.data.Selector;
@@ -1845,32 +1066,11 @@ declare module powerbi {
         formattingProperties?: string[];
     }
 }
+﻿
+
+
 
 declare module powerbi.extensibility {
-    import DataViewObjectDescriptors = powerbi.data.DataViewObjectDescriptors;
-
-    /** Defines the capabilities of an IVisual. */
-    export interface VisualCapabilities {
-        /** Defines what roles the visual expects, and how those roles should be populated.  This is useful for visual generation/editing. */
-        dataRoles?: VisualDataRole[];
-
-        /** Defines the set of objects supported by this IVisual. */
-        objects?: DataViewObjectDescriptors;
-
-        /** Defines how roles that the visual understands map to the DataView.  This is useful for query generation. */
-        dataViewMappings?: DataViewMapping[];
-
-        /** Indicates whether cross-highlight is supported by the visual. This is useful for query generation. */
-        supportsHighlight?: boolean;
-        
-        /** Indicates whether sorting is supported by the visual. This is useful for query generation */
-        sorting?: VisualSortingCapabilities;        
-    }
-}
-
-declare module powerbi.extensibility {
-
-    export function VisualPlugin(options: IVisualPluginOptions): ClassDecorator;
 
     export interface IVisualPluginOptions {
         transform?: IVisualDataViewTransform;
@@ -1896,21 +1096,16 @@ declare module powerbi.extensibility {
     export interface VisualConstructorOptions { }
 }
 
-declare module powerbi.extensibility {
-
-    export interface VisualVersionOverloads {
-        [name: string]: Function;
-    }
-
-    export interface VisualVersionOverloadFactory {
-        (visual: powerbi.extensibility.IVisual): VisualVersionOverloads;
-    }
-
-}
 
 /**
  * Change Log Version 1.0.0
+ * - Add type to update options (data, resize, viewmode)
+ * - Remove deprecated methods (onDataChange, onResizing, onViewModeChange) 
+ * - Add hostAdapter for host services versioning
  */
+
+
+
 declare module powerbi.extensibility.visual {
     /**
      * Represents a visualization displayed within an application (PowerBI dashboards, ad-hoc reporting, etc.).
@@ -1940,5 +1135,5 @@ declare module powerbi.extensibility.visual {
         element: HTMLElement;
         host: IVisualHost;
     }
-}
 
+}
