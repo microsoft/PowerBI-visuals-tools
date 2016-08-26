@@ -69,10 +69,6 @@ module powerbi.extensibility.visual {
             trSelection.exit().remove();
         }
 
-        public destroy() {
-            //TODO: handle any cleanup here
-        }
-
         private updateContainerViewports(viewport: IViewport) {
             if (!viewport) return;
             let width = viewport.width;
