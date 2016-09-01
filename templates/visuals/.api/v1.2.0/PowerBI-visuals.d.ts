@@ -1131,6 +1131,8 @@ declare module powerbi.extensibility {
         withMeasure(measureId: string): this;
         createSelectionId(): ISelectionId;
     }
+
+    function VisualPlugin (options: IVisualPluginOptions): ClassDecorator;
 }
 
 
