@@ -39,9 +39,5 @@ module powerbi.extensibility.visual {
             console.log('Visual update', options);
             this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
         }
-
-        public destroy(): void {
-            //TODO: Perform any cleanup tasks here
-        }
     }
 }

@@ -1113,7 +1113,7 @@ declare module powerbi {
 
 declare module powerbi.extensibility {
     interface ISelectionManager {
-        select(selectionId: ISelectionId, multiSelect?: boolean): IPromise<ISelectionId[]>;
+        select(selectionId: ISelectionId | ISelectionId[], multiSelect?: boolean): IPromise<ISelectionId[]>;
         hasSelection(): boolean;
         clear(): IPromise<{}>;
         getSelectionIds(): ISelectionId[];
@@ -1131,6 +1131,8 @@ declare module powerbi.extensibility {
         withMeasure(measureId: string): this;
         createSelectionId(): ISelectionId;
     }
+
+    function VisualPlugin (options: IVisualPluginOptions): ClassDecorator;
 }
 
 

@@ -17,7 +17,7 @@ module powerbi.extensibility.visual {
                     for (let i = 0, catLength = categories[0].values.length; i < catLength; i++) {
                         viewModel.categories.push({
                             color: 'white',
-                            value: categories[0].values[i],
+                            value: <string>categories[0].values[i],
                             identity: ''
                         })
 
