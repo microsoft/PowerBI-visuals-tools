@@ -29,7 +29,8 @@
                 }
             },
             "required": [
-                "name"
+                "name",
+                "url"
             ],
             "additionalProperties": false
         }
