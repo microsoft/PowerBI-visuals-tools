@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v1.2.0",
+    "PBI_API_VERSION": "v1.3.0",
     "type": "object",
     "properties": {
         "apiVersion": {
@@ -44,10 +44,6 @@
         "capabilities": {
             "type": "string",
             "description": "Relative path to the visual capabilities json file"
-        },
-        "dependencies": {
-            "type": "string",
-            "description": "Relative path to the visual dependencies json file"
         },
         "visual": {
             "type": "object",

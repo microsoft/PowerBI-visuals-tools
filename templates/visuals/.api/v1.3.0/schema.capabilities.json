@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v1.1.0",
+    "PBI_API_VERSION": "v1.3.0",
     "type": "object",
     "properties": {
         "dataRoles": {
@@ -22,6 +22,10 @@
         "sorting": {
             "$ref": "#/definitions/sorting"
         },
+        "suppressDefaultTitle": {
+            "type": "boolean",
+            "description": "Indicates whether the visual should show a default title"
+        },
         "supportsHighlight": {
             "type": "boolean",
             "description": "Tells the host to include highlight data"
@@ -42,7 +46,12 @@
                     "description": "The name of this data role that is shown to the user"
                 },
                 "kind": {
-                    "type": "number",
+                    "type": "string",
+                    "enum": [
+                        "Grouping",
+                        "Measure",
+                        "GroupingOrMeasure"
+                    ],
                     "description": "The kind of data that can be bound do this role"
                 }
             },
@@ -83,6 +92,9 @@
                 },
                 "matrix": {
                     "$ref": "#/definitions/dataViewMapping.matrix"
+                },
+                "scriptResult": {
+                    "$ref": "#/definitions/dataViewMapping.scriptResult"
                 }
             },
             "oneOf": [
@@ -104,6 +116,11 @@
                 {
                     "required": [
                         "matrix"
+                    ]
+                },
+                {
+                    "required": [
+                        "scriptResult"
                     ]
                 }
             ],
@@ -210,7 +227,10 @@
                             ]
                         }
                     ]
-                }
+                },
+                "dataVolume": {
+                    "$ref": "#/definitions/dataViewMapping.dataVolume"
+                }                
             },
             "additionalProperties": false
         },
@@ -266,6 +286,9 @@
                             "$ref": "#/definitions/dataViewMapping.numberRange"
                         }
                     }
+                },
+                "dataVolume": {
+                    "$ref": "#/definitions/dataViewMapping.dataVolume"
                 }
             },
             "requires": [
@@ -341,6 +364,62 @@
                             ]
                         }
                     ]
+                },
+                "dataVolume": {
+                    "$ref": "#/definitions/dataViewMapping.dataVolume"
+                }
+            }
+        },
+        "dataViewMapping.scriptResult": {
+            "type": "object",
+            "description": "scriptResult - Defines a scriptResult data mapping",
+            "properties": {
+                "dataInput": {
+                    "type": "object",
+                    "description": "dataInput - Defines how data is mapped to data roles",
+                    "properties": {
+                        "table": {
+                            "$ref": "#/definitions/dataViewMapping.table"
+                        }
+                    }
+                },
+                "script": {
+                    "type": "object",
+                    "description": "script - Defines where the script text and provider are stored",
+                    "properties": {
+                        "scriptSourceDefault": {
+                            "type": "string",
+                            "description": "scriptSourceDefault - Defines the default script source value to be used when no script object is defined"
+                        },
+                        "scriptProviderDefault": {
+                            "type": "string",
+                            "description": "scriptProviderDefault - Defines the default script provider value to be used when no provider object is defined"
+                        },
+                        "scriptOutputType": {
+                            "type": "string",
+                            "description": "scriptOutputType - Defines the output type that the R script will generate"
+                        },
+                        "source": {
+                            "$ref": "#/definitions/dataViewObjectPropertyIdentifier"
+                        },
+                        "provider": {
+                            "$ref": "#/definitions/dataViewObjectPropertyIdentifier"
+                        }
+                    }
+                }
+            }
+        },
+        "dataViewObjectPropertyIdentifier": {
+            "type": "object",
+            "description": "Points to an object property",
+            "properties": {
+                "objectName": {
+                    "type": "string",
+                    "description": "The name of a object"
+                },
+                "propertyName": {
+                    "type": "string",
+                    "description": "The name of a property inside the object"
                 }
             }
         },
@@ -463,6 +542,11 @@
                     ]
                 }
             ]
+        },
+        "dataViewMapping.dataVolume": {
+            "description":"Specifies the volume of data the query should return (1-6)",
+            "type": "number",
+            "enum":[1, 2, 3, 4, 5, 6]
         },
         "dataViewMapping.forIn": {
             "type": "object",
@@ -627,6 +711,16 @@
                         "text": {
                             "type": "boolean",
                             "description": "A text value that will be displayed to the user as a text input"
+                        },
+                        "scripting": {
+                            "type": "object",
+                            "description": "A text value that will be displayed to the user as a script",
+                            "properties": {
+                                "source": {
+                                    "type": "boolean",
+                                    "description": "A source code"
+                                }
+                            }
                         }
                     },
                     "additionalProperties": false,
@@ -655,7 +749,7 @@
                             "required": [
                                 "integer"
                             ]
-                        },                           
+                        },                        
                         {
                             "required": [
                                 "numeric"
@@ -664,6 +758,11 @@
                         {
                             "required": [
                                 "text"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "scripting"
                             ]
                         }
                     ]

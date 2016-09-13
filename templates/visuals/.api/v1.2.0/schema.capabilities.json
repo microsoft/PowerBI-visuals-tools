@@ -700,6 +700,10 @@
                                 }
                             ]
                         },
+                        "integer": {
+                            "type": "boolean",
+                            "description": "An integer (whole number) value that will be displayed to the user as a text input"
+                        },                           
                         "numeric": {
                             "type": "boolean",
                             "description": "A numeric value that will be displayed to the user as a text input"
@@ -741,6 +745,11 @@
                                 "formatting"
                             ]
                         },
+                        {
+                            "required": [
+                                "integer"
+                            ]
+                        },                        
                         {
                             "required": [
                                 "numeric"
