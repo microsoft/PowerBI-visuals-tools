@@ -46,13 +46,8 @@
                     "description": "The name of this data role that is shown to the user"
                 },
                 "kind": {
-                    "type": "string",
-                    "enum": [
-                        "Grouping",
-                        "Measure",
-                        "GroupingOrMeasure"
-                    ],
-                    "description": "The kind of data that can be bound do this role"
+                    "description": "The kind of data that can be bound do this role",
+                    "$ref": "#/definitions/dataRole.kind"
                 },
                 "preferredTypes": {
                     "type": "array",
@@ -89,7 +84,7 @@
                         "patternProperties": {
                             "^\\w+$": {
                                 "description": "Specifies the number of values that can be assigned to this data role in this mapping",
-                                "$ref": "#/definitions/dataViewMapping.numberRange"
+                                "$ref": "#/definitions/dataViewMapping.numberRangeWithKind"
                             }
                         },
                         "additionalProperties": false
@@ -464,6 +459,28 @@
                     "description": "Maximum value supported"
                 }
             }
+        },
+        "dataViewMapping.numberRangeWithKind": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/dataViewMapping.numberRange"
+                },
+                {
+                    "properties": {
+                        "kind" : {
+                            "$ref": "#/definitions/dataRole.kind"
+                        }
+                    }
+                }
+            ]
+        },
+        "dataRole.kind": {
+            "type": "string",
+            "enum": [
+                "Grouping",
+                "Measure",
+                "GroupingOrMeasure"
+            ]
         },
         "dataViewMapping.select": {
             "type": "array",
