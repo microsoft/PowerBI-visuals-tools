@@ -815,6 +815,16 @@
                     "type": "boolean",
                     "description": "A text value that will be displayed to the user as a text input"
                 },
+                "scripting": {		
+                    "type": "object",		
+                    "description": "A text value that will be displayed to the user as a script",		
+                    "properties": {		
+                        "source": {		
+                            "type": "boolean",		
+                            "description": "A source code"		
+                        }		
+                    }		
+                },                
                 "geography": {
                     "type": "object",
                     "description": "Geographical data",
@@ -896,6 +906,11 @@
                     "required": [
                         "geography"
                     ]
+                },		
+                {		
+                    "required": [		
+                        "scripting"		
+                    ]		
                 }
             ]
         }
