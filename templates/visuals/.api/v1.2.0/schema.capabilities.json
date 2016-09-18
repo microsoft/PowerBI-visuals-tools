@@ -46,14 +46,23 @@
                     "description": "The name of this data role that is shown to the user"
                 },
                 "kind": {
-                    "type": "string",
-                    "enum": [
-                        "Grouping",
-                        "Measure",
-                        "GroupingOrMeasure"
-                    ],
-                    "description": "The kind of data that can be bound do this role"
-                }
+                    "description": "The kind of data that can be bound do this role",
+                    "$ref": "#/definitions/dataRole.kind"
+                },
+                "preferredTypes": {
+                    "type": "array",
+                    "description": "Defines the preferred type of data for this data role",
+                    "items": {
+                        "$ref": "#/definitions/valueType"
+                    }
+                },
+                "requiredTypes": {
+                    "type": "array",
+                    "description": "Defines the required type of data for this data role. Any values that do not match will be set to null",
+                    "items": {
+                        "$ref": "#/definitions/valueType"
+                    }
+                }                
             },
             "required": [
                 "name",
@@ -75,7 +84,7 @@
                         "patternProperties": {
                             "^\\w+$": {
                                 "description": "Specifies the number of values that can be assigned to this data role in this mapping",
-                                "$ref": "#/definitions/dataViewMapping.numberRange"
+                                "$ref": "#/definitions/dataViewMapping.numberRangeWithKind"
                             }
                         },
                         "additionalProperties": false
@@ -230,7 +239,7 @@
                 },
                 "dataVolume": {
                     "$ref": "#/definitions/dataViewMapping.dataVolume"
-                }                
+                }
             },
             "additionalProperties": false
         },
@@ -451,6 +460,28 @@
                 }
             }
         },
+        "dataViewMapping.numberRangeWithKind": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/dataViewMapping.numberRange"
+                },
+                {
+                    "properties": {
+                        "kind" : {
+                            "$ref": "#/definitions/dataRole.kind"
+                        }
+                    }
+                }
+            ]
+        },
+        "dataRole.kind": {
+            "type": "string",
+            "enum": [
+                "Grouping",
+                "Measure",
+                "GroupingOrMeasure"
+            ]
+        },
         "dataViewMapping.select": {
             "type": "array",
             "description": "Defines a list of properties to bind",
@@ -544,9 +575,16 @@
             ]
         },
         "dataViewMapping.dataVolume": {
-            "description":"Specifies the volume of data the query should return (1-6)",
+            "description": "Specifies the volume of data the query should return (1-6)",
             "type": "number",
-            "enum":[1, 2, 3, 4, 5, 6]
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
         },
         "dataViewMapping.forIn": {
             "type": "object",
@@ -611,161 +649,8 @@
                     "description": "Indicates whether the Format Painter should ignore this property"
                 },
                 "type": {
-                    "type": "object",
                     "description": "Describes what type of property this is and how it should be displayed to the user",
-                    "properties": {
-                        "bool": {
-                            "type": "boolean",
-                            "description": "A boolean value that will be displayed to the user as a toggle switch"
-                        },
-                        "enumeration": {
-                            "type": "array",
-                            "description": "A list of values that will be displayed as a drop down list",
-                            "items": {
-                                "type": "object",
-                                "description": "Describes an item in the enumeration list",
-                                "properties": {
-                                    "displayName": {
-                                        "type": "string",
-                                        "description": "The name shown to the user to describe this item"
-                                    },
-                                    "value": {
-                                        "type": "string",
-                                        "description": "The internal value of this property when this item is selected"
-                                    }
-                                }
-                            }
-                        },
-                        "fill": {
-                            "type": "object",
-                            "description": "A color value that will be displayed to the user as a color picker",
-                            "properties": {
-                                "solid": {
-                                    "type": "object",
-                                    "description": "A solid color value that will be displayed to the user as a color picker",
-                                    "properties": {
-                                        "color": {
-                                            "oneOf": [
-                                                {
-                                                    "type": "boolean"
-                                                },
-                                                {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "nullable": {
-                                                            "description": "Allows the user to select 'no fill' for the color",
-                                                            "type": "boolean"
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "formatting": {
-                            "type": "object",
-                            "description": "A numeric value that will be displayed to the user as a text input",
-                            "properties": {
-                                "labelDisplayUnits": {
-                                    "type": "boolean",
-                                    "description": "Displays a dropdown with common display units (Auto, None, Thousands, Millions, Billions, Trillions)"
-                                },
-                                "alignment": {
-                                    "type": "boolean",
-                                    "description": "Displays a selector to allow the user to choose left, center, or right alignment"
-                                },
-                                "fontSize": {
-                                    "type": "boolean",
-                                    "description": "Displays a slider that allows the user to choose a font size in points"
-                                }
-                            },
-                            "additionalProperties": false,
-                            "oneOf": [
-                                {
-                                    "required": [
-                                        "labelDisplayUnits"
-                                    ]
-                                },
-                                {
-                                    "required": [
-                                        "alignment"
-                                    ]
-                                },
-                                {
-                                    "required": [
-                                        "fontSize"
-                                    ]
-                                }
-                            ]
-                        },
-                        "integer": {
-                            "type": "boolean",
-                            "description": "An integer (whole number) value that will be displayed to the user as a text input"
-                        },                           
-                        "numeric": {
-                            "type": "boolean",
-                            "description": "A numeric value that will be displayed to the user as a text input"
-                        },
-                        "text": {
-                            "type": "boolean",
-                            "description": "A text value that will be displayed to the user as a text input"
-                        },
-                        "scripting": {
-                            "type": "object",
-                            "description": "A text value that will be displayed to the user as a script",
-                            "properties": {
-                                "source": {
-                                    "type": "boolean",
-                                    "description": "A source code"
-                                }
-                            }
-                        }
-                    },
-                    "additionalProperties": false,
-                    "oneOf": [
-                        {
-                            "required": [
-                                "bool"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "enumeration"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "fill"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "formatting"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "integer"
-                            ]
-                        },                        
-                        {
-                            "required": [
-                                "numeric"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "text"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "scripting"
-                            ]
-                        }
-                    ]
+                    "$ref": "#/definitions/valueType"
                 }
             },
             "additionalProperties": false
@@ -826,6 +711,206 @@
                     "required": [
                         "implicit"
                     ]
+                }
+            ]
+        },
+        "valueType": {
+            "type": "object",
+            "properties": {
+                "bool": {
+                    "type": "boolean",
+                    "description": "A boolean value that will be displayed to the user as a toggle switch"
+                },
+                "enumeration": {
+                    "type": "array",
+                    "description": "A list of values that will be displayed as a drop down list",
+                    "items": {
+                        "type": "object",
+                        "description": "Describes an item in the enumeration list",
+                        "properties": {
+                            "displayName": {
+                                "type": "string",
+                                "description": "The name shown to the user to describe this item"
+                            },
+                            "value": {
+                                "type": "string",
+                                "description": "The internal value of this property when this item is selected"
+                            }
+                        }
+                    }
+                },
+                "fill": {
+                    "type": "object",
+                    "description": "A color value that will be displayed to the user as a color picker",
+                    "properties": {
+                        "solid": {
+                            "type": "object",
+                            "description": "A solid color value that will be displayed to the user as a color picker",
+                            "properties": {
+                                "color": {
+                                    "oneOf": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "nullable": {
+                                                    "description": "Allows the user to select 'no fill' for the color",
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "formatting": {
+                    "type": "object",
+                    "description": "A numeric value that will be displayed to the user as a text input",
+                    "properties": {
+                        "labelDisplayUnits": {
+                            "type": "boolean",
+                            "description": "Displays a dropdown with common display units (Auto, None, Thousands, Millions, Billions, Trillions)"
+                        },
+                        "alignment": {
+                            "type": "boolean",
+                            "description": "Displays a selector to allow the user to choose left, center, or right alignment"
+                        },
+                        "fontSize": {
+                            "type": "boolean",
+                            "description": "Displays a slider that allows the user to choose a font size in points"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "oneOf": [
+                        {
+                            "required": [
+                                "labelDisplayUnits"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "alignment"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "fontSize"
+                            ]
+                        }
+                    ]
+                },
+                "integer": {
+                    "type": "boolean",
+                    "description": "An integer (whole number) value that will be displayed to the user as a text input"
+                },
+                "numeric": {
+                    "type": "boolean",
+                    "description": "A numeric value that will be displayed to the user as a text input"
+                },
+                "text": {
+                    "type": "boolean",
+                    "description": "A text value that will be displayed to the user as a text input"
+                },
+                "scripting": {		
+                    "type": "object",		
+                    "description": "A text value that will be displayed to the user as a script",		
+                    "properties": {		
+                        "source": {		
+                            "type": "boolean",		
+                            "description": "A source code"		
+                        }		
+                    }		
+                },                
+                "geography": {
+                    "type": "object",
+                    "description": "Geographical data",
+                    "properties": {
+                        "address": {
+                            "type": "boolean"
+                        },
+                        "city": {
+                            "type": "boolean"
+                        },
+                        "continent": {
+                            "type": "boolean"
+                        },
+                        "country": {
+                            "type": "boolean"
+                        },
+                        "county": {
+                            "type": "boolean"
+                        },
+                        "region": {
+                            "type": "boolean"
+                        },
+                        "postalCode": {
+                            "type": "boolean"
+                        },
+                        "stateOrProvince": {
+                            "type": "boolean"
+                        },
+                        "place": {
+                            "type": "boolean"
+                        },
+                        "latitude": {
+                            "type": "boolean"
+                        },
+                        "longitude": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "oneOf": [
+                {
+                    "required": [
+                        "bool"
+                    ]
+                },
+                {
+                    "required": [
+                        "enumeration"
+                    ]
+                },
+                {
+                    "required": [
+                        "fill"
+                    ]
+                },
+                {
+                    "required": [
+                        "formatting"
+                    ]
+                },
+                {
+                    "required": [
+                        "integer"
+                    ]
+                },
+                {
+                    "required": [
+                        "numeric"
+                    ]
+                },
+                {
+                    "required": [
+                        "text"
+                    ]
+                },
+                {
+                    "required": [
+                        "geography"
+                    ]
+                },		
+                {		
+                    "required": [		
+                        "scripting"		
+                    ]		
                 }
             ]
         }
