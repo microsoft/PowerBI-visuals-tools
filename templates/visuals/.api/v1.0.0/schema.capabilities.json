@@ -488,7 +488,7 @@
                         },
                         "description": {
                             "type": "string",
-                            "description": "The desciption shown to the user to describe this group of properties"
+                            "description": "A description of this object shown to the user as a tooltip"
                         },
                         "properties": {
                             "type": "object",
