@@ -504,6 +504,10 @@
                             "type": "string",
                             "description": "The name shown to the user to describe this group of properties"
                         },
+                        "description": {
+                            "type": "string",
+                            "description": "The desciption shown to the user to describe this group of properties"
+                        },
                         "properties": {
                             "type": "object",
                             "description": "A list of unique properties contained in this group",
