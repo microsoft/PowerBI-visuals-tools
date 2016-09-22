@@ -12,9 +12,9 @@
         "dataInput": {
           "table": {
             "rows": {
-              "for": {
-                "in": "Values"
-              },
+              "select": [
+                { "for": { "in": "Values" } }
+              ],
               "dataReductionAlgorithm": {
                 "top": { }
               }
