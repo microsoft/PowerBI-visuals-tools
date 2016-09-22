@@ -163,6 +163,9 @@
                         "for": {
                             "$ref": "#/definitions/dataViewMapping.forIn"
                         },
+                        "select": {
+                            "$ref": "#/definitions/dataViewMapping.select"
+                        },
                         "dataReductionAlgorithm": {
                             "$ref": "#/definitions/dataViewMapping.dataReductionAlgorithm"
                         }
@@ -176,6 +179,11 @@
                         {
                             "required": [
                                 "bind"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "select"
                             ]
                         }
                     ]
