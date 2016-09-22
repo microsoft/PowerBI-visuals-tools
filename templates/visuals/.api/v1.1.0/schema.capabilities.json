@@ -45,6 +45,10 @@
                     "type": "number",
                     "description": "The kind of data that can be bound do this role"
                 },
+                "description": {
+                    "type": "string",
+                    "description": "A description of this role shown to the user as a tooltip"
+                },
                 "preferredTypes": {
                     "type": "array",
                     "description": "Defines the preferred type of data for this data role",
@@ -151,6 +155,9 @@
                         "for": {
                             "$ref": "#/definitions/dataViewMapping.forIn"
                         },
+                        "select": {
+                            "$ref": "#/definitions/dataViewMapping.select"
+                        },
                         "dataReductionAlgorithm": {
                             "$ref": "#/definitions/dataViewMapping.dataReductionAlgorithm"
                         }
@@ -164,6 +171,11 @@
                         {
                             "required": [
                                 "bind"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "select"
                             ]
                         }
                     ]
