@@ -25,11 +25,25 @@
  */
 module powerbi.extensibility.visual {
     
-    // Below is a snippet of a definition for a object which will contain the properties values
-    // selected by the users 
+    // Below is a snippet of a definition for an object which will contain the property values
+    // selected by the users
     /*interface VisualSettings {
         lineColor: string;
     }*/
+
+    // To allow this scenario you should first the following JSON definition to the capabilities.json file
+    // under the "objects" property:
+    // "settings": {
+    //     "displayName": "Visual Settings",
+    //     "description": "Visual Settings Tooltip",
+    //     "properties": {
+    //         "lineColor": {
+    //         "displayName": "Line Color",
+    //         "type": { "fill": { "solid": { "color": true }}}
+    //         }
+    //     }
+    // }
+
 
     export class Visual implements IVisual {
         private imageDiv: HTMLDivElement;
@@ -80,12 +94,12 @@ module powerbi.extensibility.visual {
         }
 
         /**
-         * This function gets called from the update function above. You should read the new values of the properties into 
-         * your settings object so you will be able to use the new value in the enumerateObjectInstances function below.
+         * This function gets called by the update function above. You should read the new values of the properties into 
+         * your settings object so you can use the new value in the enumerateObjectInstances function below.
          * 
-         * Below there is a code snippet for a case where you want to expose a single property called "lineColor" from the object called "settings"
+         * Below is a code snippet demonstrating how to expose a single property called "lineColor" from the object called "settings"
          * This object and property should be first defined in the capabilities.json file in the objects section.
-         * In this code we get the property value from the objects (and have a default value in case the )
+         * In this code we get the property value from the objects (and have a default value in case the property is undefined)
          */
         public updateObjects(objects: DataViewObjects) {
             /*this.settings = <VisualSettings>{
@@ -94,10 +108,10 @@ module powerbi.extensibility.visual {
         }
 
         /** 
-         * This function gets called on each of the objects defined in the capabilities files and allow you to select which of the 
+         * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
          * objects and properties you want to expose to the users in the property pane.
          * 
-         * Below there is a code snippet for a case where you want to expose a single property called "lineColor" from the object called "settings"
+         * Below is a code snippet for a case where you want to expose a single property called "lineColor" from the object called "settings"
          * This object and property should be first defined in the capabilities.json file in the objects section.
          */
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
