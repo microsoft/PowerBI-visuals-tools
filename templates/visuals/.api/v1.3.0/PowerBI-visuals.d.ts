@@ -367,6 +367,13 @@ declare module powerbi {
 
         /** The SQExpr this column represents. */
         expr?: data.ISQExpr;
+
+        /**
+         * The set of expressions that define the identity for instances of this grouping field.
+         * This must be a subset of the items in the DataViewScopeIdentity in the grouped items result.
+         * This property is undefined for measure fields, as well as for grouping fields in DSR generated prior to the CY16SU08 or SU09 timeframe.
+         */
+        identityExprs?: data.ISQExpr[];
     }
 
     export interface DataViewSegmentMetadata {
@@ -930,6 +937,9 @@ declare module powerbi {
         enumeration?: IEnumType;
         scripting?: ScriptTypeDescriptor;
         operations?: OperationalTypeDescriptor;
+
+        // variant types
+        variant?: ValueTypeDescriptor[];
     }
 
     export interface ScriptTypeDescriptor {
@@ -1011,16 +1021,25 @@ declare module powerbi {
         /** The selector that identifies this object. */
         selector: Selector;
 
-        /** Defines the constrained set of valid values for a property. */
+        /** (Optional) Defines the constrained set of valid values for a property. */
         validValues?: {
-            [propertyName: string]: string[];
+            [propertyName: string]: string[] | ValidationOptions;
         };
 
         /** (Optional) VisualObjectInstanceEnumeration category index. */
         containerIdx?: number;
+
+        /** (Optional) Set the required type for particular properties that support variant types. */
+        propertyTypes?: {
+            [propertyName: string]: ValueTypeDescriptor;
+        };
     }
 
     export type VisualObjectInstanceEnumeration = VisualObjectInstance[] | VisualObjectInstanceEnumerationObject;
+
+    export interface ValidationOptions {
+        numberRange?: NumberRange;
+    }
 
     export interface VisualObjectInstanceEnumerationObject {
         /** The visual object instances. */
@@ -1156,6 +1175,33 @@ declare module powerbi.extensibility {
 }
 
 
+
+
+declare module powerbi.extensibility {
+    interface TooltipMoveOptions {
+        coordinates: number[];
+        isTouchEvent: boolean;
+        dataItems?: VisualTooltipDataItem[];
+        identities: ISelectionId[];
+    }
+
+    interface TooltipShowOptions extends TooltipMoveOptions {
+        dataItems: VisualTooltipDataItem[];
+    }
+
+    interface TooltipHideOptions {
+        isTouchEvent: boolean;
+        immediately: boolean;
+    }
+
+    interface ITooltipManager {
+        enabled(): boolean;
+        show(options: TooltipShowOptions): void;
+        move(options: TooltipMoveOptions): void;
+        hide(options: TooltipHideOptions): void;
+    }
+}
+
 /**
  * Change Log Version 1.3.0
  */
@@ -1183,6 +1229,7 @@ declare module powerbi.extensibility.visual {
         createSelectionManager: () => ISelectionManager;
         colorPalette: IColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
+        tooltipManager: ITooltipManager;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
