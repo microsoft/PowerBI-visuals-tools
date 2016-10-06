@@ -41,7 +41,7 @@ program
     .command('new [name]', 'Create a new visual')
     .command('info', 'Display info about the current visual')
     .command('start', 'Start the current visual')
-    .command('package', 'Package the current visual into a pbiviz file')
+    .command('package', 'Package the current visual into a pbiviz file. Use --resources to output static files into a resources folder. Use --no-pbiviz to not produce a pbiviz file. Use --no-minify to not minify pbiviz static files.')
     .command('update [version]', 'Updates the api definitions and schemas in the current visual. Changes the version if specified')
     .option('--install-cert', 'Install localhost certificate', openCertFile);
 
