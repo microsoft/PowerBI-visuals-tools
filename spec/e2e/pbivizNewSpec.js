@@ -104,6 +104,7 @@ describe("E2E - pbiviz new", () => {
             versionBasePath,
             path.join(versionBasePath, 'PowerBI-visuals.d.ts'),
             path.join(versionBasePath, 'schema.capabilities.json'),
+            path.join(versionBasePath, 'schema.dependencies.json'),
             path.join(versionBasePath, 'schema.pbiviz.json')
         );
         let visualFiles = wrench.readdirSyncRecursive(visualPath);
