@@ -22,6 +22,9 @@
         "sorting": {
             "$ref": "#/definitions/sorting"
         },
+        "drilldown": {
+            "$ref": "#/definitions/drilldown"
+        },
         "suppressDefaultTitle": {
             "type": "boolean",
             "description": "Indicates whether the visual should show a default title"
@@ -729,6 +732,20 @@
                     ]
                 }
             ]
+        },
+        "drilldown": {
+            "type": "object",
+            "description": "Defines the visual's drill capability",
+            "properties": {
+                "roles": {
+                    "type": "array",
+                    "description": "The drillable role names for this visual",
+                     "items": {
+                         "type": "string",
+                         "description": "The name of the role"
+                     }
+                }
+            }
         },
         "valueType": {
             "type": "object",
