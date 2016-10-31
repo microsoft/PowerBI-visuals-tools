@@ -10,6 +10,7 @@
     "files": [
         ".api/v1.2.0/PowerBI-visuals.d.ts",
         "./typings/index.d.ts",
+        "node_modules/d3/d3.js",
         "src/visualViewModel.ts",
         "src/visualTransform.ts",
         "src/visual.ts"
