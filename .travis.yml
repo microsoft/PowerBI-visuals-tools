@@ -33,13 +33,4 @@ sudo: false
 
 script:
   - "npm test"
-
-deploy:
-  provider: npm
-  email: nugetpowerbi@microsoft.com
-  api_key:
-    secure: bo5ec5OaQ5mdG2tQV32Telbkx1kbcHgqBzBmEUAaH2QlY/47Bdx3BIC7SyA7vnLzBhixF7+V7biISa/1gOmjQ/OyhaHLzMiaGn+SMhSKUh0MD6ZhsT1p263QqHX4W6km/QQo8SOdWNuReetT2dfolSakAfPrLO9Lldtl4zDR4AIHn1MDpsEGa7xEemuOWIpu7iaIPDkm5LE9wkOjCcmfVyQumPABq3rEjyGiwGNP511731I0RK2fwmpWNdMZcQfsAMK1a60POeyoi9XsN2ThAqBAIaqESt7k+eaaAHuv42TylkI19hzpqDFVutwdRCI5GL0/ewGRztfF0d54O7U/3ZQsSwcWBJd2aP9ED5wL1kZ02cNyD+RZdvA4Svr38oU8EaVMv/GWAxvL3WMF737VtYKfWFNAzb4GicL1aOavf6vAM5LAcDCDR7ZJQv9EAgkJdBsyHCtkrzb8CECIGyC7z3NzeRlOUNK2V+Y9vYDNj/z9xb8bzyWwsjBm6KSFbP/SB5TxzGfPI4mCY0bpH7xPMQSCIsREHCrjwAXMa4nT2NJG7kwrOjAEFU9800fXEbjpFjnLmYj5l1xt83FVTgHxZVkvFtK/JOx2GxKMccA/Eaims+LzNrEI2TOS+oryznGfI8JGTVimdHowAVQ9MHAqdY1Wi0IvTqykcXvCapQc+To=
-  on:
-    tags: true
-    repo: Microsoft/PowerBI-visuals-tools
-    branch: master
+  
