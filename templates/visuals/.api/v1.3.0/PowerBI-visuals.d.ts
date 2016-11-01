@@ -1,28 +1,10 @@
-/*
- *  Power BI Visual CLI
- *
- *  Copyright (c) Microsoft Corporation
- *  All rights reserved.
- *  MIT License
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the ""Software""), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
+
+
+
+
+
+
+
 declare module powerbi {
     enum VisualDataRoleKind {
         /** Indicates that the role should be bound to something that evaluates to a grouping of values. */
@@ -356,6 +338,9 @@ declare module powerbi {
         /** The sort direction of this column. */
         sort?: SortDirection;
 
+        /** The order sorts are applied. Lower values are applied first. Undefined indicates no sort was done on this column. */
+        sortOrder?: number;
+
         /** The KPI metadata to use to convert a numeric status value into its visual representation. */
         kpi?: DataViewKpiColumnMetadata;
 
@@ -518,13 +503,18 @@ declare module powerbi {
     }
 
     export interface DataViewTableRow extends Array<PrimitiveValue> {
-        /** The metadata repetition objects. */
+        /** The data repetition objects. */
         objects?: DataViewObjects[];
     }
 
     export interface DataViewMatrix {
         rows: DataViewHierarchy;
         columns: DataViewHierarchy;
+
+        /**
+         * The metadata columns of the measure values.
+         * In visual DataView, this array is sorted in projection order.
+         */
         valueSources: DataViewMetadataColumn[];
     }
 
@@ -585,6 +575,9 @@ declare module powerbi {
     export interface DataViewMatrixNodeValue extends DataViewTreeNodeValue {
         highlight?: PrimitiveValue;
 
+        /** The data repetition objects. */
+        objects?: DataViewObjects;
+
         /** Indicates the index of the corresponding measure (held by DataViewMatrix.valueSources). Its value is 0 if omitted. */
         valueSourceIndex?: number;
     }
@@ -595,6 +588,10 @@ declare module powerbi {
     }
 
     export interface DataViewHierarchyLevel {
+        /**
+         * The metadata columns of this hierarchy level.
+         * In visual DataView, this array is sorted in projection order.
+         */
         sources: DataViewMetadataColumn[];
     }
 
@@ -609,6 +606,17 @@ declare module powerbi {
     export interface DataViewScriptResultData {
         payloadBase64: string;
     }
+
+    export interface ValueRange<T> {
+        min?: T;
+        max?: T;
+    }
+
+    /** Defines the acceptable values of a number. */
+    export type NumberRange = ValueRange<number>;
+
+    /** Defines the PrimitiveValue range. */
+    export type PrimitiveValueRange = ValueRange<PrimitiveValue>;
 }﻿
 
 
@@ -982,6 +990,7 @@ declare module powerbi {
         labelDisplayUnits?: boolean;
         fontSize?: boolean;
         labelDensity?: boolean;
+        bubbleSize?: boolean;
     }
 
     export interface OperationalTypeDescriptor {
@@ -1178,6 +1187,14 @@ declare module powerbi.extensibility {
 
 
 declare module powerbi.extensibility {
+    interface VisualTooltipDataItem {
+        displayName: string;
+        value: string;
+        color?: string;
+        header?: string;
+        opacity?: string;
+    }
+    
     interface TooltipMoveOptions {
         coordinates: number[];
         isTouchEvent: boolean;
@@ -1194,7 +1211,7 @@ declare module powerbi.extensibility {
         immediately: boolean;
     }
 
-    interface ITooltipManager {
+    interface ITooltipService {
         enabled(): boolean;
         show(options: TooltipShowOptions): void;
         move(options: TooltipMoveOptions): void;
@@ -1229,7 +1246,7 @@ declare module powerbi.extensibility.visual {
         createSelectionManager: () => ISelectionManager;
         colorPalette: IColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
-        tooltipManager: ITooltipManager;
+        tooltipService: ITooltipService;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
