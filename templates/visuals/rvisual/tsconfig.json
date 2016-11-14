@@ -9,6 +9,7 @@
     },
     "files": [
         ".api/v1.2.0/PowerBI-visuals.d.ts",
+        "src/objectEnumerationUtility.ts",
         "src/visual.ts"
     ]
 }
