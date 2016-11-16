@@ -48,7 +48,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     builder = new VisualBuilder(visualPackage, buildOptions);
     if (program.verbose) {
         builder.on('verbose_trace', message => {
-            ConsoleWriter.info(message);
+            ConsoleWriter.trace(message);
         });
     }
 
