@@ -234,7 +234,7 @@ describe("E2E - pbiviz package for R Visual template", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--template rvisual --api-version 1.2.0 ');
+        FileSystem.runPbiviz('new', visualName, '--template rvisual');
         process.chdir(visualPath);
     });
 
