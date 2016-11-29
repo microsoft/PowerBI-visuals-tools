@@ -282,7 +282,7 @@ describe("E2E - pbiviz start for R Visuals", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--template rvisual --api-version 1.2.0');
+        FileSystem.runPbiviz('new', visualName, '--template rvisual');
     });
 
     afterEach(() => {
