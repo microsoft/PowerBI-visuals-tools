@@ -27,7 +27,7 @@
 "use strict";
 
 let fs = require('fs');
-let path = require('path')
+let path = require('path');
 let program = require('commander');
 let validator = require('gulp-powerbi-package-validator');
 let VisualPackage = require('../lib/VisualPackage');
@@ -40,17 +40,20 @@ let args = program.args;
 
 let validatePackage = (packagePath) => {
     if (fs.existsSync(packagePath)) {
-        ConsoleWriter.info('Run validator v.'+validator.ver);
-        ConsoleWriter.info('Checking package: '+packagePath);
+        let runText = ['Run validator v.', validator.ver];
+        let checkText = ['Checking package:', packagePath];
+        ConsoleWriter.info(runText.join());
+        ConsoleWriter.info(checkText.join(' '));
         ConsoleWriter.blank();
+
         validator.run(packagePath, ConsoleWriter.validationLog);
-    }else{
+    } else {
         ConsoleWriter.error('Package not exist. Please run "$ pbiviz package" first.');
     }
-}
+};
 
-let initialize = ((args) =>{
-    if (args.length){
+let initialize = ((args) => {
+    if (args.length) {
         /**
          * checking package incoming from $ args
          */
@@ -58,7 +61,7 @@ let initialize = ((args) =>{
 
         validatePackage(packagePath);
 
-    }else{
+    } else {
 
         /**
          * checking of default package which located in /dist/
@@ -66,10 +69,10 @@ let initialize = ((args) =>{
         VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             let info = visualPackage.config;
             if (info) {
-                let packageName = visualPackage.config.visual.name+'.pbiviz';
-                let packagePath = path.join(visualPackage.basePath, 'dist', packageName);
+                let packageName = [visualPackage.config.visual.name, '.pbiviz'];
+                let packagePath = path.join(visualPackage.basePath, 'dist', packageName.join());
 
-                validatePackage(packagePath)
+                validatePackage(packagePath);
             } else {
                 ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
             }
@@ -79,5 +82,5 @@ let initialize = ((args) =>{
         });
 
     }
-})(args)
+})(args);
 
