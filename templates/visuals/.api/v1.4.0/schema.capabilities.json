@@ -48,10 +48,6 @@
                     "type": "string",
                     "description": "The name of this data role that is shown to the user"
                 },
-                "displayNameKey": {
-                    "type": "string",
-                    "description": "The localization key for the displayed name in the stringResourced file"
-                },
                 "kind": {
                     "description": "The kind of data that can be bound do this role",
                     "$ref": "#/definitions/dataRole.kind"
@@ -631,10 +627,6 @@
                             "type": "string",
                             "description": "The name shown to the user to describe this group of properties"
                         },
-                        "displayNameKey": {
-                            "type": "string",
-                            "description": "The localization key for the displayed name in the stringResourced file"
-                        },
                         "description": {
                             "type": "string",
                             "description": "A description of this object shown to the user as a tooltip"
@@ -662,10 +654,6 @@
                 "displayName": {
                     "type": "string",
                     "description": "The name shown to the user to describe this property"
-                },
-                "displayNameKey": {
-                    "type": "string",
-                    "description": "The localization key for the displayed name in the stringResourced file"
                 },
                 "description": {
                     "type": "string",
@@ -776,10 +764,6 @@
                             "displayName": {
                                 "type": "string",
                                 "description": "The name shown to the user to describe this item"
-                            },
-                            "displayNameKey": {
-                                "type": "string",
-                                "description": "The localization key for the displayed name in the stringResourced file"
                             },
                             "value": {
                                 "type": "string",
