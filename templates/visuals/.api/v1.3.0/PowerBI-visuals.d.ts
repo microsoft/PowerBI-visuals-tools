@@ -1265,6 +1265,7 @@ declare module powerbi.extensibility.visual {
         colorPalette: IColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
         tooltipService: ITooltipService;
+        locale: string;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
