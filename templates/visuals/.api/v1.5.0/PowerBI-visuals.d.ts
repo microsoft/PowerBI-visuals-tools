@@ -23,7 +23,8 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-declare module powerbi {
+ 
+declare namespace powerbi {
     enum VisualDataRoleKind {
         /** Indicates that the role should be bound to something that evaluates to a grouping of values. */
         Grouping = 0,
@@ -816,34 +817,43 @@ declare module powerbi {
 
 
 declare module powerbi {
-    export interface FillRule extends FillRuleGeneric<string, number> {
+    export interface FillRule extends FillRuleGeneric<string, number, string> {
     }
 
     export interface FillRuleTypeDescriptor {
     }
 
-    export interface FillRuleGeneric<TColor, TValue> {
-        linearGradient2?: LinearGradient2Generic<TColor, TValue>;
-        linearGradient3?: LinearGradient3Generic<TColor, TValue>;
+    export interface FillRuleGeneric<TColor, TValue, TStrategy> {
+        linearGradient2?: LinearGradient2Generic<TColor, TValue, TStrategy>;
+        linearGradient3?: LinearGradient3Generic<TColor, TValue, TStrategy>;
 
         // stepped2?
         // ...
     }
 
-    export interface LinearGradient2Generic<TColor, TValue> {
+    export interface LinearGradient2Generic<TColor, TValue, TStrategy> {
         max: RuleColorStopGeneric<TColor, TValue>;
         min: RuleColorStopGeneric<TColor, TValue>;
+        nullColoringStrategy?: NullColoringStrategyGeneric<TStrategy, TColor>;
     }
-
-    export interface LinearGradient3Generic<TColor, TValue> {
+    export interface LinearGradient3Generic<TColor, TValue, TStrategy> {
         max: RuleColorStopGeneric<TColor, TValue>;
         mid: RuleColorStopGeneric<TColor, TValue>;
         min: RuleColorStopGeneric<TColor, TValue>;
+        nullColoringStrategy?: NullColoringStrategyGeneric<TStrategy, TColor>;
     }
 
     export interface RuleColorStopGeneric<TColor, TValue> {
         color: TColor;
         value?: TValue;
+    }
+
+    export interface NullColoringStrategyGeneric<TStrategy, TColor> {
+        strategy: TStrategy;
+        /**
+         * Only used if strategy is specificColor
+         */
+        color?: TColor;
     }
 }﻿
 
@@ -946,73 +956,73 @@ declare module powerbi {
     /** Describes a data value type in the client type system. Can be used to get a concrete ValueType instance. */
     export interface ValueTypeDescriptor {
         // Simplified primitive types
-        text?: boolean;
-        numeric?: boolean;
-        integer?: boolean;
-        bool?: boolean;
-        dateTime?: boolean;
-        duration?: boolean;
-        binary?: boolean;
-        none?: boolean; //TODO: 5005022 remove none type when we introduce property categories.
+        readonly text?: boolean;
+        readonly numeric?: boolean;
+        readonly integer?: boolean;
+        readonly bool?: boolean;
+        readonly dateTime?: boolean;
+        readonly duration?: boolean;
+        readonly binary?: boolean;
+        readonly none?: boolean; //TODO: 5005022 remove none type when we introduce property categories.
 
         // Extended types
-        temporal?: TemporalTypeDescriptor;
-        geography?: GeographyTypeDescriptor;
-        misc?: MiscellaneousTypeDescriptor;
-        formatting?: FormattingTypeDescriptor;
-        enumeration?: IEnumType;
-        scripting?: ScriptTypeDescriptor;
-        operations?: OperationalTypeDescriptor;
+        readonly temporal?: TemporalTypeDescriptor;
+        readonly geography?: GeographyTypeDescriptor;
+        readonly misc?: MiscellaneousTypeDescriptor;
+        readonly formatting?: FormattingTypeDescriptor;
+         enumeration?: IEnumType;
+        readonly scripting?: ScriptTypeDescriptor;
+        readonly operations?: OperationalTypeDescriptor;
 
         // variant types
-        variant?: ValueTypeDescriptor[];
+        readonly variant?: ValueTypeDescriptor[];
     }
 
     export interface ScriptTypeDescriptor {
-        source?: boolean;
+        readonly source?: boolean;
     }
 
     export interface TemporalTypeDescriptor {
-        year?: boolean;
-        quarter?: boolean;
-        month?: boolean;
-        day?: boolean;
-        paddedDateTableDate?: boolean;
+        readonly year?: boolean;
+        readonly quarter?: boolean;
+        readonly month?: boolean;
+        readonly day?: boolean;
+        readonly paddedDateTableDate?: boolean;
     }
 
     export interface GeographyTypeDescriptor {
-        address?: boolean;
-        city?: boolean;
-        continent?: boolean;
-        country?: boolean;
-        county?: boolean;
-        region?: boolean;
-        postalCode?: boolean;
-        stateOrProvince?: boolean;
-        place?: boolean;
-        latitude?: boolean;
-        longitude?: boolean;
+        readonly address?: boolean;
+        readonly city?: boolean;
+        readonly continent?: boolean;
+        readonly country?: boolean;
+        readonly county?: boolean;
+        readonly region?: boolean;
+        readonly postalCode?: boolean;
+        readonly stateOrProvince?: boolean;
+        readonly place?: boolean;
+        readonly latitude?: boolean;
+        readonly longitude?: boolean;
     }
 
     export interface MiscellaneousTypeDescriptor {
-        image?: boolean;
-        imageUrl?: boolean;
-        webUrl?: boolean;
-        barcode?: boolean;
+        readonly image?: boolean;
+        readonly imageUrl?: boolean;
+        readonly webUrl?: boolean;
+        readonly barcode?: boolean;
     }
 
     export interface FormattingTypeDescriptor {
-        color?: boolean;
-        formatString?: boolean;
-        alignment?: boolean;
-        labelDisplayUnits?: boolean;
-        fontSize?: boolean;
-        labelDensity?: boolean;
-        bubbleSize?: boolean;
+        readonly color?: boolean;
+        readonly formatString?: boolean;
+        readonly alignment?: boolean;
+        readonly labelDisplayUnits?: boolean;
+        readonly fontSize?: boolean;
+        readonly labelDensity?: boolean;
+        readonly bubbleSize?: boolean;
     }
 
     export interface OperationalTypeDescriptor {
-        searchEnabled?: boolean;
+        readonly searchEnabled?: boolean;
     }
 
     /** Describes instances of value type objects. */
@@ -1204,7 +1214,6 @@ declare module powerbi.extensibility {
 
 
 
-
 declare module powerbi.extensibility {
     interface VisualTooltipDataItem {
         displayName: string;
@@ -1238,6 +1247,7 @@ declare module powerbi.extensibility {
     }
 }
 
+
 /**
  * Change Log Version 1.5.0
  */
@@ -1267,6 +1277,7 @@ declare module powerbi.extensibility.visual {
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
         tooltipService: ITooltipService;
         locale: string;
+        allowInteractions: boolean;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
