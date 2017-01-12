@@ -224,6 +224,54 @@ describe("E2E - pbiviz package", () => {
         expect(css.size).toBe(prodCss.size);
     });
 
+    it("Should set all versions in metadata equal", (done) => {
+        let visualVersion = "1.2.3";
+
+        let pbivizJsonPath = path.join(visualPath, 'pbiviz.json');
+        let pbiviz = fs.readJsonSync(pbivizJsonPath);        
+        pbiviz.visual.version = visualVersion;
+        fs.writeFileSync(pbivizJsonPath, JSON.stringify(pbiviz));
+
+        FileSystem.runPbiviz('package');
+          
+        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+        let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
+
+        let zipContents = fs.readFileSync(pbivizPath);
+        let jszip = new JSZip();
+        jszip.loadAsync(zipContents)
+            .then((zip) => {
+                async.parallel([
+                    //check package.json
+                    (next) => {
+                        zip.file('package.json').async('string')
+                            .then((content) => {
+                                let data = JSON.parse(content);
+                                expect(data.visual.version).toEqual(visualVersion);
+                                expect(data.version).toEqual(visualVersion);
+                                next();
+                            })
+                            .catch(next);
+                    },
+                    //check pbiviz
+                    (next) => {
+                        zip.file(pbivizResourcePath).async('string')
+                            .then((content) => {
+                                let data = JSON.parse(content);
+                                expect(data.visual.version).toEqual(visualVersion);
+                                next();
+                            })
+                            .catch(next);
+                    },
+                ], error => {
+                    if (error) throw error;
+                    done();
+                });
+
+            });
+    });
+
 });
 
 describe("E2E - pbiviz package for R Visual template", () => {
