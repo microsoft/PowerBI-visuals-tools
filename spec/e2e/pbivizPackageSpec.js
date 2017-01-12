@@ -244,7 +244,7 @@ describe("E2E - pbiviz package", () => {
             .then((zip) => {
                 async.parallel([
                     //check package.json
-                    (next) => {
+                    next => {
                         zip.file('package.json').async('string')
                             .then((content) => {
                                 let data = JSON.parse(content);
@@ -255,7 +255,7 @@ describe("E2E - pbiviz package", () => {
                             .catch(next);
                     },
                     //check pbiviz
-                    (next) => {
+                    next => {
                         zip.file(pbivizResourcePath).async('string')
                             .then((content) => {
                                 let data = JSON.parse(content);
