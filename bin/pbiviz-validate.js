@@ -48,7 +48,7 @@ let validatePackage = (packagePath) => {
 
         validator.run(packagePath, ConsoleWriter.validationLog);
     } else {
-        ConsoleWriter.error('Package not exist. Please run "$ pbiviz package" first.');
+        ConsoleWriter.error('Package not found. Please run "$ pbiviz package" first.');
     }
 };
 
