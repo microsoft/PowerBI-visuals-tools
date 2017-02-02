@@ -31,7 +31,6 @@ let async = require('async');
 let JSZip = require('jszip');
 
 let FileSystem = require('../helpers/FileSystem.js');
-
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
@@ -84,11 +83,11 @@ describe("E2E - pbiviz package", () => {
         expect(error.message).toContain("Nothing to build. Cannot use --no-pbiviz without --resources");
     });
 
-    it("Should create a pbiviz file and no resources folder with no flags", () => {
-        FileSystem.runPbiviz('package');
-
+    it("Should create a pbiviz file and no resources folder with no flags", () => {        
+        FileSystem.runCMDCommand('npm i', visualPath);
         let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
         let resourcesPath = path.join(visualPath, 'dist', 'resources');
+        FileSystem.runPbiviz('package');
 
         let resourcesError;
         try {
@@ -103,6 +102,7 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should create a pbiviz file and resource folder with --resources flag", () => {
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package', false, '--resources');
 
         let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
@@ -113,6 +113,7 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should not create pbiviz file with --no-pbiviz flag", () => {
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package', false, '--no-pbiviz --resources');
 
         let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
@@ -131,6 +132,7 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should correctly generate pbiviz file", (done) => {
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package');
 
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
@@ -178,6 +180,7 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should correctly generate resources folder", () => {
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package', false, '--no-pbiviz --resources');
 
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
@@ -199,6 +202,7 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should minify assets by default", () => {
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package');
 
         let js = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.js'));
@@ -212,6 +216,7 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should skip minification with --no-minify flag", () => {
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package', false, '--no-minify');
 
         let js = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.js'));
@@ -231,7 +236,7 @@ describe("E2E - pbiviz package", () => {
         let pbiviz = fs.readJsonSync(pbivizJsonPath);        
         pbiviz.visual.version = visualVersion;
         fs.writeFileSync(pbivizJsonPath, JSON.stringify(pbiviz));
-
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package');
           
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
@@ -284,6 +289,7 @@ describe("E2E - pbiviz package for R Visual template", () => {
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--template rvisual');
         process.chdir(visualPath);
+        FileSystem.runCMDCommand('npm i', visualPath);
     });
 
     afterEach(() => {

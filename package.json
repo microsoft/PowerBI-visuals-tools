@@ -9,7 +9,7 @@
     "jasmine": "node spec/jasmine-runner.js",
     "jscs": "jscs bin lib spec",
     "jshint": "jshint bin lib spec",
-    "clean-tests": "node spec/clean-tests.js" 
+    "clean-tests": "node spec/clean-tests.js"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
@@ -38,7 +38,8 @@
     "typescript": "^1.8.10",
     "uglify-js": "^2.6.2",
     "uuid": "^3.0.0",
-    "gulp-powerbi-package-validator": "^1.0.0"
+    "gulp-powerbi-package-validator": "^1.0.0",
+    "powerbi-visuals-utils-dataviewutils": "1.0.1"
   },
   "devDependencies": {
     "async": "^2.0.1",
@@ -46,8 +47,9 @@
     "jasmine-spec-reporter": "^2.5.0",
     "jscs": "^3.0.7",
     "jshint": "^2.9.2",
-    "request": "^2.74.0",
+    "powerbi-visuals-utils-dataviewutils": "^1.0.1",
     "ps-tree": "^1.1.0",
+    "request": "^2.74.0",
     "wrench": "^1.5.9"
   }
 }

@@ -50,6 +50,7 @@ describe("E2E - pbiviz start", () => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
+        FileSystem.runCMDCommand('npm i', visualPath, tempPath);
     });
 
     afterEach(() => {
@@ -230,14 +231,13 @@ describe("E2E - pbiviz start", () => {
     });
 
     it("Should serve files from drop folder on custom port with -p flag", (done) => {
-        process.chdir(visualPath);
+        process.chdir(visualPath);        
         let pbivizProc = FileSystem.runPbivizAsync('start', ['-p', '3333']);
         pbivizProc.stderr.on('data', (data) => {
             throw new Error(data.toString());
         });
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
-
             if (dataStr.indexOf("Server listening on port 3333") !== -1) {
                 async.each(
                     assetFiles,
@@ -299,6 +299,7 @@ describe("E2E - pbiviz start for R Visuals", () => {
 
         beforeEach(() => {
             process.chdir(visualPath);
+            FileSystem.runCMDCommand('npm i', visualPath);
             pbivizProc = FileSystem.runPbivizAsync('start');
             pbivizProc.stderr.on('data', (data) => {
                 throw new Error(data.toString());

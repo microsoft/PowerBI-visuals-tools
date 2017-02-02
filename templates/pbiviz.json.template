@@ -14,10 +14,12 @@
         "name": "",
         "email": ""
     },
-    "assets": {
-        "icon": "assets/icon.png"
-    },
-    "externalJS": [],
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"
+  ],
     "style": "style/visual.less",
     "capabilities": "capabilities.json",
     "dependencies": "dependencies.json"

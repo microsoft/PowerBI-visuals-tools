@@ -1,5 +1,5 @@
 /*
- *  Power BI Visual CLI
+ *  Power BI Visualizations
  *
  *  Copyright (c) Microsoft Corporation
  *  All rights reserved.
@@ -25,23 +25,15 @@
  */
 
 module powerbi.extensibility.visual {
-    export class Visual implements IVisual {
-        private target: HTMLElement;
-        private updateCount: number;
+    import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
-        constructor(options: VisualConstructorOptions) {
-            console.log('Visual constructor', options);
-            this.target = options.element;
-            this.updateCount = 0;
-        }
-
-        public update(options: VisualUpdateOptions) {
-            console.log('Visual update', options);
-            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
-        }
-
-        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
-            return VisualSettings.enumerateObjectInstances(VisualSettings.getDefault(), options);
-        }
+    export class VisualSettings extends DataViewObjectsParser {
+    	// TODO: fill all visual settings here
+        // public dataPoint: DataPointSettings = new DataPointSettings();
     }
+
+	// TODO: fill all visual settings here
+    // export class DataPointSettings {
+    //    public fill: string = "#005c55";
+    // }
 }

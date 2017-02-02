@@ -114,23 +114,8 @@ module powerbi.extensibility.visual {
          * Below is a code snippet for a case where you want to expose a single property called "lineColor" from the object called "settings"
          * This object and property should be first defined in the capabilities.json file in the objects section.
          */
-        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-            let objectName = options.objectName;
-            let objectEnumeration = [];
-
-            /*switch( objectName ){
-                case 'settings':
-                    objectEnumeration.push({
-                        objectName: objectName,
-                        properties: {
-                            lineColor: this.settings.lineColor,
-                         },
-                        selector: null
-                    });
-                    break;
-            };*/
-
-            return objectEnumeration;
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+            return VisualSettings.enumerateObjectInstances(VisualSettings.getDefault(), options);
         }
     }
 }

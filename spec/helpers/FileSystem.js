@@ -83,8 +83,25 @@ class FileSystem {
         flags = flags ? ' ' + flags : '';
         args = args ? ' ' + args : '';
         let pbivizCmd = command + args + flags;
-        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd);        
+        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd);
         return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
+    }
+
+    /**
+     * Executes console commands
+     * 
+     * @param {string} command - the command to be executed
+     * @param {string} pathToExec - path where to execute command
+     * @param {string} pathToReturn - path to return after command execution
+     */
+    static runCMDCommand(command, pathToExec, pathToReturn) {
+        const execSync = require('child_process').execSync;
+        //console.log('executing: ' + pathToExec + ' ' + command);
+        process.chdir(pathToExec);
+        let cmd2 = execSync('npm i --silent');
+        if (pathToReturn) {
+            process.chdir(pathToReturn);
+        }
     }
 
     /**

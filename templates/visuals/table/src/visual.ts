@@ -84,5 +84,9 @@ module powerbi.extensibility.visual {
             let prefix = d3.formatPrefix(d);
             return d3.round(prefix.scale(d), 2) + ' ' + prefix.symbol
         }
+
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+            return VisualSettings.enumerateObjectInstances(VisualSettings.getDefault(), options);
+        }
     }
 }
