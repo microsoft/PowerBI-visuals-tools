@@ -198,6 +198,14 @@ describe("E2E - pbiviz package", () => {
         expect(pbiviz.content.iconBase64).toBeDefined();
     });
 
+    it("Should not create the visualPlugin.ts with --resources, --no-pbiviz, --no-plugin flags", () => {
+        FileSystem.runPbiviz('package', false, '--resources --no-pbiviz --no-plugin');
+
+        let visualPluginPath = path.join(visualPath, '.tmp', 'precompile', 'visualPlugin.ts');
+
+        expect(fs.existsSync(visualPluginPath)).toBeFalsy();
+    });
+
     it("Should minify assets by default", () => {
         FileSystem.runPbiviz('package');
 
@@ -228,12 +236,12 @@ describe("E2E - pbiviz package", () => {
         let visualVersion = "1.2.3";
 
         let pbivizJsonPath = path.join(visualPath, 'pbiviz.json');
-        let pbiviz = fs.readJsonSync(pbivizJsonPath);        
+        let pbiviz = fs.readJsonSync(pbivizJsonPath);
         pbiviz.visual.version = visualVersion;
         fs.writeFileSync(pbivizJsonPath, JSON.stringify(pbiviz));
 
         FileSystem.runPbiviz('package');
-          
+
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
         let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
@@ -339,7 +347,7 @@ describe("E2E - pbiviz package for R Visual template", () => {
         let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
         let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
 
-        visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault = 
+        visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault =
             fs.readFileSync(path.join(visualPath, 'script.r')).toString();
 
         let zipContents = fs.readFileSync(pbivizPath);
@@ -390,7 +398,7 @@ describe("E2E - pbiviz package for R Visual template", () => {
         let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
         let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
 
-        visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault = 
+        visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault =
             fs.readFileSync(path.join(visualPath, 'script.r')).toString();
 
         let dependencies = fs.readJsonSync(path.join(visualPath, 'dependencies.json'));
