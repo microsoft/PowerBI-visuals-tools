@@ -41,10 +41,12 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 describe("E2E - pbiviz start", () => {
 
-    let visualName = 'visualname';
-    let visualPath = path.join(tempPath, visualName);
-    let dropPath = path.join(visualPath, '.tmp', 'drop');
-    let assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
+    const visualName = 'visualname';
+    const visualPath = path.join(tempPath, visualName);
+    const tmpPath = path.join(visualPath, '.tmp');
+    const dropPath = path.join(tmpPath, 'drop');
+    const precompilePath = path.join(tmpPath, 'precompile');
+    const assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
 
     beforeEach(() => {
         FileSystem.resetTempDirectory();
@@ -188,7 +190,7 @@ describe("E2E - pbiviz start", () => {
 
                     //trigger less change
                     let lessSrcPath = path.join(visualPath, 'style/visual.less');
-                    fs.appendFileSync(lessSrcPath, '/* appended to less file */');                    
+                    fs.appendFileSync(lessSrcPath, '/* appended to less file */');
                 }
 
                 if (dataStr.indexOf('Less build complete') !== -1) {
@@ -205,7 +207,7 @@ describe("E2E - pbiviz start", () => {
                     let visualCapabilities = fs.readJsonSync(capabilitiesPath);
                     visualCapabilities.dataRoles.pop();
                     fs.writeJsonSync(capabilitiesPath, visualCapabilities);
-                }          
+                }
 
                 if (dataStr.indexOf('JSON build complete') !== -1) {
                     jsonChangeCount++;
@@ -217,13 +219,40 @@ describe("E2E - pbiviz start", () => {
                     lastStatus = status;
 
                     //the end
-                    FileSystem.killProcess(pbivizProc, 'SIGTERM');                    
-                }                      
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM');
+                }
             });
 
             pbivizProc.on('close', (error, message) => {
                 if (error) throw error;
                 expect(message).toBe('SIGTERM');
+                done();
+            });
+        });
+
+        it("Should create a custom visual plugin file (visualPlugin.ts)", (done) => {
+            pbivizProc.stdout.on('data', (data) => {
+                const dataStr = data.toString();
+
+                if (dataStr.indexOf("Server listening on port 8080") === -1) {
+                    return;
+                }
+
+                const pluginPath = path.join(precompilePath, 'visualPlugin.ts'),
+                    doesPluginExist = fs.existsSync(pluginPath);
+
+                expect(doesPluginExist).toBeTruthy();
+
+                FileSystem.killProcess(pbivizProc, 'SIGTERM');
+            });
+
+            pbivizProc.on('close', (error, message) => {
+                if (error) {
+                    throw error;
+                }
+
+                expect(message).toBe('SIGTERM');
+
                 done();
             });
         });
@@ -333,7 +362,7 @@ describe("E2E - pbiviz start for R Visuals", () => {
                     lastStatus = status;
 
                     //the end
-                    FileSystem.killProcess(pbivizProc, 'SIGTERM');    
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM');
                 }
             });
 
