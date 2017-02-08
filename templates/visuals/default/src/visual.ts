@@ -28,6 +28,7 @@ module powerbi.extensibility.visual {
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
+        private settings: VisualSettings;
 
         constructor(options: VisualConstructorOptions) {
             console.log('Visual constructor', options);
@@ -37,11 +38,19 @@ module powerbi.extensibility.visual {
 
         public update(options: VisualUpdateOptions) {
             console.log('Visual update', options);
+            if (options.dataViews === undefined || options.dataViews === null) {
+                return;
+            }
+            this.settings = Visual.parseSettings(options.dataViews[0]);
             this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
         }
 
+        private static parseSettings(dataView: DataView): VisualSettings {
+            return VisualSettings.parse(dataView) as VisualSettings;
+        }
+
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
-            return VisualSettings.enumerateObjectInstances(VisualSettings.getDefault(), options);
+            return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
     }
 }

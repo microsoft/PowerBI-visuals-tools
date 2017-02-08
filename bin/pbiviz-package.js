@@ -36,6 +36,7 @@ program
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
     .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
     .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
+    .option('--no-plugin', "Doesn't include a plugin declaration to the package (must be used in conjunction with --no-pbiviz and --resources flags)")
     .parse(process.argv);
 
 let cwd = process.cwd();
@@ -49,17 +50,22 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
     let buildOptions = {
-        minify: program.minify
+        minify: program.minify,
+        plugin: program.plugin || program.pbiviz
     };
+
     let builder = new VisualBuilder(visualPackage, buildOptions);
+
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
         ConsoleWriter.blank();
         ConsoleWriter.info('Building visual...');
+
         let packager = new PbivizBuilder(visualPackage, {
             resources: program.resources,
             pbiviz: program.pbiviz
         });
+
         packager.build().then(() => {
             ConsoleWriter.done('packaging complete');
         }).catch(e => {

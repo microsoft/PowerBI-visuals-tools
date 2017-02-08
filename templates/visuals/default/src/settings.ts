@@ -28,11 +28,11 @@ module powerbi.extensibility.visual {
     import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
     export class VisualSettings extends DataViewObjectsParser {
-    	// TODO: fill all visual settings here
+        // TODO: fill all visual settings here
         // public dataPoint: DataPointSettings = new DataPointSettings();
     }
 
-	// TODO: fill all visual settings here
+    // TODO: fill all visual settings here
     // export class DataPointSettings {
     //    public fill: string = "#005c55";
     // }

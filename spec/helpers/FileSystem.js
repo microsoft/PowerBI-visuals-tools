@@ -96,7 +96,6 @@ class FileSystem {
      */
     static runCMDCommand(command, pathToExec, pathToReturn) {
         const execSync = require('child_process').execSync;
-        //console.log('executing: ' + pathToExec + ' ' + command);
         process.chdir(pathToExec);
         let cmd2 = execSync('npm i --silent');
         if (pathToReturn) {
