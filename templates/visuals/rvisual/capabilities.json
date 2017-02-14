@@ -41,17 +41,6 @@
     }
   ],
   "objects": {
-    "general": {
-      "displayName": "General",
-      "properties": {
-        "filter": {
-          "displayName": "filter",
-          "type": {
-            "filter": true
-          }
-        }
-      }
-    },
     "rcv_script": {
       "properties": {
         "provider": {
