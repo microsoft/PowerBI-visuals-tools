@@ -35,7 +35,7 @@
     "lodash": "^4.11.1",
     "serve-static": "^1.10.2",
     "source-map-concat": "^1.0.1",
-    "typescript": "^1.8.10",
+    "typescript": "2.1.5",
     "uglify-js": "^2.6.2",
     "uuid": "^3.0.0",
     "gulp-powerbi-package-validator": "^1.0.0"
