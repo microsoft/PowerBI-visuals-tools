@@ -33,6 +33,7 @@ module powerbi.extensibility.visual {
         private table: d3.Selection<HTMLElement>;
         private tHead: d3.Selection<HTMLElement>;
         private tBody: d3.Selection<HTMLElement>;
+        private settings: VisualSettings;
 
         constructor(options: VisualConstructorOptions) {
             let target = this.target = d3.select(options.element).append('div')
@@ -46,8 +47,10 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions, viewModel: VisualViewModel) {
-            if (!viewModel) return;
-
+            if (!viewModel || options.dataViews === undefined || options.dataViews === null) {
+                return;
+            }
+            this.settings = Visual.parseSettings(options.dataViews[0]);
             this.updateContainerViewports(options.viewport);
 
             let transposedSeries = d3.transpose(viewModel.values.map(d => d.values.map(d => d)));
@@ -83,6 +86,14 @@ module powerbi.extensibility.visual {
         private format(d: number) {
             let prefix = d3.formatPrefix(d);
             return d3.round(prefix.scale(d), 2) + ' ' + prefix.symbol
+        }
+
+        private static parseSettings(dataView: DataView): VisualSettings {
+            return VisualSettings.parse(dataView) as VisualSettings;
+        }
+
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+            return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
     }
 }

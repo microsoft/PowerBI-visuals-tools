@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 module powerbi.extensibility.visual {
-    
+
     // Below is a snippet of a definition for an object which will contain the property values
     // selected by the users
     /*interface VisualSettings {
@@ -48,6 +48,7 @@ module powerbi.extensibility.visual {
     export class Visual implements IVisual {
         private imageDiv: HTMLDivElement;
         private imageElement: HTMLImageElement;
+        private settings: VisualSettings;
 
         // Snippet for defining the member property which will hold the property pane values
         /*private settings: VisualSettings;*/
@@ -56,7 +57,7 @@ module powerbi.extensibility.visual {
             this.imageDiv = document.createElement('div');
             this.imageDiv.className = 'rcv_autoScaleImageContainer';
             options.element.appendChild(this.imageDiv);
-            
+
             this.imageElement = document.createElement('img');
             this.imageElement.className = 'rcv_autoScaleImage';
 
@@ -106,7 +107,9 @@ module powerbi.extensibility.visual {
                 lineColor: getFillValue(object, 'settings', 'lineColor', "#333333")
             };*/
         }
-
+        private static parseSettings(dataView: DataView): VisualSettings {
+            return VisualSettings.parse(dataView) as VisualSettings;
+        }
         /** 
          * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
          * objects and properties you want to expose to the users in the property pane.
@@ -114,23 +117,8 @@ module powerbi.extensibility.visual {
          * Below is a code snippet for a case where you want to expose a single property called "lineColor" from the object called "settings"
          * This object and property should be first defined in the capabilities.json file in the objects section.
          */
-        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-            let objectName = options.objectName;
-            let objectEnumeration = [];
-
-            /*switch( objectName ){
-                case 'settings':
-                    objectEnumeration.push({
-                        objectName: objectName,
-                        properties: {
-                            lineColor: this.settings.lineColor,
-                         },
-                        selector: null
-                    });
-                    break;
-            };*/
-
-            return objectEnumeration;
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+            return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
     }
 }

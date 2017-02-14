@@ -1,3 +1,7 @@
 {
-  "name": "visual"
+  "name": "visual",
+  "version": "0.0.1",
+  "devDependencies": {
+    "powerbi-visuals-utils-dataviewutils": "1.0.1"
+  }
 }
