@@ -34,7 +34,7 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .option('-t, --template [template]', 'use a specific template (default, table)')
+    .option('-t, --template [template]', 'use a specific template (default, table, slicer)')
     .option('--api-version [version]', 'use a specific api version (1.0.0, 1.1.0, 1.2.0, ...)')
     .parse(process.argv);
 
