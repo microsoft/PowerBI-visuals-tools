@@ -23,7 +23,12 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+<<<<<<< HEAD
 declare module powerbi {
+=======
+ 
+declare namespace powerbi {
+>>>>>>> origin/API-1.5
     enum VisualDataRoleKind {
         /** Indicates that the role should be bound to something that evaluates to a grouping of values. */
         Grouping = 0,
@@ -816,20 +821,31 @@ declare module powerbi {
 
 
 declare module powerbi {
+<<<<<<< HEAD
     export interface FillRule extends FillRuleGeneric<string, number> {
+=======
+    export interface FillRule extends FillRuleGeneric<string, number, string> {
+>>>>>>> origin/API-1.5
     }
 
     export interface FillRuleTypeDescriptor {
     }
 
+<<<<<<< HEAD
     export interface FillRuleGeneric<TColor, TValue> {
         linearGradient2?: LinearGradient2Generic<TColor, TValue>;
         linearGradient3?: LinearGradient3Generic<TColor, TValue>;
+=======
+    export interface FillRuleGeneric<TColor, TValue, TStrategy> {
+        linearGradient2?: LinearGradient2Generic<TColor, TValue, TStrategy>;
+        linearGradient3?: LinearGradient3Generic<TColor, TValue, TStrategy>;
+>>>>>>> origin/API-1.5
 
         // stepped2?
         // ...
     }
 
+<<<<<<< HEAD
     export interface LinearGradient2Generic<TColor, TValue> {
         max: RuleColorStopGeneric<TColor, TValue>;
         min: RuleColorStopGeneric<TColor, TValue>;
@@ -839,12 +855,35 @@ declare module powerbi {
         max: RuleColorStopGeneric<TColor, TValue>;
         mid: RuleColorStopGeneric<TColor, TValue>;
         min: RuleColorStopGeneric<TColor, TValue>;
+=======
+    export interface LinearGradient2Generic<TColor, TValue, TStrategy> {
+        max: RuleColorStopGeneric<TColor, TValue>;
+        min: RuleColorStopGeneric<TColor, TValue>;
+        nullColoringStrategy?: NullColoringStrategyGeneric<TStrategy, TColor>;
+    }
+    export interface LinearGradient3Generic<TColor, TValue, TStrategy> {
+        max: RuleColorStopGeneric<TColor, TValue>;
+        mid: RuleColorStopGeneric<TColor, TValue>;
+        min: RuleColorStopGeneric<TColor, TValue>;
+        nullColoringStrategy?: NullColoringStrategyGeneric<TStrategy, TColor>;
+>>>>>>> origin/API-1.5
     }
 
     export interface RuleColorStopGeneric<TColor, TValue> {
         color: TColor;
         value?: TValue;
     }
+<<<<<<< HEAD
+=======
+
+    export interface NullColoringStrategyGeneric<TStrategy, TColor> {
+        strategy: TStrategy;
+        /**
+         * Only used if strategy is specificColor
+         */
+        color?: TColor;
+    }
+>>>>>>> origin/API-1.5
 }﻿
 
 
@@ -946,6 +985,7 @@ declare module powerbi {
     /** Describes a data value type in the client type system. Can be used to get a concrete ValueType instance. */
     export interface ValueTypeDescriptor {
         // Simplified primitive types
+<<<<<<< HEAD
         text?: boolean;
         numeric?: boolean;
         integer?: boolean;
@@ -1013,6 +1053,75 @@ declare module powerbi {
 
     export interface OperationalTypeDescriptor {
         searchEnabled?: boolean;
+=======
+        readonly text?: boolean;
+        readonly numeric?: boolean;
+        readonly integer?: boolean;
+        readonly bool?: boolean;
+        readonly dateTime?: boolean;
+        readonly duration?: boolean;
+        readonly binary?: boolean;
+        readonly none?: boolean; //TODO: 5005022 remove none type when we introduce property categories.
+
+        // Extended types
+        readonly temporal?: TemporalTypeDescriptor;
+        readonly geography?: GeographyTypeDescriptor;
+        readonly misc?: MiscellaneousTypeDescriptor;
+        readonly formatting?: FormattingTypeDescriptor;
+         enumeration?: IEnumType;
+        readonly scripting?: ScriptTypeDescriptor;
+        readonly operations?: OperationalTypeDescriptor;
+
+        // variant types
+        readonly variant?: ValueTypeDescriptor[];
+    }
+
+    export interface ScriptTypeDescriptor {
+        readonly source?: boolean;
+    }
+
+    export interface TemporalTypeDescriptor {
+        readonly year?: boolean;
+        readonly quarter?: boolean;
+        readonly month?: boolean;
+        readonly day?: boolean;
+        readonly paddedDateTableDate?: boolean;
+    }
+
+    export interface GeographyTypeDescriptor {
+        readonly address?: boolean;
+        readonly city?: boolean;
+        readonly continent?: boolean;
+        readonly country?: boolean;
+        readonly county?: boolean;
+        readonly region?: boolean;
+        readonly postalCode?: boolean;
+        readonly stateOrProvince?: boolean;
+        readonly place?: boolean;
+        readonly latitude?: boolean;
+        readonly longitude?: boolean;
+    }
+
+    export interface MiscellaneousTypeDescriptor {
+        readonly image?: boolean;
+        readonly imageUrl?: boolean;
+        readonly webUrl?: boolean;
+        readonly barcode?: boolean;
+    }
+
+    export interface FormattingTypeDescriptor {
+        readonly color?: boolean;
+        readonly formatString?: boolean;
+        readonly alignment?: boolean;
+        readonly labelDisplayUnits?: boolean;
+        readonly fontSize?: boolean;
+        readonly labelDensity?: boolean;
+        readonly bubbleSize?: boolean;
+    }
+
+    export interface OperationalTypeDescriptor {
+        readonly searchEnabled?: boolean;
+>>>>>>> origin/API-1.5
     }
 
     /** Describes instances of value type objects. */
@@ -1204,7 +1313,10 @@ declare module powerbi.extensibility {
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/API-1.5
 declare module powerbi.extensibility {
     interface VisualTooltipDataItem {
         displayName: string;
@@ -1238,6 +1350,10 @@ declare module powerbi.extensibility {
     }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/API-1.5
 /**
  * Change Log Version 1.5.0
  */
@@ -1266,6 +1382,11 @@ declare module powerbi.extensibility.visual {
         colorPalette: IColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
         tooltipService: ITooltipService;
+<<<<<<< HEAD
+=======
+        locale: string;
+        allowInteractions: boolean;
+>>>>>>> origin/API-1.5
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {

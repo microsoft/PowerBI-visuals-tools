@@ -69,7 +69,11 @@
                     "items": {
                         "$ref": "#/definitions/valueType"
                     }
+<<<<<<< HEAD
                 }                
+=======
+                }
+>>>>>>> origin/API-1.5
             },
             "required": [
                 "name",
@@ -482,7 +486,11 @@
                 },
                 {
                     "properties": {
+<<<<<<< HEAD
                         "kind" : {
+=======
+                        "kind": {
+>>>>>>> origin/API-1.5
                             "$ref": "#/definitions/dataRole.kind"
                         }
                     }
@@ -740,10 +748,17 @@
                 "roles": {
                     "type": "array",
                     "description": "The drillable role names for this visual",
+<<<<<<< HEAD
                      "items": {
                          "type": "string",
                          "description": "The name of the role"
                      }
+=======
+                    "items": {
+                        "type": "string",
+                        "description": "The name of the role"
+                    }
+>>>>>>> origin/API-1.5
                 }
             }
         },
@@ -845,6 +860,7 @@
                     "description": "A numeric value that will be displayed to the user as a text input"
                 },
                 "filter": {
+<<<<<<< HEAD
                     "type": "boolean",
                     "description": "A filter"
                 },
@@ -861,6 +877,46 @@
                             "description": "A source code"		
                         }		
                     }		
+=======
+                    "oneOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "selfFilter": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    ],
+                    "description": "A filter"
+                },
+                "operations": {
+                    "type": "object",
+                    "description": "A visual operation",
+                    "properties": {
+                        "searchEnabled": {
+                            "type": "boolean",
+                            "description": "Turns search ability on"
+                        }
+                    }
+                },
+                "text": {
+                    "type": "boolean",
+                    "description": "A text value that will be displayed to the user as a text input"
+                },
+                "scripting": {
+                    "type": "object",
+                    "description": "A text value that will be displayed to the user as a script",
+                    "properties": {
+                        "source": {
+                            "type": "boolean",
+                            "description": "A source code"
+                        }
+                    }
+>>>>>>> origin/API-1.5
                 },
                 "geography": {
                     "type": "object",
@@ -943,18 +999,38 @@
                     "required": [
                         "geography"
                     ]
+<<<<<<< HEAD
                 },		
                 {		
                     "required": [		
                         "scripting"		
                     ]		
+=======
+                },
+                {
+                    "required": [
+                        "scripting"
+                    ]
+>>>>>>> origin/API-1.5
                 },
                 {
                     "required": [
                         "filter"
                     ]
+<<<<<<< HEAD
+=======
+                },
+                {
+                    "required": [
+                        "operations"
+                    ]
+>>>>>>> origin/API-1.5
                 }
             ]
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/API-1.5
