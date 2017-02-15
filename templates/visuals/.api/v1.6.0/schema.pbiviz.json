@@ -36,13 +36,6 @@
             "items": {
                 "type": "string"
             }
-        },
-        "stringResources": {
-            "type": "array",
-            "description": "An array of relative paths to string resources to load",
-            "items": {
-                "type": "string"
-            }
         },        
         "style" : {
             "type": "string",
