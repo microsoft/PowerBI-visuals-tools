@@ -69,11 +69,7 @@
                     "items": {
                         "$ref": "#/definitions/valueType"
                     }
-<<<<<<< HEAD
-                }                
-=======
                 }
->>>>>>> origin/API-1.5
             },
             "required": [
                 "name",
@@ -860,24 +856,6 @@
                     "description": "A numeric value that will be displayed to the user as a text input"
                 },
                 "filter": {
-<<<<<<< HEAD
-                    "type": "boolean",
-                    "description": "A filter"
-                },
-                "text": {
-                    "type": "boolean",
-                    "description": "A text value that will be displayed to the user as a text input"
-                },		
-                "scripting": {		
-                    "type": "object",		
-                    "description": "A text value that will be displayed to the user as a script",		
-                    "properties": {		
-                        "source": {		
-                            "type": "boolean",		
-                            "description": "A source code"		
-                        }		
-                    }		
-=======
                     "oneOf": [
                         {
                             "type": "boolean"
@@ -916,7 +894,6 @@
                             "description": "A source code"
                         }
                     }
->>>>>>> origin/API-1.5
                 },
                 "geography": {
                     "type": "object",
@@ -999,38 +976,18 @@
                     "required": [
                         "geography"
                     ]
-<<<<<<< HEAD
-                },		
-                {		
-                    "required": [		
-                        "scripting"		
-                    ]		
-=======
                 },
                 {
                     "required": [
                         "scripting"
                     ]
->>>>>>> origin/API-1.5
                 },
                 {
                     "required": [
                         "filter"
                     ]
-<<<<<<< HEAD
-=======
-                },
-                {
-                    "required": [
-                        "operations"
-                    ]
->>>>>>> origin/API-1.5
                 }
             ]
         }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/API-1.5
