@@ -42,8 +42,7 @@
             "description": "An array of relative paths to string resources to load",
             "items": {
                 "type": "string"
-            },
-            "uniqueItems": true
+            }
         },        
         "style" : {
             "type": "string",
