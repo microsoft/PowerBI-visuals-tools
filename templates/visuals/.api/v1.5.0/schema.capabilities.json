@@ -482,11 +482,7 @@
                 },
                 {
                     "properties": {
-<<<<<<< HEAD
-                        "kind" : {
-=======
                         "kind": {
->>>>>>> origin/API-1.5
                             "$ref": "#/definitions/dataRole.kind"
                         }
                     }
@@ -744,17 +740,10 @@
                 "roles": {
                     "type": "array",
                     "description": "The drillable role names for this visual",
-<<<<<<< HEAD
-                     "items": {
-                         "type": "string",
-                         "description": "The name of the role"
-                     }
-=======
                     "items": {
                         "type": "string",
                         "description": "The name of the role"
                     }
->>>>>>> origin/API-1.5
                 }
             }
         },
