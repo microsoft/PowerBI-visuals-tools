@@ -939,29 +939,11 @@
                     "required": [
                         "geography"
                     ]
-<<<<<<< HEAD:templates/visuals/.api/v1.3.0/schema.capabilities.json
                 },		
                 {		
                     "required": [		
                         "scripting"		
                     ]		
-=======
-                },
-                {
-                    "required": [
-                        "scripting"
-                    ]
-                },
-                {
-                    "required": [
-                        "filter"
-                    ]
-                },
-                {
-                    "required": [
-                        "operations"
-                    ]
->>>>>>> 15005: PBIVIZ: Include a slicer template to the PBIVIZ tools:templates/visuals/.api/v1.5.0/schema.capabilities.json
                 }
             ]
         }
