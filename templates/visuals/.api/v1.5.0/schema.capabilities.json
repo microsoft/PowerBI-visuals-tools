@@ -975,6 +975,11 @@
                     "required": [
                         "filter"
                     ]
+                },
+                {
+                    "required": [
+                        "operations"
+                    ]
                 }
             ]
         }
