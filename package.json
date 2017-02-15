@@ -1,22 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   "version": "1.5.0",
-=======
-  "version": "1.4.1",
->>>>>>> Update package.json
-=======
-  "version": "1.4.2",
->>>>>>> 14731: CVUT coverage: Implement the --no-plugin flag of Power BI Visuals Tools (PBIVIZ)
-=======
-  "version": "1.4.3",
->>>>>>> 14822: CVUT coverage: Update source code of the PBIVIZ tools in order to fix the watching mode
-=======
-  "version": "1.5.0",
->>>>>>> origin/API-1.5
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
