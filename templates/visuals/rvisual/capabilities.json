@@ -13,10 +13,14 @@
           "table": {
             "rows": {
               "select": [
-                { "for": { "in": "Values" } }
+                {
+                  "for": {
+                    "in": "Values"
+                  }
+                }
               ],
               "dataReductionAlgorithm": {
-                "top": { }
+                "top": {}
               }
             }
           }
@@ -40,11 +44,15 @@
     "rcv_script": {
       "properties": {
         "provider": {
-          "type": { "text": true }
+          "type": {
+            "text": true
+          }
         },
         "source": {
           "type": {
-            "scripting": { "source": true }
+            "scripting": {
+              "source": true
+            }
           }
         }
       }

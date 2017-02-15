@@ -33,5 +33,31 @@
                 }
             }
         }
-    ]
+    ],
+    "objects": {
+        "general": {
+            "displayName": "General",
+            "properties": {
+                "filter": {
+                    "type": {
+                        "filter": true
+                    }
+                },
+                "selfFilter": {
+                    "type": {
+                        "filter": {
+                            "selfFilter": true
+                        }
+                    }
+                },
+                "selfFilterEnabled": {
+                    "type": {
+                        "operations": {
+                            "searchEnabled": true
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

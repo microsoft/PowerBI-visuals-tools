@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v1.3.0",
+    "PBI_API_VERSION": "v1.4.0",
     "type": "object",
     "properties": {
         "dataRoles": {
@@ -69,7 +69,7 @@
                     "items": {
                         "$ref": "#/definitions/valueType"
                     }
-                }
+                }                
             },
             "required": [
                 "name",
@@ -482,7 +482,7 @@
                 },
                 {
                     "properties": {
-                        "kind": {
+                        "kind" : {
                             "$ref": "#/definitions/dataRole.kind"
                         }
                     }
@@ -740,10 +740,10 @@
                 "roles": {
                     "type": "array",
                     "description": "The drillable role names for this visual",
-                    "items": {
-                        "type": "string",
-                        "description": "The name of the role"
-                    }
+                     "items": {
+                         "type": "string",
+                         "description": "The name of the role"
+                     }
                 }
             }
         },
@@ -847,16 +847,16 @@
                 "text": {
                     "type": "boolean",
                     "description": "A text value that will be displayed to the user as a text input"
-                },
-                "scripting": {
-                    "type": "object",
-                    "description": "A text value that will be displayed to the user as a script",
-                    "properties": {
-                        "source": {
-                            "type": "boolean",
-                            "description": "A source code"
-                        }
-                    }
+                },		
+                "scripting": {		
+                    "type": "object",		
+                    "description": "A text value that will be displayed to the user as a script",		
+                    "properties": {		
+                        "source": {		
+                            "type": "boolean",		
+                            "description": "A source code"		
+                        }		
+                    }		
                 },
                 "geography": {
                     "type": "object",

@@ -79,45 +79,58 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
     });
 
-    it("Should generate new visual using specified template", () => {
-        let visualName = 'visualname';
-        let template = 'table';
-        let visualPath = path.join(tempPath, visualName);
+    describe('Should generate new visual using specified template', () => {
+        it('table', () => {
+            const template = 'table';
 
-        FileSystem.runPbiviz('new', visualName, '--template table');
+            testGeneratedVisualByTemplateName(template);
+        });
 
-        //check base dir exists
-        let stat = fs.statSync(visualPath);
-        expect(stat.isDirectory()).toBe(true);
+        it('slicer', () => {
+            const template = 'slicer';
 
-        //read pbiviz json generated in visual
-        let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
-        let version = 'v' + pbivizJson.apiVersion;
+            testGeneratedVisualByTemplateName(template);
+        });
 
-        //check that all files were created
-        let versionBasePath = path.join('.api', version);
-        let expectedFiles = wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
-        expectedFiles = expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
-        expectedFiles.push(
-            'pbiviz.json',
-            '.api',
-            versionBasePath,
-            path.join(versionBasePath, 'PowerBI-visuals.d.ts'),
-            path.join(versionBasePath, 'schema.capabilities.json'),
-            path.join(versionBasePath, 'schema.dependencies.json'),
-            path.join(versionBasePath, 'schema.pbiviz.json')
-        );
-        let visualFiles = wrench.readdirSyncRecursive(visualPath);
-        let fileDiff = _.xor(visualFiles, expectedFiles);
-        expect(fileDiff.length).toBe(0);
+        function testGeneratedVisualByTemplateName(template) {
+            let visualName = 'visualname',
+                visualPath = path.join(tempPath, visualName);
 
-        //check pbiviz.json config file
-        let visualConfig = pbivizJson.visual;
-        expect(visualConfig.name).toBe(visualName);
-        expect(visualConfig.displayName).toBe(visualName);
-        expect(visualConfig.guid).toBeDefined();
-        expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
+            FileSystem.runPbiviz('new', visualName, `--template ${template}`);
 
+            //check base dir exists
+            let stat = fs.statSync(visualPath);
+            expect(stat.isDirectory()).toBe(true);
+
+            //read pbiviz json generated in visual
+            let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
+            let version = 'v' + pbivizJson.apiVersion;
+
+            //check that all files were created
+            let versionBasePath = path.join('.api', version);
+            let expectedFiles = wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
+            expectedFiles = expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
+            expectedFiles.push(
+                'pbiviz.json',
+                '.api',
+                versionBasePath,
+                path.join(versionBasePath, 'PowerBI-visuals.d.ts'),
+                path.join(versionBasePath, 'schema.capabilities.json'),
+                path.join(versionBasePath, 'schema.dependencies.json'),
+                path.join(versionBasePath, 'schema.pbiviz.json')
+            );
+            let visualFiles = wrench.readdirSyncRecursive(visualPath);
+            let fileDiff = _.xor(visualFiles, expectedFiles);
+
+            expect(fileDiff.length).toBe(0);
+
+            //check pbiviz.json config file
+            let visualConfig = pbivizJson.visual;
+            expect(visualConfig.name).toBe(visualName);
+            expect(visualConfig.displayName).toBe(visualName);
+            expect(visualConfig.guid).toBeDefined();
+            expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
+        }
     });
 
     it("Should convert multi-word visual name to camelCase", () => {
@@ -196,7 +209,7 @@ describe("E2E - pbiviz new", () => {
 
             //pbiviz version number should've been updated
             let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
-            expect(pbivizJson.apiVersion).toBe('1.0.0');  
+            expect(pbivizJson.apiVersion).toBe('1.0.0');
 
             //tsconfig should've been updated
             let tsConfig = fs.readJsonSync(path.join(visualPath, 'tsconfig.json'));
@@ -214,8 +227,8 @@ describe("E2E - pbiviz new", () => {
                     expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.capabilities.json');
                     vsCodeMatches++;
                 }
-            });  
-            expect(vsCodeMatches).toBe(2);   
+            });
+            expect(vsCodeMatches).toBe(2);
         });
 
         it("Should fail with invalid version number", () => {
