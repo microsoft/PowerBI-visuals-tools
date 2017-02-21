@@ -86,14 +86,20 @@ describe("E2E - pbiviz new", () => {
             testGeneratedVisualByTemplateName(template);
         });
 
+        it('slicer', () => {
+            const template = 'slicer';
+
+            testGeneratedVisualByTemplateName(template);
+        });
+        
         it('rvisual', () => {
             const template = 'rvisual';
 
             testGeneratedVisualByTemplateName(template);
         });
 
-        it('slicer', () => {
-            const template = 'slicer';
+        it('rhtml', () => {
+            const template = 'rvisual';
 
             testGeneratedVisualByTemplateName(template);
         });
