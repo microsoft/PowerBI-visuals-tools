@@ -23,8 +23,8 @@ FlattenHTML <- function(fnameIn, fnameOut)
   for (node in srcNode)
   {
     b = xmlAttrs(node)
-    f = file.path(dir, b['src'])
-    alternateSrc = FindSrcReplacement(f)
+    fname = file.path(dir, b['src'])
+    alternateSrc = FindSrcReplacement(fname)
     if (!is.null(alternateSrc))
     {
       s = alternateSrc
@@ -32,7 +32,7 @@ FlattenHTML <- function(fnameIn, fnameOut)
       newNode = xmlNode("script",attrs = s)
       replaceNodes(node, newNode)
     }else{
-      str=ReadFileForEmbedding(b['src']);
+      str=ReadFileForEmbedding(fname);
       if (!is.null(str))
       {      
         newNode = xmlNode("script", str, attrs = c(type="text/javascript"))
@@ -46,8 +46,8 @@ FlattenHTML <- function(fnameIn, fnameOut)
   for (node in linkNode)
   {
     b = xmlAttrs(node)
-    f = file.path(dir, b['href'])
-    str = ReadFileForEmbedding(f);
+    fname = file.path(dir, b['href'])
+    str = ReadFileForEmbedding(fname);
     if (!is.null(str))
     {
       newNode = xmlNode("style", str)

@@ -91,7 +91,7 @@ describe("E2E - pbiviz new", () => {
 
             testGeneratedVisualByTemplateName(template);
         });
-        
+
         it('rvisual', () => {
             const template = 'rvisual';
 
@@ -99,7 +99,7 @@ describe("E2E - pbiviz new", () => {
         });
 
         it('rhtml', () => {
-            const template = 'rvisual';
+            const template = 'rhtml';
 
             testGeneratedVisualByTemplateName(template);
         });
