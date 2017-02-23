@@ -47,7 +47,7 @@ FlattenHTML <- function(fnameIn, fnameOut)
   {
     b = xmlAttrs(node)
     fname = file.path(dir, b['href'])
-    str = ReadFileForEmbedding(fname);
+    str = ReadFileForEmbedding(fname, FALSE);
     if (!is.null(str))
     {
       newNode = xmlNode("style", str)
@@ -70,14 +70,16 @@ ReadFullFile <- function(fname)
   return(data)
 }
 
-ReadFileForEmbedding <- function(fname)
+ReadFileForEmbedding <- function(fname, addCdata = TRUE)
 {
   data = ReadFullFile(fname)
   if (is.null(data))
     return(NULL)
 
   str = paste(data, collapse ='\n')
-  str = paste(cbind('// <![CDATA[', str,'// ]]>'), collapse ='\n')
+  if (addCdata) {
+    str = paste(cbind('// <![CDATA[', str,'// ]]>'), collapse ='\n')
+  }
   return(str)
 }
 
