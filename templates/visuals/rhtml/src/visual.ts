@@ -122,12 +122,12 @@ module powerbi.extensibility.visual {
 
             while (this.bodyNodes.length > 0) {
                 let tempNode: Node = this.bodyNodes.pop();
-                document.body.removeChild(tempNode);
+                this.rootElement.removeChild(tempNode);
             }
             let bodyList: NodeListOf<HTMLBodyElement> = el.getElementsByTagName('body');
             if (bodyList && bodyList.length > 0) {
                 let body: HTMLBodyElement = bodyList[0];
-                this.bodyNodes = ParseElement(body, document.body);
+                this.bodyNodes = ParseElement(body, this.rootElement);
             }
 
             RunHTMLWidgetRenderer();
