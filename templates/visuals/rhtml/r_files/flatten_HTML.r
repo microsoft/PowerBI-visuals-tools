@@ -11,6 +11,7 @@ libraryRequireInstall("htmlwidgets")
 internalSaveWidget <- function(widget, fname)
 {
   tempFname = paste(fname, ".tmp", sep="")
+  htmlwidgets::saveWidget(widget, file = tempFname, selfcontained = FALSE)
   FlattenHTML(tempFname, fname)
 }
 
