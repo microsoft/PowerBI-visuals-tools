@@ -98,12 +98,17 @@ module powerbi.extensibility.visual {
             /* add code to handle resizing of the view port */
         }
 
-        private injectCodeFromPayload(payloadBase64: string): void {          
+        private injectCodeFromPayload(payloadBase64: string): void {
+            // Inject HTML from payload, created in R
+            // the code is injected to the 'head' and 'body' sections.
+            // if the visual was already rendered, the previous DOM elements are cleared
+
             ResetInjector();
 
             if (!payloadBase64) 
                 return
 
+            // create 'virtual' HTML, so parsing is easier
             let el: HTMLHtmlElement = document.createElement('html');
             try {
                 el.innerHTML = window.atob(payloadBase64);
@@ -111,7 +116,8 @@ module powerbi.extensibility.visual {
                 return;
             }
 
-            // update the header data only on the 1st update
+            // if 'updateHTMLHead == false', then the code updates the header data only on the 1st rendering
+            // this option allows loading and parsing of large and recurring scripts only once.
             if (updateHTMLHead || this.headNodes.length === 0) {
                 let headList: NodeListOf<HTMLHeadElement> = el.getElementsByTagName('head');
                 if (headList && headList.length > 0) {
@@ -120,6 +126,7 @@ module powerbi.extensibility.visual {
                 }
             }
 
+            // update 'body' nodes, under the rootElement
             while (this.bodyNodes.length > 0) {
                 let tempNode: Node = this.bodyNodes.pop();
                 this.rootElement.removeChild(tempNode);

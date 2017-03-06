@@ -40,7 +40,7 @@ module powerbi.extensibility.visual {
       script.setAttribute(attr[i].name, attr[i].textContent);
 
       if (attr[i].name.toLowerCase() === 'src') {
-        // waiting only for src to finish loading
+        // waiting only for src to finish loading - async opetation
         injectorCounter++;
         script.onload = function() {
             injectorCounter--;
@@ -53,6 +53,8 @@ module powerbi.extensibility.visual {
   }
 
   export function RunHTMLWidgetRenderer(): void {
+    // rendering HTML which was created by HTMLWidgets package
+    // wait till all tje script elements are loaded
     let intervalVar = window.setInterval(() => {
       if (injectorReady()) {
         window.clearInterval(intervalVar);

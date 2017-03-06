@@ -2,20 +2,28 @@
 libraryRequireInstall = function(packageName, ...)
 {
   if(!require(packageName, character.only = TRUE)) 
-    warning(paste("*** The package: '", packageName, "' was not installed ***",sep=""))
+    warning(paste("*** The package: '", packageName, "' was not installed ***", sep=""))
 }
 
 libraryRequireInstall("XML")
 libraryRequireInstall("htmlwidgets")
 
+internalSaveWidget <- function(widget, fname)
+{
+  tempFname = paste(fname, ".tmp", sep="")
+  FlattenHTML(tempFname, fname)
+}
+
 FlattenHTML <- function(fnameIn, fnameOut)
 {
   # Read and parse HTML file
+  # Embed all js and css files into one unified file
+  
   if(!file.exists(fnameIn))
     return(FALSE)
   
   dir = dirname(fnameIn)
-  html = htmlTreeParse(fnameIn,useInternal = TRUE)
+  html = htmlTreeParse(fnameIn, useInternal = TRUE)
   top = xmlRoot(html)
   
   # extract all <script> tags with src value
@@ -35,7 +43,7 @@ FlattenHTML <- function(fnameIn, fnameOut)
       str=ReadFileForEmbedding(fname);
       if (!is.null(str))
       {      
-        newNode = xmlNode("script", str, attrs = c(type="text/javascript"))
+        newNode = xmlNode("script", str, attrs = c(type = "text/javascript"))
         replaceNodes(node, newNode)
       }
     }
@@ -55,19 +63,8 @@ FlattenHTML <- function(fnameIn, fnameOut)
     }
   }
   
-  saveXML(html, file=fnameOut)
+  saveXML(html, file = fnameOut)
   return(TRUE)
-}
-
-ReadFullFile <- function(fname)
-{
-  if(!file.exists(fname))
-    return(NULL)
-  
-  con = file(fname,open = "r")
-  data = readLines(con)
-  close(con)
-  return(data)
 }
 
 ReadFileForEmbedding <- function(fname, addCdata = TRUE)
@@ -83,29 +80,38 @@ ReadFileForEmbedding <- function(fname, addCdata = TRUE)
   return(str)
 }
 
+ReadFullFile <- function(fname)
+{
+  if(!file.exists(fname))
+    return(NULL)
+  
+  con = file(fname, open = "r")
+  data = readLines(con)
+  close(con)
+  return(data)
+}
+
 FindSrcReplacement <- function(str)
 {
+  # finds reference to 'plotly' js and replaces with a version from CDN
+  # This allows the HTML to be smaller, since this script is not fully embedded in it
   str <- iconv(str, to="UTF-8")
   pattern = "plotlyjs-(\\w.+)/plotly-latest.min.js"
   match1=regexpr(pattern, str)
   attr(match1, 'useBytes') <- FALSE
   strMatch=regmatches(str, match1, invert = FALSE)
-  if (length(strMatch)==0) return(NULL)
+  if (length(strMatch) == 0) return(NULL)
   
   pattern2 = "-(\\d.+)/"
   match2 = regexpr(pattern2, strMatch[1])
   attr(match2, 'useBytes') <- FALSE
-  s = regmatches(strMatch[1], match2)
-  if (length(s) == 0) return(NULL)
+  strmatch = regmatches(strMatch[1], match2)
+  if (length(strmatch) == 0) return(NULL)
   
-  verstr = substr(s, 2, nchar(s)-1)
+  # CDN url is https://cdn.plot.ly/plotly-<Version>.js
+  # This matches the specific version used in the plotly package used.
+  verstr = substr(strmatch, 2, nchar(strmatch)-1)
   str = paste('https://cdn.plot.ly/plotly-', verstr,'.min.js', sep='')
   return(str)
-}
-
-internalSaveWidget <- function(w, fname)
-{
-  htmlwidgets::saveWidget(w, file=fname, selfcontained = FALSE)
-  FlattenHTML(fname, fname)
 }
 #################################################
