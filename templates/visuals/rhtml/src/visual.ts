@@ -119,6 +119,10 @@ module powerbi.extensibility.visual {
             // if 'updateHTMLHead == false', then the code updates the header data only on the 1st rendering
             // this option allows loading and parsing of large and recurring scripts only once.
             if (updateHTMLHead || this.headNodes.length === 0) {
+                while (this.headNodes.length > 0) {
+                    let tempNode: Node = this.headNodes.pop();
+                    document.head.removeChild(tempNode);
+                }
                 let headList: NodeListOf<HTMLHeadElement> = el.getElementsByTagName('head');
                 if (headList && headList.length > 0) {
                     let head: HTMLHeadElement = headList[0];
