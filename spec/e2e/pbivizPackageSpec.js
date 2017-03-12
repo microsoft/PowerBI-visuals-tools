@@ -358,6 +358,8 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
                         .then((content) => {
                             let data = JSON.parse(content);
                             expect(data.visual).toEqual(visualConfig);
+                            console.log('data.capabilities: ' + data.capabilities.length);
+                            console.log('visualCapabilities: ' + visualCapabilities.length);
                             expect(data.capabilities).toEqual(visualCapabilities);
                             expect(data.content.js).toBeDefined();
                             expect(data.content.css).toBeDefined();
