@@ -93,6 +93,18 @@ describe("E2E - pbiviz new", () => {
             testGeneratedVisualByTemplateName(template);
         });
 
+        it('rvisual', () => {
+            const template = 'rvisual';
+
+            testGeneratedVisualByTemplateName(template);
+        });
+
+        it('rhtml', () => {
+            const template = 'rhtml';
+
+            testGeneratedVisualByTemplateName(template);
+        });
+
         function testGeneratedVisualByTemplateName(template) {
             let visualName = 'visualname',
                 visualPath = path.join(tempPath, visualName);

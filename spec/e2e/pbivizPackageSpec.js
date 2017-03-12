@@ -282,6 +282,101 @@ describe("E2E - pbiviz package", () => {
 
 });
 
+function testMissingScript(fname) {
+    let error;
+    fs.unlinkSync(fname);
+
+    try {
+        FileSystem.runPbiviz('package');
+    } catch (e) {
+        error = e;
+    }
+    expect(error).toBeDefined();
+    expect(error.status).toBe(1);
+    expect(error.message).toContain("Failed updating visual capabilities");
+}
+
+function testErrorInDependencies() {
+    let error;
+    let invalidDependencies = [
+        {
+            invalidPropertyName: "ddd"
+        }
+    ];
+
+    fs.writeFileSync('dependencies.json', JSON.stringify(invalidDependencies));
+
+    try {
+        FileSystem.runPbiviz('package');
+    } catch (e) {
+        error = e;
+    }
+    expect(error).toBeDefined();
+    expect(error.status).toBe(1);
+    expect(error.message).toContain("JSON  dependencies.json :  instance is not of a type(s) object");
+}
+
+function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies) {
+    if (removeDependencies) {
+        fs.unlinkSync('dependencies.json');
+    }
+
+    FileSystem.runPbiviz('package');
+
+    let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+    let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
+    let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+    let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
+
+    visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault = scriptSourceDefault;
+
+    let dependencies = '';
+    if (!removeDependencies) {
+        dependencies = fs.readJsonSync(path.join(visualPath, 'dependencies.json'));
+    }
+
+    let zipContents = fs.readFileSync(pbivizPath);
+    let jszip = new JSZip();
+    jszip.loadAsync(zipContents)
+        .then((zip) => {
+            async.parallel([
+                //check package.json
+                (next) => {
+                    zip.file('package.json').async('string')
+                        .then((content) => {
+                            let data = JSON.parse(content);
+                            expect(data.resources.length).toBe(1);
+                            expect(data.resources[0].file).toBe(pbivizResourcePath);
+                            expect(data.visual).toEqual(visualConfig);
+                            next();
+                        })
+                        .catch(next);
+                },
+                //check pbiviz
+                (next) => {
+                    zip.file(pbivizResourcePath).async('string')
+                        .then((content) => {
+                            let data = JSON.parse(content);
+                            expect(data.visual).toEqual(visualConfig);
+                            expect(data.capabilities).toEqual(visualCapabilities);
+                            expect(data.content.js).toBeDefined();
+                            expect(data.content.css).toBeDefined();
+                            expect(data.content.iconBase64).toBeDefined();
+                            if (!removeDependencies) {
+                                expect(data.dependencies).toEqual(dependencies);
+                            }
+                            next();
+                        })
+                        .catch(next);
+                },
+            ], error => {
+                if (error) throw error;
+                done();
+            });
+
+        });
+}
+
 describe("E2E - pbiviz package for R Visual template", () => {
 
     let visualName = 'visualname';
@@ -304,143 +399,75 @@ describe("E2E - pbiviz package for R Visual template", () => {
     });
 
     it("Should throw error if script.r file is missing", () => {
-        let error;
-        fs.unlinkSync('script.r');
-
-        try {
-            FileSystem.runPbiviz('package');
-        } catch (e) {
-            error = e;
-        }
-        expect(error).toBeDefined();
-        expect(error.status).toBe(1);
-        expect(error.message).toContain("Failed updating visual capabilities");
+        testMissingScript('script.r');
     });
 
     it("Should throw error if dependencies file is not valid", () => {
-        let error;
-        let invalidDependencies = [
-            {
-                invalidPropertyName: "ddd"
-            }
-        ];
-
-        fs.writeFileSync('dependencies.json', JSON.stringify(invalidDependencies));
-
-        try {
-            FileSystem.runPbiviz('package');
-        } catch (e) {
-            error = e;
-        }
-        expect(error).toBeDefined();
-        expect(error.status).toBe(1);
-        expect(error.message).toContain("JSON  dependencies.json :  instance is not of a type(s) object");
+        testErrorInDependencies();
     });
 
     it("Should correctly generate pbiviz file for R Visual template - no dependencies file", (done) => {
-        fs.unlinkSync('dependencies.json');
-
-        FileSystem.runPbiviz('package');
-
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
-        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
-        let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
-
-        visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault =
-            fs.readFileSync(path.join(visualPath, 'script.r')).toString();
-
-        let zipContents = fs.readFileSync(pbivizPath);
-        let jszip = new JSZip();
-        jszip.loadAsync(zipContents)
-            .then((zip) => {
-                async.parallel([
-                    //check package.json
-                    (next) => {
-                        zip.file('package.json').async('string')
-                            .then((content) => {
-                                let data = JSON.parse(content);
-                                expect(data.resources.length).toBe(1);
-                                expect(data.resources[0].file).toBe(pbivizResourcePath);
-                                expect(data.visual).toEqual(visualConfig);
-                                next();
-                            })
-                            .catch(next);
-                    },
-                    //check pbiviz
-                    (next) => {
-                        zip.file(pbivizResourcePath).async('string')
-                            .then((content) => {
-                                let data = JSON.parse(content);
-                                expect(data.visual).toEqual(visualConfig);
-                                expect(data.capabilities).toEqual(visualCapabilities);
-                                expect(data.content.js).toBeDefined();
-                                expect(data.content.css).toBeDefined();
-                                expect(data.content.iconBase64).toBeDefined();
-                                expect(data.dependencies).toBe(undefined);
-                                next();
-                            })
-                            .catch(next);
-                    },
-                ], error => {
-                    if (error) throw error;
-                    done();
-                });
-
-            });
+        let scriptSourceDefault = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+        let removeDependencies = true;
+        testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
     });
 
     it("Should correctly generate pbiviz file for R Visual template", (done) => {
-        FileSystem.runPbiviz('package');
+        let scriptSourceDefault = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+        let removeDependencies = false;
+        testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
+    });
+});
 
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
-        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
-        let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
+describe("E2E - pbiviz package for R HTML template", () => {
 
-        visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault =
-            fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+    let visualName = 'visualname';
+    let visualPath = path.join(tempPath, visualName);
 
-        let dependencies = fs.readJsonSync(path.join(visualPath, 'dependencies.json'));
+    function getScriptSourceDefault() {
+        let FlattenScriptContent = fs.readFileSync(path.join(visualPath, 'r_files/flatten_HTML.r')).toString();
+        let scriptContent = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+        let pattern = "source('./r_files/flatten_HTML.r')";
+        return scriptContent.replace(pattern, FlattenScriptContent);
+    }
 
-        let zipContents = fs.readFileSync(pbivizPath);
-        let jszip = new JSZip();
-        jszip.loadAsync(zipContents)
-            .then((zip) => {
-                async.parallel([
-                    //check package.json
-                    (next) => {
-                        zip.file('package.json').async('string')
-                            .then((content) => {
-                                let data = JSON.parse(content);
-                                expect(data.resources.length).toBe(1);
-                                expect(data.resources[0].file).toBe(pbivizResourcePath);
-                                expect(data.visual).toEqual(visualConfig);
-                                next();
-                            })
-                            .catch(next);
-                    },
-                    //check pbiviz
-                    (next) => {
-                        zip.file(pbivizResourcePath).async('string')
-                            .then((content) => {
-                                let data = JSON.parse(content);
-                                expect(data.visual).toEqual(visualConfig);
-                                expect(data.capabilities).toEqual(visualCapabilities);
-                                expect(data.content.js).toBeDefined();
-                                expect(data.content.css).toBeDefined();
-                                expect(data.content.iconBase64).toBeDefined();
-                                expect(data.dependencies).toEqual(dependencies);
-                                next();
-                            })
-                            .catch(next);
-                    },
-                ], error => {
-                    if (error) throw error;
-                    done();
-                });
-
-            });
+    beforeEach(() => {
+        FileSystem.resetTempDirectory();
+        process.chdir(tempPath);
+        FileSystem.runPbiviz('new', visualName, '--template rhtml');
+        process.chdir(visualPath);
     });
 
+    afterEach(() => {
+        process.chdir(startPath);
+    });
+
+    afterAll(() => {
+        process.chdir(startPath);
+        FileSystem.deleteTempDirectory();
+    });
+
+    it("Should throw error if script.r file is missing", () => {
+        testMissingScript('script.r');
+    });
+
+    it("Should throw error if flatten_HTML.r file is missing", () => {
+        testMissingScript('r_files/flatten_HTML.r');
+    });
+
+    it("Should throw error if dependencies file is not valid", () => {
+        testErrorInDependencies();
+    });
+
+    it("Should correctly generate pbiviz file for R HTML template - no dependencies file", (done) => {
+            let scriptSourceDefault = getScriptSourceDefault();
+            let removeDependencies = true;
+            testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
+        });
+
+    it("Should correctly generate pbiviz file for R HTML template", (done) => {
+            let scriptSourceDefault = getScriptSourceDefault();
+            let removeDependencies = false;
+            testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
+        });
 });
