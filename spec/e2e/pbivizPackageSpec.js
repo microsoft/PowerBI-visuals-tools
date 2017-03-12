@@ -423,15 +423,16 @@ describe("E2E - pbiviz package for R HTML template", () => {
 
     let visualName = 'visualname';
     let visualPath = path.join(tempPath, visualName);
-
+    let nl = (process.platform === 'win32' ? '\r' : '')
     function getScriptSourceDefault() {
         let FlattenScriptContent = fs.readFileSync(path.join(visualPath, 'r_files/flatten_HTML.r')).toString();
         let scriptContent = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
         // break the scriptContent into lines. Assume there is a line with 'source('./r_files/flatten_HTML.r')'.
         let lines = scriptContent.split('\n');
+
         for (let i in lines) {
             if (lines[i].includes('flatten_HTML.r')) {
-                lines[i] = FlattenScriptContent + '\r';
+                lines[i] = FlattenScriptContent + nl;
                 break;
             }
         }
