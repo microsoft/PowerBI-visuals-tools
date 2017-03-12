@@ -423,8 +423,6 @@ describe("E2E - pbiviz package for R HTML template", () => {
 
     let visualName = 'visualname';
     let visualPath = path.join(tempPath, visualName);
-    let endOfLine = require('os').EOL;
-    let eolAdd = endOfLine.slice(0, -1);
 
     function getScriptSourceDefault() {
         let FlattenScriptContent = fs.readFileSync(path.join(visualPath, 'r_files/flatten_HTML.r')).toString();
