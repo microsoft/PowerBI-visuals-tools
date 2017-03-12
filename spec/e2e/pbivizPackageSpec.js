@@ -358,10 +358,6 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
                         .then((content) => {
                             let data = JSON.parse(content);
                             expect(data.visual).toEqual(visualConfig);
-                            console.log('data.capabilities: ' +
-                                data.capabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault.length);
-                            console.log('visualCapabilities: ' + 
-                                visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault.length);
                             expect(data.capabilities).toEqual(visualCapabilities);
                             expect(data.content.js).toBeDefined();
                             expect(data.content.css).toBeDefined();
@@ -435,22 +431,6 @@ describe("E2E - pbiviz package for R HTML template", () => {
         let scriptContent = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
         let pattern = "source('./r_files/flatten_HTML.r')";
         return scriptContent.replace(pattern, FlattenScriptContent);
-
-        /*
-        // break the scriptContent into lines. Assume there is a line with 'source('./r_files/flatten_HTML.r')'.
-        let lines = scriptContent.split('\n');
-
-        console.log('eolAdd: ' + eolAdd.length);
-        for (let i in lines) {
-            if (lines[i].includes('flatten_HTML.r')) {
-                lines[i] = FlattenScriptContent + eolAdd;
-                break;
-            }
-        }
-
-        // join the lines back to a single string
-        return lines.join('\n');
-        */
     }
 
     beforeEach(() => {
