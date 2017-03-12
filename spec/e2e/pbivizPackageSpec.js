@@ -436,6 +436,7 @@ describe("E2E - pbiviz package for R HTML template", () => {
         // break the scriptContent into lines. Assume there is a line with 'source('./r_files/flatten_HTML.r')'.
         let lines = scriptContent.split('\n');
 
+        console.log('eolAdd: ' + eolAdd.length);
         for (let i in lines) {
             if (lines[i].includes('flatten_HTML.r')) {
                 lines[i] = FlattenScriptContent + eolAdd;
