@@ -76,7 +76,8 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.name).toBe(visualName);
         expect(visualConfig.displayName).toBe(visualName);
         expect(visualConfig.guid).toBeDefined();
-        expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
+        expect(visualConfig.guid).toMatch(/^[a-zA-Z0-9]+$/g);
+        expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
     });
 
     describe('Should generate new visual using specified template', () => {
@@ -88,6 +89,18 @@ describe("E2E - pbiviz new", () => {
 
         it('slicer', () => {
             const template = 'slicer';
+
+            testGeneratedVisualByTemplateName(template);
+        });
+
+        it('rvisual', () => {
+            const template = 'rvisual';
+
+            testGeneratedVisualByTemplateName(template);
+        });
+
+        it('rhtml', () => {
+            const template = 'rhtml';
 
             testGeneratedVisualByTemplateName(template);
         });
@@ -130,7 +143,8 @@ describe("E2E - pbiviz new", () => {
             expect(visualConfig.name).toBe(visualName);
             expect(visualConfig.displayName).toBe(visualName);
             expect(visualConfig.guid).toBeDefined();
-            expect(visualConfig.guid.substr(0, 7)).toBe('PBI_CV_');
+            expect(visualConfig.guid).toMatch(/^[a-zA-Z0-9]+$/g);
+            expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
         }
     });
 
