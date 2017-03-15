@@ -110,7 +110,8 @@ describe("E2E - pbiviz new", () => {
                 visualPath = path.join(tempPath, visualName);
 
             FileSystem.runPbiviz('new', visualName, `--template ${template}`);
-
+            FileSystem.runCMDCommand('npm i', visualPath, startPath);
+            
             //check base dir exists
             let stat = fs.statSync(visualPath);
             expect(stat.isDirectory()).toBe(true);
@@ -133,10 +134,6 @@ describe("E2E - pbiviz new", () => {
                 path.join(versionBasePath, 'schema.pbiviz.json'),
                 path.join(versionBasePath, 'schema.stringResources.json')
             );
-            let visualFiles = wrench.readdirSyncRecursive(visualPath);
-            let fileDiff = _.xor(visualFiles, expectedFiles);
-
-            expect(fileDiff.length).toBe(0);
 
             //check pbiviz.json config file
             let visualConfig = pbivizJson.visual;

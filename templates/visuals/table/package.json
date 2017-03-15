@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "typings": "^1.3.2",
-    "d3": "3.5.5"
+    "d3": "3.5.5",
+    "powerbi-visuals-utils-dataviewutils": "1.0.1"
   }
 }

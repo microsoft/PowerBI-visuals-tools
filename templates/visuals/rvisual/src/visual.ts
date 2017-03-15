@@ -48,6 +48,7 @@ module powerbi.extensibility.visual {
     export class Visual implements IVisual {
         private imageDiv: HTMLDivElement;
         private imageElement: HTMLImageElement;
+        private settings: VisualSettings;
 
         // Snippet for defining the member property which will hold the property pane values
         /*private settings: VisualSettings;*/
@@ -106,7 +107,10 @@ module powerbi.extensibility.visual {
                 lineColor: getFillValue(object, 'settings', 'lineColor', "#333333")
             };*/
         }
-
+        
+        private static parseSettings(dataView: DataView): VisualSettings {
+            return VisualSettings.parse(dataView) as VisualSettings;
+        }
         /** 
          * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
          * objects and properties you want to expose to the users in the property pane.

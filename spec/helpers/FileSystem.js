@@ -86,7 +86,22 @@ class FileSystem {
         if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd);        
         return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
     }
-
+    
+    /**
+     * Executes console commands
+     * 
+     * @param {string} command - the command to be executed
+     * @param {string} pathToExec - path where to execute command
+     * @param {string} pathToReturn - path to return after command execution
+     */
+    static runCMDCommand(command, pathToExec, pathToReturn) {
+        const execSync = require('child_process').execSync;
+        process.chdir(pathToExec);
+        let cmd2 = execSync('npm i --silent');
+        if (pathToReturn) {
+            process.chdir(pathToReturn);
+        }
+    }
     /**
      * Executes the pbiviz CLI
      * 

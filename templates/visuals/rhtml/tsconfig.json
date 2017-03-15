@@ -10,6 +10,8 @@
   "files": [
     ".api/v1.6.0/PowerBI-visuals.d.ts",
     "src/htmlInjectionUtility.ts",
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.d.ts",
+    "src/settings.ts",
     "src/objectEnumerationUtility.ts",
     "src/visual.ts"
   ]
