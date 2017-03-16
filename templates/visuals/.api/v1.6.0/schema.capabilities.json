@@ -864,6 +864,32 @@
                     "type": "boolean",
                     "description": "A numeric value that will be displayed to the user as a text input"
                 },
+                "filter": {
+                    "oneOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "selfFilter": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    ],
+                    "description": "A filter"
+                },
+                "operations": {
+                    "type": "object",
+                    "description": "A visual operation",
+                    "properties": {
+                        "searchEnabled": {
+                            "type": "boolean",
+                            "description": "Turns search ability on"
+                        }
+                    }
+                },
                 "text": {
                     "type": "boolean",
                     "description": "A text value that will be displayed to the user as a text input"
@@ -964,6 +990,16 @@
                     "required": [		
                         "scripting"		
                     ]		
+                },
+                {
+                    "required": [
+                        "filter"
+                    ]
+                },
+                {
+                    "required": [
+                        "operations"
+                    ]
                 }
             ]
         }
