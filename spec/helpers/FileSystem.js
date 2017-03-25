@@ -95,9 +95,8 @@ class FileSystem {
      * @param {string} pathToReturn - path to return after command execution
      */
     static runCMDCommand(command, pathToExec, pathToReturn) {
-        const execSync = require('child_process').execSync;
         process.chdir(pathToExec);
-        let cmd2 = execSync('npm i --silent');
+        childProcess.execSync('npm i --silent');
         if (pathToReturn) {
             process.chdir(pathToReturn);
         }

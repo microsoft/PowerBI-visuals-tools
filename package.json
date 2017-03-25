@@ -47,7 +47,6 @@
     "jasmine-spec-reporter": "^2.5.0",
     "jscs": "^3.0.7",
     "jshint": "^2.9.2",
-    "powerbi-visuals-utils-dataviewutils": "^1.0.1",
     "request": "^2.74.0",
     "ps-tree": "^1.1.0",
     "wrench": "^1.5.9"
