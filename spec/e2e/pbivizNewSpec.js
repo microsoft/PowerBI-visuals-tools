@@ -29,6 +29,7 @@ let fs = require('fs-extra');
 let path = require('path');
 let wrench = require('wrench');
 let _ = require('lodash');
+let visualGenerator = require('../../lib/VisualGenerator.js');
 
 let FileSystem = require('../helpers/FileSystem.js');
 
@@ -80,6 +81,29 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
     });
 
+    it("Should generate correct settings.ts file", () => {
+        let visualName = 'visualname';
+        let template = 'default';
+        let settingsFileSize = 1826;
+        let visualPath = path.join(tempPath, visualName);
+        let error = null;
+        
+        FileSystem.runPbiviz('new', visualName);
+
+        let settingsFileName = visualPath + '/src/settings.ts';
+        let fileContent = fs.readFileSync(settingsFileName, 'utf8');
+        expect(fileContent.length).toBe(settingsFileSize);
+
+        process.chdir(visualPath);
+        FileSystem.runCMDCommand('npm i', visualPath);
+        try {
+            FileSystem.runPbiviz('package');
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBe(null);
+    });
+
     describe('Should generate new visual using specified template', () => {
         it('table', () => {
             const template = 'table';
@@ -111,7 +135,7 @@ describe("E2E - pbiviz new", () => {
 
             FileSystem.runPbiviz('new', visualName, `--template ${template}`);
             FileSystem.runCMDCommand('npm i', visualPath, startPath);
-            
+
             //check base dir exists
             let stat = fs.statSync(visualPath);
             expect(stat.isDirectory()).toBe(true);
