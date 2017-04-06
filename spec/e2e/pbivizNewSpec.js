@@ -81,27 +81,37 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
     });
 
-    it("Should generate correct settings.ts file", () => {
-        let visualName = 'visualname';
-        let template = 'default';
-        let settingsFileSize = 1826;
-        let visualPath = path.join(tempPath, visualName);
-        let error = null;
-        
-        FileSystem.runPbiviz('new', visualName);
+    describe("Should generate correct settings.ts", () => {
+        const visualName = "visualname";
+        const template = "default";
+        const visualPath = path.join(tempPath, visualName);
+        const settingsPath = `${visualPath}/src/settings.ts`;
+        const visualFilePath = `${visualPath}/src/visual.ts`;
+        beforeEach(() => {
+            FileSystem.runPbiviz("new", visualName);
+        });
 
-        let settingsFileName = visualPath + '/src/settings.ts';
-        let fileContent = fs.readFileSync(settingsFileName, 'utf8');
-        expect(fileContent.length).toBe(settingsFileSize);
+        afterEach(() => {
+            process.chdir(visualPath);
+        });
 
-        process.chdir(visualPath);
-        FileSystem.runCMDCommand('npm i', visualPath);
-        try {
-            FileSystem.runPbiviz('package');
-        } catch (e) {
-            error = e;
-        }
-        expect(error).toBe(null);
+        it("settings.ts was created", (done) => {
+            FileSystem.expectFileToExist(settingsPath)
+                .then(done)
+                .catch((error) => fail(error));
+        });
+
+        it("settings.ts have export function", (done) => {
+            FileSystem.expectFileToMatch(settingsPath, "export class VisualSettings extends DataViewObjectsParser")
+                .then(done)
+                .catch((error) => fail(error));
+        });
+
+        it("visual import settings", (done) => {
+            FileSystem.expectFileToMatch(visualFilePath, "private settings: VisualSettings;")
+                .then(done)
+                .catch((error) => fail(error));
+        });
     });
 
     describe('Should generate new visual using specified template', () => {
