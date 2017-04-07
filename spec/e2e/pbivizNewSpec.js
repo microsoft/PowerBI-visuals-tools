@@ -87,6 +87,7 @@ describe("E2E - pbiviz new", () => {
         const visualPath = path.join(tempPath, visualName);
         const settingsPath = `${visualPath}/src/settings.ts`;
         const visualFilePath = `${visualPath}/src/visual.ts`;
+        global.powerbi = {};
         beforeEach(() => {
             FileSystem.runPbiviz("new", visualName);
         });
@@ -95,22 +96,55 @@ describe("E2E - pbiviz new", () => {
             process.chdir(visualPath);
         });
 
+        afterAll(() => {
+            global.powerbi = undefined;
+        });
+
         it("settings.ts was created", (done) => {
             FileSystem.expectFileToExist(settingsPath)
                 .then(done)
                 .catch((error) => fail(error));
         });
 
-        it("settings.ts have export function", (done) => {
+        it("settings.ts has export function", (done) => {
             FileSystem.expectFileToMatch(settingsPath, "export class VisualSettings extends DataViewObjectsParser")
                 .then(done)
                 .catch((error) => fail(error));
         });
 
-        it("visual import settings", (done) => {
+        it("visual has import settings", (done) => {
             FileSystem.expectFileToMatch(visualFilePath, "private settings: VisualSettings;")
                 .then(done)
                 .catch((error) => fail(error));
+        });
+        it("the settings are available on the visual", (done) => {
+            let defaultSettings = {
+                "dataPoint": {
+                    "defaultColor": "",
+                    "showAllDataPoints": true,
+                    "fill": "",
+                    "fillRule": "",
+                    "fontSize": 12
+                }
+            };
+            process.chdir(visualPath);
+            FileSystem.runCMDCommand('npm i', visualPath);
+            try {
+                FileSystem.runPbiviz('package', '--no-pbiviz', "--resources");
+            } catch (e) {
+                fail(e);
+            }
+            let visualCode = fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
+                (err, data) => {
+                    if (err) {
+                        fail(err);
+                    }
+                    global.eval(data); // jshint ignore:line
+                    let visualFullName = Object.keys(global.powerbi.extensibility.visual)[0];
+                    let settings = global.powerbi.extensibility.visual[visualFullName].VisualSettings.getDefault();
+                    expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
+                    done();
+                });
         });
     });
 

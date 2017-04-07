@@ -20,7 +20,6 @@
     "externalJS": [
         "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"
     ],
-    "externalJS": [],
     "style": "style/visual.less",
     "capabilities": "capabilities.json",
     "dependencies": "dependencies.json",
