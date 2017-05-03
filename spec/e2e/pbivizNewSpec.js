@@ -29,6 +29,7 @@ let fs = require('fs-extra');
 let path = require('path');
 let wrench = require('wrench');
 let _ = require('lodash');
+let visualGenerator = require('../../lib/VisualGenerator.js');
 
 let FileSystem = require('../helpers/FileSystem.js');
 
@@ -80,6 +81,73 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
     });
 
+    describe("Should generate correct settings.ts", () => {
+        const visualName = "visualname";
+        const template = "default";
+        const visualPath = path.join(tempPath, visualName);
+        const settingsPath = `${visualPath}/src/settings.ts`;
+        const visualFilePath = `${visualPath}/src/visual.ts`;
+        global.powerbi = {};
+        beforeEach(() => {
+            FileSystem.runPbiviz("new", visualName);
+        });
+
+        afterEach(() => {
+            process.chdir(visualPath);
+        });
+
+        afterAll(() => {
+            global.powerbi = undefined;
+        });
+
+        it("settings.ts was created", (done) => {
+            FileSystem.expectFileToExist(settingsPath)
+                .then(done)
+                .catch((error) => fail(error));
+        });
+
+        it("settings.ts has export function", (done) => {
+            FileSystem.expectFileToMatch(settingsPath, "export class VisualSettings extends DataViewObjectsParser")
+                .then(done)
+                .catch((error) => fail(error));
+        });
+
+        it("visual has import settings", (done) => {
+            FileSystem.expectFileToMatch(visualFilePath, "private settings: VisualSettings;")
+                .then(done)
+                .catch((error) => fail(error));
+        });
+        it("the settings are available on the visual", (done) => {
+            let defaultSettings = {
+                "dataPoint": {
+                    "defaultColor": "",
+                    "showAllDataPoints": true,
+                    "fill": "",
+                    "fillRule": "",
+                    "fontSize": 12
+                }
+            };
+            process.chdir(visualPath);
+            FileSystem.runCMDCommand('npm i', visualPath);
+            try {
+                FileSystem.runPbiviz('package', '--no-pbiviz', "--resources");
+            } catch (e) {
+                fail(e);
+            }
+            let visualCode = fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
+                (err, data) => {
+                    if (err) {
+                        fail(err);
+                    }
+                    global.eval(data); // jshint ignore:line
+                    let visualFullName = Object.keys(global.powerbi.extensibility.visual)[0];
+                    let settings = global.powerbi.extensibility.visual[visualFullName].VisualSettings.getDefault();
+                    expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
+                    done();
+                });
+        });
+    });
+
     describe('Should generate new visual using specified template', () => {
         it('table', () => {
             const template = 'table';
@@ -110,6 +178,7 @@ describe("E2E - pbiviz new", () => {
                 visualPath = path.join(tempPath, visualName);
 
             FileSystem.runPbiviz('new', visualName, `--template ${template}`);
+            FileSystem.runCMDCommand('npm i', visualPath, startPath);
 
             //check base dir exists
             let stat = fs.statSync(visualPath);
@@ -133,10 +202,6 @@ describe("E2E - pbiviz new", () => {
                 path.join(versionBasePath, 'schema.pbiviz.json'),
                 path.join(versionBasePath, 'schema.stringResources.json')
             );
-            let visualFiles = wrench.readdirSyncRecursive(visualPath);
-            let fileDiff = _.xor(visualFiles, expectedFiles);
-
-            expect(fileDiff.length).toBe(0);
 
             //check pbiviz.json config file
             let visualConfig = pbivizJson.visual;

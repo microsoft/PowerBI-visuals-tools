@@ -1,6 +1,9 @@
 {
     "version": <%= JSON.stringify(visualData.version) %>,
     "author": <%= JSON.stringify(authorData) %>,
+    "devDependencies": {
+        "powerbi-visuals-utils-dataviewutils": "1.0.1"
+    },
     "resources": [
         {
             "resourceId": "rId0",

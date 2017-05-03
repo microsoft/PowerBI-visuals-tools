@@ -11,8 +11,10 @@
         ".api/v1.5.0/PowerBI-visuals.d.ts",
         "./typings/index.d.ts",
         "node_modules/d3/d3.js",
+        "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.d.ts",
         "src/visualViewModel.ts",
         "src/visualTransform.ts",
+        "src/settings.ts",
         "src/visual.ts"
     ]
 }

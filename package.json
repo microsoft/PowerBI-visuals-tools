@@ -38,7 +38,8 @@
     "typescript": "2.1.5",
     "uglify-js": "^2.6.2",
     "uuid": "^3.0.0",
-    "gulp-powerbi-package-validator": "^1.0.0"
+    "gulp-powerbi-package-validator": "^1.0.0",
+    "powerbi-visuals-utils-dataviewutils": "1.0.1"
   },
   "devDependencies": {
     "async": "^2.0.1",

@@ -52,6 +52,7 @@ describe("E2E - pbiviz start", () => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
+        FileSystem.runCMDCommand('npm i', visualPath, tempPath);
     });
 
     afterEach(() => {
@@ -328,6 +329,7 @@ describe("E2E - pbiviz start for R Visuals", () => {
 
         beforeEach(() => {
             process.chdir(visualPath);
+            FileSystem.runCMDCommand('npm i', visualPath);
             pbivizProc = FileSystem.runPbivizAsync('start');
             pbivizProc.stderr.on('data', (data) => {
                 throw new Error(data.toString());

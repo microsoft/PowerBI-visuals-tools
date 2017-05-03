@@ -45,6 +45,7 @@ describe("E2E - pbiviz package", () => {
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
+        FileSystem.runCMDCommand('npm i', visualPath);
     });
 
     afterEach(() => {
@@ -239,7 +240,7 @@ describe("E2E - pbiviz package", () => {
         let pbiviz = fs.readJsonSync(pbivizJsonPath);
         pbiviz.visual.version = visualVersion;
         fs.writeFileSync(pbivizJsonPath, JSON.stringify(pbiviz));
-
+        FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package');
 
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
@@ -387,6 +388,7 @@ describe("E2E - pbiviz package for R Visual template", () => {
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--template rvisual');
         process.chdir(visualPath);
+        FileSystem.runCMDCommand('npm i', visualPath);
     });
 
     afterEach(() => {
@@ -436,6 +438,7 @@ describe("E2E - pbiviz package for R HTML template", () => {
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--template rhtml');
         process.chdir(visualPath);
+        FileSystem.runCMDCommand('npm i', visualPath);
     });
 
     afterEach(() => {

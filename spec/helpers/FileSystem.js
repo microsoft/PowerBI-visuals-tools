@@ -37,6 +37,44 @@ const BIN_PATH = path.join(__dirname, '..', '..', 'bin', 'pbiviz.js');
 const TEMPLATE_PATH = path.join(__dirname, '..', '..', 'templates');
 
 class FileSystem {
+    static expectFileToExist(fileName) {
+        return new Promise((resolve, reject) => {
+            fs.exists(fileName, (exist) => {
+                if (exist) {
+                    resolve();
+                } else {
+                    reject(new Error(`File ${fileName} was expected to exist but not found...`));
+                }
+            });
+        });
+    }
+
+    static readFile(fileName) {
+        return new Promise((resolve, reject) => {
+            fs.readFile(fileName, 'utf-8', (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    static expectFileToMatch(fileName, regEx) {
+        return FileSystem.readFile(fileName)
+            .then(content => {
+                if (typeof regEx == 'string') {
+                    if (content.indexOf(regEx) == -1) {
+                        throw new Error(`File "${fileName}" did not contain "${regEx}"...`);
+                    }
+                } else {
+                    if (!content.match(regEx)) {
+                        throw new Error(`File "${fileName}" did not contain "${regEx}"...`);
+                    }
+                }
+            });
+    }
 
     static getBinPath() {
         return BIN_PATH;
@@ -83,10 +121,24 @@ class FileSystem {
         flags = flags ? ' ' + flags : '';
         args = args ? ' ' + args : '';
         let pbivizCmd = command + args + flags;
-        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd);        
+        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd);
         return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
     }
 
+    /**
+     * Executes console commands
+     * 
+     * @param {string} command - the command to be executed
+     * @param {string} pathToExec - path where to execute command
+     * @param {string} pathToReturn - path to return after command execution
+     */
+    static runCMDCommand(command, pathToExec, pathToReturn) {
+        process.chdir(pathToExec);
+        childProcess.execSync('npm i --silent');
+        if (pathToReturn) {
+            process.chdir(pathToReturn);
+        }
+    }
     /**
      * Executes the pbiviz CLI
      * 
