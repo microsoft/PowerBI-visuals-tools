@@ -77,7 +77,7 @@
                     "items": {
                         "$ref": "#/definitions/valueType"
                     }
-                }                
+                }
             },
             "required": [
                 "name",
@@ -97,7 +97,7 @@
                         "type": "object",
                         "description": "condition - Defines conditions for a data mapping (each key needs to be a valid data role)",
                         "patternProperties": {
-                            "^\\w+$": {
+                            "^[\\w\\s-]+$": {
                                 "description": "Specifies the number of values that can be assigned to this data role in this mapping",
                                 "$ref": "#/definitions/dataViewMapping.numberRangeWithKind"
                             }
@@ -490,7 +490,7 @@
                 },
                 {
                     "properties": {
-                        "kind" : {
+                        "kind": {
                             "$ref": "#/definitions/dataRole.kind"
                         }
                     }
@@ -627,7 +627,7 @@
             "type": "object",
             "description": "A list of unique property groups",
             "patternProperties": {
-                "^\\w+$": {
+                "^[\\w\\s-]+$": {
                     "type": "object",
                     "description": "Settings for a group of properties",
                     "properties": {
@@ -647,7 +647,7 @@
                             "type": "object",
                             "description": "A list of unique properties contained in this group",
                             "patternProperties": {
-                                "^\\w+$": {
+                                "^[\\w\\s-]+$": {
                                     "$ref": "#/definitions/object.propertySettings"
                                 }
                             },
@@ -756,10 +756,10 @@
                 "roles": {
                     "type": "array",
                     "description": "The drillable role names for this visual",
-                     "items": {
-                         "type": "string",
-                         "description": "The name of the role"
-                     }
+                    "items": {
+                        "type": "string",
+                        "description": "The name of the role"
+                    }
                 }
             }
         },
@@ -893,16 +893,16 @@
                 "text": {
                     "type": "boolean",
                     "description": "A text value that will be displayed to the user as a text input"
-                },		
-                "scripting": {		
-                    "type": "object",		
-                    "description": "A text value that will be displayed to the user as a script",		
-                    "properties": {		
-                        "source": {		
-                            "type": "boolean",		
-                            "description": "A source code"		
-                        }		
-                    }		
+                },
+                "scripting": {
+                    "type": "object",
+                    "description": "A text value that will be displayed to the user as a script",
+                    "properties": {
+                        "source": {
+                            "type": "boolean",
+                            "description": "A source code"
+                        }
+                    }
                 },
                 "geography": {
                     "type": "object",
@@ -985,11 +985,11 @@
                     "required": [
                         "geography"
                     ]
-                },		
-                {		
-                    "required": [		
-                        "scripting"		
-                    ]		
+                },
+                {
+                    "required": [
+                        "scripting"
+                    ]
                 },
                 {
                     "required": [
