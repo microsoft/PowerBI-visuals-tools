@@ -9,7 +9,7 @@
     "jasmine": "node spec/jasmine-runner.js",
     "jscs": "jscs bin lib spec",
     "jshint": "jshint bin lib spec",
-    "clean-tests": "node spec/clean-tests.js" 
+    "clean-tests": "node spec/clean-tests.js"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
@@ -44,11 +44,15 @@
   "devDependencies": {
     "async": "^2.0.1",
     "jasmine": "^2.4.1",
+    "jasmine-node": "^1.14.5",
     "jasmine-spec-reporter": "^2.5.0",
     "jscs": "^3.0.7",
     "jshint": "^2.9.2",
-    "request": "^2.74.0",
     "ps-tree": "^1.1.0",
+    "request": "^2.74.0",
     "wrench": "^1.5.9"
+  },
+  "engines": {
+    "node": "^6.0.0"
   }
 }
