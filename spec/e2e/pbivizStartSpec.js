@@ -93,6 +93,10 @@ describe("E2E - pbiviz start", () => {
             let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
+
+                // Make sure we don't get any trace lines when the verbose flag was NOT used
+                expect(dataStr.indexOf(" trace") === 0).toBe(false);
+
                 if (dataStr.indexOf("Server listening on port 8080") !== -1) {
                     //check files on filesystem
                     expect(fs.statSync(dropPath).isDirectory()).toBe(true);
@@ -124,6 +128,10 @@ describe("E2E - pbiviz start", () => {
         it("Should serve files from drop folder on port 8080", (done) => {
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
+
+                // Make sure we don't get any trace lines when the verbose flag was NOT used
+                expect(dataStr.indexOf(" trace") === 0).toBe(false);
+
                 if (dataStr.indexOf("Server listening on port 8080") !== -1) {
                     async.each(
                         assetFiles,
@@ -169,6 +177,10 @@ describe("E2E - pbiviz start", () => {
 
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
+                
+                // Make sure we don't get any trace lines when the verbose flag was NOT used
+                expect(dataStr.indexOf(" trace") === 0).toBe(false);
+
                 if (dataStr.indexOf("Server listening on port 8080") !== -1) {
                     expect(tsChangeCount).toBe(0);
                     expect(lessChangeCount).toBe(0);
@@ -268,6 +280,9 @@ describe("E2E - pbiviz start", () => {
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
 
+            // Make sure we don't get any trace lines when the verbose flag was NOT used
+            expect(dataStr.indexOf(" trace") === 0).toBe(false);
+
             if (dataStr.indexOf("Server listening on port 3333") !== -1) {
                 async.each(
                     assetFiles,
@@ -347,6 +362,10 @@ describe("E2E - pbiviz start for R Visuals", () => {
 
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
+                
+                // Make sure we don't get any trace lines when the verbose flag was NOT used
+                expect(dataStr.indexOf(" trace") === 0).toBe(false);
+
                 if (dataStr.indexOf("Server listening on port 8080") !== -1) {
                     expect(rChangeCount).toBe(0);
                     lastStatus = getStatus();
@@ -371,6 +390,69 @@ describe("E2E - pbiviz start for R Visuals", () => {
             pbivizProc.on('close', (error, message) => {
                 if (error) throw error;
                 expect(message).toBe('SIGTERM');
+                done();
+            });
+        });
+    });
+});
+
+describe("E2E - pbiviz start for R Visuals", () => {
+
+    let visualName = 'visualname';
+    let visualPath = path.join(tempPath, visualName);
+    let dropPath = path.join(visualPath, '.tmp', 'drop');
+    let assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
+
+    beforeEach(() => {
+        FileSystem.resetTempDirectory();
+        process.chdir(tempPath);
+        FileSystem.runPbiviz('new', visualName);
+    });
+
+    afterEach(() => {
+        process.chdir(startPath);
+    });
+
+    afterAll(() => {
+        process.chdir(startPath);
+        FileSystem.deleteTempDirectory();
+    });
+
+    describe("Build and Server with Verbose flag", () => {
+        let pbivizProc;
+
+        beforeEach(() => {
+            process.chdir(visualPath);
+            pbivizProc = FileSystem.runPbivizAsync('start', '-v');
+            pbivizProc.stderr.on('data', (data) => {
+                throw new Error(data.toString());
+            });
+        });
+
+        it("Should print out verbose logs", (done) => {
+            let statusPath = path.join(dropPath, 'status');
+            let lastStatus;
+            let traceLines = 0;
+
+            function getStatus() {
+                return fs.readFileSync(statusPath);
+            }
+
+            pbivizProc.stdout.on('data', (data) => {
+                let dataStr = data.toString();
+                if (dataStr.indexOf(" trace") === 0) {
+                    traceLines++;
+                }
+
+                if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                    //the end
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM');
+                }
+            });
+
+            pbivizProc.on('close', (error, message) => {
+                if (error) throw error;
+                expect(traceLines > 0).toBe(true);
                 done();
             });
         });

@@ -35,6 +35,7 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 program
     .option('-p, --port [port]', 'force creation (overwrites folder if exists)')
     .option('-m, --mute', 'mute error sounds')
+    .option('-v, --verbose', 'show verbose traces')
     .parse(process.argv);
 
 let cwd = process.cwd();
@@ -45,6 +46,12 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
     let buildOptions = { namespace: visualPackage.config.visual.guid + '_DEBUG', minify: false };
     builder = new VisualBuilder(visualPackage, buildOptions);
+    if (program.verbose) {
+        builder.on('verbose_trace', message => {
+            ConsoleWriter.trace(message);
+        });
+    }
+
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
 
