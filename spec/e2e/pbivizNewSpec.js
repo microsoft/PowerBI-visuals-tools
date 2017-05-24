@@ -227,6 +227,18 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });
 
+    it("Should throw error if the visual name beginning with number", () => {
+        let invalidVisualName = '12test';
+        let error;
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error).toBeDefined();
+    });
+
     it("Should throw error if the visual already exists", () => {
         let visualName = 'visualname';
         let error;
