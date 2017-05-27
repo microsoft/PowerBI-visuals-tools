@@ -307,14 +307,7 @@ describe("E2E - pbiviz package", () => {
                 pbivizJson.stringResources = ["stringResources/ru-RU.json"];
                 return writeJsonPromise('pbiviz.json', pbivizJson);
             })
-            .then(() => {
-                try {
-                    return FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources');
-                }
-                catch (e) {
-                    throw e;
-                }
-            })
+            .then(() => FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources'))
             .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', 'pbiviz.json')))
             .then((pbivizJson) => {
                 expect(JSON.stringify(pbivizJson.stringResources) === JSON.stringify(validStringResources)).toBe(true);
@@ -361,14 +354,7 @@ describe("E2E - pbiviz package", () => {
                     mkDirPromise('stringResources/ru-RU')
                         .then(() => writeJsonPromise('stringResources/ru-RU/resources.resjson', ResJsonRuLocalization))
                 ]))
-            .then(() => {
-                try {
-                    return FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources');
-                }
-                catch (e) {
-                    throw e;
-                }
-            })
+            .then(() => FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources'))
             .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', 'pbiviz.json')))
             .then((pbivizJson) => {
                 expect(JSON.stringify(pbivizJson.stringResources) === JSON.stringify(validStringResources)).toBe(true);
