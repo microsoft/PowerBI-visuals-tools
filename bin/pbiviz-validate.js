@@ -29,7 +29,7 @@
 let fs = require('fs');
 let path = require('path');
 let program = require('commander');
-let validator = require('gulp-powerbi-package-validator');
+let validator = require('powerbi-visuals-package-validator');
 let VisualPackage = require('../lib/VisualPackage');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 
