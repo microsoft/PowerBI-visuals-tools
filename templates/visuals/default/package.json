@@ -1,6 +1,9 @@
 {
   "name": "visual",
-  "devDependencies": {
-    "powerbi-visuals-utils-dataviewutils": "1.0.1"
+  "dependencies": {
+	"powerbi-models": "0.10.0",
+    "powerbi-visuals-utils-dataviewutils": "1.0.1",
+    "powerbi-visuals-utils-interactivityutils": "0.3.0",
+    "powerbi-visuals-utils-typeutils": "0.2.1"
   }
 }
