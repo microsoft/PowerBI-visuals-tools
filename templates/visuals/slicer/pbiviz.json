@@ -18,12 +18,7 @@
     "icon": "assets/icon.png"
   },
   "externalJS": [
-    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js", 
-    "node_modules/powerbi-visuals-utils-typeutils/lib/index.js",
-    "node_modules/powerbi-visuals-utils-svgutils/lib/index.js",
-    "node_modules/powerbi-visuals-utils-formattingutils/lib/index.js",
-    "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.js",
-    "node_modules/powerbi-visuals-utils-colorutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js",
     "node_modules/powerbi-models/dist/models.js"	
   ],
   "style": "style/visual.less",
