@@ -196,8 +196,6 @@ describe("E2E - pbiviz new", () => {
                     let settings = global.powerbi.extensibility.visual[visualFullName].VisualSettings.getDefault();
                     expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
                     let visualInstance = new global.powerbi.extensibility.visual[visualFullName].Visual({ element: { innerHTML: null } });
-                    visualInstance.update({ dataViews: [] });
-                    expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(defaultSettings));
                     visualInstance.update({ dataViews: dataViews });
                     expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
                     done();
