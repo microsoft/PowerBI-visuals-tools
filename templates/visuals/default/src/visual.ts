@@ -38,7 +38,9 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions) {
-            if (!options || !options.dataViews) {
+            if (!options ||
+                !options.dataViews ||
+                !options.dataViews[0]) {
                 return;
             }
             this.settings = Visual.parseSettings(options.dataViews[0]);
