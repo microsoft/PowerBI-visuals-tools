@@ -66,7 +66,7 @@ let templateExternalJS = {
     defalut: [],
     rhtml: [],
     rvisual: [],
-    slicer: ["node_modules/powerbi-models/dist/models.js"],
+    slicer: ["node_modules/powerbi-models/dist/models.js", "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"],
     table: []
 };
 
