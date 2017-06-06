@@ -25,6 +25,7 @@
  */
 
 module powerbi.extensibility.visual {
+    "use strict";
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
