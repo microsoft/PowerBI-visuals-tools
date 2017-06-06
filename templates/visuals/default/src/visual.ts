@@ -50,8 +50,6 @@ module powerbi.extensibility.visual {
          * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
          * objects and properties you want to expose to the users in the property pane.
          * 
-         * Below is a code snippet for a case where you want to expose a single property called "lineColor" from the object called "settings"
-         * This object and property should be first defined in the capabilities.json file in the objects section.
          */
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
             return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
