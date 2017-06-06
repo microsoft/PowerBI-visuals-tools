@@ -18,6 +18,7 @@
         "icon": "assets/icon.png"
     },
     "externalJS": [
+        "node_modules/lodash/lodash.min.js",
         "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"
     ],
     "style": "style/visual.less",
