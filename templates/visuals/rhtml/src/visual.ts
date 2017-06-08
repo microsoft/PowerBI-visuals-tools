@@ -24,14 +24,14 @@
  *  THE SOFTWARE.
  */
 module powerbi.extensibility.visual {
-    
-    // Below is a snippet of a definition for an object which will contain the property values
+    "use strict";
+    // below is a snippet of a definition for an object which will contain the property values
     // selected by the users
     /*interface VisualSettings {
         lineColor: string;
     }*/
 
-    // To allow this scenario you should first the following JSON definition to the capabilities.json file
+    // to allow this scenario you should first the following JSON definition to the capabilities.json file
     // under the "objects" property:
     // "settings": {
     //     "displayName": "Visual Settings",
@@ -47,7 +47,11 @@ module powerbi.extensibility.visual {
     // in order to improve the performance, one can update the <head> only in the initial rendering.
     // set to 'true' if you are using different packages to create the widgets
     const updateHTMLHead: boolean = false;
-    const renderVisualUpdateType: number[] = [VisualUpdateType.Resize, VisualUpdateType.ResizeEnd, VisualUpdateType.Resize + VisualUpdateType.ResizeEnd];
+    const renderVisualUpdateType: number[] = [
+        VisualUpdateType.Resize,
+        VisualUpdateType.ResizeEnd,
+        VisualUpdateType.Resize + VisualUpdateType.ResizeEnd
+    ];
 
     export class Visual implements IVisual {
         private rootElement: HTMLElement;
@@ -55,31 +59,26 @@ module powerbi.extensibility.visual {
         private bodyNodes: Node[];
         private settings: VisualSettings;
 
-
-        // Snippet for defining the member property which will hold the property pane values
-        /*private settings: VisualSettings;*/
-
         public constructor(options: VisualConstructorOptions) {
-            if(options && options.element)
+            if (options && options.element) {
                 this.rootElement = options.element;
-
+            }
             this.headNodes = [];
             this.bodyNodes = [];
         }
 
-        public update(options: VisualUpdateOptions) {
-            if (!options || !options.type || !options.viewport)
-                return;
+        public update(options: VisualUpdateOptions): void {
 
-            let dataViews: DataView[] = options.dataViews;
-            if (!dataViews || dataViews.length === 0)
+            if (!options ||
+                !options.type ||
+                !options.viewport ||
+                !options.dataViews ||
+                options.dataViews.length === 0 ||
+                !options.dataViews[0]) {
                 return;
-
-            let dataView: DataView = dataViews[0];
-            if (!dataView || !dataView.metadata)
-                return;
-
-            this.updateObjects(dataView.metadata.objects);
+            }
+            const dataView: DataView = options.dataViews[0];
+            this.settings = Visual.parseSettings(dataView);
 
             let payloadBase64: string = null;
             if (dataView.scriptResult && dataView.scriptResult.payloadBase64) {
@@ -90,9 +89,9 @@ module powerbi.extensibility.visual {
                 if (payloadBase64) {
                     this.injectCodeFromPayload(payloadBase64);
                 }
+            } else {
+                this.onResizing(options.viewport);
             }
-            
-            this.onResizing(options.viewport);
         }
 
         public onResizing(finalViewport: IViewport): void {
@@ -100,17 +99,18 @@ module powerbi.extensibility.visual {
         }
 
         private injectCodeFromPayload(payloadBase64: string): void {
-            // Inject HTML from payload, created in R
+            // inject HTML from payload, created in R
             // the code is injected to the 'head' and 'body' sections.
             // if the visual was already rendered, the previous DOM elements are cleared
 
             ResetInjector();
 
-            if (!payloadBase64) 
-                return
+            if (!payloadBase64) {
+                return;
+            }
 
             // create 'virtual' HTML, so parsing is easier
-            let el: HTMLHtmlElement = document.createElement('html');
+            let el: HTMLHtmlElement = document.createElement("html");
             try {
                 el.innerHTML = window.atob(payloadBase64);
             } catch (err) {
@@ -124,7 +124,7 @@ module powerbi.extensibility.visual {
                     let tempNode: Node = this.headNodes.pop();
                     document.head.removeChild(tempNode);
                 }
-                let headList: NodeListOf<HTMLHeadElement> = el.getElementsByTagName('head');
+                let headList: NodeListOf<HTMLHeadElement> = el.getElementsByTagName("head");
                 if (headList && headList.length > 0) {
                     let head: HTMLHeadElement = headList[0];
                     this.headNodes = ParseElement(head, document.head);
@@ -136,7 +136,7 @@ module powerbi.extensibility.visual {
                 let tempNode: Node = this.bodyNodes.pop();
                 this.rootElement.removeChild(tempNode);
             }
-            let bodyList: NodeListOf<HTMLBodyElement> = el.getElementsByTagName('body');
+            let bodyList: NodeListOf<HTMLBodyElement> = el.getElementsByTagName("body");
             if (bodyList && bodyList.length > 0) {
                 let body: HTMLBodyElement = bodyList[0];
                 this.bodyNodes = ParseElement(body, this.rootElement);
@@ -145,47 +145,18 @@ module powerbi.extensibility.visual {
             RunHTMLWidgetRenderer();
         }
 
-        /**
-         * This function gets called by the update function above. You should read the new values of the properties into 
-         * your settings object so you can use the new value in the enumerateObjectInstances function below.
-         * 
-         * Below is a code snippet demonstrating how to expose a single property called "lineColor" from the object called "settings"
-         * This object and property should be first defined in the capabilities.json file in the objects section.
-         * In this code we get the property value from the objects (and have a default value in case the property is undefined)
-         */
-        public updateObjects(objects: DataViewObjects) {
-            /*this.settings = <VisualSettings>{
-                lineColor: getFillValue(object, 'settings', 'lineColor', "#333333")
-            };*/
-        }
-        
         private static parseSettings(dataView: DataView): VisualSettings {
             return VisualSettings.parse(dataView) as VisualSettings;
         }
+
         /** 
          * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
          * objects and properties you want to expose to the users in the property pane.
          * 
-         * Below is a code snippet for a case where you want to expose a single property called "lineColor" from the object called "settings"
-         * This object and property should be first defined in the capabilities.json file in the objects section.
          */
-        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-            let objectName = options.objectName;
-            let objectEnumeration = [];
-
-            /*switch( objectName ){
-                case 'settings':
-                    objectEnumeration.push({
-                        objectName: objectName,
-                        properties: {
-                            lineColor: this.settings.lineColor,
-                         },
-                        selector: null
-                    });
-                    break;
-            };*/
-
-            return objectEnumeration;
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions):
+            VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+            return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
     }
 }

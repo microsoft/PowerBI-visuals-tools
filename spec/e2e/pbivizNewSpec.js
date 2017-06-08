@@ -118,7 +118,7 @@ describe("E2E - pbiviz new", () => {
                 .catch((error) => fail(error));
         });
         it("the settings are available on the visual", (done) => {
-            let defaultSettings = {
+            const defaultSettings = {
                 "dataPoint": {
                     "defaultColor": "",
                     "showAllDataPoints": true,
@@ -127,6 +127,58 @@ describe("E2E - pbiviz new", () => {
                     "fontSize": 12
                 }
             };
+            const dataViews = [{
+                "metadata": {
+                    "columns": [],
+                    "objects": {
+                        "dataPoint": {
+                            "defaultColor": {
+                                "solid": {
+                                    "color": "#A66999"
+                                }
+                            },
+                            "fontSize": "21",
+                            "fillRule": {
+                                "solid": {
+                                    "color": {
+                                        "_kind": 17,
+                                        "type": {
+                                            "underlyingType": 1,
+                                            "category": null
+                                        },
+                                        "value": "#FD625E",
+                                        "valueEncoded": "'#FD625E'"
+                                    }
+                                }
+                            },
+                            "fill": {
+                                "solid": {
+                                    "color": "#caa5c2"
+                                }
+                            },
+                            "showAllDataPoints": true
+                        }
+                    }
+                }
+            }];
+            const fillSettings = {
+                "dataPoint": {
+                    "defaultColor": "#A66999",
+                    "showAllDataPoints": true,
+                    "fill": "#caa5c2",
+                    "fillRule": {
+                        "_kind": 17,
+                        "type": {
+                            "underlyingType": 1,
+                            "category": null
+                        },
+                        "value": "#FD625E",
+                        "valueEncoded": "'#FD625E'"
+                    },
+                    "fontSize": "21"
+                }
+            };
+
             process.chdir(visualPath);
             FileSystem.runCMDCommand('npm i', visualPath);
             try {
@@ -143,6 +195,9 @@ describe("E2E - pbiviz new", () => {
                     let visualFullName = Object.keys(global.powerbi.extensibility.visual)[0];
                     let settings = global.powerbi.extensibility.visual[visualFullName].VisualSettings.getDefault();
                     expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
+                    let visualInstance = new global.powerbi.extensibility.visual[visualFullName].Visual({ element: { innerHTML: null } });
+                    visualInstance.update({ dataViews: dataViews });
+                    expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
                     done();
                 });
         });
