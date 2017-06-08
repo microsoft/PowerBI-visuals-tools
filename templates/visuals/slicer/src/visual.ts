@@ -38,12 +38,7 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions) {
-            if (!options ||
-                !options.dataViews ||
-                !options.dataViews[0]) {
-                return;
-            }
-            this.settings = Visual.parseSettings(options.dataViews[0]);
+            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
             console.log("Visual update", options);
             this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
         }
