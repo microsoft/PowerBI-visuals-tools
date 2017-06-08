@@ -74,7 +74,7 @@ let generateOptions = {
     force: program.force,
     template: program.template,
     apiVersion: program.apiVersion,
-    externalJS: templateExternalJS[program.template]
+    externalJS: program.template ? templateExternalJS[program.template] : null
 };
 
 VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
