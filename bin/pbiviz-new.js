@@ -63,7 +63,7 @@ if (program.force) {
 }
 
 let templateExternalJS = {
-    defalut: [],
+    default: ["node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"],
     rhtml: [],
     rvisual: [],
     slicer: ["node_modules/powerbi-models/dist/models.js", "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"],

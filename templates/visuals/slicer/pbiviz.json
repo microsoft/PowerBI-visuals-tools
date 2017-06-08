@@ -1,9 +1,9 @@
 {
   "visual": {
-    "name": "slicer",
-    "displayName": "slicer",
-    "guid": "slicerADBF8B769AEF46CBAEA9AA1779FA9885",
-    "visualClassName": "Visual",
+    "name": "slicerSample",
+    "displayName": "slicerSample",
+    "guid": "slicerSampleADBF8B769AEF46CBAEA9AA1779FA9885",
+    "visualClassName": "slicerVisual",
     "version": "1.0.0",
     "description": "",
     "supportUrl": "",
