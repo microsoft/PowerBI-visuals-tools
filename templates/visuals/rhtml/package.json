@@ -1,8 +1,6 @@
 {
   "name": "visual",
   "devDependencies": {
-    "@types/lodash": "4.14.36",
-    "lodash": "4.16.2",
     "powerbi-visuals-utils-dataviewutils": "1.1.1"
   }
 }
