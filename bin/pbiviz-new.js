@@ -62,19 +62,10 @@ if (program.force) {
     ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
 }
 
-let templateExternalJS = {
-    default: ["node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"],
-    rhtml: [],
-    rvisual: [],
-    slicer: ["node_modules/powerbi-models/dist/models.js", "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"],
-    table: []
-};
-
 let generateOptions = {
     force: program.force,
     template: program.template,
-    apiVersion: program.apiVersion,
-    externalJS: program.template ? templateExternalJS[program.template] : null
+    apiVersion: program.apiVersion
 };
 
 VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
