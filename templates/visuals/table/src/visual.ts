@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 module powerbi.extensibility.visual {
-
+    "use strict";
     @VisualPlugin({
         transform: visualTransform
     })
@@ -36,61 +36,58 @@ module powerbi.extensibility.visual {
         private settings: VisualSettings;
 
         constructor(options: VisualConstructorOptions) {
-            let target = this.target = d3.select(options.element).append('div')
-                .classed('powerbi-demo-wrapper', true);
+            let target: d3.Selection<HTMLElement> = this.target = d3.select(options.element).append("div")
+                .classed("powerbi-demo-wrapper", true);
 
-            let table = this.table = target.append('table')
-                .classed('powerbi-demo-table', true);
+            let table: d3.Selection<HTMLElement> = this.table = target.append("table")
+                .classed("powerbi-demo-table", true);
 
-            this.tHead = table.append('thead').append('tr');
-            this.tBody = table.append('tbody');
+            this.tHead = table.append("thead").append("tr");
+            this.tBody = table.append("tbody");
         }
 
-        public update(options: VisualUpdateOptions, viewModel: VisualViewModel) {
-            if (!viewModel) return;
-
+        public update(options: VisualUpdateOptions, viewModel: VisualViewModel): void {
+            if (!viewModel) {
+                return;
+            }
+            this.settings = Visual.parseSettings(options.dataViews[0]);
             this.updateContainerViewports(options.viewport);
 
-            let transposedSeries = d3.transpose(viewModel.values.map(d => d.values.map(d => d)));
-            let thSelection = this.tHead.selectAll('th').data(viewModel.categories);
-            let th = thSelection.enter().append('th');
-
-            thSelection.text(d => d.value);
-
+            let transposedSeries: any[][] = d3.transpose(viewModel.values.map((d: any) => d.values.map((d: any) => d)));
+            let thSelection: d3.selection.Update<CategoryViewModel> = this.tHead.selectAll("th").data(viewModel.categories);
+            thSelection.enter().append("th");
+            thSelection.text((d: CategoryViewModel) => d.value);
             thSelection.exit().remove();
 
-            let trSelection = this.tBody.selectAll('tr').data(transposedSeries);
-
-            let tr = trSelection.enter().append('tr');
-
-            tr.selectAll('td').data(d => d).enter().append('td')
-                .attr('data-th', (d, i) => viewModel.categories[i].value)
-                .text(d => this.format(<number>d));
+            let trSelection: d3.selection.Update<any[]> = this.tBody.selectAll("tr").data(transposedSeries);
+            let tr: d3.Selection<any[]> = trSelection.enter().append("tr");
+            tr.selectAll("td").data((d: any) => d).enter().append("td")
+                .attr("data-th", (d: any, i: number) => viewModel.categories[i].value)
+                .text((d: number) => this.format(d));
 
             trSelection.exit().remove();
         }
 
-        private updateContainerViewports(viewport: IViewport) {
-            if (!viewport) return;
-            let width = viewport.width;
-            let height = viewport.height;
-
-            this.tHead.classed('dynamic', width > 400);
-            this.tBody.classed('dynamic', width > 400);
-
-            this.table.attr('width', width);
+        private updateContainerViewports(viewport: IViewport): void {
+            if (!viewport) {
+                return;
+            }
+            const width: number = viewport.width;
+            this.tHead.classed("dynamic", width > 400);
+            this.table.attr("width", width);
         }
 
-        private format(d: number) {
-            let prefix = d3.formatPrefix(d);
-            return d3.round(prefix.scale(d), 2) + ' ' + prefix.symbol
+        private format(d: number): string {
+            let prefix: d3.FormatPrefix = d3.formatPrefix(d);
+            return d3.round(prefix.scale(d), 2) + " " + prefix.symbol;
         }
 
         private static parseSettings(dataView: DataView): VisualSettings {
             return VisualSettings.parse(dataView) as VisualSettings;
         }
 
-        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions):
+            VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
             return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
     }

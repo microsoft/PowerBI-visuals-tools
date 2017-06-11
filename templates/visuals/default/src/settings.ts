@@ -25,6 +25,7 @@
  */
 
 module powerbi.extensibility.visual {
+    "use strict";
     import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
     <%= visualSettingsClasses %>
