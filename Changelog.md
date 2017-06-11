@@ -1,6 +1,8 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+## pbiviz v1.6.6
+* Added RESJSON support 
 
 ## pbiviz v1.6.5
 * Updated npm dependencies
