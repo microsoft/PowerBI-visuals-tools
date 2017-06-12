@@ -1,28 +1,6 @@
 {
-  "visual": {
-    "name": "slicerSample",
-    "displayName": "slicerSample",
-    "guid": "slicerSampleADBF8B769AEF46CBAEA9AA1779FA9885",
-    "visualClassName": "slicerVisual",
-    "version": "1.0.0",
-    "description": "",
-    "supportUrl": "",
-    "gitHubUrl": ""
-  },
-  "apiVersion": "1.7.0",
-  "author": {
-    "name": "",
-    "email": ""
-  },
-  "assets": {
-    "icon": "assets/icon.png"
-  },
   "externalJS": [
     "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js",
     "node_modules/powerbi-models/dist/models.js"	
-  ],
-  "style": "style/visual.less",
-  "capabilities": "capabilities.json",
-  "dependencies": "dependencies.json",
-  "stringResources": []
+  ]
 }
