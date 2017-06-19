@@ -1,0 +1,6 @@
+{
+  "externalJS": [
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js",
+    "node_modules/powerbi-models/dist/models.js"	
+  ]
+}
