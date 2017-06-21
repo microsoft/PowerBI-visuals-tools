@@ -282,7 +282,7 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });
 
-    it("Should throw error if the visual name beginning with number", () => {
+    it("Should throw error if the visual name invalid", () => {
         let invalidVisualName = '12test';
         let error;
         try {
@@ -291,7 +291,26 @@ describe("E2E - pbiviz new", () => {
         catch (e) {
             error = e;
         }
-        expect(error).toBeDefined();
+        expect(error.message).toMatch("The visual name can't be starting from number");
+
+        invalidVisualName = '\u200c';
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name can't be empty");
+
+        invalidVisualName = 'do';
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name can't equels with reserved JavaScript keywords");
+
     });
 
     it("Should throw error if the visual already exists", () => {
