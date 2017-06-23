@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.7.1
+* Returned removed objectEnumerationUtility.ts in R visuals template
+
 ## pbiviz v1.6.5
 * Updated npm dependencies
 * Fixed settings generation
