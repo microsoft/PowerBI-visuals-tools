@@ -72,6 +72,10 @@ describe("E2E - pbiviz new", () => {
         let fileDiff = _.difference(expectedFiles, visualFiles);
         expect(fileDiff.length).toBe(0);
 
+        // check exists node_modules directory
+        let nodeModulesDirStat = fs.statSync(path.join(visualPath, "node_modules"));
+        expect(nodeModulesDirStat.isDirectory()).toBe(true);
+
         //check pbiviz.json config file
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(visualConfig.name).toBe(visualName);
