@@ -291,7 +291,7 @@ describe("E2E - pbiviz new", () => {
         catch (e) {
             error = e;
         }
-        expect(error.message).toMatch("The visual name can't be begin with a number digit");
+        expect(error.message).toMatch("The visual name can't begin with a number digit");
 
         invalidVisualName = '\u200c';
         try {
