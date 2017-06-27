@@ -291,7 +291,7 @@ describe("E2E - pbiviz new", () => {
         catch (e) {
             error = e;
         }
-        expect(error.message).toMatch("The visual name can't be starting from number");
+        expect(error.message).toMatch("The visual name can't be begin with a number digit");
 
         invalidVisualName = '\u200c';
         try {
@@ -309,7 +309,7 @@ describe("E2E - pbiviz new", () => {
         catch (e) {
             error = e;
         }
-        expect(error.message).toMatch("The visual name can't equels with reserved JavaScript keywords");
+        expect(error.message).toMatch("The visual name cannot be equal to a reserved JavaScript keyword");
 
     });
 
