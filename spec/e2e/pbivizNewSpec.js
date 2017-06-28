@@ -286,6 +286,37 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });
 
+    it("Should throw error if the visual name invalid", () => {
+        let invalidVisualName = '12test';
+        let error;
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name can't begin with a number digit");
+
+        invalidVisualName = '\u200c';
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name can't be empty");
+
+        invalidVisualName = 'do';
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name cannot be equal to a reserved JavaScript keyword");
+
+    });
+
     it("Should throw error if the visual already exists", () => {
         let visualName = 'visualname';
         let error;

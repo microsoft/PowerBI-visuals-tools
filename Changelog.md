@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.7.1
+* Added visual name validation
+* Added auto-install npm dependencies
+
 ## pbiviz v1.6.5
 * Updated npm dependencies
 * Fixed settings generation
