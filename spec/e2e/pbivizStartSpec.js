@@ -37,7 +37,7 @@ const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
 //these tests can take a bit longer
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
 describe("E2E - pbiviz start", () => {
 
