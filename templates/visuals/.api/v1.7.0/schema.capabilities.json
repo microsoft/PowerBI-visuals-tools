@@ -2,6 +2,11 @@
     "PBI_API_VERSION": "v1.7.0",
     "type": "object",
     "properties": {
+        "$schema": {
+            "description": "URL to JSON schema",
+            "format": "uri",
+            "type": "string"
+        },
         "dataRoles": {
             "type": "array",
             "description": "Defines data roles for the visual",
