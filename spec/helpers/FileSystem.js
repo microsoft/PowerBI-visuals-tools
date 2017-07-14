@@ -28,7 +28,7 @@
 let fs = require('fs-extra');
 let path = require('path');
 let childProcess = require('child_process');
-let psTree = require('ps-tree');
+let treeKill = require('tree-kill');
 let async = require('async');
 let platform = require('os').platform();
 
@@ -162,20 +162,12 @@ class FileSystem {
      * @param {function} [callback] - callback called after all processes are terminated
      */
     static killProcess(childProcess, signal, callback) {
-        if (platform === 'win32') {
-            childProcess.kill(signal);
-            if (callback) callback();
-        } else {
-            let pid = childProcess.pid || childProcess.PID;
-            psTree(pid, (error, children) => {
-                async.each(children, (child, next) => {
-                    FileSystem.killProcess(child, signal, next);
-                }, (error) => {
-                    process.kill(pid, signal);
-                    if (callback) callback();
-                });
-            });
-        }
+        let pid = childProcess.pid || childProcess.PID;
+        treeKill(pid, signal, (error) => {
+            if (callback) {
+                callback(error || null);
+            }
+        });
     }
 
 }
