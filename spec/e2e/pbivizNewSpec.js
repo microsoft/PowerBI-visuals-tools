@@ -206,7 +206,7 @@ describe("E2E - pbiviz new", () => {
                 });
         });
     });
-
+     
     describe('Should generate new visual using specified template', () => {
         it('table', () => {
             const template = 'table';

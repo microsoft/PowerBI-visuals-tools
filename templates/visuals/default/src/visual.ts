@@ -35,12 +35,23 @@ module powerbi.extensibility.visual {
             console.log('Visual constructor', options);
             this.target = options.element;
             this.updateCount = 0;
+
         }
 
         public update(options: VisualUpdateOptions) {
             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
             console.log('Visual update', options);
-            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
+            while (this.target.firstChild) {
+                this.target.removeChild(this.target.firstChild);
+            }
+            if (typeof document !== "undefined") {
+                var new_p = document.createElement("p");
+                new_p.appendChild(document.createTextNode("Update count:"));
+                var new_em = document.createElement("em");
+                new_em.appendChild(document.createTextNode(`${(this.updateCount++)}`));
+                new_p.appendChild(new_em);
+                this.target.appendChild(new_p);
+            }
         }
 
         private static parseSettings(dataView: DataView): VisualSettings {
