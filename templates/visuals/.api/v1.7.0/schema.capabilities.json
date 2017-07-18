@@ -688,7 +688,7 @@
                     "$ref": "#/definitions/valueType"
                 },
                 "rule": {
-                    "description": "Describes what type of property this is and how it should be displayed to the user",
+                    "description": "",
                     "$ref": "#/definitions/rule"
                 }
             },
