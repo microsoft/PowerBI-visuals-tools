@@ -30,26 +30,28 @@ module powerbi.extensibility.visual {
         private target: HTMLElement;
         private updateCount: number;
         private settings: VisualSettings;
+        private textNode: Text;
 
         constructor(options: VisualConstructorOptions) {
             console.log("Visual constructor", options);
             this.target = options.element;
             this.updateCount = 0;
+            if (typeof document !== "undefined") {
+                const new_p: HTMLParagraphElement = document.createElement("p");
+                new_p.appendChild(document.createTextNode("Update count:"));
+                const new_em: HTMLPhraseElement = document.createElement("em");
+                this.textNode = document.createTextNode(this.updateCount.toString());
+                new_em.appendChild(this.textNode);
+                new_p.appendChild(new_em);
+                this.target.appendChild(new_p);
+            }
         }
 
         public update(options: VisualUpdateOptions) {
             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
             console.log("Visual update", options);
-            while (this.target.firstChild) {
-                this.target.removeChild(this.target.firstChild);
-            }
-            if (typeof document !== "undefined") {
-                var new_p = document.createElement("p");
-                new_p.appendChild(document.createTextNode("Update count:"));
-                var new_em = document.createElement("em");
-                new_em.appendChild(document.createTextNode(`${(this.updateCount++)}`));
-                new_p.appendChild(new_em);
-                this.target.appendChild(new_p);
+            if (typeof this.textNode !== "undefined") {
+                this.textNode.textContent = (this.updateCount++).toString();
             }
         }
 
