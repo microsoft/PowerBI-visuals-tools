@@ -286,6 +286,24 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });
 
+    it("Should replace dash ('-') in visual name in visual guid", () => {
+        let visualDisplayName = 'My-Visual-Name-here';
+        let visualName = 'my-Visual-Name-Here';
+        let guidStart = 'myVisualNameHere';
+        let compareLength = guidStart.length;
+        FileSystem.runPbiviz('new', visualDisplayName);
+
+        let visualPath = path.join(tempPath, visualName);
+        let stat = fs.statSync(visualPath);
+        expect(stat.isDirectory()).toBe(true);
+
+        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        expect(visualConfig.name).toBe(visualName);
+        expect(visualConfig.displayName).toBe(visualDisplayName);
+        // First number of characters shoudl be the visualname without '-'
+        expect(visualConfig.guid.substr(0, compareLength)).toBe(guidStart);
+    });
+
     it("Should throw error if the visual name invalid", () => {
         let invalidVisualName = '12test';
         let error;
