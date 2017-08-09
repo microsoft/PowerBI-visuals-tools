@@ -304,7 +304,7 @@ describe("E2E - pbiviz new", () => {
         catch (e) {
             error = e;
         }
-        expect(error.message).toMatch("The visual name can't be empty");
+        expect(error.message).toMatch("The visual name can contain only letters and numbers");
 
         invalidVisualName = 'do';
         try {
