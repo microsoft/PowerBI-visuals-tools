@@ -314,6 +314,15 @@ describe("E2E - pbiviz new", () => {
             error = e;
         }
         expect(error.message).toMatch("The visual name cannot be equal to a reserved JavaScript keyword");
+        
+        invalidVisualName = 'foo-bar';
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name cannot contain dashes");
 
     });
 
