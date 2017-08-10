@@ -281,7 +281,189 @@ describe("E2E - pbiviz package", () => {
             });
     });
 
+    it("Should correctly generate pbiviz file with stringResources localization", (done) => {
+        const resourceStringLocalization =
+            {
+                "locale": "ru-RU",
+                "values": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
+        const validStringResources =
+            {
+                "ru-RU": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
+
+        mkDirPromise('stringResources')
+            .then(() => writeJsonPromise('stringResources/ru-RU.json', resourceStringLocalization))
+            .then(() => readJsonPromise('pbiviz.json'))
+            .then((pbivizJson) => {
+                pbivizJson.stringResources = ["stringResources/ru-RU.json"];
+                return writeJsonPromise('pbiviz.json', pbivizJson);
+            })
+            .then(() => FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources'))
+            .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', 'pbiviz.json')))
+            .then((pbivizJson) => {
+                expect(JSON.stringify(pbivizJson.stringResources) === JSON.stringify(validStringResources)).toBe(true);
+                done();
+            })
+            .catch((err) => {
+                expect(err).toBe(null);
+                done();
+            });
+    });
+
+    it("Should correctly generate pbiviz file with RESJSON localization", (done) => {
+        const ResJsonEngLocalization =
+            {
+                "formattingGeneral": "General",
+                "formattingGeneralOrientation": "Orientation",
+                "formattingGeneralOrientationVertical": "Vertical",
+            };
+        const ResJsonRuLocalization =
+            {
+                "formattingGeneral": "Общие настройки",
+                "formattingGeneralOrientation": "Ориентация",
+                "formattingGeneralOrientationVertical": "Вертикальная"
+            };
+
+        const validStringResources =
+            {
+                "en-US": {
+                    "formattingGeneral": "General",
+                    "formattingGeneralOrientation": "Orientation",
+                    "formattingGeneralOrientationVertical": "Vertical"
+                },
+                "ru-RU": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
+        mkDirPromise('stringResources')
+            .then(() =>
+                Promise.all([
+                    mkDirPromise('stringResources/en-US')
+                        .then(() => writeJsonPromise('stringResources/en-US/resources.resjson', ResJsonEngLocalization)),
+                    mkDirPromise('stringResources/ru-RU')
+                        .then(() => writeJsonPromise('stringResources/ru-RU/resources.resjson', ResJsonRuLocalization))
+                ]))
+            .then(() => FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources'))
+            .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', 'pbiviz.json')))
+            .then((pbivizJson) => {
+                expect(JSON.stringify(pbivizJson.stringResources) === JSON.stringify(validStringResources)).toBe(true);
+                done();
+            })
+            .catch((err) => {
+                expect(err).toBe(null);
+                done();
+            });
+    });
+
+    it("Should correctly generate pbiviz file with RESJSON and stringResources localizations", (done) => {
+        const resourceStringRuLocalization =
+            {
+                "locale": "ru-RU",
+                "values": {
+                    "formattingGeneral": "Главные настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingHeaderFontColor": "Цвет шрифта",
+                    "formattingHeaderBackground": "Цвет фона"
+                }
+            };
+
+        const ResJsonEngLocalization =
+            {
+                "formattingGeneral": "General",
+                "formattingGeneralOrientation": "Orientation",
+                "formattingGeneralOrientationVertical": "Vertical",
+            };
+        const ResJsonRuLocalization =
+            {
+                "formattingGeneral": "Общие настройки",
+                "formattingGeneralOrientation": "Ориентация",
+                "formattingGeneralOrientationVertical": "Вертикальная"
+            };
+
+        const validStringResources =
+            {
+                "en-US": {
+                    "formattingGeneral": "General",
+                    "formattingGeneralOrientation": "Orientation",
+                    "formattingGeneralOrientationVertical": "Vertical"
+                },
+                "ru-RU": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingHeaderFontColor": "Цвет шрифта",
+                    "formattingHeaderBackground": "Цвет фона",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
+
+        mkDirPromise('stringResources')
+            .then(() =>
+                Promise.all([
+                    mkDirPromise('stringResources/en-US')
+                        .then(() => writeJsonPromise('stringResources/en-US/resources.resjson', ResJsonEngLocalization)),
+                    mkDirPromise('stringResources/ru-RU')
+                        .then(() => writeJsonPromise('stringResources/ru-RU/resources.resjson', ResJsonRuLocalization)),
+                    writeJsonPromise('stringResources/ru-RU.json', resourceStringRuLocalization)
+                ]))
+            .then(() => readJsonPromise('pbiviz.json'))
+            .then((pbivizJson) => {
+                pbivizJson.stringResources = ["stringResources/ru-RU.json"];
+                return writeJsonPromise('pbiviz.json', pbivizJson);
+            })
+            .then(() => FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources'))
+            .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', 'pbiviz.json')))
+            .then((pbivizJson) => {
+                expect(JSON.stringify(pbivizJson.stringResources) === JSON.stringify(validStringResources)).toBe(true);
+                done();
+            })
+            .catch((err) => {
+                expect(err).toBe(null);
+                done();
+            });
+    });
+
 });
+
+function mkDirPromise(path) {
+    return new Promise((resolve, reject) => fs.mkdir(path, (err) => {
+        if (err) {
+            reject(err);
+        } else {
+            resolve();
+        }
+    }));
+}
+
+function readJsonPromise(path) {
+    return new Promise((resolve, reject) => fs.readJSON(path, (err, jsonObject) => {
+        if (err) {
+            reject(err);
+        } else {
+            resolve(jsonObject);
+        }
+    }));
+}
+
+function writeJsonPromise(path, jsonObject) {
+    return new Promise((resolve, reject) => fs.writeJSON(path, jsonObject, (err) => {
+        if (err) {
+            reject(err);
+        } else {
+            resolve();
+        }
+    }));
+}
 
 function testMissingScript(fname) {
     let error;
@@ -463,14 +645,14 @@ describe("E2E - pbiviz package for R HTML template", () => {
     });
 
     it("Should correctly generate pbiviz file for R HTML template - no dependencies file", (done) => {
-            let scriptSourceDefault = getScriptSourceDefault();
-            let removeDependencies = true;
-            testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
-        });
+        let scriptSourceDefault = getScriptSourceDefault();
+        let removeDependencies = true;
+        testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
+    });
 
     it("Should correctly generate pbiviz file for R HTML template", (done) => {
-            let scriptSourceDefault = getScriptSourceDefault();
-            let removeDependencies = false;
-            testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
-        });
+        let scriptSourceDefault = getScriptSourceDefault();
+        let removeDependencies = false;
+        testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
+    });
 });

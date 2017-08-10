@@ -32,5 +32,5 @@ let noop = function () { };
 let jrunner = new Jasmine();
 jrunner.configureDefaultReporter({ print: noop });
 jasmine.getEnv().addReporter(new SpecReporter());
-jrunner.loadConfigFile(); 
+jrunner.loadConfigFile();
 jrunner.execute();
