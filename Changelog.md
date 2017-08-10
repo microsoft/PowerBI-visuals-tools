@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.7.3
+* Added RESJSON support 
+
 ## pbiviz v1.7.2
 * Add name validation to pbiviz new command, restrict usage of symbols in the file visual name.
 
