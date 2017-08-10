@@ -686,6 +686,10 @@
                 "type": {
                     "description": "Describes what type of property this is and how it should be displayed to the user",
                     "$ref": "#/definitions/valueType"
+                },
+                "rule": {
+                    "description": "",
+                    "$ref": "#/definitions/rule"
                 }
             },
             "additionalProperties": false
@@ -819,6 +823,11 @@
                             }
                         }
                     }
+                },
+                "fillRule": {
+                    "type": "object",
+                    "description": "A color saturation",
+                    "properties": {}
                 },
                 "formatting": {
                     "type": "object",
@@ -963,6 +972,11 @@
                 },
                 {
                     "required": [
+                        "fillRule"
+                    ]
+                },
+                {
+                    "required": [
                         "formatting"
                     ]
                 },
@@ -1002,6 +1016,28 @@
                     ]
                 }
             ]
+        },
+        "rule": {
+            "type": "object",
+            "properties": {
+                "inputRole": {
+                    "type": "string"
+                },
+                "output": {
+                    "type": "object",
+                    "properties": {
+                        "property": {
+                            "type": "string"
+                        },
+                        "selector": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
