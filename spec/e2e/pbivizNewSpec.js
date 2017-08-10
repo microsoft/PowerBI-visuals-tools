@@ -72,6 +72,10 @@ describe("E2E - pbiviz new", () => {
         let fileDiff = _.difference(expectedFiles, visualFiles);
         expect(fileDiff.length).toBe(0);
 
+        // check exists node_modules directory
+        let nodeModulesDirStat = fs.statSync(path.join(visualPath, "node_modules"));
+        expect(nodeModulesDirStat.isDirectory()).toBe(true);
+
         //check pbiviz.json config file
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(visualConfig.name).toBe(visualName);
@@ -280,6 +284,37 @@ describe("E2E - pbiviz new", () => {
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(visualConfig.name).toBe(visualName);
         expect(visualConfig.displayName).toBe(visualDisplayName);
+    });
+
+    it("Should throw error if the visual name invalid", () => {
+        let invalidVisualName = '12test';
+        let error;
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name can't begin with a number digit");
+
+        invalidVisualName = '\u200c';
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name can contain only letters and numbers");
+
+        invalidVisualName = 'do';
+        try {
+            FileSystem.runPbiviz('new', invalidVisualName);
+        }
+        catch (e) {
+            error = e;
+        }
+        expect(error.message).toMatch("The visual name cannot be equal to a reserved JavaScript keyword");
+
     });
 
     it("Should throw error if the visual already exists", () => {

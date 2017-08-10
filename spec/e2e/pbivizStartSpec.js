@@ -37,7 +37,7 @@ const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
 //these tests can take a bit longer
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
 describe("E2E - pbiviz start", () => {
 
@@ -86,6 +86,9 @@ describe("E2E - pbiviz start", () => {
             pbivizProc.stderr.on('data', (data) => {
                 throw new Error(data.toString());
             });
+            pbivizProc.on('error', (error) => {
+                throw new Error(error.toString());
+            });
         });
 
         it("Should build visual and generate resources in drop folder", (done) => {
@@ -110,14 +113,11 @@ describe("E2E - pbiviz start", () => {
                     expect(pbiviz.content.js).toBeDefined();
                     expect(pbiviz.content.css).toBeDefined();
                     expect(pbiviz.content.iconBase64).toBeDefined();
-                    FileSystem.killProcess(pbivizProc, 'SIGTERM');
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                        expect(error).toBeNull();
+                        done();
+                    });
                 }
-
-                pbivizProc.on('close', (error, message) => {
-                    if (error) throw error;
-                    expect(message).toBe('SIGTERM');
-                    done();
-                });
             });
         });
 
@@ -142,17 +142,13 @@ describe("E2E - pbiviz start", () => {
                         },
                         error => {
                             if (error) throw error;
-                            FileSystem.killProcess(pbivizProc, 'SIGTERM');
+                            FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                                expect(error).toBeNull();
+                                done();
+                            });
                         }
                     );
-
                 }
-            });
-
-            pbivizProc.on('close', (error, message) => {
-                if (error) throw error;
-                expect(message).toBe('SIGTERM');
-                done();
             });
         });
 
@@ -220,14 +216,11 @@ describe("E2E - pbiviz start", () => {
                     lastStatus = status;
 
                     //the end
-                    FileSystem.killProcess(pbivizProc, 'SIGTERM');
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                        expect(error).toBeNull();
+                        done();
+                    });
                 }
-            });
-
-            pbivizProc.on('close', (error, message) => {
-                if (error) throw error;
-                expect(message).toBe('SIGTERM');
-                done();
             });
         });
 
@@ -244,17 +237,10 @@ describe("E2E - pbiviz start", () => {
 
                 expect(doesPluginExist).toBeTruthy();
 
-                FileSystem.killProcess(pbivizProc, 'SIGTERM');
-            });
-
-            pbivizProc.on('close', (error, message) => {
-                if (error) {
-                    throw error;
-                }
-
-                expect(message).toBe('SIGTERM');
-
-                done();
+                FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                    expect(error).toBeNull();
+                    done();
+                });
             });
         });
     });
@@ -286,17 +272,14 @@ describe("E2E - pbiviz start", () => {
                     },
                     error => {
                         if (error) throw error;
-                        FileSystem.killProcess(pbivizProc, 'SIGTERM');
+                        FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                            expect(error).toBeNull();
+                            done();
+                        });
                     }
                 );
 
             }
-        });
-
-        pbivizProc.on('close', (error, message) => {
-            if (error) throw error;
-            expect(message).toBe('SIGTERM');
-            done();
         });
     });
 
@@ -364,14 +347,11 @@ describe("E2E - pbiviz start for R Visuals", () => {
                     lastStatus = status;
 
                     //the end
-                    FileSystem.killProcess(pbivizProc, 'SIGTERM');
+                    FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                        expect(error).toBeNull();
+                        done();
+                    });
                 }
-            });
-
-            pbivizProc.on('close', (error, message) => {
-                if (error) throw error;
-                expect(message).toBe('SIGTERM');
-                done();
             });
         });
     });
