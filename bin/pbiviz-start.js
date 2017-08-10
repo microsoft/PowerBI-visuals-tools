@@ -33,8 +33,8 @@ let VisualBuilder = require('../lib/VisualBuilder');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 
 program
-    .option('-p, --port [port]', 'force creation (overwrites folder if exists)')
-    .option('-m, --mute', 'mute error sounds')
+    .option('-p, --port [port]', 'set the port listening on')
+    .option('-m, --mute', 'mute error outputs')
     .parse(process.argv);
 
 let cwd = process.cwd();
