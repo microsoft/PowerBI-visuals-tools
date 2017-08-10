@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -50,6 +50,7 @@
     "jshint": "2.9.2",
     "ps-tree": "1.1.0",
     "request": "2.74.0",
+    "tree-kill": "^1.1.0",
     "wrench": "1.5.9"
   },
   "engines": {
