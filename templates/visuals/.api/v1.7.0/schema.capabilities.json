@@ -686,6 +686,10 @@
                 "type": {
                     "description": "Describes what type of property this is and how it should be displayed to the user",
                     "$ref": "#/definitions/valueType"
+                },
+                "rule": {
+                    "type": "object",
+                    "description": "Describes some custom logic rule. For instance, it uses for gradient option substitution"
                 }
             },
             "additionalProperties": false
@@ -815,6 +819,92 @@
                                             }
                                         }
                                     ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "fillRule" : {
+                    "type": "object",
+                    "description": "A color gradient that will be dispalyed to user as a minimum and maximum color pickers",
+                    "properties": {
+                        "linearGradient2": {
+                            "type": "object",
+                            "description": "Two color gradient",
+                            "properties": {
+                                "max": {
+                                    "type": "object",
+                                    "description": "Maximum color for gradient",
+                                    "properties": {
+                                        "color": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "number"
+                                        }
+                                    }
+                                },
+                                "min": {
+                                    "type": "object",
+                                    "description": "Minimum color for gradient",
+                                    "properties": {
+                                        "color": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "number"
+                                        }
+                                    }
+                                },
+                                "nullColoringStrategy": {
+                                    "type": "object",
+                                    "description": "Null color strategy"
+                                }
+                            }
+                        },
+                        "linearGradient3": {
+                            "type": "object",
+                            "description": "Three color gradient",
+                            "properties": {
+                                "max": {
+                                    "type": "object",
+                                    "description": "Maximum color for gradient",
+                                    "properties": {
+                                        "color": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "number"
+                                        }
+                                    }
+                                },
+                                "min": {
+                                    "type": "object",
+                                    "description": "Minimum color for gradient",
+                                    "properties": {
+                                        "color": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "number"
+                                        }
+                                    }
+                                },
+                                "mid": {
+                                    "type": "object",
+                                    "description": "Middle color for gradient",
+                                    "properties": {
+                                        "color": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "number"
+                                        }
+                                    }
+                                },
+                                "nullColoringStrategy": {
+                                    "type": "object",
+                                    "description": "Null color strategy"
                                 }
                             }
                         }
@@ -959,6 +1049,11 @@
                 {
                     "required": [
                         "fill"
+                    ]
+                },
+                {
+                    "required": [
+                        "fillRule"
                     ]
                 },
                 {
