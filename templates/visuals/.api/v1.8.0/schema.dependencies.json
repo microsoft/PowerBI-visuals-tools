@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v1.7.0",
+    "PBI_API_VERSION": "v1.8.0",
     "type": "object",
     "properties": {
         "cranPackages": {

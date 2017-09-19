@@ -1335,7 +1335,7 @@ declare module powerbi {
 }
 
 /**
- * Change Log Version 1.7.0
+ * Change Log Version 1.8.0
  */
 
 declare module powerbi.extensibility.visual {
