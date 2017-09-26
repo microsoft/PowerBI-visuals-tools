@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.7.5
+* Was corrected sub commands help output in "Using:" section
+
 ## pbiviz v1.7.4
 * Remove innerHTML method from sample visual
 
