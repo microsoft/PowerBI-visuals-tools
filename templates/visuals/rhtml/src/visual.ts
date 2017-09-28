@@ -112,7 +112,7 @@ module powerbi.extensibility.visual {
             // create 'virtual' HTML, so parsing is easier
             let el: HTMLHtmlElement = document.createElement("html");
             try {
-                el.appendChild(document.createTextNode(window.atob(payloadBase64)));
+                el.innerHTML = window.atob(payloadBase64);
             } catch (err) {
                 return;
             }
