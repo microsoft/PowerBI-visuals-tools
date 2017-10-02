@@ -1370,7 +1370,6 @@ declare module powerbi.extensibility.visual {
         telemetry: ITelemetryService;
         locale: string;
         allowInteractions: boolean;
-        launchUrl: (url: string) => void;
         instanceId: string;
         refreshHostData: () => void;
     }
