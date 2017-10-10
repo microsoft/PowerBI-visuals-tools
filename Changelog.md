@@ -5,9 +5,10 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 ## pbiviz v1.8.0
 * Added new type "fillRule" (gradient) support in capabilities schema
 * Added "rule" property support in capabilities schema for object properties
+* Fixed sub commands help output in "Using:" section
 
 ## pbiviz v1.7.5
-* Was corrected sub commands help output in "Using:" section
+* Return innerHTML method for RHTML visual sample 
 
 ## pbiviz v1.7.4
 * Remove innerHTML method from sample visual
