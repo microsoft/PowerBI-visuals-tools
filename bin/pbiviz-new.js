@@ -31,12 +31,22 @@ let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let VisualGenerator = require('../lib/VisualGenerator');
 let ConsoleWriter = require('../lib/ConsoleWriter');
+let CommandHelpManager = require('../lib/CommandHelpManager');
+let options = process.argv;
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
     .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)')
-    .option('--api-version [version]', 'use a specific api version (1.0.0, 1.1.0, 1.2.0, ...)')
-    .parse(process.argv);
+    .option('--api-version [version]', 'use a specific api version (1.0.0, 1.1.0, 1.2.0, ...)');
+
+for (let i = 0; i < options.length; i++) {
+    if (options[i] == '--help' || options[i] == '-h') {
+        program.help(CommandHelpManager.createSubCommandHelpCallback(options));
+        process.exit(0);
+    }
+}
+
+program.parse(options);
 
 let args = program.args;
 

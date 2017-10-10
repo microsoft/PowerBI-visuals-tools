@@ -31,9 +31,17 @@ let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let VisualGenerator = require('../lib/VisualGenerator');
 let ConsoleWriter = require('../lib/ConsoleWriter');
-let fs = require('fs');
+let CommandHelpManager = require('../lib/CommandHelpManager');
+let options = process.argv;
 
-program.parse(process.argv);
+for (let i = 0; i < options.length; i++) {
+    if (options[i] == '--help' || options[i] == '-h') {
+        program.help(CommandHelpManager.createSubCommandHelpCallback(options));
+        process.exit(0);
+    }
+}
+
+program.parse(options);
 
 let args = program.args;
 

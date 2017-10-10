@@ -31,11 +31,21 @@ let VisualPackage = require('../lib/VisualPackage');
 let VisualServer = require('../lib/VisualServer');
 let VisualBuilder = require('../lib/VisualBuilder');
 let ConsoleWriter = require('../lib/ConsoleWriter');
+let CommandHelpManager = require('../lib/CommandHelpManager');
+let options = process.argv;
 
 program
     .option('-p, --port [port]', 'set the port listening on')
-    .option('-m, --mute', 'mute error outputs')
-    .parse(process.argv);
+    .option('-m, --mute', 'mute error outputs');
+
+for (let i = 0; i < options.length; i++) {
+    if (options[i] == '--help' || options[i] == '-h') {
+        program.help(CommandHelpManager.createSubCommandHelpCallback(options));
+        process.exit(0);
+    }
+}
+    
+program.parse(options);
 
 let cwd = process.cwd();
 let server, builder;
