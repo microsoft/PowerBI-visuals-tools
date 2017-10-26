@@ -76,7 +76,7 @@ describe("E2E - pbiviz start", () => {
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
     });
 
-    it("Should build visual with API 1.5 and check that is is started correctly (string resources doesn't exist)", (done) => {
+    it("Should build visual with API 1.5 and check that it is started correctly (string resources doesn't exist)", (done) => {
         const visualName = 'api150visual';
         const visualPath = path.join(tempPath, visualName);
 
@@ -107,7 +107,7 @@ describe("E2E - pbiviz start", () => {
         });
     });
 
-    it("Should build visual with API 1.6 and check that is is started correctly (string resources exists)", (done) => {
+    it("Should build visual with API 1.6 and check that it is started correctly (string resources exists)", (done) => {
         const visualName = 'api150visual';
         const visualPath = path.join(tempPath, visualName);
 
