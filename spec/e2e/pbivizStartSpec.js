@@ -40,7 +40,6 @@ const startPath = process.cwd();
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
 describe("E2E - pbiviz start", () => {
-
     const visualName = 'visualname';
     const visualPath = path.join(tempPath, visualName);
     const tmpPath = path.join(visualPath, '.tmp');
@@ -75,6 +74,68 @@ describe("E2E - pbiviz start", () => {
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
+    });
+
+    it("Should build visual with API 1.5 and check that it is started correctly (string resources doesn't exist)", (done) => {
+        const visualName = 'api150visual';
+        const visualPath = path.join(tempPath, visualName);
+
+        process.chdir(tempPath);
+        FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0');
+
+        //api version file should've been created
+        let stat = fs.statSync(path.join(visualPath, '.api', 'v1.5.0'));
+        expect(stat.isDirectory()).toBe(true);
+        expect(fs.existsSync(path.join(visualPath, '.api', 'v1.5.0', 'schema.stringResources.json'))).toBe(false);
+
+        process.chdir(visualPath);
+
+        let pbivizProc;
+        pbivizProc = FileSystem.runPbivizAsync('start');
+        pbivizProc.stdout.on('data', (data) => {
+            let dataStr = data.toString();
+            if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                //the end
+                FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                    expect(error).toBeNull();
+                    done();
+                });
+            }
+        });
+        pbivizProc.stderr.on('data', (data) => {
+            throw new Error(data.toString());
+        });
+    });
+
+    it("Should build visual with API 1.6 and check that it is started correctly (string resources exists)", (done) => {
+        const visualName = 'api150visual';
+        const visualPath = path.join(tempPath, visualName);
+
+        process.chdir(tempPath);
+        FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0');
+
+        //api version file should've been created
+        let stat = fs.statSync(path.join(visualPath, '.api', 'v1.6.0'));
+        expect(stat.isDirectory()).toBe(true);
+        expect(fs.existsSync(path.join(visualPath, '.api', 'v1.6.0', 'schema.stringResources.json'))).toBe(true);
+
+        process.chdir(visualPath);
+
+        let pbivizProc;
+        pbivizProc = FileSystem.runPbivizAsync('start');
+        pbivizProc.stdout.on('data', (data) => {
+            let dataStr = data.toString();
+            if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                //the end
+                FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
+                    expect(error).toBeNull();
+                    done();
+                });
+            }
+        });
+        pbivizProc.stderr.on('data', (data) => {
+            throw new Error(data.toString());
+        });
     });
 
     describe("Build and Server", () => {
