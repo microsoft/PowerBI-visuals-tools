@@ -2,8 +2,12 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## pbiviz v1.8.2
+## pbiviz v1.10.0
 * Increase typescript to 2.3.3 version 
+
+## pbiviz v1.9.0
+* Added launchUrl API call support
+* Added authenticationService API call support
 
 ## pbiviz v1.8.1
 * FIX: Localization schema will be ignored if API doesn't support localization
