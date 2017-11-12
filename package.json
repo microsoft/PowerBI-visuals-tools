@@ -7,9 +7,11 @@
     "start": "node ./bin/pbiviz.js",
     "test": "npm run clean-tests && npm run jscs && npm run jshint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
+    "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
     "jscs": "jscs bin lib spec",
     "jshint": "jshint bin lib spec",
-    "clean-tests": "node spec/clean-tests.js"
+    "clean-tests": "node spec/clean-tests.js",
+    "debug-tests": "npm run clean-tests && npm run jscs && npm run jshint && npm run jasmine-inspect"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
