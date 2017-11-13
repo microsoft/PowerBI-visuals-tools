@@ -1342,7 +1342,6 @@ declare module powerbi {
 
 /**
  * Change Log Version 1.9.0
- * Added authenticationService
  * Added launchUrl
  */
 
@@ -1370,7 +1369,6 @@ declare module powerbi.extensibility.visual {
         applyJsonFilter: (filter: IFilter, objectName: string, propertyName: string, action: FilterAction) => void;
         tooltipService: ITooltipService;
         telemetry: ITelemetryService;
-        authenticationService: IAuthenticationService;
         locale: string;
         allowInteractions: boolean;
         launchUrl: (url: string) => void;

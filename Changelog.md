@@ -4,7 +4,6 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 ## pbiviz v1.9.0
 * Added launchUrl API call support
-* Added authenticationService API call support
 
 ## pbiviz v1.8.0
 * Added new type "fillRule" (gradient) support in capabilities schema

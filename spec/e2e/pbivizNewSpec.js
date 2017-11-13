@@ -182,7 +182,7 @@ describe("E2E - pbiviz new", () => {
                     "fontSize": "21"
                 }
             };
-
+            debugger; // jshint ignore:line
             process.chdir(visualPath);
             FileSystem.runCMDCommand('npm i', visualPath);
             try {
