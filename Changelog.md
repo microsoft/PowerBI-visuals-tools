@@ -4,6 +4,8 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 ## pbiviz v1.9.0
 * Added launchUrl API call support
+## pbiviz v1.8.1
+* FIX: Localization schema will be ignored if API doesn't support localization
 
 ## pbiviz v1.8.0
 * Added new type "fillRule" (gradient) support in capabilities schema
