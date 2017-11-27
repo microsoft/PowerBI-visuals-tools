@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.10.0
+* Added ILocalizationManager
+
 ## pbiviz v1.9.0
 * Added launchUrl API call support
 
