@@ -1336,13 +1336,19 @@ declare module powerbi.extensibility {
     export function VisualPlugin (options: IVisualPluginOptions): ClassDecorator;
 }
 
+declare module powerbi.extensibility {
+    export interface ILocalizationManager {
+        getDisplayName(key: string): string; 
+    }
+}
+
 declare module powerbi {
     export interface IFilter { }
 }
 
 /**
- * Change Log Version 1.9.0
- * Added launchUrl
+ * Change Log Version 1.10.0
+ * Added ILocalizationManager
  */
 
 declare module powerbi.extensibility.visual {
@@ -1374,6 +1380,7 @@ declare module powerbi.extensibility.visual {
         launchUrl: (url: string) => void;
         instanceId: string;
         refreshHostData: () => void;
+        createLocalizationManager: () => ILocalizationManager;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
