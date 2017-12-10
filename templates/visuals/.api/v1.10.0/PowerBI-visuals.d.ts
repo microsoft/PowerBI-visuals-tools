@@ -1342,6 +1342,12 @@ declare module powerbi.extensibility {
     }
 }
 
+declare module powerbi.extensibility {
+    export interface IAuthenticationService {
+        getAADToken(visualId?: string): IPromise<string>;
+    }
+}
+
 declare module powerbi {
     export interface IFilter { }
 }
@@ -1349,6 +1355,7 @@ declare module powerbi {
 /**
  * Change Log Version 1.10.0
  * Added ILocalizationManager
+ * Added authenticationService
  */
 
 declare module powerbi.extensibility.visual {
@@ -1375,6 +1382,7 @@ declare module powerbi.extensibility.visual {
         applyJsonFilter: (filter: IFilter, objectName: string, propertyName: string, action: FilterAction) => void;
         tooltipService: ITooltipService;
         telemetry: ITelemetryService;
+        authenticationService: IAuthenticationService;
         locale: string;
         allowInteractions: boolean;
         launchUrl: (url: string) => void;
