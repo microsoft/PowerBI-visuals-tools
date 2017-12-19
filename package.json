@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -33,9 +33,9 @@
     "fs-extra": "0.28.0",
     "jsonschema": "1.1.0",
     "jszip": "3.0.0",
-    "less": "2.6.1",
+    "less": "2.7.3",
     "lodash": "4.11.1",
-    "powerbi-visuals-package-validator": "^1.0.0",
+    "powerbi-visuals-package-validator": "^1.0.1",
     "powerbi-visuals-utils-dataviewutils": "1.2.0",
     "serve-static": "1.10.2",
     "source-map-concat": "1.0.1",
@@ -45,13 +45,13 @@
   },
   "devDependencies": {
     "async": "2.0.1",
-    "jasmine": "2.4.1",
+    "jasmine": "2.8.0",
     "jasmine-node": "1.14.5",
     "jasmine-spec-reporter": "2.5.0",
     "jscs": "3.0.7",
     "jshint": "2.9.2",
     "ps-tree": "1.1.0",
-    "request": "2.74.0",
+    "request": "2.83.0",
     "tree-kill": "^1.1.0",
     "wrench": "1.5.9"
   },
@@ -59,3 +59,4 @@
     "node": "^6.0.0"
   }
 }
+
