@@ -27,14 +27,18 @@
 
 "use strict";
 
+let confPath = '../config.json';
 let exec = require('child_process').execSync;
+let execAsync = require('child_process').exec;
 let path = require('path');
 let os = require('os');
 let program = require('commander');
 let npmPackage = require('../package.json');
 let ConsoleWriter = require('../lib/ConsoleWriter');
-let config = require('../config.json');
+let config = require(confPath);
+let fs = require('fs');
 let args = process.argv;
+let StringDecoder = require('string_decoder').StringDecoder;
 
 program
     .version(npmPackage.version)
@@ -44,6 +48,7 @@ program
     .command('package', 'Package the current visual into a pbiviz file')
     .command('validate [path]', 'Validate pbiviz file for submission')
     .command('update [version]', 'Updates the api definitions and schemas in the current visual. Changes the version if specified')
+    .option('--create-cert', 'Create new localhost certificate', createCertFile)
     .option('--install-cert', 'Install localhost certificate', openCertFile);
 
 //prepend logo to help screen
@@ -58,6 +63,98 @@ if (program.args.length > 0) {
     if (validCommands.indexOf(program.args[0]) === -1) {
         ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
         process.exit(1);
+    }
+}
+
+function removeCertFiles(certPath, keyPath, pfxPath) {
+    try {
+        fs.unlinkSync(certPath);
+    } catch (e) {
+        if (!e.message.indexOf("no such file or directory")) {
+            throw e;
+        }
+    }
+    try {
+        fs.unlinkSync(keyPath);
+    } catch (e) {
+        if (!e.message.indexOf("no such file or directory")) {
+            throw e;
+        }
+    }
+    try {
+        fs.unlinkSync(pfxPath);
+    } catch (e) {
+        if (!e.message.indexOf("no such file or directory")) {
+            throw e;
+        }
+    }
+}
+
+function createCertFile() {
+    const subject = "localhost";
+    const keyLength = 2048;
+    const algorithm = "sha256";
+    const certName = "CN=localhost";
+    const validPeriod = 180;
+    const msInOneDay = 86400000;
+
+    let certPath = path.join(__dirname, '..', config.server.certificate);
+    let keyPath = path.join(__dirname, '..', config.server.privateKey);
+    let pfxPath = path.join(__dirname, '..', config.server.pfx);
+
+    let openCmds = {
+        linux: 'openssl',
+        darwin: 'openssl',
+        win32: 'powershell'
+    };
+    let startCmd = openCmds[os.platform()];
+
+    if (startCmd) {
+        try {
+            let createCertCommand = "";
+            switch (os.platform()) {
+                case "linux":
+                    removeCertFiles(certPath, keyPath);
+                    createCertCommand =
+                        `  req -newkey rsa:${keyLength}` +
+                        ` -nodes` +
+                        ` -keyout ${keyPath}` +
+                        ` -x509 ` +
+                        ` -days ${validPeriod} ` +
+                        ` -out ${certPath} ` +
+                        ` -subj "/CN=${subject}"`;
+                    exec(`${startCmd} ${createCertCommand}`);
+                    break;
+                case "darwin":
+                    removeCertFiles(certPath, keyPath);
+                    createCertCommand =
+                        `  req -newkey rsa:${keyLength}` +
+                        ` -nodes` +
+                        ` -keyout ${keyPath}` +
+                        ` -x509 ` +
+                        ` -days ${validPeriod} ` +
+                        ` -out ${certPath} ` +
+                        ` -subj "/CN=${subject}"`;
+                    exec(`${startCmd} ${createCertCommand}`);
+                    break;
+                case "win32":
+                    removeCertFiles(certPath, keyPath, pfxPath);
+                    let passphrase = Math.random().toString().substring(2);
+                    config.server.passphrase = passphrase;
+                    fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
+                    ConsoleWriter.warn("passphrase for privatekey", passphrase);
+
+                    let psFile = path.join(__dirname, '..', 'bin/generateCert.ps1');
+                    createCertCommand =
+                        ` -File ${psFile} ${passphrase} ${subject} ${keyLength} "${pfxPath}" "${certPath}" "${keyPath}" ${validPeriod} ${algorithm}`;
+                    exec(`${startCmd} ${createCertCommand}`);
+                    break;
+            }
+        } catch (e) {
+            ConsoleWriter.error('Create certificate error:', e);
+        }
+    } else {
+        ConsoleWriter.error('Unknown platform. Put custom certificate to:', certPath);
     }
 }
 
