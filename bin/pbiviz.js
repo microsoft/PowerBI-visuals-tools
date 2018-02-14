@@ -39,6 +39,7 @@ let config = require(confPath);
 let fs = require('fs');
 let args = process.argv;
 let StringDecoder = require('string_decoder').StringDecoder;
+let readline = require('readline');
 
 program
     .version(npmPackage.version)
@@ -90,6 +91,19 @@ function removeCertFiles(certPath, keyPath, pfxPath) {
     }
 }
 
+function removeTempCerts() {
+    try {
+        fs.unlinkSync(path.join(__dirname,  "..", "certs", "cer.cer"));
+    } catch (ex) {
+
+    }
+    try {
+        fs.unlinkSync(path.join(__dirname,  "..", "certs", "pvk.pvk"));
+    } catch (ex) {
+
+    }
+}
+
 function createCertFile() {
     const subject = "localhost";
     const keyLength = 2048;
@@ -138,19 +152,53 @@ function createCertFile() {
                     exec(`${startCmd} ${createCertCommand}`);
                     break;
                 case "win32":
-                    removeCertFiles(certPath, keyPath, pfxPath);
-                    let passphrase = Math.random().toString().substring(2);
-                    config.server.passphrase = passphrase;
-                    fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
-                    ConsoleWriter.warn("passphrase for privatekey", passphrase);
+                    let passphrase = "";
+                    // for windows 7
+                    // 6.1 - Windows 7
+                    // 6.2 - Windows 8
+                    let osVersion = +os.release().split(".");
+                    if (+osVersion[0] === 6 && osVersion[1] === 1 || osVersion[0] < 6) {
+                        removeCertFiles(certPath, keyPath, pfxPath);
+                        startCmd = "openssl";
+                        createCertCommand =
+                            `  req -newkey rsa:${keyLength}` +
+                            ` -nodes` +
+                            ` -keyout ${keyPath}` +
+                            ` -x509 ` +
+                            ` -days ${validPeriod} ` +
+                            ` -out ${certPath} ` +
+                            ` -subj "/CN=${subject}"`;
+                        exec(`${startCmd} ${createCertCommand}`);
+                    } else {
+                        // for windows 8 / 10
+                        passphrase = Math.random().toString().substring(2);
+                        config.server.passphrase = passphrase;
+                        fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
+                        ConsoleWriter.warn("passphrase for privatekey", passphrase);
 
-                    let psFile = path.join(__dirname, '..', 'bin/generateCert.ps1');
-                    createCertCommand =
-                        ` -File ${psFile} ${passphrase} ${subject} ${keyLength} "${pfxPath}" "${certPath}" "${keyPath}" ${validPeriod} ${algorithm}`;
-                    exec(`${startCmd} ${createCertCommand}`);
+                        let psFile = path.join(__dirname, '..', 'bin/generateCert.ps1');
+                        createCertCommand =
+                            ` -File ${psFile} ` +
+                            ` ${passphrase}` +
+                            ` ${subject} ` +
+                            ` ${keyLength} ` +
+                            ` "${pfxPath}" ` +
+                            ` "${certPath}" ` +
+                            ` "${keyPath}" ` +
+                            ` ${validPeriod} ` +
+                            ` ${algorithm}`;
+                        exec(`${startCmd} ${createCertCommand}`);
+                    }
                     break;
             }
         } catch (e) {
+            if (e.message.indexOf("'openssl' is not recognized as an internal or external command") > 0) {
+                ConsoleWriter.warn('Create certificate error:');
+                ConsoleWriter.warn('OpenSSL not installed or not available from command line');
+                ConsoleWriter.info('Install OpenSSL from https://www.openssl.org or https://wiki.openssl.org/index.php/Binaries');
+                ConsoleWriter.info('and try again');
+                return;
+            }
             ConsoleWriter.error('Create certificate error:', e);
         }
     } else {
@@ -176,3 +224,4 @@ function openCertFile() {
         ConsoleWriter.info('Certificate path:', certPath);
     }
 }
+

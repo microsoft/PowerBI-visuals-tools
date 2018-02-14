@@ -9,7 +9,7 @@ $hashAlg = $Args[7]
 
 $secstr = ConvertTo-SecureString -String "$passphrase" -Force -AsPlainText;
 $certId = (
-        -DnsName localhost -HashAlgorithm $hashAlg -Type Custom -Subject $subject -KeyAlgorithm RSA -KeyLength $keyLength -KeyExportPolicy Exportable -CertStoreLocation Cert:\CurrentUser\My -NotAfter (get-date).AddDays($validPeriod) |
+        New-SelfSignedCertificate -DnsName localhost -HashAlgorithm $hashAlg -Type Custom -Subject $subject -KeyAlgorithm RSA -KeyLength $keyLength -KeyExportPolicy Exportable -CertStoreLocation Cert:\CurrentUser\My -NotAfter (get-date).AddDays($validPeriod) |
             select Thumbprint | 
             ForEach-Object { $_.Thumbprint.ToString() }); 
 
