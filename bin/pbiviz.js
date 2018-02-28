@@ -197,6 +197,9 @@ function createCertFile() {
                 ConsoleWriter.warn('OpenSSL not installed or not available from command line');
                 ConsoleWriter.info('Install OpenSSL from https://www.openssl.org or https://wiki.openssl.org/index.php/Binaries');
                 ConsoleWriter.info('and try again');
+
+                ConsoleWriter.info('Read more at');
+                ConsoleWriter.info('https://github.com/Microsoft/PowerBI-visuals/blob/master/tools/CreateCertificate.md#manual');
                 return;
             }
             ConsoleWriter.error('Create certificate error:', e);
