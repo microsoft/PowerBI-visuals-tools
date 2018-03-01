@@ -2,8 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## pbiviz v1.10.1
+## pbiviz v1.10.2
+* Add `pbiviz --create-cert` for generating new unique certificate
 
+## pbiviz v1.10.1
 * Increase typescript to 2.3.3 version
 
 ## pbiviz v1.10.0

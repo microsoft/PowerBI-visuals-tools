@@ -22,6 +22,7 @@
         "assetsRoute": "/assets",
         "privateKey":"certs/PowerBICustomVisualTest_private.key",
         "certificate":"certs/PowerBICustomVisualTest_public.crt",
+        "pfx":"certs/PowerBICustomVisualTest_public.pfx",
         "port":"8080"
     }
 }
