@@ -25,7 +25,9 @@
 # appveyor CI configuration file
 # http://www.appveyor.com/docs/appveyor-yml
 
-
+# Switch to win server 2016
+image: 
+  - Visual Studio 2017 
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js or io.js
