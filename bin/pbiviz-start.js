@@ -64,7 +64,9 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             // ...
 
             console.log('Rebuild...');
-            console.log(err);
+            if (err) {
+                console.log(err);
+            }
         });
         // var server = new WebpackDevServer(compiler, {});
         // server.listen(webpackConfig.devServer.port);
