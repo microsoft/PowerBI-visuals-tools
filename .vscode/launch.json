@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "cwd": "${workspaceRoot}\\spec\\.tmp\\visualname",
-            "program": "${workspaceRoot}\\bin\\pbiviz-package.js"
+            "cwd": "E:\\WORKSPACE\\PowerBI-visuals-tools-webpack-poc",
+            "program": "${workspaceRoot}\\bin\\pbiviz-start.js"
         }
     ]
 }

@@ -35,6 +35,7 @@
     "jszip": "3.0.0",
     "less": "2.7.3",
     "lodash": "4.11.1",
+    "powerbi-customvisuals-webpack-plugin": "file:../../PowerBICustomVisualsWebpackPlugin",
     "powerbi-visuals-package-validator": "^1.0.1",
     "powerbi-visuals-utils-dataviewutils": "1.2.0",
     "serve-static": "1.10.2",
@@ -53,10 +54,11 @@
     "ps-tree": "1.1.0",
     "request": "2.83.0",
     "tree-kill": "^1.1.0",
-    "wrench": "1.5.9"
+    "wrench": "1.5.9",
+    "webpack": "4.1.0",
+    "webpack-dev-server": "^3.1.0"
   },
   "engines": {
     "node": "^6.0.0"
   }
 }
-
