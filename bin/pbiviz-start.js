@@ -29,7 +29,6 @@
 let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let VisualServer = require('../lib/VisualServer');
-let VisualBuilder = require('../lib/VisualBuilder');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 let WebPackWrap = require('../lib/WebPackWrap');
 const webpack = require("webpack");
