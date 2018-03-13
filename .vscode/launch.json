@@ -8,6 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
+            // "cwd": "E:\\WORKSPACE\\PowerBI\\powerbi-visuals-sankey",
             "cwd": "E:\\WORKSPACE\\PowerBI-visuals-tools-webpack-poc",
             "program": "${workspaceRoot}\\bin\\pbiviz-start.js"
         }
