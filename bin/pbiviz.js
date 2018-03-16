@@ -208,11 +208,6 @@ function getCertFile(config) {
     let  cert = path.join(__dirname, '..', config.server.certificate);
     let  pfx = path.join(__dirname, '..', config.server.pfx);
 
-    if (!fs.existsSync(cert) && !fs.existsSync(pfx)) {
-        ConsoleWriter.info('Certificate not found. Call `pbiviz --create-cert` command to create the new certificate');
-        return null;
-    }
-
     if (fs.existsSync(cert)) {
         return cert;
     }
@@ -222,6 +217,9 @@ function getCertFile(config) {
         }
         return pfx;
     }
+
+    ConsoleWriter.info('Certificate not found. Call `pbiviz --create-cert` command to create the new certificate');
+    return null;
 }
 
 function openCertFile() {
