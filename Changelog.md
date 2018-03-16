@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.11.1
+* Check certificate path in `--install-cert` command.
+
 ## pbiviz v1.11.0
 * Added `selectionManager.registerOnSelectCallback()` method for Report Bookmarks support
 
