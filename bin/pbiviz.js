@@ -137,6 +137,9 @@ function createCertFile() {
                         ` -out ${certPath} ` +
                         ` -subj "/CN=${subject}"`;
                     exec(`${startCmd} ${createCertCommand}`);
+                    if (fs.existsSync(certPath)) {
+                        ConsoleWriter.info(`Certificate generated. Location is ${certPath}`); 
+                    }
                     break;
                 case "win32":
                     let passphrase = "";
@@ -156,6 +159,9 @@ function createCertFile() {
                             ` -out ${certPath} ` +
                             ` -subj "/CN=${subject}"`;
                         exec(`${startCmd} ${createCertCommand}`);
+                        if (fs.existsSync(certPath)) {
+                            ConsoleWriter.info(`Certificate generated. Location is ${certPath}`); 
+                        }
                     } else {
                         // for windows 8 / 10
                         passphrase = Math.random().toString().substring(2);
@@ -174,6 +180,9 @@ function createCertFile() {
                             ` ${validPeriod} ` +
                             ` ${algorithm}`;
                         exec(`${startCmd} ${createCertCommand}`);
+                        if (fs.existsSync(psFile)) {
+                            ConsoleWriter.info(`Certificate generated. Location is ${psFile}. Passphrase is '${passphrase}'`); 
+                        }
                     }
                     break;
             }
@@ -195,8 +204,31 @@ function createCertFile() {
     }
 }
 
+function getCertFile(config) {
+    let  cert = path.join(__dirname, '..', config.server.certificate);
+    let  pfx = path.join(__dirname, '..', config.server.pfx);
+
+    if (fs.existsSync(cert)) {
+        return cert;
+    }
+    if (fs.existsSync(pfx)) {
+        if (config.server.passphrase) {
+            ConsoleWriter.info(`Use '${config.server.passphrase}' passphrase to install PFX certificate.`);
+        }
+        return pfx;
+    }
+
+    ConsoleWriter.info('Certificate not found. Call `pbiviz --create-cert` command to create the new certificate');
+    return null;
+}
+
 function openCertFile() {
-    let certPath = path.join(__dirname, '..', config.server.certificate);
+    let certPath = getCertFile(config);
+    
+    if (!certPath) {
+        return;
+    }
+
     let openCmds = {
         linux: 'xdg-open',
         darwin: 'open',
@@ -205,7 +237,7 @@ function openCertFile() {
     let startCmd = openCmds[os.platform()];
     if (startCmd) {
         try {
-            exec(`${startCmd} "${certPath}"`);
+            exec(`${startCmd} "${certPath}"`); 
         } catch (e) {
             ConsoleWriter.info('Certificate path:', certPath);
         }
