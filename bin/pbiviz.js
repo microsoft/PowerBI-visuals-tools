@@ -168,20 +168,26 @@ function createCertFile() {
                         config.server.passphrase = passphrase;
                         fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
 
-                        let psFile = path.join(__dirname, '..', 'bin/generateCert.ps1');
-                        createCertCommand =
-                            ` -File ${psFile} ` +
-                            ` ${passphrase}` +
-                            ` ${subject} ` +
-                            ` ${keyLength} ` +
-                            ` "${pfxPath}" ` +
-                            ` "${certPath}" ` +
-                            ` "${keyPath}" ` +
-                            ` ${validPeriod} ` +
-                            ` ${algorithm}`;
-                        exec(`${startCmd} ${createCertCommand}`);
-                        if (fs.existsSync(psFile)) {
-                            ConsoleWriter.info(`Certificate generated. Location is ${psFile}. Passphrase is '${passphrase}'`); 
+                        createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
+                        `   New-SelfSignedCertificate ` +
+                        `       -DnsName localhost ` +
+                        `       -HashAlgorithm ${algorithm} ` +
+                        `       -Type Custom ` +
+                        `       -Subject ${subject} ` +
+                        `       -KeyAlgorithm RSA ` +
+                        `       -KeyLength ${keyLength} ` +
+                        `       -KeyExportPolicy Exportable ` +
+                        `       -CertStoreLocation Cert:\\CurrentUser\\My ` +
+                        `       -NotAfter (get-date).AddDays(${validPeriod}) |` +
+                        `   select Thumbprint | ` +
+                        `   ForEach-Object { $_.Thumbprint.ToString() }).toString()); ` +
+                        `   Export-PfxCertificate -Cert $cert` +
+                        `       -FilePath '${pfxPath}' ` +
+                        `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
+
+                        exec(`${startCmd} "${createCertCommand}"`);
+                        if (fs.existsSync(pfxPath)) {
+                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`); 
                         }
                     }
                     break;
