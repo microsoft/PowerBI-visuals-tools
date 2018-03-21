@@ -31,6 +31,8 @@ let VisualPackage = require('../lib/VisualPackage');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 let PbivizBuilder = require('../lib/PbivizBuilder');
 let VisualBuilder = require('../lib/VisualBuilder');
+let WebPackWrap = require('../lib/WebPackWrap');
+const webpack = require("webpack");
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
@@ -60,32 +62,28 @@ if (!program.pbiviz && !program.resources) {
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
-    let buildOptions = {
-        minify: program.minify,
-        plugin: program.plugin || program.pbiviz
-    };
+    WebPackWrap.applyWebpackConfig(visualPackage, {
+        devMode: false
+    })
+    .then((webpackConfig) => {
+        var compiler = webpack(webpackConfig);
+        // compiler.watch({
+        //     aggregateTimeout: 300, // wait so long for more changes
+	    //     poll: true // use polling instead of native watchers
+        // }, function(err, stats) {
+        //     // ...
 
-    let builder = new VisualBuilder(visualPackage, buildOptions);
-
-    builder.build().then(() => {
-        ConsoleWriter.done('build complete');
-        ConsoleWriter.blank();
-        ConsoleWriter.info('Building visual...');
-
-        let packager = new PbivizBuilder(visualPackage, {
-            resources: program.resources,
-            pbiviz: program.pbiviz
+        //     console.log('Rebuild...');
+        //     if (err) {
+        //         console.log(err);
+        //     }
+        // });
+        compiler.run(() => {
+            ConsoleWriter.info('Package created');
         });
-
-        packager.build().then(() => {
-            ConsoleWriter.done('packaging complete');
-        }).catch(e => {
-            ConsoleWriter.error('PACKAGE ERROR', e);
-            process.exit(1);
-        });
-    }).catch(e => {
-        ConsoleWriter.formattedErrors(e);
-        process.exit(1);
+    })
+    .catch(e => {
+        console.log(e.message);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
