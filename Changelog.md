@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.11.2
+* Resolve PowerShell script launching issue.
+
 ## pbiviz v1.11.1
 * Check certificate path in `--install-cert` command.
 
