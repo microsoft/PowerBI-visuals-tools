@@ -1386,6 +1386,7 @@ declare module powerbi.extensibility.visual {
         locale: string;
         allowInteractions: boolean;
         launchUrl: (url: string) => void;
+        fetchMoreData: () => boolean;
         instanceId: string;
         refreshHostData: () => void;
         createLocalizationManager: () => ILocalizationManager;
@@ -1397,6 +1398,7 @@ declare module powerbi.extensibility.visual {
         type: VisualUpdateType;
         viewMode?: ViewMode;
         editMode?: EditMode;
+        operationKind?: VisualDataChangeOperationKind;
     }
 
     export interface VisualConstructorOptions extends extensibility.VisualConstructorOptions {

@@ -573,6 +573,9 @@
                     "properties": {
                         "count": {
                             "type": "number"
+                        },
+                        "aggregate" : {
+                            "type": "boolean"
                         }
                     }
                 }
