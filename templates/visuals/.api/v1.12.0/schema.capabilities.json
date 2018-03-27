@@ -19,6 +19,9 @@
         "objects": {
             "$ref": "#/definitions/objects"
         },
+        "tooltips": {
+            "$ref": "#/definitions/tooltips"
+        },
         "sorting": {
             "$ref": "#/definitions/sorting"
         },
@@ -666,6 +669,33 @@
                 }
             },
             "additionalProperties": false
+        },
+        "tooltips": {
+            "type": "object",
+            "description": "Tells the host to include tooltips ability",
+            "properties": {
+                "supportedTypes": {
+                    "type": "object",
+                    "description": "Tells the host what tooltip types to support",
+                    "properties": {
+                    "default": {
+                        "type": "boolean",
+                        "description": "Tells the host to support showing default tooltips"
+                        },
+                    "canvas": {
+                        "type": "boolean",
+                        "description": "Tells the host to support showing canvas tooltips"
+                        }
+                    }
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "The name of the data role to bind the tooltips selected info to"
+                    }
+                }	
+            }			
         },
         "object.propertySettings": {
             "type": "object",
