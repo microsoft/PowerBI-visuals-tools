@@ -63,7 +63,8 @@
     "ts-loader": "4.0.1",
     "webpack": "4.4.1",
     "webpack-dev-server": "^3.1.0",
-    "wrench": "1.5.9"
+    "wrench": "1.5.9",
+    "tsc-watch": "1.0.17"
   },
   "engines": {
     "node": "^6.0.0"
