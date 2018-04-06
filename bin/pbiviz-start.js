@@ -60,15 +60,14 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             aggregateTimeout: 300, // wait so long for more changes
 	        poll: true // use polling instead of native watchers
         }, function(err, stats) {
-            // ...
-
-            console.log('Rebuild...');
+            
             if (err) {
+                console.log('Visual rebuild failed');
                 console.log(err);
+                return;
             }
+            console.log('Visual rebuild completed');
         });
-        // var server = new WebpackDevServer(compiler, {});
-        // server.listen(webpackConfig.devServer.port);
 
         ConsoleWriter.blank();
         ConsoleWriter.info('Starting server...');
