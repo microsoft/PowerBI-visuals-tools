@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.11.3
+* Resolve PowerShell params issue on Win8.
+
 ## pbiviz v1.11.2
 * Resolve PowerShell script launching issue.
 
