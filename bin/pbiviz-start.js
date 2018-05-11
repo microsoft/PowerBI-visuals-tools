@@ -55,19 +55,21 @@ let server, builder;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     WebPackWrap.applyWebpackConfig(visualPackage)
     .then((webpackConfig) => {
-        var compiler = webpack(webpackConfig);
+        let compiler = webpack(webpackConfig);
         compiler.watch({
-            aggregateTimeout: 300, // wait so long for more changes
-	        poll: true // use polling instead of native watchers
-        }, function(err, stats) {
+                aggregateTimeout: 300, // wait so long for more changes
+                poll: true // use polling instead of native watchers
+            },
+            function (err, stats) {
             
-            if (err) {
-                console.log('Visual rebuild failed');
-                console.log(err);
-                return;
+                if (err) {
+                    console.log('Visual rebuild failed');
+                    console.log(err);
+                    return;
+                }
+                console.log('Visual rebuild completed');
             }
-            console.log('Visual rebuild completed');
-        });
+        );
 
         ConsoleWriter.blank();
         ConsoleWriter.info('Starting server...');
@@ -80,7 +82,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         });
     })
     .catch(e => {
-        console.log(e.message);
+        ConsoleWriter.error(e.message);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);

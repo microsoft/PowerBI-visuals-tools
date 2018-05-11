@@ -64,26 +64,13 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
     WebPackWrap.applyWebpackConfig(visualPackage, {
         devMode: false
-    })
-    .then((webpackConfig) => {
-        var compiler = webpack(webpackConfig);
-        // compiler.watch({
-        //     aggregateTimeout: 300, // wait so long for more changes
-	    //     poll: true // use polling instead of native watchers
-        // }, function(err, stats) {
-        //     // ...
-
-        //     console.log('Rebuild...');
-        //     if (err) {
-        //         console.log(err);
-        //     }
-        // });
+    }).then((webpackConfig) => {
+        let compiler = webpack(webpackConfig);
         compiler.run(() => {
             ConsoleWriter.info('Package created');
         });
-    })
-    .catch(e => {
-        console.log(e.message);
+    }).catch(e => {
+        ConsoleWriter.error(e.message);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
