@@ -137,14 +137,16 @@ function createCertFile() {
                         ` -out ${certPath} ` +
                         ` -subj "/CN=${subject}"`;
                     exec(`${startCmd} ${createCertCommand}`);
+                    if (fs.existsSync(certPath)) {
+                        ConsoleWriter.info(`Certificate generated. Location is ${certPath}`); 
+                    }
                     break;
                 case "win32":
                     let passphrase = "";
-                    // for windows 7
+                    // for windows 7 and others
                     // 6.1 - Windows 7
-                    // 6.2 - Windows 8
-                    let osVersion = +os.release().split(".");
-                    if (+osVersion[0] === 6 && osVersion[1] === 1 || osVersion[0] < 6) {
+                    let osVersion = os.release().split(".");
+                    if (+osVersion[0] === 6 && +osVersion[1] === 1 || +osVersion[0] < 6) {
                         removeCertFiles(certPath, keyPath, pfxPath);
                         startCmd = "openssl";
                         createCertCommand =
@@ -156,24 +158,58 @@ function createCertFile() {
                             ` -out ${certPath} ` +
                             ` -subj "/CN=${subject}"`;
                         exec(`${startCmd} ${createCertCommand}`);
-                    } else {
-                        // for windows 8 / 10
+                        if (fs.existsSync(certPath)) {
+                            ConsoleWriter.info(`Certificate generated. Location is ${certPath}`); 
+                        }
+                    } 
+                    // for windows 8 / 8.1 / server 2012 R2 /
+                    if (+osVersion[0] === 6 && (+osVersion[1] === 2 || +osVersion[1] === 3)) {
+                        // for 10
                         passphrase = Math.random().toString().substring(2);
                         config.server.passphrase = passphrase;
                         fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
 
-                        let psFile = path.join(__dirname, '..', 'bin/generateCert.ps1');
-                        createCertCommand =
-                            ` -File ${psFile} ` +
-                            ` ${passphrase}` +
-                            ` ${subject} ` +
-                            ` ${keyLength} ` +
-                            ` "${pfxPath}" ` +
-                            ` "${certPath}" ` +
-                            ` "${keyPath}" ` +
-                            ` ${validPeriod} ` +
-                            ` ${algorithm}`;
-                        exec(`${startCmd} ${createCertCommand}`);
+                        createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
+                        `   New-SelfSignedCertificate ` +
+                        `       -DnsName localhost ` +
+                        `       -CertStoreLocation Cert:\\CurrentUser\\My ` +
+                        `   | select Thumbprint | ` +
+                        `   ForEach-Object { $_.Thumbprint.ToString() }).toString()); ` +
+                        `   Export-PfxCertificate -Cert $cert` +
+                        `       -FilePath '${pfxPath}' ` +
+                        `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
+
+                        exec(`${startCmd} "${createCertCommand}"`);
+                        if (fs.existsSync(pfxPath)) {
+                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`); 
+                        }
+                    } else {
+                        // for window 10 / server 2016
+                        passphrase = Math.random().toString().substring(2);
+                        config.server.passphrase = passphrase;
+                        fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
+
+                        createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
+                        `   New-SelfSignedCertificate ` +
+                        `       -DnsName localhost ` +
+                        `       -HashAlgorithm ${algorithm} ` +
+                        `       -Type Custom ` +
+                        `       -Subject ${subject} ` +
+                        `       -KeyAlgorithm RSA ` +
+                        `       -KeyLength ${keyLength} ` +
+                        `       -KeyExportPolicy Exportable ` +
+                        `       -CertStoreLocation Cert:\\CurrentUser\\My ` +
+                        `       -NotAfter (get-date).AddDays(${validPeriod}) ` +
+                        `   | select Thumbprint | ` +
+                        `   ForEach-Object { $_.Thumbprint.ToString() }).toString()); ` +
+                        `   Export-PfxCertificate -Cert $cert` +
+                        `       -FilePath '${pfxPath}' ` +
+                        `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
+
+                        exec(`${startCmd} "${createCertCommand}"`);
+                        if (fs.existsSync(pfxPath)) {
+                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`); 
+                        }
                     }
                     break;
             }
@@ -195,8 +231,31 @@ function createCertFile() {
     }
 }
 
+function getCertFile(config) {
+    let  cert = path.join(__dirname, '..', config.server.certificate);
+    let  pfx = path.join(__dirname, '..', config.server.pfx);
+
+    if (fs.existsSync(cert)) {
+        return cert;
+    }
+    if (fs.existsSync(pfx)) {
+        if (config.server.passphrase) {
+            ConsoleWriter.info(`Use '${config.server.passphrase}' passphrase to install PFX certificate.`);
+        }
+        return pfx;
+    }
+
+    ConsoleWriter.info('Certificate not found. Call `pbiviz --create-cert` command to create the new certificate');
+    return null;
+}
+
 function openCertFile() {
-    let certPath = path.join(__dirname, '..', config.server.certificate);
+    let certPath = getCertFile(config);
+    
+    if (!certPath) {
+        return;
+    }
+
     let openCmds = {
         linux: 'xdg-open',
         darwin: 'open',
@@ -205,7 +264,7 @@ function openCertFile() {
     let startCmd = openCmds[os.platform()];
     if (startCmd) {
         try {
-            exec(`${startCmd} "${certPath}"`);
+            exec(`${startCmd} "${certPath}"`); 
         } catch (e) {
             ConsoleWriter.info('Certificate path:', certPath);
         }
