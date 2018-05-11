@@ -63,7 +63,9 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
     WebPackWrap.applyWebpackConfig(visualPackage, {
-        devMode: false
+        devMode: false,
+        generateResources: program.resources || false,
+        generatePbiviz: program.pbiviz || false
     }).then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
         compiler.run(() => {

@@ -84,10 +84,7 @@ describe("E2E - pbiviz start", () => {
         FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0');
 
         //api version file should've been created
-        let stat = fs.statSync(path.join(visualPath, '.api', 'v1.5.0'));
-        expect(stat.isDirectory()).toBe(true);
-        expect(fs.existsSync(path.join(visualPath, '.api', 'v1.5.0', 'schema.stringResources.json'))).toBe(false);
-
+        
         process.chdir(visualPath);
 
         let pbivizProc;
@@ -113,11 +110,6 @@ describe("E2E - pbiviz start", () => {
 
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0');
-
-        //api version file should've been created
-        let stat = fs.statSync(path.join(visualPath, '.api', 'v1.6.0'));
-        expect(stat.isDirectory()).toBe(true);
-        expect(fs.existsSync(path.join(visualPath, '.api', 'v1.6.0', 'schema.stringResources.json'))).toBe(true);
 
         process.chdir(visualPath);
 

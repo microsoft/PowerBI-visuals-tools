@@ -39,6 +39,7 @@ describe("E2E - pbiviz package", () => {
 
     let visualName = 'visualname';
     let visualPath = path.join(tempPath, visualName);
+    let visualPbiviz = {};
 
     beforeEach(() => {
         FileSystem.resetTempDirectory();
@@ -46,6 +47,8 @@ describe("E2E - pbiviz package", () => {
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
         FileSystem.runCMDCommand('npm i', visualPath);
+
+        visualPbiviz = JSON.parse(fs.readFileSync(path.join(visualPath, 'pbiviz.json'), { encoding: "utf8" }));
     });
 
     afterEach(() => {
@@ -88,7 +91,7 @@ describe("E2E - pbiviz package", () => {
     it("Should create a pbiviz file and no resources folder with no flags", () => {
         FileSystem.runPbiviz('package');
 
-        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
         let resourcesPath = path.join(visualPath, 'dist', 'resources');
 
         let resourcesError;
@@ -106,7 +109,7 @@ describe("E2E - pbiviz package", () => {
     it("Should create a pbiviz file and resource folder with --resources flag", () => {
         FileSystem.runPbiviz('package', false, '--resources');
 
-        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
         let resourcesPath = path.join(visualPath, 'dist', 'resources');
 
         expect(fs.statSync(pbivizPath).isFile()).toBe(true);
@@ -116,7 +119,7 @@ describe("E2E - pbiviz package", () => {
     it("Should not create pbiviz file with --no-pbiviz flag", () => {
         FileSystem.runPbiviz('package', false, '--no-pbiviz --resources');
 
-        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
         let resourcesPath = path.join(visualPath, 'dist', 'resources');
 
         let pbivizError;
@@ -136,7 +139,7 @@ describe("E2E - pbiviz package", () => {
 
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
-        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
         let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
 
         let zipContents = fs.readFileSync(pbivizPath);
@@ -244,7 +247,7 @@ describe("E2E - pbiviz package", () => {
         FileSystem.runPbiviz('package');
 
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
         let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
 
         let zipContents = fs.readFileSync(pbivizPath);

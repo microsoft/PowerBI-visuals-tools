@@ -197,9 +197,9 @@ describe("E2E - pbiviz new", () => {
                     }
                     global.eval(data); // jshint ignore:line
                     let visualFullName = Object.keys(global.powerbi.extensibility.visual)[0];
-                    let settings = global.powerbi.extensibility.visual[visualFullName].VisualSettings.getDefault();
+                    let settings = global.powerbi.extensibility.visual.VisualSettings.getDefault();
                     expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
-                    let visualInstance = new global.powerbi.extensibility.visual[visualFullName].Visual({ element: { innerHTML: null } });
+                    let visualInstance = new global.powerbi.extensibility.visual.Visual({ element: { innerHTML: null } });
                     visualInstance.update({ dataViews: dataViews });
                     expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
                     done();
