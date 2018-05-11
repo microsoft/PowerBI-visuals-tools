@@ -2,8 +2,20 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.11.3
+* Resolve PowerShell params issue on Win8.
+
+## pbiviz v1.11.2
+* Resolve PowerShell script launching issue.
+
+## pbiviz v1.11.1
+* Check certificate path in `--install-cert` command.
+
+## pbiviz v1.11.0
+* Added `selectionManager.registerOnSelectCallback()` method for Report Bookmarks support
+
 ## pbiviz v1.10.2
-* Add `pbiviz --create-cert` for generating new unique certificate
+* Added `pbiviz --create-cert` for generating new unique certificate
 
 ## pbiviz v1.10.1
 * Increase typescript to 2.3.3 version
