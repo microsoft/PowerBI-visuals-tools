@@ -143,11 +143,10 @@ function createCertFile() {
                     break;
                 case "win32":
                     let passphrase = "";
-                    // for windows 7
+                    // for windows 7 and others
                     // 6.1 - Windows 7
-                    // 6.2 - Windows 8
-                    let osVersion = +os.release().split(".");
-                    if (+osVersion[0] === 6 && osVersion[1] === 1 || osVersion[0] < 6) {
+                    let osVersion = os.release().split(".");
+                    if (+osVersion[0] === 6 && +osVersion[1] === 1 || +osVersion[0] < 6) {
                         removeCertFiles(certPath, keyPath, pfxPath);
                         startCmd = "openssl";
                         createCertCommand =
@@ -162,8 +161,30 @@ function createCertFile() {
                         if (fs.existsSync(certPath)) {
                             ConsoleWriter.info(`Certificate generated. Location is ${certPath}`); 
                         }
+                    } 
+                    // for windows 8 / 8.1 / server 2012 R2 /
+                    if (+osVersion[0] === 6 && (+osVersion[1] === 2 || +osVersion[1] === 3)) {
+                        // for 10
+                        passphrase = Math.random().toString().substring(2);
+                        config.server.passphrase = passphrase;
+                        fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
+
+                        createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
+                        `   New-SelfSignedCertificate ` +
+                        `       -DnsName localhost ` +
+                        `       -CertStoreLocation Cert:\\CurrentUser\\My ` +
+                        `   | select Thumbprint | ` +
+                        `   ForEach-Object { $_.Thumbprint.ToString() }).toString()); ` +
+                        `   Export-PfxCertificate -Cert $cert` +
+                        `       -FilePath '${pfxPath}' ` +
+                        `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
+
+                        exec(`${startCmd} "${createCertCommand}"`);
+                        if (fs.existsSync(pfxPath)) {
+                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`); 
+                        }
                     } else {
-                        // for windows 8 / 10
+                        // for window 10 / server 2016
                         passphrase = Math.random().toString().substring(2);
                         config.server.passphrase = passphrase;
                         fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
@@ -178,8 +199,8 @@ function createCertFile() {
                         `       -KeyLength ${keyLength} ` +
                         `       -KeyExportPolicy Exportable ` +
                         `       -CertStoreLocation Cert:\\CurrentUser\\My ` +
-                        `       -NotAfter (get-date).AddDays(${validPeriod}) |` +
-                        `   select Thumbprint | ` +
+                        `       -NotAfter (get-date).AddDays(${validPeriod}) ` +
+                        `   | select Thumbprint | ` +
                         `   ForEach-Object { $_.Thumbprint.ToString() }).toString()); ` +
                         `   Export-PfxCertificate -Cert $cert` +
                         `       -FilePath '${pfxPath}' ` +
