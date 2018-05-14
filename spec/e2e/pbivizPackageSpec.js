@@ -187,7 +187,7 @@ describe("E2E - pbiviz package", () => {
         let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
         let resourcesPath = path.join(visualPath, 'dist', 'resources');
-        let pbivizPath = path.join(resourcesPath, 'pbiviz.json');
+        let pbivizPath = path.join(resourcesPath, visualPbiviz.visual.guid + '.pbiviz.json');
 
         expect(fs.statSync(resourcesPath).isDirectory()).toBe(true);
         expect(fs.statSync(path.join(resourcesPath, 'visual.prod.js')).isFile()).toBe(true);
@@ -211,26 +211,26 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should minify assets by default", () => {
-        FileSystem.runPbiviz('package');
+        FileSystem.runPbiviz('package', false, '--resources --no-pbiviz');
 
         let js = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.js'));
         let css = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.css'));
 
-        let prodJs = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.prod.js'));
-        let prodCss = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.prod.css'));
+        let prodJs = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.prod.js'));
+        let prodCss = fs.statSync(path.join(visualPath,  'dist', 'resources', 'visual.prod.css'));
 
         expect(js.size).toBeGreaterThan(prodJs.size);
-        expect(css.size).toBeGreaterThan(prodCss.size);
+        expect(css.size).toBeGreaterThanOrEqual(prodCss.size);
     });
 
     it("Should skip minification with --no-minify flag", () => {
-        FileSystem.runPbiviz('package', false, '--no-minify');
+        FileSystem.runPbiviz('package', false, '--no-minify --resources');
 
         let js = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.js'));
         let css = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.css'));
 
-        let prodJs = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.prod.js'));
-        let prodCss = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.prod.css'));
+        let prodJs = fs.statSync(path.join(visualPath, '.tmp', 'resources', 'visual.prod.js'));
+        let prodCss = fs.statSync(path.join(visualPath, '.tmp', 'resources', 'visual.prod.css'));
 
         expect(js.size).toBe(prodJs.size);
         expect(css.size).toBe(prodCss.size);

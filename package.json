@@ -41,7 +41,7 @@
     "serve-static": "1.10.2",
     "source-map-concat": "1.0.1",
     "typescript": "2.7.2",
-    "uglify-js": "2.6.2",
+    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
     "uuid": "3.0.0"
   },
   "devDependencies": {
