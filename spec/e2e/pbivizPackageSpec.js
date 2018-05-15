@@ -580,7 +580,8 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
         });
 }
 
-describe("E2E - pbiviz package for R Visual template", () => {
+// new tools doesn't support R visuals build. coming soon
+xdescribe("E2E - pbiviz package for R Visual template", () => {
 
     let visualName = 'visualname';
     let visualPath = path.join(tempPath, visualName);
@@ -623,7 +624,8 @@ describe("E2E - pbiviz package for R Visual template", () => {
     });
 });
 
-describe("E2E - pbiviz package for R HTML template", () => {
+// new tools doesn't support R visuals build. coming soon
+xdescribe("E2E - pbiviz package for R HTML template", () => {
 
     let visualName = 'visualname';
     let visualPath = path.join(tempPath, visualName);
