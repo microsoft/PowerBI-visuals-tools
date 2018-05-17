@@ -37,11 +37,10 @@
     "lodash": "4.11.1",
     "powerbi-visuals-package-validator": "^1.0.1",
     "powerbi-visuals-utils-dataviewutils": "1.2.0",
-    "powerbi-visuals-webpack-plugin": "git+https://github.com/Microsoft/powerbi-visuals-webpack-plugin",
+    "powerbi-visuals-webpack-plugin": "git+https://github.com/zBritva/powerbi-visuals-webpack-plugin",
     "serve-static": "1.10.2",
     "source-map-concat": "1.0.1",
     "typescript": "2.7.2",
-    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
     "uuid": "3.0.0"
   },
   "devDependencies": {
@@ -56,6 +55,8 @@
     "jshint": "2.9.2",
     "less-loader": "4.1.0",
     "mini-css-extract-plugin": "0.4.0",
+    "uglifyjs-webpack-plugin": "1.2.5",
+    "uglify-js": "3.3.25",
     "ps-tree": "1.1.0",
     "request": "2.83.0",
     "style-loader": "0.20.3",
@@ -70,4 +71,3 @@
     "node": "^6.0.0"
   }
 }
-
