@@ -211,7 +211,9 @@ describe("E2E - pbiviz package", () => {
         expect(fs.existsSync(visualPluginPath)).toBeFalsy();
     });
 
-    it("Should minify assets by default", () => {
+    // tets can't check the minification, because in input the plugin gets minified version, 
+    // plugin can't create two version js file for compare
+    xit("Should minify assets by default", () => {
         FileSystem.runPbiviz('package', false, '--resources --no-pbiviz');
 
         let js = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.js'));
