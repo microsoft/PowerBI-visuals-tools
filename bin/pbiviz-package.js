@@ -31,6 +31,8 @@ let VisualPackage = require('../lib/VisualPackage');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 let PbivizBuilder = require('../lib/PbivizBuilder');
 let VisualBuilder = require('../lib/VisualBuilder');
+let WebPackWrap = require('../lib/WebPackWrap');
+const webpack = require("webpack");
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
@@ -60,32 +62,19 @@ if (!program.pbiviz && !program.resources) {
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
-    let buildOptions = {
-        minify: program.minify,
-        plugin: program.plugin || program.pbiviz
-    };
-
-    let builder = new VisualBuilder(visualPackage, buildOptions);
-
-    builder.build().then(() => {
-        ConsoleWriter.done('build complete');
-        ConsoleWriter.blank();
-        ConsoleWriter.info('Building visual...');
-
-        let packager = new PbivizBuilder(visualPackage, {
-            resources: program.resources,
-            pbiviz: program.pbiviz
-        });
-
-        packager.build().then(() => {
-            ConsoleWriter.done('packaging complete');
-        }).catch(e => {
-            ConsoleWriter.error('PACKAGE ERROR', e);
-            process.exit(1);
+    WebPackWrap.applyWebpackConfig(visualPackage, {
+        devMode: false,
+        generateResources: program.resources || false,
+        generatePbiviz: program.pbiviz || false,
+        minifyJS: typeof program.minify === 'undefined' ? true : program.minify,
+        minify: typeof program.minify === 'undefined' ? true : program.minify
+    }).then((webpackConfig) => {
+        let compiler = webpack(webpackConfig);
+        compiler.run(() => {
+            ConsoleWriter.info('Package created');
         });
     }).catch(e => {
-        ConsoleWriter.formattedErrors(e);
-        process.exit(1);
+        ConsoleWriter.error(e.message);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);

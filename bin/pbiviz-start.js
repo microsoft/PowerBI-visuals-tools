@@ -29,8 +29,10 @@
 let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let VisualServer = require('../lib/VisualServer');
-let VisualBuilder = require('../lib/VisualBuilder');
 let ConsoleWriter = require('../lib/ConsoleWriter');
+let WebPackWrap = require('../lib/WebPackWrap');
+const webpack = require("webpack");
+const WebpackDevServer = require("webpack-dev-server");
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
@@ -51,41 +53,36 @@ let cwd = process.cwd();
 let server, builder;
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
+    WebPackWrap.applyWebpackConfig(visualPackage)
+    .then((webpackConfig) => {
+        let compiler = webpack(webpackConfig);
+        compiler.watch({
+                aggregateTimeout: 300, // wait so long for more changes
+                poll: true // use polling instead of native watchers
+            },
+            function (err, stats) {
+            
+                if (err) {
+                    console.log('Visual rebuild failed');
+                    console.log(err);
+                    return;
+                }
+                console.log('Visual rebuild completed');
+            }
+        );
 
-    ConsoleWriter.info('Building visual...');
-    let buildOptions = { namespace: visualPackage.config.visual.guid + '_DEBUG', minify: false };
-    builder = new VisualBuilder(visualPackage, buildOptions);
-    builder.build().then(() => {
-        ConsoleWriter.done('build complete');
-
-        builder.startWatcher().then(() => {
-            builder.on('watch_change', changeType => {
-                ConsoleWriter.blank();
-                ConsoleWriter.info(changeType + ' change detected. Rebuilding...');
-            });
-            builder.on('watch_complete', changeType => {
-                ConsoleWriter.done(changeType + ' build complete');
-            });
-            builder.on('watch_error', errors => {
-                if (!program.mute) ConsoleWriter.beep();
-                ConsoleWriter.formattedErrors(errors);
-            });
-
-            ConsoleWriter.blank();
-            ConsoleWriter.info('Starting server...');
-            server = new VisualServer(visualPackage, program.port);
-            server.start().then(() => {
-                ConsoleWriter.info('Server listening on port ' + server.port + '.');
-            }).catch(e => {
-                ConsoleWriter.error('SERVER ERROR', e);
-                process.exit(1);
-            });
+        ConsoleWriter.blank();
+        ConsoleWriter.info('Starting server...');
+        server = new VisualServer(visualPackage, program.port);
+        server.start().then(() => {
+            ConsoleWriter.info('Server listening on port ' + server.port + '.');
+        }).catch(e => {
+            ConsoleWriter.error('SERVER ERROR', e);
+            process.exit(1);
         });
-
-    }).catch(e => {
-        if (!program.mute) ConsoleWriter.beep();
-        ConsoleWriter.formattedErrors(e);
-        process.exit(1);
+    })
+    .catch(e => {
+        ConsoleWriter.error(e.message);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
@@ -108,3 +105,4 @@ function stopServer() {
 
 process.on('SIGINT', stopServer);
 process.on('SIGTERM', stopServer);
+

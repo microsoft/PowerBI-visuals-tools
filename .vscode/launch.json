@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "cwd": "${workspaceRoot}\\spec\\.tmp\\visualname",
-            "program": "${workspaceRoot}\\bin\\pbiviz-package.js"
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceFolder}\\spec\\jasmine-runner.js"
         }
     ]
 }

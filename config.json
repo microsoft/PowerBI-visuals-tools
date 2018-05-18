@@ -11,7 +11,7 @@
     "build": {
         "precompileFolder": ".tmp/precompile",
         "dropFolder": ".tmp/drop",
-        "js": "visual.js",
+        "js": "tmp.visual.js",
         "css": "visual.css"
     },
     "package": {
