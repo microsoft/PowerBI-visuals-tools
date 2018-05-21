@@ -2,6 +2,12 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v2.0.1
+* Update package.json. Fix package installation
+
+## pbiviz v2.0.0
+* TypeScript external modules support
+
 ## pbiviz v1.11.3
 * Resolve PowerShell params issue on Win8.
 
