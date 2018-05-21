@@ -53,7 +53,13 @@ let cwd = process.cwd();
 let server, builder;
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    WebPackWrap.applyWebpackConfig(visualPackage)
+    WebPackWrap.applyWebpackConfig(visualPackage, {
+        devMode: true,
+        generateResources: true,
+        generatePbiviz: false,
+        minifyJS: false,
+        minify: false
+    })
     .then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
         compiler.watch({
