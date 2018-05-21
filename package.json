@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -41,31 +41,28 @@
     "serve-static": "1.10.2",
     "source-map-concat": "1.0.1",
     "typescript": "2.7.2",
-    "uuid": "3.0.0"
-  },
-  "devDependencies": {
+    "uuid": "3.0.0",
     "async": "2.0.1",
     "css-loader": "0.28.11",
     "expose-loader": "0.7.4",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "less-loader": "4.1.0",
+    "uglifyjs-webpack-plugin": "1.2.5",
+    "uglify-js": "3.3.25",
+    "style-loader": "0.20.3",
+    "ts-loader": "4.0.1",
+    "webpack": "4.4.1",
+    "webpack-dev-server": "^3.1.0",
+    "tsc-watch": "1.0.17"
+  },
+  "devDependencies": {
     "jasmine": "2.8.0",
     "jasmine-node": "1.14.5",
     "jasmine-spec-reporter": "2.5.0",
     "jscs": "3.0.7",
     "jshint": "2.9.2",
-    "less-loader": "4.1.0",
-    "mini-css-extract-plugin": "0.4.0",
-    "uglifyjs-webpack-plugin": "1.2.5",
-    "uglify-js": "3.3.25",
-    "ps-tree": "1.1.0",
     "request": "2.83.0",
-    "style-loader": "0.20.3",
     "tree-kill": "^1.1.0",
-    "ts-loader": "4.0.1",
-    "webpack": "4.4.1",
-    "webpack-dev-server": "^3.1.0",
-    "wrench": "1.5.9",
-    "tsc-watch": "1.0.17"
+    "wrench": "1.5.9"
   },
   "engines": {
     "node": "^6.0.0"
