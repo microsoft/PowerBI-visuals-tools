@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.12.1
+* Generate certificates on development server starts 
+
 ## pbiviz v1.11.3
 * Resolve PowerShell params issue on Win8.
 

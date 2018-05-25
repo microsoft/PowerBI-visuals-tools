@@ -34,6 +34,10 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
+let confPath = '../config.json';
+let config = require(confPath);
+let CertificateTools = require("../lib/CertificateTools");
+
 program
     .option('-p, --port [port]', 'set the port listening on')
     .option('-m, --mute', 'mute error outputs');
@@ -49,6 +53,13 @@ program.parse(options);
 
 let cwd = process.cwd();
 let server, builder;
+
+if (!CertificateTools.getCertFile(config, true)) {
+    CertificateTools.createCertFile(config);
+    if (!CertificateTools.getCertFile(config, true)) {
+        ConsoleWriter.error('Certificate wasn\'t created');
+    }
+}
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
