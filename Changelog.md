@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.13.0
+* Expanded `host.colorPalette` now expose a boolean `isHighContrast` flag and several non-data colors (including `foreground`, `foregroundSelected`, `background` and `hyperlink` all of which are required for high-contrast accessibility support)
+
 ## pbiviz v1.11.3
 * Resolve PowerShell params issue on Win8.
 
