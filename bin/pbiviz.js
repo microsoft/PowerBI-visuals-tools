@@ -73,5 +73,12 @@ function onCreateCertFile() {
 }
 
 function onOpenCertFile() {
-    return CertificateTools.openCertFile(config);
+    let certPath = CertificateTools.getCertFile(config, true);
+    
+    if (!certPath) {
+        ConsoleWriter.error("Certificate not found. The new certificate will be generated");
+        CertificateTools.createCertFile(config);
+    }
+
+    CertificateTools.openCertFile(config);
 }
