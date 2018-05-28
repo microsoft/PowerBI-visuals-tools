@@ -1419,7 +1419,7 @@ declare module powerbi.extensibility.visual {
     export interface IVisualHost extends extensibility.IVisualHost {
         createSelectionIdBuilder: () => visuals.ISelectionIdBuilder;
         createSelectionManager: () => ISelectionManager;
-        colorPalette: IColorPalette;
+        colorPalette: ISandboxExtendedColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
         applyJsonFilter: (filter: IFilter, objectName: string, propertyName: string, action: FilterAction) => void;
         tooltipService: ITooltipService;
