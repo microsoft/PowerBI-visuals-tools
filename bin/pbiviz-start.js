@@ -57,7 +57,7 @@ let cwd = process.cwd();
 let server, builder;
 
 if (!CertificateTools.getCertFile(config, true)) {
-    CertificateTools.createCertFile(config);
+    CertificateTools.createCertFile(config, true);
     if (!CertificateTools.getCertFile(config, true)) {
         ConsoleWriter.error('Certificate wasn\'t created');
     }
