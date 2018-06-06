@@ -2,11 +2,17 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v2.0.2 
+* Skip precompilation for the visual with ES6 modules
+
 ## pbiviz v2.0.1
 * Update package.json. Fix package installation
 
 ## pbiviz v2.0.0
 * TypeScript external modules support
+
+## pbiviz v1.12.1
+* Generate certificates on development server starts 
 
 ## pbiviz v1.11.3
 * Resolve PowerShell params issue on Win8.
