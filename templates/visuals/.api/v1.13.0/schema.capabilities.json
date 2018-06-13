@@ -32,6 +32,10 @@
             "type": "boolean",
             "description": "Indicates whether the visual should show a default title"
         },
+        "supportsKeyboardFocus": {
+            "type": "boolean",
+            "description": "Allows the visual to receive focus through keyboard navigation"
+        },
         "supportsHighlight": {
             "type": "boolean",
             "description": "Tells the host to include highlight data"
