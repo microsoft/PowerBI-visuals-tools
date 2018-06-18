@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pibviz v2.0.0
+* use Custom Visuals Selection id's instead of old Selection id's 
+* remove Semantic Query dependency inside the iFrame
+* Serialize DataView and remove multiple DataView types
+
 ## pbiviz v1.13.0
 * Expanded `host.colorPalette` now expose a boolean `isHighContrast` flag and several non-data colors (including `foreground`, `foregroundSelected`, `background` and `hyperlink` all of which are required for high-contrast accessibility support)
 
