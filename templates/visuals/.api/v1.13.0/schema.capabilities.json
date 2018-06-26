@@ -725,6 +725,10 @@
                     "type": "string",
                     "description": "Text to display if the field is empty"
                 },
+                "placeHolderTextKey": {
+                    "type": "string",
+                    "description": "The localization key for the placeHolderText in the stringResources file"
+                },
                 "suppressFormatPainterCopy": {
                     "type": "boolean",
                     "description": "Indicates whether the Format Painter should ignore this property"
