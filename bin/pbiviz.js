@@ -50,7 +50,6 @@ program
     .command('package', 'Package the current visual into a pbiviz file')
     .command('validate [path]', 'Validate pbiviz file for submission')
     .command('update [version]', 'Updates the api definitions and schemas in the current visual. Changes the version if specified')
-    .option('--create-cert', 'Create new localhost certificate', onCreateCertFile)
     .option('--install-cert', 'Install localhost certificate', onOpenCertFile);
 
 //prepend logo to help screen
@@ -77,8 +76,10 @@ function onOpenCertFile() {
     
     if (!certPath) {
         ConsoleWriter.error("Certificate not found. The new certificate will be generated");
-        CertificateTools.createCertFile(config);
+        CertificateTools.createCertFile(config, true);
     }
-
-    CertificateTools.openCertFile(config);
+    else {
+        ConsoleWriter.warn("Certificate found. The new certificate will be regenerated");
+        CertificateTools.createCertFile(config, true);
+    }
 }
