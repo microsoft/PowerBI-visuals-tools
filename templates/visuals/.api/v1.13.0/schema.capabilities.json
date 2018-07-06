@@ -745,6 +745,10 @@
                     "type": "object",
                     "description": "Describes substitution rule that replaces property object, described inside the rule, to current property object that contains this rule",
                     "$ref": "#/definitions/substitutionRule"
+                },
+                "filterState": {
+                    "type": "boolean",
+                    "description": "Indicates whether the property is a part of filtration information or not"
                 }
             },
             "additionalProperties": false
