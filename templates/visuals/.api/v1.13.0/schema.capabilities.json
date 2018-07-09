@@ -42,7 +42,7 @@
         },
         "supportsSynchronizingFilterState": {
             "type": "boolean",
-            "description": "Indicates whether synchronize slicer (vissual) across report pages"
+            "description": "Indicates whether the visual supports synchronization across report pages (for slicer visuals only)"
         },
         "advancedEditModeSupport": {
             "type": "number",
@@ -748,7 +748,7 @@
                 },
                 "filterState": {
                     "type": "boolean",
-                    "description": "Indicates whether the property is a part of filtration information or not"
+                    "description": "Indicates whether the property is a part of filtration information"
                 }
             },
             "additionalProperties": false
