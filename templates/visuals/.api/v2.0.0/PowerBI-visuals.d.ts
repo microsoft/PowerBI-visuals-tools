@@ -1361,10 +1361,6 @@ declare module powerbi {
     export interface IFilter { }
 }
 
-namespace powerbi.data.services {
-
-}
-
 /**
  * Change Log Version 1.13.0
  *  Expanded `host.colorPalette` now expose a boolean `isHighContrast` flag and several non-data colors 
