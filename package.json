@@ -37,7 +37,7 @@
     "lodash": "4.11.1",
     "powerbi-visuals-package-validator": "1.0.1",
     "powerbi-visuals-utils-dataviewutils": "1.4.1",
-    "powerbi-visuals-webpack-plugin": "git+https://github.com/zBritva/powerbi-visuals-webpack-plugin",
+    "powerbi-visuals-webpack-plugin": "git+https://github.com/zBritva/powerbi-visuals-webpack-plugin-1",
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
     "typescript": "2.9.2",
@@ -60,12 +60,12 @@
     "jasmine-node": "1.14.5",
     "jasmine-spec-reporter": "2.5.0",
     "jscs": "3.0.7",
-    "jshint": "2.9.2",
+    "jshint": "2.9.5",
     "request": "2.83.0",
     "tree-kill": "^1.1.0",
     "wrench": "1.5.9"
   },
   "engines": {
-    "node": "^6.0.0"
+    "node": "^7.6.0"
   }
 }
