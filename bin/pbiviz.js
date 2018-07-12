@@ -28,18 +28,11 @@
 "use strict";
 
 let confPath = '../config.json';
-let exec = require('child_process').execSync;
-let execAsync = require('child_process').exec;
-let path = require('path');
-let os = require('os');
 let program = require('commander');
 let npmPackage = require('../package.json');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 let config = require(confPath);
-let fs = require('fs');
 let args = process.argv;
-let StringDecoder = require('string_decoder').StringDecoder;
-let readline = require('readline');
 let CertificateTools = require("../lib/CertificateTools");
 
 program
