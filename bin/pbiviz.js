@@ -77,8 +77,7 @@ function onOpenCertFile() {
     if (!certPath) {
         ConsoleWriter.error("Certificate not found. The new certificate will be generated");
         CertificateTools.createCertFile(config, true);
-    }
-    else {
+    } else {
         ConsoleWriter.warn("Certificate found. The new certificate will be regenerated");
         CertificateTools.createCertFile(config, true);
     }
