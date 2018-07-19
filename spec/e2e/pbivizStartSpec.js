@@ -39,6 +39,17 @@ const startPath = process.cwd();
 //these tests can take a bit longer
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
+function supressVisualInfoWarnings(visualPath) {
+    const configFile = path.join(visualPath, 'pbiviz.json');
+    let pbiviz = fs.readJSONSync(configFile);
+    pbiviz.author = pbiviz.visual.author || {};
+    pbiviz.author.name = "Microsoft";
+    pbiviz.author.email = "email";
+    pbiviz.visual.description = "description";
+    pbiviz.visual.supportUrl = "https://github.com/Microsoft/PowerBI-visuals";
+    fs.writeJSONSync(configFile, pbiviz);
+}
+
 describe("E2E - pbiviz start", () => {
     const visualName = 'visualname';
     const visualPath = path.join(tempPath, visualName);
@@ -82,6 +93,7 @@ describe("E2E - pbiviz start", () => {
 
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0');
+        supressVisualInfoWarnings(visualPath);
 
         //api version file should've been created
         let stat = fs.statSync(path.join(visualPath, '.api', 'v1.5.0'));
@@ -113,6 +125,7 @@ describe("E2E - pbiviz start", () => {
 
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0');
+        supressVisualInfoWarnings(visualPath);
 
         //api version file should've been created
         let stat = fs.statSync(path.join(visualPath, '.api', 'v1.6.0'));
@@ -143,6 +156,7 @@ describe("E2E - pbiviz start", () => {
 
         beforeEach(() => {
             process.chdir(visualPath);
+            supressVisualInfoWarnings(visualPath);
             pbivizProc = FileSystem.runPbivizAsync('start');
             pbivizProc.stderr.on('data', (data) => {
                 throw new Error(data.toString());
@@ -308,6 +322,7 @@ describe("E2E - pbiviz start", () => {
 
     it("Should serve files from drop folder on custom port with -p flag", (done) => {
         process.chdir(visualPath);
+        supressVisualInfoWarnings(visualPath);
         let pbivizProc = FileSystem.runPbivizAsync('start', ['-p', '3333']);
         pbivizProc.stderr.on('data', (data) => {
             throw new Error(data.toString());
@@ -357,6 +372,7 @@ describe("E2E - pbiviz start for R Visuals", () => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--template rvisual');
+        supressVisualInfoWarnings(visualPath);
     });
 
     afterEach(() => {
