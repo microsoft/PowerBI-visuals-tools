@@ -161,6 +161,7 @@ function createCertFile() {
                         if (fs.existsSync(certPath)) {
                             ConsoleWriter.info(`Certificate generated. Location is ${certPath}`); 
                         }
+                        break;
                     } 
                     // for windows 8 / 8.1 / server 2012 R2 /
                     if (+osVersion[0] === 6 && (+osVersion[1] === 2 || +osVersion[1] === 3)) {
