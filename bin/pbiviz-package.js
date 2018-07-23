@@ -29,8 +29,6 @@
 let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let ConsoleWriter = require('../lib/ConsoleWriter');
-let PbivizBuilder = require('../lib/PbivizBuilder');
-let VisualBuilder = require('../lib/VisualBuilder');
 let WebPackWrap = require('../lib/WebPackWrap');
 const webpack = require("webpack");
 let CommandHelpManager = require('../lib/CommandHelpManager');
@@ -70,8 +68,10 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         minify: typeof program.minify === 'undefined' ? true : program.minify
     }).then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
-        compiler.run(() => {
-            ConsoleWriter.info('Package created');
+        compiler.run((err, stats) => {
+            if (!err) {
+                ConsoleWriter.info('Package created');
+            }
         });
     }).catch(e => {
         ConsoleWriter.error(e.message);
