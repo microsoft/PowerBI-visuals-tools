@@ -40,7 +40,7 @@
     "powerbi-visuals-webpack-plugin": "git+https://github.com/Microsoft/powerbi-visuals-webpack-plugin",
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
-    "typescript": "2.9.2",
+    "typescript": "2.8.4",
     "uuid": "3.2.1",
     "async": "2.6.1",
     "css-loader": "0.28.11",
