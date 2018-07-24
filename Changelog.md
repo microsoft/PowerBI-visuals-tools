@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v1.13.2
+* Generate certificates on development server starts 
+
 ## pbiviz v1.13.1
 * Added support of parameter `supportsSynchronizingFilterState`
 * Added support of parameter `filterState` for properties that makes property a part of filtration model

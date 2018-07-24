@@ -38,16 +38,17 @@ let FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
+let CertificateTools = require("../../lib/CertificateTools");
 
-describe("E2E - pbiviz --create-cert", () => {
+describe("E2E - pbiviz --install-cert", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('', '--create-cert');
+        CertificateTools.createCertFile(config, false);
     });
 
     describe("pbiviz", () => {
-        it("pbiviz --create-cert command should generate certificate", (done) => {
+        it("pbiviz --install-cert command should generate certificate", (done) => {
             let certPath = path.join(__dirname, "../../", config.server.certificate);
             let keyPath = path.join(__dirname, "../../", config.server.privateKey);
             let pfxPath = path.join(__dirname, "../../", config.server.pfx);
