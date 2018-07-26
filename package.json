@@ -37,7 +37,7 @@
     "lodash": "4.11.1",
     "powerbi-visuals-package-validator": "1.0.1",
     "powerbi-visuals-utils-dataviewutils": "1.4.1",
-    "powerbi-visuals-webpack-plugin": "git+https://github.com/Microsoft/powerbi-visuals-webpack-plugin",
+    "powerbi-visuals-webpack-plugin": "1.0.1",
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
     "typescript": "2.8.4",
