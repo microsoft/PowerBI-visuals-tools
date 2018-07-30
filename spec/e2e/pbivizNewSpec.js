@@ -53,12 +53,12 @@ describe("E2E - pbiviz new", () => {
         FileSystem.deleteTempDirectory();
     });
 
-    it("Should generate new visual with default template", () => {
+    it("Should generate new visual with olddefault template", () => {
         let visualName = 'visualname';
-        let template = 'default';
+        let template = 'olddefault';
         let visualPath = path.join(tempPath, visualName);
 
-        FileSystem.runPbiviz('new', visualName);
+        FileSystem.runPbiviz('new', visualName, '-t olddefault');
 
         //check base dir
         let stat = fs.statSync(visualPath);
@@ -87,13 +87,13 @@ describe("E2E - pbiviz new", () => {
 
     describe("Should generate correct settings.ts", () => {
         const visualName = "visualname";
-        const template = "default";
+        const template = "olddefault";
         const visualPath = path.join(tempPath, visualName);
         const settingsPath = `${visualPath}/src/settings.ts`;
         const visualFilePath = `${visualPath}/src/visual.ts`;
         global.powerbi = {};
         beforeEach(() => {
-            FileSystem.runPbiviz("new", visualName);
+            FileSystem.runPbiviz("new", visualName, `-t ${template}`);
         });
 
         afterEach(() => {
@@ -371,7 +371,7 @@ describe("E2E - pbiviz new", () => {
             let visualName = 'visualname';
             let visualPath = path.join(tempPath, visualName);
 
-            FileSystem.runPbiviz('new', visualName, '--api-version 1.0.0');
+            FileSystem.runPbiviz('new', visualName, '--api-version 1.0.0 -t olddefault');
 
             //api version file should've been created
             let stat = fs.statSync(path.join(visualPath, '.api', 'v1.0.0'));

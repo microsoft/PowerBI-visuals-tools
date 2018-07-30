@@ -10,6 +10,17 @@
             "name": "Launch Program",
             "cwd": "${workspaceRoot}",
             "program": "${workspaceFolder}\\spec\\jasmine-runner.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "olddefault",
+            "cwd": "${workspaceRoot}\\.tmp",
+            "program": "${workspaceFolder}\\bin\\pbiviz-new.js",
+            "args": [
+                "test",
+                "--template olddefault"
+            ]
         }
     ]
 }
