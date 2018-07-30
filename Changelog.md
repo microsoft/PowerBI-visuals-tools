@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pibviz v2.0.1
+* Copy of version 2.0.0 that work on SU07
+
 ## pibviz v2.0.0
 * use Custom Visuals Selection id's instead of old Selection id's 
 * remove Semantic Query dependency inside the iFrame
