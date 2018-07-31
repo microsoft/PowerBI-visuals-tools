@@ -58,7 +58,7 @@ describe("E2E - pbiviz new", () => {
         let template = 'default';
         let visualPath = path.join(tempPath, visualName);
 
-        FileSystem.runPbiviz('new', visualName);
+        FileSystem.runPbiviz('new', visualName, ' -t default1');
 
         //check base dir
         let stat = fs.statSync(visualPath);
@@ -93,7 +93,7 @@ describe("E2E - pbiviz new", () => {
         const visualFilePath = `${visualPath}/src/visual.ts`;
         global.powerbi = {};
         beforeEach(() => {
-            FileSystem.runPbiviz("new", visualName);
+            FileSystem.runPbiviz("new", visualName, ' -t default1');
         });
 
         afterEach(() => {
@@ -371,7 +371,7 @@ describe("E2E - pbiviz new", () => {
             let visualName = 'visualname';
             let visualPath = path.join(tempPath, visualName);
 
-            FileSystem.runPbiviz('new', visualName, '--api-version 1.0.0');
+            FileSystem.runPbiviz('new', visualName, '--api-version 1.0.0 -t default1');
 
             //api version file should've been created
             let stat = fs.statSync(path.join(visualPath, '.api', 'v1.0.0'));
@@ -407,7 +407,7 @@ describe("E2E - pbiviz new", () => {
             let error;
 
             try {
-                FileSystem.runPbiviz('new', visualName, '--api-version 99.99.99');
+                FileSystem.runPbiviz('new', visualName, '--api-version 99.99.99 -t default1');
             } catch (e) {
                 error = e;
             }

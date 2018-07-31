@@ -81,7 +81,7 @@ describe("E2E - pbiviz start", () => {
         const visualPath = path.join(tempPath, visualName);
 
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0');
+        FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0 -t default1');
 
         //api version file should've been created
         
@@ -111,7 +111,7 @@ describe("E2E - pbiviz start", () => {
         const visualPath = path.join(tempPath, visualName);
 
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0');
+        FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0 -t default1');
 
         process.chdir(visualPath);
 
