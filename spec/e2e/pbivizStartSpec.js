@@ -50,7 +50,7 @@ describe("E2E - pbiviz start", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName);
+        FileSystem.runPbiviz('new', visualName, '-t default1');
         FileSystem.runCMDCommand('npm i', visualPath, tempPath);
     });
 
@@ -81,7 +81,7 @@ describe("E2E - pbiviz start", () => {
         const visualPath = path.join(tempPath, visualName);
 
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0');
+        FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0 -t default1');
 
         //api version file should've been created
         
@@ -111,7 +111,7 @@ describe("E2E - pbiviz start", () => {
         const visualPath = path.join(tempPath, visualName);
 
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0');
+        FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0 -t default1');
 
         process.chdir(visualPath);
 
@@ -219,7 +219,7 @@ describe("E2E - pbiviz start", () => {
                                 });
                             }
                         );
-                    }, 2000);
+                    }, 4000);
                 }
             });
         });
@@ -351,7 +351,7 @@ describe("E2E - pbiviz start for R Visuals", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--template rvisual');
+        FileSystem.runPbiviz('new', visualName, '-t rvisual');
     });
 
     afterEach(() => {
