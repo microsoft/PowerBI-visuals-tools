@@ -8,8 +8,7 @@
 	},	
 	"dependencies": {
 		"powerbi-models": "0.10.0",
-    "powerbi-visuals-utils-dataviewutils": "2.0.1",
-    "powerbi-visuals-api": "1.13.0"
+    "powerbi-visuals-utils-dataviewutils": "1.2.0"
 	},
 	"devDependencies": {
 	  "tslint": "^4.4.2",

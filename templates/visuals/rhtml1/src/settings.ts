@@ -24,9 +24,10 @@
  *  THE SOFTWARE.
  */
 
-"use strict";
+module powerbi.extensibility.visual {
+    "use strict";
 
-import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
-import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
+    import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
-<%= visualSettingsClasses %>
+   <%= visualSettingsClasses %>
+}

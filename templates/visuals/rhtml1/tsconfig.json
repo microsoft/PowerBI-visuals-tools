@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES5",
+    "sourceMap": true,
+    "out": "./.tmp/build/visual.js"
+  },
+  "files": [
+    ".api/v1.12.0/PowerBI-visuals.d.ts",
+    "src/htmlInjectionUtility.ts",
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.d.ts",
+    "src/settings.ts",
+    "src/visual.ts"
+  ]
+}

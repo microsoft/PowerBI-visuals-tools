@@ -1,5 +1,10 @@
 {
   "name": "visual",
+  "scripts": {
+		"pbiviz": "pbiviz",
+		"start": "pbiviz start",
+		"package": "pbiviz package"
+  },
   "dependencies": {
     "powerbi-visuals-utils-dataviewutils": "2.0.1",
     "powerbi-visuals-api": "1.13.0"

@@ -3,7 +3,7 @@
         "allowJs": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "ES6",
+        "target": "es6",
         "sourceMap": true,
         "outDir": "./.tmp/build/",
         "moduleResolution": "node",
