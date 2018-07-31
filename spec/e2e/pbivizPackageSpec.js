@@ -45,7 +45,7 @@ describe("E2E - pbiviz package", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '-t olddefault');
+        FileSystem.runPbiviz('new', visualName, '-t default1');
         process.chdir(visualPath);
         FileSystem.runCMDCommand('npm i', visualPath);
 

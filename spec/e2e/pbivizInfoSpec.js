@@ -41,7 +41,7 @@ describe("E2E - pbiviz info", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '-t olddefault');
+        FileSystem.runPbiviz('new', visualName, '-t default1');
         process.chdir(visualPath);
     });
 
