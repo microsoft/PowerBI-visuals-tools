@@ -1,0 +1,9 @@
+{
+  "name": "visual",
+  "devDependencies": {
+    "@types/d3": "3.5.36",
+    "d3": "3.5.5",
+    "powerbi-visuals-utils-dataviewutils": "1.2.0",
+    "typescript": "2.2.1"
+  }
+}

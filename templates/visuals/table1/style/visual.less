@@ -1,0 +1,77 @@
+.powerbi-demo-wrapper {
+    overflow-x: auto;
+    height: 100%;
+    width: 100%;
+
+    .powerbi-demo-table {
+        background: #34495E;
+        color: #fff;
+        border-radius: .4em;
+        overflow: hidden;   
+
+        tr {
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            display: none;
+        }
+
+        td {
+            display: block;
+        }
+
+        td:first-child {
+            padding-top: .5em;
+        }
+
+        td:last-child {
+            padding-bottom: .5em;
+        }
+
+        td:before {
+            content: attr(data-th) ": ";
+            font-weight: bold;
+            width: 6.5em;
+            display: inline-block;
+        }
+
+        .dynamic td:before {
+            display: none;
+        }
+
+        th, td {
+            text-align: left;
+        }
+
+        .dynamic th, .dynamic td {
+            display: table-cell;
+            padding: .25em .5em;
+        }
+
+        .dynamic th:first-child, .dynamic td:first-child {
+            padding-left: 0;
+        }
+
+        .dynamic th:last-child, .dynamic td:last-child {
+            padding-right: 0;
+        }
+
+        tr {
+            border-color: #46627f;
+        }
+
+        th, td {
+            margin: .5em 1em;
+        }
+
+        .dynamic th, .dynamic td {
+            padding: 1em !important;
+        }
+
+        th, td:before {
+            color: #dd5;
+        }
+    }
+}
