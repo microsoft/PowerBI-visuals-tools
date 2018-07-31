@@ -141,9 +141,16 @@ describe("E2E - pbiviz start", () => {
             process.chdir(visualPath);
             pbivizProc = FileSystem.runPbivizAsync('start');
             pbivizProc.stderr.on('data', (data) => {
-                if (data.toString().indexOf("DeprecationWarning") === -1) {
-                    throw new Error(data.toString());
+                if (data.indexOf("For better development experience") !== -1) {
+                    return;
                 }
+                if (data.indexOf("https://microsoft.github.io/") !== -1) {
+                    return;
+                }
+                if (data.toString().indexOf("DeprecationWarning") !== -1) {
+                    return;
+                }
+                throw new Error(data.toString());
             });
             pbivizProc.on('error', (error) => {
                 throw new Error(error.toString());

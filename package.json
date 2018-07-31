@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -37,7 +37,7 @@
     "lodash": "4.11.1",
     "powerbi-visuals-package-validator": "1.0.1",
     "powerbi-visuals-utils-dataviewutils": "1.4.1",
-    "powerbi-visuals-webpack-plugin": "git+https://github.com/Microsoft/powerbi-visuals-webpack-plugin",
+    "powerbi-visuals-webpack-plugin": "1.0.1",
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
     "typescript": "2.8.4",
@@ -48,9 +48,10 @@
     "expose-loader": "0.7.5",
     "less-loader": "4.1.0",
     "uglifyjs-webpack-plugin": "1.2.7",
+    "webpack-visualizer-plugin": "0.1.11",
     "uglify-js": "3.4.0",
     "style-loader": "0.21.0",
-    "ts-loader": "4.4.1",
+    "ts-loader": "4.4.2",
     "webpack": "4.12.0",
     "webpack-dev-server": "3.1.4",
     "tsc-watch": "1.0.22"
