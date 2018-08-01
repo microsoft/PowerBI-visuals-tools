@@ -591,7 +591,7 @@ xdescribe("E2E - pbiviz package for R Visual template", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--template rvisual1');
+        FileSystem.runPbiviz('new', visualName, '--template rvisual');
         process.chdir(visualPath);
         FileSystem.runCMDCommand('npm i', visualPath);
     });
@@ -642,7 +642,7 @@ xdescribe("E2E - pbiviz package for R HTML template", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--template rhtml1');
+        FileSystem.runPbiviz('new', visualName, '--template rhtml');
         process.chdir(visualPath);
         FileSystem.runCMDCommand('npm i', visualPath);
     });
