@@ -29,7 +29,6 @@ let fs = require('fs-extra');
 let path = require('path');
 let wrench = require('wrench');
 let _ = require('lodash');
-let visualGenerator = require('../../lib/VisualGenerator.js');
 
 let FileSystem = require('../helpers/FileSystem.js');
 

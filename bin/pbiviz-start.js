@@ -32,7 +32,6 @@ let VisualServer = require('../lib/VisualServer');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 let WebPackWrap = require('../lib/WebPackWrap');
 const webpack = require("webpack");
-const WebpackDevServer = require("webpack-dev-server");
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
@@ -77,8 +76,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
                 aggregateTimeout: 300, // wait so long for more changes
                 poll: true // use polling instead of native watchers
             },
-            function (err, stats) {
-            
+            function (err) {
                 if (err) {
                     ConsoleWriter.error('Visual rebuild failed');
                     ConsoleWriter.error(err);

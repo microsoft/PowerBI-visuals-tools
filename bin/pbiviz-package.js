@@ -68,7 +68,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         minify: typeof program.minify === 'undefined' ? true : program.minify
     }).then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
-        compiler.run((err, stats) => {
+        compiler.run((err) => {
             if (!err) {
                 ConsoleWriter.info('Package created');
             }
