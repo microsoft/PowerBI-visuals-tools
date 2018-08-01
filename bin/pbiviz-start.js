@@ -80,11 +80,11 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             function (err, stats) {
             
                 if (err) {
-                    console.log('Visual rebuild failed');
-                    console.log(err);
+                    ConsoleWriter.error('Visual rebuild failed');
+                    ConsoleWriter.error(err);
                     return;
                 }
-                console.log('Visual rebuild completed');
+                ConsoleWriter.info('Visual rebuild completed');
             }
         );
 
