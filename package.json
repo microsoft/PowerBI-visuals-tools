@@ -57,6 +57,7 @@
     "tsc-watch": "1.0.22"
   },
   "devDependencies": {
+    "friendly-errors-webpack-plugin": "^1.7.0",
     "jasmine": "2.8.0",
     "jasmine-node": "1.14.5",
     "jasmine-spec-reporter": "2.5.0",
