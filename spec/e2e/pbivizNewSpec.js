@@ -27,8 +27,8 @@
 
 let fs = require('fs-extra');
 let path = require('path');
-let wrench = require('wrench');
 let _ = require('lodash');
+let utils = require('./utils');
 
 let FileSystem = require('../helpers/FileSystem.js');
 
@@ -64,10 +64,10 @@ describe("E2E - pbiviz new", () => {
         expect(stat.isDirectory()).toBe(true);
 
         //check contents
-        let expectedFiles = wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
-        expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
-        expectedFiles.push('pbiviz.json');
-        let visualFiles = wrench.readdirSyncRecursive(visualPath);
+        let expectedFiles = utils.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
+        expectedFiles.concat(utils.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
+        expectedFiles.push('/pbiviz.json');
+        let visualFiles = utils.readdirSyncRecursive(visualPath);
         let fileDiff = _.difference(expectedFiles, visualFiles);
         expect(fileDiff.length).toBe(0);
 
@@ -248,8 +248,8 @@ describe("E2E - pbiviz new", () => {
 
             //check that all files were created
             let versionBasePath = path.join('.api', version);
-            let expectedFiles = wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
-            expectedFiles = expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
+            let expectedFiles = utils.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
+            expectedFiles = expectedFiles.concat(utils.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
             expectedFiles.push(
                 'pbiviz.json',
                 '.api',

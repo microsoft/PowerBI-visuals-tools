@@ -63,8 +63,7 @@
     "jscs": "3.0.7",
     "jshint": "2.9.6",
     "request": "2.87.0",
-    "tree-kill": "1.2.0",
-    "wrench": "1.5.9"
+    "tree-kill": "1.2.0"
   },
   "engines": {
     "node": "^7.6.0"
