@@ -26,7 +26,6 @@
 
 "use strict";
 
-let path = require('path');
 let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let VisualGenerator = require('../lib/VisualGenerator');
