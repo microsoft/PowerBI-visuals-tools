@@ -5,13 +5,12 @@
   "main": "./lib/VisualPackage.js",
   "scripts": {
     "start": "node ./bin/pbiviz.js",
-    "test": "npm run clean-tests && npm run eslint && npm run jshint && npm run jasmine",
+    "test": "npm run clean-tests && npm run eslint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
     "eslint": "eslint bin lib spec",
-    "jshint": "jshint bin lib spec",
     "clean-tests": "node spec/clean-tests.js",
-    "debug-tests": "npm run clean-tests && npm run eslint && npm run jshint && npm run jasmine-inspect"
+    "debug-tests": "npm run clean-tests && npm run eslint && npm run jasmine-inspect"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
@@ -60,7 +59,6 @@
     "jasmine-node": "1.15.0",
     "jasmine-spec-reporter": "2.5.0",
     "eslint": "5.2.0",
-    "jshint": "2.9.6",
     "request": "2.87.0",
     "tree-kill": "1.2.0"
   },
