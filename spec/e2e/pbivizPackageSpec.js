@@ -23,6 +23,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
@@ -173,9 +174,9 @@ describe("E2E - pbiviz package", () => {
                                 next();
                             })
                             .catch(next);
-                    },
+                    }
                 ], error => {
-                    if (error) throw error;
+                    if (error) { throw error; }
                     done();
                 });
 
@@ -217,30 +218,20 @@ describe("E2E - pbiviz package", () => {
         FileSystem.runPbiviz('package', false, '--resources --no-pbiviz');
 
         let js = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.js'));
-        let css = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.css'));
 
         let prodJs = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.prod.js'));
-        let prodCss = fs.statSync(path.join(visualPath,  '.tmp', 'drop', 'visual.prod.css'));
 
         expect(js.size).toBeGreaterThan(prodJs.size);
-        // test doesn't have effectm because visual.css and creates as visual.prod.css
-        // test worked, becuse visual.css had _DEBUG suffics, but visual.prod.css doesn't 
-        // expect(css.size).toBeGreaterThanOrEqual(prodCss.size);
     });
 
     it("Should skip minification with --no-minify flag", () => {
         FileSystem.runPbiviz('package', false, '--resources --no-pbiviz --no-minify');
 
         let js = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.js'));
-        let css = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.css'));
 
         let prodJs = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.prod.js'));
-        let prodCss = fs.statSync(path.join(visualPath, '.tmp', 'drop', 'visual.prod.css'));
 
         expect(js.size).toBe(prodJs.size);
-        // test doesn't have effectm because visual.css and creates as visual.prod.css
-        // test worked, becuse visual.css had _DEBUG suffics, but visual.prod.css doesn't 
-        // expect(css.size).toBe(prodCss.size);
     });
 
     it("Should set all versions in metadata equal", (done) => {
@@ -282,9 +273,9 @@ describe("E2E - pbiviz package", () => {
                                 next();
                             })
                             .catch(next);
-                    },
+                    }
                 ], error => {
-                    if (error) throw error;
+                    if (error) { throw error; }
                     done();
                 });
 
@@ -340,7 +331,7 @@ describe("E2E - pbiviz package", () => {
             {
                 "formattingGeneral": "General",
                 "formattingGeneralOrientation": "Orientation",
-                "formattingGeneralOrientationVertical": "Vertical",
+                "formattingGeneralOrientationVertical": "Vertical"
             };
         const ResJsonRuLocalization =
             {
@@ -402,7 +393,7 @@ describe("E2E - pbiviz package", () => {
             {
                 "formattingGeneral": "General",
                 "formattingGeneralOrientation": "Orientation",
-                "formattingGeneralOrientationVertical": "Vertical",
+                "formattingGeneralOrientationVertical": "Vertical"
             };
         const ResJsonRuLocalization =
             {
@@ -573,9 +564,9 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
                             next();
                         })
                         .catch(next);
-                },
+                }
             ], error => {
-                if (error) throw error;
+                if (error) { throw error; }
                 done();
             });
 

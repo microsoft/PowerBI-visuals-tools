@@ -23,14 +23,14 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let Jasmine = require('jasmine');
 let SpecReporter = require('jasmine-spec-reporter');
-let noop = function () { };
 
 let jrunner = new Jasmine();
-jrunner.configureDefaultReporter({ print: noop });
+jrunner.configureDefaultReporter({ print: () => {} }); // eslint-disable-line no-empty-function
 jasmine.getEnv().addReporter(new SpecReporter());
 jrunner.loadConfigFile();
 jrunner.execute();

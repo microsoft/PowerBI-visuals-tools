@@ -23,6 +23,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
@@ -86,7 +87,6 @@ describe("E2E - pbiviz new", () => {
 
     describe("Should generate correct settings.ts", () => {
         const visualName = "visualname";
-        const template = "default";
         const visualPath = path.join(tempPath, visualName);
         const settingsPath = `${visualPath}/src/settings.ts`;
         const visualFilePath = `${visualPath}/src/visual.ts`;
@@ -100,7 +100,7 @@ describe("E2E - pbiviz new", () => {
         });
 
         afterAll(() => {
-            global.powerbi = undefined;
+            global.powerbi = undefined; // eslint-disable-line no-undefined
         });
 
         it("settings.ts was created", (done) => {
@@ -130,40 +130,42 @@ describe("E2E - pbiviz new", () => {
                     "fontSize": 12
                 }
             };
-            const dataViews = [{
-                "metadata": {
-                    "columns": [],
-                    "objects": {
-                        "dataPoint": {
-                            "defaultColor": {
-                                "solid": {
-                                    "color": "#A66999"
-                                }
-                            },
-                            "fontSize": "21",
-                            "fillRule": {
-                                "solid": {
-                                    "color": {
-                                        "_kind": 17,
-                                        "type": {
-                                            "underlyingType": 1,
-                                            "category": null
-                                        },
-                                        "value": "#FD625E",
-                                        "valueEncoded": "'#FD625E'"
+            const dataViews = [
+                {
+                    "metadata": {
+                        "columns": [],
+                        "objects": {
+                            "dataPoint": {
+                                "defaultColor": {
+                                    "solid": {
+                                        "color": "#A66999"
                                     }
-                                }
-                            },
-                            "fill": {
-                                "solid": {
-                                    "color": "#caa5c2"
-                                }
-                            },
-                            "showAllDataPoints": true
+                                },
+                                "fontSize": "21",
+                                "fillRule": {
+                                    "solid": {
+                                        "color": {
+                                            "_kind": 17,
+                                            "type": {
+                                                "underlyingType": 1,
+                                                "category": null
+                                            },
+                                            "value": "#FD625E",
+                                            "valueEncoded": "'#FD625E'"
+                                        }
+                                    }
+                                },
+                                "fill": {
+                                    "solid": {
+                                        "color": "#caa5c2"
+                                    }
+                                },
+                                "showAllDataPoints": true
+                            }
                         }
                     }
                 }
-            }];
+            ];
             const fillSettings = {
                 "dataPoint": {
                     "defaultColor": "#A66999",
@@ -189,20 +191,21 @@ describe("E2E - pbiviz new", () => {
             } catch (e) {
                 fail(e);
             }
-            let visualCode = fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
-                (err, data) => {
-                    if (err) {
-                        fail(err);
-                    }
-                    global.eval(data); // jshint ignore:line
-                    let visualFullName = Object.keys(global.powerbi.extensibility.visual)[0];
-                    let settings = global.powerbi.extensibility.visual.VisualSettings.getDefault();
-                    expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
-                    let visualInstance = new global.powerbi.extensibility.visual.Visual({ element: { innerHTML: null } });
-                    visualInstance.update({ dataViews: dataViews });
-                    expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
-                    done();
-                });
+            fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
+            (err, data) => {
+                if (err) {
+                    fail(err);
+                }
+                /* jshint ignore:start */
+                global.eval(data); // eslint-disable-line no-eval 
+                /* jshint ignore:end */
+                let settings = global.powerbi.extensibility.visual.VisualSettings.getDefault();
+                expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
+                let visualInstance = new global.powerbi.extensibility.visual.Visual({ element: { innerHTML: null } });
+                visualInstance.update({ dataViews: dataViews });
+                expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
+                done();
+            });
         });
     });
 
@@ -342,7 +345,7 @@ describe("E2E - pbiviz new", () => {
         fs.writeFileSync(visualTestFilePath, 'hello!!');
 
         try {
-            let stater = fs.statSync(visualTestFilePath);
+            fs.statSync(visualTestFilePath);
         } catch (e) {
             testFileError1 = e;
         }

@@ -23,13 +23,11 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
 let path = require('path');
-let async = require('async');
-let JSZip = require('jszip');
-let request = require('request');
 console.log(__dirname);
 let config = require('./../../config.json');
 
@@ -37,7 +35,6 @@ let FileSystem = require('../helpers/FileSystem.js');
 let CertificateTools = require('./../../lib/CertificateTools');
 
 const tempPath = FileSystem.getTempPath();
-const startPath = process.cwd();
 
 describe("E2E - pbiviz --install-cert", () => {
     beforeEach(() => {
@@ -55,7 +52,7 @@ describe("E2E - pbiviz --install-cert", () => {
             let keyExists = fs.existsSync(keyPath);
             let pfxExists = fs.existsSync(pfxPath);
 
-            let result = certExists && keyExists || pfxExists;
+            let result = (certExists && keyExists) || pfxExists;
 
             expect(result).toBeTruthy();
             done();
