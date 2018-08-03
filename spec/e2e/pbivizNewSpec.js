@@ -196,9 +196,7 @@ describe("E2E - pbiviz new", () => {
                 if (err) {
                     fail(err);
                 }
-                /* jshint ignore:start */
-                global.eval(data); // eslint-disable-line no-eval 
-                /* jshint ignore:end */
+                global.eval(data); // eslint-disable-line no-eval
                 let settings = global.powerbi.extensibility.visual.VisualSettings.getDefault();
                 expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
                 let visualInstance = new global.powerbi.extensibility.visual.Visual({ element: { innerHTML: null } });
