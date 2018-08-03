@@ -60,6 +60,14 @@ describe("E2E - pbiviz new", () => {
 
         FileSystem.runPbiviz('new', visualName, ' -t default1');
 
+        let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
+        let pbiviz = fs.readJSONSync(pbivizJSONFile);
+        pbiviz.visual.description = "description";
+        pbiviz.visual.supportUrl = "supportUrl";
+        pbiviz.author.name = "Microsoft";
+        pbiviz.author.email = "pbicvsupport";
+        fs.writeJSONSync(pbivizJSONFile, pbiviz);
+
         //check base dir
         let stat = fs.statSync(visualPath);
         expect(stat.isDirectory()).toBe(true);
@@ -93,6 +101,14 @@ describe("E2E - pbiviz new", () => {
         global.powerbi = {};
         beforeEach(() => {
             FileSystem.runPbiviz("new", visualName, ' -t default1');
+
+            let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
+            let pbiviz = fs.readJSONSync(pbivizJSONFile);
+            pbiviz.visual.description = "description";
+            pbiviz.visual.supportUrl = "supportUrl";
+            pbiviz.author.name = "Microsoft";
+            pbiviz.author.email = "pbicvsupport";
+            fs.writeJSONSync(pbivizJSONFile, pbiviz);
         });
 
         afterEach(() => {

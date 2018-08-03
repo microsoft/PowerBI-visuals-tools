@@ -51,6 +51,14 @@ describe("E2E - pbiviz start", () => {
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         FileSystem.runCMDCommand('npm i', visualPath, tempPath);
+
+        let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
+        let pbiviz = fs.readJSONSync(pbivizJSONFile);
+        pbiviz.visual.description = "description";
+        pbiviz.visual.supportUrl = "supportUrl";
+        pbiviz.author.name = "Microsoft";
+        pbiviz.author.email = "pbicvsupport";
+        fs.writeJSONSync(pbivizJSONFile, pbiviz);
     });
 
     afterEach(() => {

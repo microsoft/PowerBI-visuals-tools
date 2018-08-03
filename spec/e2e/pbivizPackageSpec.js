@@ -50,6 +50,14 @@ describe("E2E - pbiviz package", () => {
         process.chdir(visualPath);
         FileSystem.runCMDCommand('npm i', visualPath);
 
+        let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
+        let pbiviz = fs.readJSONSync(pbivizJSONFile);
+        pbiviz.visual.description = "description";
+        pbiviz.visual.supportUrl = "supportUrl";
+        pbiviz.author.name = "Microsoft";
+        pbiviz.author.email = "pbicvsupport";
+        fs.writeJSONSync(pbivizJSONFile, pbiviz);
+
         visualPbiviz = JSON.parse(fs.readFileSync(path.join(visualPath, 'pbiviz.json'), { encoding: "utf8" }));
     });
 
