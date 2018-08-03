@@ -23,12 +23,12 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
 let path = require('path');
 let async = require('async');
-let JSZip = require('jszip');
 let request = require('request');
 
 let FileSystem = require('../helpers/FileSystem.js');
@@ -44,7 +44,6 @@ describe("E2E - pbiviz start", () => {
     const visualPath = path.join(tempPath, visualName);
     const tmpPath = path.join(visualPath, '.tmp');
     const dropPath = path.join(tmpPath, 'drop');
-    const precompilePath = path.join(tmpPath, 'precompile');
     const assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
 
     beforeEach(() => {
@@ -212,7 +211,7 @@ describe("E2E - pbiviz start", () => {
                                 });
                             },
                             error => {
-                                if (error) throw error;
+                                if (error) { throw error; }
                                 FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
                                     expect(error).toBeNull();
                                     done();
@@ -327,7 +326,7 @@ describe("E2E - pbiviz start", () => {
                         });
                     },
                     error => {
-                        if (error) throw error;
+                        if (error) { throw error; }
                         FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
                             expect(error).toBeNull();
                             done();
@@ -346,7 +345,6 @@ describe("E2E - pbiviz start for R Visuals", () => {
     let visualName = 'visualname';
     let visualPath = path.join(tempPath, visualName);
     let dropPath = path.join(visualPath, '.tmp', 'drop');
-    let assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
 
     beforeEach(() => {
         FileSystem.resetTempDirectory();
