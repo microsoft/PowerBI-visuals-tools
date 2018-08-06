@@ -30,7 +30,6 @@ import { transpose } from "d3-array";
 import { formatPrefix } from "d3-format";
 
 import powerbi from "powerbi-visuals-api";
-import VisualPlugin = powerbi.VisualPlugin;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;

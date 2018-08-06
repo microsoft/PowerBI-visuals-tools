@@ -26,7 +26,8 @@
 
 "use strict";
 
-let fs = require('fs-extra');
+const path = require("path");
+const fs = require('fs-extra');
 
 let readdirSyncRecursive = (baseDir) => {
     let read = (dir) => {
@@ -48,4 +49,15 @@ let readdirSyncRecursive = (baseDir) => {
     return read(baseDir);
 };
 
+let writeMetadata = (visualPath) => {
+    let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
+    let pbiviz = fs.readJSONSync(pbivizJSONFile);
+    pbiviz.visual.description = "description";
+    pbiviz.visual.supportUrl = "supportUrl";
+    pbiviz.author.name = "Microsoft";
+    pbiviz.author.email = "pbicvsupport";
+    fs.writeJSONSync(pbivizJSONFile, pbiviz);
+};
+
 module.exports.readdirSyncRecursive = readdirSyncRecursive;
+module.exports.writeMetadata = writeMetadata;

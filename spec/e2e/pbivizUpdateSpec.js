@@ -31,6 +31,7 @@ let path = require('path');
 let _ = require('lodash');
 
 let FileSystem = require('../helpers/FileSystem.js');
+const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -44,6 +45,8 @@ describe("E2E - pbiviz update", () => {
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, ' -t default1');
         process.chdir(visualPath);
+
+        writeMetadata(visualPath);
     });
 
     afterEach(() => {

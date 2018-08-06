@@ -33,6 +33,7 @@ let FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
+const writeMetadata = require("./utils").writeMetadata;
 
 describe("E2E - pbiviz info", () => {
 
@@ -44,6 +45,8 @@ describe("E2E - pbiviz info", () => {
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
+
+        writeMetadata(visualPath);
     });
 
     afterEach(() => {

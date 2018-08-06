@@ -33,6 +33,7 @@ let JSZip = require('jszip');
 let _ = require('lodash');
 
 let FileSystem = require('../helpers/FileSystem.js');
+const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -49,6 +50,8 @@ describe("E2E - pbiviz package", () => {
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
         FileSystem.runCMDCommand('npm i', visualPath);
+
+        writeMetadata(visualPath);
 
         visualPbiviz = JSON.parse(fs.readFileSync(path.join(visualPath, 'pbiviz.json'), { encoding: "utf8" }));
     });
