@@ -32,6 +32,7 @@ let async = require('async');
 let request = require('request');
 
 let FileSystem = require('../helpers/FileSystem.js');
+const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -52,13 +53,7 @@ describe("E2E - pbiviz start", () => {
         FileSystem.runPbiviz('new', visualName);
         FileSystem.runCMDCommand('npm i', visualPath, tempPath);
 
-        let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
-        let pbiviz = fs.readJSONSync(pbivizJSONFile);
-        pbiviz.visual.description = "description";
-        pbiviz.visual.supportUrl = "supportUrl";
-        pbiviz.author.name = "Microsoft";
-        pbiviz.author.email = "pbicvsupport";
-        fs.writeJSONSync(pbivizJSONFile, pbiviz);
+        writeMetadata(visualPath);
     });
 
     afterEach(() => {
@@ -182,7 +177,7 @@ describe("E2E - pbiviz start", () => {
                         let pbivizPath = path.join(dropPath, 'pbiviz.json');
                         let pbiviz = fs.readJsonSync(pbivizPath);
                         //should append "_DEBUG" to guid to avoid collisions
-                        // visualConfig.guid += "_DEBUG";
+                        visualConfig.guid += "_DEBUG";
                         expect(pbiviz.visual).toEqual(visualConfig);
                         expect(pbiviz.capabilities).toEqual(visualCapabilities);
                         expect(pbiviz.content.js).toBeDefined();

@@ -31,6 +31,7 @@ let path = require('path');
 let _ = require('lodash');
 
 let FileSystem = require('../helpers/FileSystem.js');
+const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -45,13 +46,7 @@ describe("E2E - pbiviz update", () => {
         FileSystem.runPbiviz('new', visualName, ' -t default1');
         process.chdir(visualPath);
 
-        let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
-        let pbiviz = fs.readJSONSync(pbivizJSONFile);
-        pbiviz.visual.description = "description";
-        pbiviz.visual.supportUrl = "supportUrl";
-        pbiviz.author.name = "Microsoft";
-        pbiviz.author.email = "pbicvsupport";
-        fs.writeJSONSync(pbivizJSONFile, pbiviz);
+        writeMetadata(visualPath);
     });
 
     afterEach(() => {

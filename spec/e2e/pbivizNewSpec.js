@@ -32,6 +32,7 @@ let _ = require('lodash');
 let utils = require('./utils');
 
 let FileSystem = require('../helpers/FileSystem.js');
+const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
@@ -60,13 +61,7 @@ describe("E2E - pbiviz new", () => {
 
         FileSystem.runPbiviz('new', visualName, ' -t default1');
 
-        let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
-        let pbiviz = fs.readJSONSync(pbivizJSONFile);
-        pbiviz.visual.description = "description";
-        pbiviz.visual.supportUrl = "supportUrl";
-        pbiviz.author.name = "Microsoft";
-        pbiviz.author.email = "pbicvsupport";
-        fs.writeJSONSync(pbivizJSONFile, pbiviz);
+        writeMetadata(visualPath);
 
         //check base dir
         let stat = fs.statSync(visualPath);
@@ -102,13 +97,7 @@ describe("E2E - pbiviz new", () => {
         beforeEach(() => {
             FileSystem.runPbiviz("new", visualName, ' -t default1');
 
-            let pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
-            let pbiviz = fs.readJSONSync(pbivizJSONFile);
-            pbiviz.visual.description = "description";
-            pbiviz.visual.supportUrl = "supportUrl";
-            pbiviz.author.name = "Microsoft";
-            pbiviz.author.email = "pbicvsupport";
-            fs.writeJSONSync(pbivizJSONFile, pbiviz);
+            writeMetadata(visualPath);
         });
 
         afterEach(() => {
