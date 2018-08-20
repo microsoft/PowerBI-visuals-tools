@@ -6,7 +6,7 @@
         "package": "templates/package.json.template"
     },
     "generate": {
-        "apiVersion": "1.13.0"
+        "apiVersion": "2.1.0"
     },
     "build": {
         "precompileFolder": ".tmp/precompile",
