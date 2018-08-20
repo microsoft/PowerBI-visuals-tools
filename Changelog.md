@@ -3,12 +3,13 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
 ## pibviz v2.1.0
-* Copy of version 2.0.0 that displays correct error in SU 07
-
-## pibviz v2.0.0
 * use Custom Visuals Selection id's instead of old Selection id's 
 * remove Semantic Query dependency inside the iFrame
 * Serialize DataView and remove multiple DataView types
+
+## pbiviz v1.13.1
+* Added support of parameter `supportsSynchronizingFilterState`
+* Added support of parameter `filterState` for properties that makes property a part of filtration model
 
 ## pbiviz v1.13.0
 * Expanded `host.colorPalette` now expose a boolean `isHighContrast` flag and several non-data colors (including `foreground`, `foregroundSelected`, `background` and `hyperlink` all of which are required for high-contrast accessibility support)
