@@ -7,10 +7,10 @@
   },
   "dependencies": {
     "powerbi-visuals-utils-dataviewutils": "2.0.1",
-    "powerbi-visuals-api": "1.13.0"
+    "powerbi-visuals-api": "2.1.0"
   },
   "devDependencies": {
-    "ts-loader": "4.4.1",
-    "typescript": "^2.9.2"
+    "ts-loader": "4.5.0",
+    "typescript": "3.0.1"
   }
 }

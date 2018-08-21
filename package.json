@@ -44,7 +44,7 @@
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
     "style-loader": "0.21.0",
-    "ts-loader": "4.4.2",
+    "ts-loader": "4.5.0",
     "tsc-watch": "1.0.26",
     "typescript": "3.0.1",
     "uglify-js": "3.4.6",
