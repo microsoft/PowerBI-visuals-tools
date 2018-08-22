@@ -49,12 +49,20 @@ let args = program.args;
 
 let cwd = process.cwd();
 
+let pbiviz;
+try {
+    pbiviz = require(path.join(cwd, "./pbiviz.json"));
+}
+catch (err) {
+    throw new Error("pbiviz.json not found. You must be in the root of a visual project to run this command");
+}
+
 let pkg;
 try {
     pkg = require(path.join(cwd, "./package.json"));
 }
 catch (err) {
-    throw new Error("pbiviz.json not found. You must be in the root of a visual project to run this command");
+    throw new Error("package.json not found. You must be in the root of a visual project to run this command");
 }
 
 let tsconfig;
@@ -75,13 +83,25 @@ if (tsconfig.compilerOptions && tsconfig.compilerOptions.outDir) {
     }
 
     try {
-        let apiVersion =  args.length > 0 ? args[0] : packgeApiVersion ? packgeApiVersion : "latest";
-        exec(`npm install powerbi-visuals-tools@${apiVersion}`, (err, strout, stderror) => {
+        let apiVersion;
+        if (args.length > 0) {
+            apiVersion = args[0];
+        }
+        if (!apiVersion && pbiviz.apiVersion) {
+            apiVersion = pbiviz.apiVersion;
+        }
+        if (!apiVersion && packgeApiVersion) {
+            apiVersion = packgeApiVersion;
+        }
+        if (!apiVersion) {
+            apiVersion = "latest";
+        }
+        exec(`npm install --save powerbi-visuals-api@${apiVersion}`, (err, strout, stderror) => {
             if (err) {
-                if (err.message.indexOf("No matching version found for powerbi-visuals-tools") !== -1) {
+                if (err.message.indexOf("No matching version found for powerbi-visuals-api") !== -1) {
                     throw new Error(`Error: Invalid API version: ${apiVersion}`);
                 }
-                ConsoleWriter.error(`npm install powerbi-visuals-tools@${apiVersion} failed`);
+                ConsoleWriter.error(`npm install --save powerbi-visuals-api@${apiVersion} failed`);
                 return;
             }
             ConsoleWriter.info(strout);

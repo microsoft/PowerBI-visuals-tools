@@ -207,14 +207,6 @@ describe("E2E - pbiviz package", () => {
         expect(pbiviz.content.iconBase64).toBeDefined();
     });
 
-    it("Should not create the visualPlugin.ts with --resources, --no-pbiviz, --no-plugin flags", () => {
-        FileSystem.runPbiviz('package', false, '--resources --no-pbiviz --no-plugin');
-
-        let visualPluginPath = path.join(visualPath, '.tmp', 'precompile', 'visualPlugin.ts');
-
-        expect(fs.existsSync(visualPluginPath)).toBeFalsy();
-    });
-
     // tets can't check the minification, because in input the plugin gets minified version, 
     // plugin can't create two version js file for compare
     xit("Should minify assets by default", () => {
