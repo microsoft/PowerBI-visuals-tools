@@ -40,7 +40,7 @@
     "less-loader": "4.1.0",
     "less": "3.8.0",
     "lodash": "4.17.10",
-    "powerbi-visuals-webpack-plugin": "1.0.4",
+    "powerbi-visuals-webpack-plugin": "1.0.5",
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
     "style-loader": "0.21.0",
