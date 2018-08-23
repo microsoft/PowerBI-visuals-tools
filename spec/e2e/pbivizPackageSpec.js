@@ -172,8 +172,10 @@ describe("E2E - pbiviz package", () => {
                                 expect(data.visual).toEqual(visualConfig);
                                 expect(data.capabilities).toEqual(visualCapabilities);
                                 expect(data.content.js).toBeDefined();
+                                expect(data.content.js.length).toBeGreaterThan(0);
                                 expect(data.content.css).toBeDefined();
                                 expect(data.content.iconBase64).toBeDefined();
+                                expect(data.content.iconBase64.length).toBeGreaterThan(0);
                                 next();
                             })
                             .catch(next);
