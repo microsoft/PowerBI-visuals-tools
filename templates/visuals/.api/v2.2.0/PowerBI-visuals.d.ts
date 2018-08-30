@@ -1234,7 +1234,7 @@ declare module powerbi.extensibility {
     }
     
     interface ISelectionManager {
-        showContextMenu(selectionId: ISelectionId, position: IPoint): IPromise<{}>
+        showContextMenu(selectionId: ISelectionId, position: IPoint): IPromise<{}>;
         select(selectionId: ISelectionId | ISelectionId[], multiSelect?: boolean): IPromise<ISelectionId[]>;
         hasSelection(): boolean;
         clear(): IPromise<{}>;
