@@ -40,6 +40,10 @@
             "type": "boolean",
             "description": "Tells the host to include highlight data"
         },
+        "supportsSynchronizingFilterState": {
+            "type": "boolean",
+            "description": "Indicates whether the visual supports synchronization across report pages (for slicer visuals only)"
+        },
         "advancedEditModeSupport": {
             "type": "number",
             "description": "Indicates the action requested from the host when this visual enters Advanced Edit mode."
@@ -725,6 +729,10 @@
                     "type": "string",
                     "description": "Text to display if the field is empty"
                 },
+                "placeHolderTextKey": {
+                    "type": "string",
+                    "description": "The localization key for the placeHolderText in the stringResources file"
+                },
                 "suppressFormatPainterCopy": {
                     "type": "boolean",
                     "description": "Indicates whether the Format Painter should ignore this property"
@@ -737,6 +745,10 @@
                     "type": "object",
                     "description": "Describes substitution rule that replaces property object, described inside the rule, to current property object that contains this rule",
                     "$ref": "#/definitions/substitutionRule"
+                },
+                "filterState": {
+                    "type": "boolean",
+                    "description": "Indicates whether the property is a part of filtration information"
                 }
             },
             "additionalProperties": false
