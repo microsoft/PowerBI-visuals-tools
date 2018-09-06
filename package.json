@@ -37,10 +37,10 @@
     "json-loader": "0.5.7",
     "jsonschema": "1.2.4",
     "jszip": "3.1.5",
-    "less-loader": "4.1.0",
     "less": "3.8.0",
+    "less-loader": "4.1.0",
     "lodash": "4.17.10",
-    "powerbi-visuals-webpack-plugin": "1.0.7",
+    "powerbi-visuals-webpack-plugin": "^1.0.8",
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
     "style-loader": "0.21.0",
@@ -50,9 +50,9 @@
     "uglify-js": "3.4.6",
     "uglifyjs-webpack-plugin": "1.2.7",
     "uuid": "3.3.2",
+    "webpack": "4.16.3",
     "webpack-dev-server": "3.1.5",
-    "webpack-visualizer-plugin": "0.1.11",
-    "webpack": "4.16.3"
+    "webpack-visualizer-plugin": "0.1.11"
   },
   "devDependencies": {
     "eslint": "5.2.0",
