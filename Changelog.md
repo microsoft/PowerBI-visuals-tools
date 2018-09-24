@@ -2,6 +2,13 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v3.0.2
+* Tools observe changes in `pbiviz.json` and `capabilities.json` files and rebuild the visual.
+* `webpack-visualizer-plugin` replaced by `webpack-bundle-analyzer` to visualize the webpack bundle stats.
+
+## pbiviz v3.0.1
+* Webpack based tools
+
 ## pbiviz v2.0.2 
 * Skip precompilation for the visual with ES6 modules
 
