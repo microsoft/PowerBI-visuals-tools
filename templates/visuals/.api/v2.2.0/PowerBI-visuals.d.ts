@@ -1414,6 +1414,7 @@ declare module powerbi.extensibility.visual {
         viewMode?: ViewMode;
         editMode?: EditMode;
         operationKind?: VisualDataChangeOperationKind;
+        jsonFilters?: IFilter[]; 
     }
 
     export interface VisualConstructorOptions extends extensibility.VisualConstructorOptions {
