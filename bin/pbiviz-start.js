@@ -53,7 +53,10 @@ let server, builder;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
     ConsoleWriter.info('Building visual...');
-    let buildOptions = { namespace: visualPackage.config.visual.guid + '_DEBUG', minify: false };
+    let buildOptions = {
+        namespace: visualPackage.config.visual.guid + '_DEBUG',
+        minify: false
+    };
     builder = new VisualBuilder(visualPackage, buildOptions);
     builder.build().then(() => {
         ConsoleWriter.done('build complete');
@@ -67,7 +70,9 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
                 ConsoleWriter.done(changeType + ' build complete');
             });
             builder.on('watch_error', errors => {
-                if (!program.mute) ConsoleWriter.beep();
+                if (!program.mute) {
+                    ConsoleWriter.beep();
+                }
                 ConsoleWriter.formattedErrors(errors);
             });
 
@@ -83,7 +88,9 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         });
 
     }).catch(e => {
-        if (!program.mute) ConsoleWriter.beep();
+        if (!program.mute) {
+            ConsoleWriter.beep();
+        }
         ConsoleWriter.formattedErrors(e);
         process.exit(1);
     });

@@ -23,14 +23,13 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
 let path = require('path');
 let childProcess = require('child_process');
 let treeKill = require('tree-kill');
-let async = require('async');
-let platform = require('os').platform();
 
 const TEMP_DIR = path.join(__dirname, '..', '.tmp');
 const BIN_PATH = path.join(__dirname, '..', '..', 'bin', 'pbiviz.js');
@@ -68,11 +67,9 @@ class FileSystem {
                     if (content.indexOf(regEx) == -1) {
                         throw new Error(`File "${fileName}" did not contain "${regEx}"...`);
                     }
-                } else {
-                    if (!content.match(regEx)) {
+                } else if (!content.match(regEx)) {
                         throw new Error(`File "${fileName}" did not contain "${regEx}"...`);
                     }
-                }
             });
     }
 
@@ -116,12 +113,12 @@ class FileSystem {
      * @param {boolean} [verbose = false] - enables verbose output
      */
     static runPbiviz(command, args, flags, verbose) {
-        let opts = verbose ? undefined : { stdio: [] };
+        let opts = verbose ? null : { stdio: [] };
 
         flags = flags ? ' ' + flags : '';
         args = args ? ' ' + args : '';
         let pbivizCmd = command + args + flags;
-        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd);
+        if (verbose) { console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd); }
         return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
     }
 
@@ -139,6 +136,7 @@ class FileSystem {
             process.chdir(pathToReturn);
         }
     }
+
     /**
      * Executes the pbiviz CLI
      * 
@@ -147,10 +145,10 @@ class FileSystem {
      * @param {boolean} [verbose = false] - enables verbose output
      */
     static runPbivizAsync(command, args, verbose) {
-        if (verbose) console.log('run:', 'node ' + BIN_PATH + ' ' + command, args || '');
+        if (verbose) { console.log('run:', 'node ' + BIN_PATH + ' ' + command, args || ''); }
 
         let spawnCmd = [BIN_PATH, command];
-        if (args) spawnCmd = spawnCmd.concat(args);
+        if (args) { spawnCmd = spawnCmd.concat(args); }
         return childProcess.spawn('node', spawnCmd);
     }
 
