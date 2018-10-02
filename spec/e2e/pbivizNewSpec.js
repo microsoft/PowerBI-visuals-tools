@@ -23,13 +23,13 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
 let path = require('path');
 let wrench = require('wrench');
 let _ = require('lodash');
-let visualGenerator = require('../../lib/VisualGenerator.js');
 
 let FileSystem = require('../helpers/FileSystem.js');
 
@@ -87,7 +87,6 @@ describe("E2E - pbiviz new", () => {
 
     describe("Should generate correct settings.ts", () => {
         const visualName = "visualname";
-        const template = "default";
         const visualPath = path.join(tempPath, visualName);
         const settingsPath = `${visualPath}/src/settings.ts`;
         const visualFilePath = `${visualPath}/src/visual.ts`;
@@ -101,7 +100,9 @@ describe("E2E - pbiviz new", () => {
         });
 
         afterAll(() => {
+            /* eslint-disable no-undefined */
             global.powerbi = undefined;
+            /* eslint-enable no-undefined */
         });
 
         it("settings.ts was created", (done) => {
@@ -131,7 +132,8 @@ describe("E2E - pbiviz new", () => {
                     "fontSize": 12
                 }
             };
-            const dataViews = [{
+            const dataViews = [
+{
                 "metadata": {
                     "columns": [],
                     "objects": {
@@ -164,7 +166,8 @@ describe("E2E - pbiviz new", () => {
                         }
                     }
                 }
-            }];
+            }
+];
             const fillSettings = {
                 "dataPoint": {
                     "defaultColor": "#A66999",
@@ -190,12 +193,14 @@ describe("E2E - pbiviz new", () => {
             } catch (e) {
                 fail(e);
             }
-            let visualCode = fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
+            fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
                 (err, data) => {
                     if (err) {
                         fail(err);
                     }
+                    /* eslint-disable no-eval */
                     global.eval(data); // jshint ignore:line
+                    /* eslint-enable no-eval */
                     let visualFullName = Object.keys(global.powerbi.extensibility.visual)[0];
                     let settings = global.powerbi.extensibility.visual[visualFullName].VisualSettings.getDefault();
                     expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
@@ -343,7 +348,7 @@ describe("E2E - pbiviz new", () => {
         fs.writeFileSync(visualTestFilePath, 'hello!!');
 
         try {
-            let stater = fs.statSync(visualTestFilePath);
+            fs.statSync(visualTestFilePath);
         } catch (e) {
             testFileError1 = e;
         }

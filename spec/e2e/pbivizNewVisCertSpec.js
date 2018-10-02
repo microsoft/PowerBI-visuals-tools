@@ -23,13 +23,11 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
 let path = require('path');
-let async = require('async');
-let JSZip = require('jszip');
-let request = require('request');
 console.log(__dirname);
 let confPath = '../../config.json';
 let config = require(confPath);
@@ -37,7 +35,6 @@ let config = require(confPath);
 let FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
-const startPath = process.cwd();
 
 describe("E2E - pbiviz --create-cert", () => {
     beforeEach(() => {
