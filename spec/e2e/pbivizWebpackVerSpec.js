@@ -66,6 +66,13 @@ describe("E2E - webpack tools", () => {
         fs.removeSync(path.join(visualPath, "node_modules", "powerbi-visuals-api"));
     };
 
+    it("Should not add empty dependencies option into visual config", () => {
+        FileSystem.runPbiviz('package');
+
+        let packageJson = fs.readJsonSync(path.join(visualPath, '.tmp/drop/pbiviz.json'));
+        expect(packageJson.dependencies).not.toBeDefined();
+    });
+
     it("Should install the latest powerbi-visual-api if apiVersion is undefined", () => {
         let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
         pbivizJson.apiVersion = null;
