@@ -23,11 +23,11 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
 let path = require('path');
-let wrench = require('wrench');
 let _ = require('lodash');
 
 let FileSystem = require('../helpers/FileSystem.js');
@@ -100,7 +100,7 @@ describe("E2E - pbiviz update", () => {
         //check that the file doesn't already exist
         let statPreError;
         try {
-            let statPre = fs.statSync(path.join(visualPath, '.api', 'v1.0.0'));
+            fs.statSync(path.join(visualPath, '.api', 'v1.0.0'));
         } catch (e) {
             statPreError = e;
         }

@@ -5,7 +5,13 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 ## pbiviz v2.2.0
 * custom visuals now support context menu
 
-## pbiviz v2.1.0
+## pibviz v2.1.2
+* Remove jasmine-node package
+
+## pibviz v2.1.1
+* Fix vulnerabilities
+
+## pibviz v2.1.0
 * use Custom Visuals Selection id's instead of old Selection id's 
 * remove Semantic Query dependency inside the iFrame
 * Serialize DataView and remove multiple DataView types

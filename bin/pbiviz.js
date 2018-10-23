@@ -29,7 +29,6 @@
 
 let confPath = '../config.json';
 let exec = require('child_process').execSync;
-let execAsync = require('child_process').exec;
 let path = require('path');
 let os = require('os');
 let program = require('commander');
@@ -38,8 +37,6 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 let config = require(confPath);
 let fs = require('fs');
 let args = process.argv;
-let StringDecoder = require('string_decoder').StringDecoder;
-let readline = require('readline');
 
 program
     .version(npmPackage.version)
@@ -47,7 +44,6 @@ program
     .command('info', 'Display info about the current visual')
     .command('start', 'Start the current visual')
     .command('package', 'Package the current visual into a pbiviz file')
-    .command('validate [path]', 'Validate pbiviz file for submission')
     .command('update [version]', 'Updates the api definitions and schemas in the current visual. Changes the version if specified')
     .option('--create-cert', 'Create new localhost certificate', createCertFile)
     .option('--install-cert', 'Install localhost certificate', openCertFile);
@@ -95,9 +91,7 @@ function createCertFile() {
     const subject = "localhost";
     const keyLength = 2048;
     const algorithm = "sha256";
-    const certName = "CN=localhost";
     const validPeriod = 180;
-    const msInOneDay = 86400000;
 
     let certPath = path.join(__dirname, '..', config.server.certificate);
     let keyPath = path.join(__dirname, '..', config.server.privateKey);
@@ -146,7 +140,7 @@ function createCertFile() {
                     // for windows 7 and others
                     // 6.1 - Windows 7
                     let osVersion = os.release().split(".");
-                    if (+osVersion[0] === 6 && +osVersion[1] === 1 || +osVersion[0] < 6) {
+                    if (Number(osVersion[0]) === 6 && Number(osVersion[1]) === 1 || Number(osVersion[0]) < 6) {
                         removeCertFiles(certPath, keyPath, pfxPath);
                         startCmd = "openssl";
                         createCertCommand =
@@ -164,7 +158,7 @@ function createCertFile() {
                         break;
                     } 
                     // for windows 8 / 8.1 / server 2012 R2 /
-                    if (+osVersion[0] === 6 && (+osVersion[1] === 2 || +osVersion[1] === 3)) {
+                    if (Number(osVersion[0]) === 6 && (Number(osVersion[1]) === 2 || Number(osVersion[1]) === 3)) {
                         // for 10
                         passphrase = Math.random().toString().substring(2);
                         config.server.passphrase = passphrase;
@@ -213,6 +207,8 @@ function createCertFile() {
                         }
                     }
                     break;
+                default:
+                    ConsoleWriter.error("Unknown platform");
             }
         } catch (e) {
             if (e.message.indexOf("'openssl' is not recognized as an internal or external command") > 0) {

@@ -23,6 +23,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 "use strict";
 
 let fs = require('fs-extra');
@@ -169,9 +170,9 @@ describe("E2E - pbiviz package", () => {
                                 next();
                             })
                             .catch(next);
-                    },
+                    }
                 ], error => {
-                    if (error) throw error;
+                    if (error) { throw error; }
                     done();
                 });
 
@@ -272,9 +273,9 @@ describe("E2E - pbiviz package", () => {
                                 next();
                             })
                             .catch(next);
-                    },
+                    }
                 ], error => {
-                    if (error) throw error;
+                    if (error) { throw error; }
                     done();
                 });
 
@@ -324,7 +325,7 @@ describe("E2E - pbiviz package", () => {
             {
                 "formattingGeneral": "General",
                 "formattingGeneralOrientation": "Orientation",
-                "formattingGeneralOrientationVertical": "Vertical",
+                "formattingGeneralOrientationVertical": "Vertical"
             };
         const ResJsonRuLocalization =
             {
@@ -382,7 +383,7 @@ describe("E2E - pbiviz package", () => {
             {
                 "formattingGeneral": "General",
                 "formattingGeneralOrientation": "Orientation",
-                "formattingGeneralOrientationVertical": "Vertical",
+                "formattingGeneralOrientationVertical": "Vertical"
             };
         const ResJsonRuLocalization =
             {
@@ -551,9 +552,9 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
                             next();
                         })
                         .catch(next);
-                },
+                }
             ], error => {
-                if (error) throw error;
+                if (error) { throw error; }
                 done();
             });
 
