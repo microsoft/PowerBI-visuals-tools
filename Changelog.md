@@ -2,7 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 3.0.3
+## pbiviz 3.0.4
+* Update powerbi-visuals-plugin to version 1.0.11
+
+## pbiviz 3.0.3
 * Update powerbi-visuals-plugin to version 1.0.10
 * Remove jasmine-node package
 
