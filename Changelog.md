@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.0.3
+* Update powerbi-visuals-plugin to version 1.0.10
+* Remove jasmine-node package
+
 ## pbiviz v3.0.2
 * Tools observe changes in `pbiviz.json` and `capabilities.json` files and rebuild the visual.
 * `webpack-visualizer-plugin` replaced by `webpack-bundle-analyzer` to visualize the webpack bundle stats.
