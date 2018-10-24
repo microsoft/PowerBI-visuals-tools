@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz v2.2.0
+* custom visuals now support context menu
+
 ## pibviz v2.1.2
 * Remove jasmine-node package
 
