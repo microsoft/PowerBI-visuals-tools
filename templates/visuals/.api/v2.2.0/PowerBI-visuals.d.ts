@@ -1239,7 +1239,6 @@ declare module powerbi.extensibility {
         hasSelection(): boolean;
         clear(): IPromise<{}>;
         getSelectionIds(): ISelectionId[];
-        applySelectionFilter(): void;
         registerOnSelectCallback(callback: (ids: ISelectionId[]) => void): void;
     }
 }
