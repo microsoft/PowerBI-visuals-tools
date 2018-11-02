@@ -35,7 +35,6 @@
     "extra-watch-webpack-plugin": "^1.0.3",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "fs-extra": "7.0.0",
-    "imports-loader": "^0.8.0",
     "json-loader": "0.5.7",
     "jsonschema": "1.2.4",
     "jszip": "3.1.5",
