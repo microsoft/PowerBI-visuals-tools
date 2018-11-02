@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## pbiviz 3.0.5
+* Prevent using define function in context of module
+
 ## pbiviz 3.0.4
 * Update powerbi-visuals-plugin to version 1.0.11
 
