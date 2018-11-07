@@ -85,13 +85,13 @@ if (tsconfig.compilerOptions && tsconfig.compilerOptions.outDir) {
     try {
         let apiVersion;
         if (args.length > 0) {
-            apiVersion = args[0];
+            apiVersion = `~${args[0]}`;
         }
         if (!apiVersion && pbiviz.apiVersion) {
-            apiVersion = pbiviz.apiVersion;
+            apiVersion = `~${pbiviz.apiVersion}`;
         }
         if (!apiVersion && packgeApiVersion) {
-            apiVersion = packgeApiVersion;
+            apiVersion = `~${packgeApiVersion}`;
         }
         if (!apiVersion) {
             apiVersion = "latest";

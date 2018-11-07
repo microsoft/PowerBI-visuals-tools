@@ -31,15 +31,10 @@ let path = require('path');
 console.log(__dirname);
 let config = require('./../../config.json');
 
-let FileSystem = require('../helpers/FileSystem.js');
 let CertificateTools = require('./../../lib/CertificateTools');
-
-const tempPath = FileSystem.getTempPath();
 
 describe("E2E - pbiviz --install-cert", () => {
     beforeEach(() => {
-        FileSystem.resetTempDirectory();
-        process.chdir(tempPath);
         CertificateTools.createCertFile(config, false);
     });
 

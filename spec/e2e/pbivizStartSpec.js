@@ -50,7 +50,7 @@ describe("E2E - pbiviz start", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName);
+        FileSystem.runPbiviz('new', visualName, '--force');
         FileSystem.runCMDCommand('npm i', visualPath, tempPath);
 
         writeMetadata(visualPath);
@@ -150,6 +150,9 @@ describe("E2E - pbiviz start", () => {
                     return;
                 }
                 if (data.toString().indexOf("DeprecationWarning") !== -1) {
+                    return;
+                }
+                if (data.toString().indexOf("warn   No such file or directory") !== -1) {
                     return;
                 }
                 throw new Error(data.toString());
