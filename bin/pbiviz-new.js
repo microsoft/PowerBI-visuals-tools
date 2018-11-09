@@ -28,7 +28,6 @@
 
 let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
-let VisualGenerator = require('../lib/VisualGenerator');
 let ConsoleWriter = require('../lib/ConsoleWriter');
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
@@ -52,14 +51,6 @@ let args = program.args;
 if (!args || args.length < 1) {
     ConsoleWriter.error("You must enter a visual name");
     process.exit(1);
-}
-
-//pre-check API version before we create anything
-if (program.apiVersion) {
-    if (!VisualGenerator.checkApiVersion(program.apiVersion)) {
-        ConsoleWriter.error('Invalid API version: ' + program.apiVersion);
-        process.exit(1);
-    }
 }
 
 let visualName = args.join(' ');

@@ -73,8 +73,9 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     .then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
         compiler.watch({
-                aggregateTimeout: 300, // wait so long for more changes
-                poll: true // use polling instead of native watchers
+                aggregateTimeout: 1000, // wait so long for more changes
+                poll: false, // use polling instead of native watchers
+                ignored: /node_modules/
             },
             function (err) {
                 if (err) {
