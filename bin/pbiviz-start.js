@@ -63,7 +63,7 @@ if (!CertificateTools.getCertFile(config, true)) {
 }
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    WebPackWrap.applyWebpackConfig(visualPackage, {
+    new WebPackWrap().applyWebpackConfig(visualPackage, {
         devMode: true,
         generateResources: true,
         generatePbiviz: false,

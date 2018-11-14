@@ -60,7 +60,7 @@ if (!program.pbiviz && !program.resources) {
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
-    WebPackWrap.applyWebpackConfig(visualPackage, {
+    new WebPackWrap().applyWebpackConfig(visualPackage, {
         devMode: false,
         generateResources: program.resources || false,
         generatePbiviz: program.pbiviz || false,
