@@ -27,6 +27,7 @@
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
     "async": "2.6.1",
+    "base64-inline-loader": "^1.1.1",
     "chalk": "2.4.1",
     "commander": "2.16.0",
     "connect": "3.6.6",
