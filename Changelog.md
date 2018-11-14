@@ -6,6 +6,8 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Install the latest patch of `powerbi-visuals-api`
 * The `pbiviz.json` values of visual templates overrides global template values
 * Remove unnecessary `setApiVersion` and `updateApi` from `VisualGenerator`
+* Fix including styles into visual package
+* Update powerbi-visuals-plugin to version 1.0.13
 
 ## pbiviz 3.0.5
 * Prevent using define function in context of module
