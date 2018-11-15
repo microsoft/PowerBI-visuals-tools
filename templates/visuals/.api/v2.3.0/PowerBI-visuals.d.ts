@@ -1393,7 +1393,7 @@ declare module powerbi.extensibility.visual {
         createSelectionManager: () => ISelectionManager;
         colorPalette: ISandboxExtendedColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
-        applyJsonFilter: (filter: IFilter, objectName: string, propertyName: string, action: FilterAction) => void;
+        applyJsonFilter: (filter: IFilter[]|IFilter, objectName: string, propertyName: string, action: FilterAction)=> void;
         tooltipService: ITooltipService;
         telemetry: ITelemetryService;
         authenticationService: IAuthenticationService;
