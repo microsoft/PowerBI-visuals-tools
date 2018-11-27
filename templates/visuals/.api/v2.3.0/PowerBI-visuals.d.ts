@@ -1366,7 +1366,7 @@ declare module powerbi.extensibility {
     /** 
      * Provides an access to local storage for read / write access 
      */
-    interface ILocalVisualStorageService {
+    export interface ILocalVisualStorageService {
         /**
          * Returns promise that resolves to the data associated with 'key' if it was found or rejects otherwise.
          * 
