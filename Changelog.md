@@ -1,6 +1,9 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+## pbiviz v2.2.2
+* Update package-lock.json to fix vulnerabilities
+
 ## pbiviz v2.2.1
 * Deprecated `applySelectionFilter` from `ISelectionManager`
 
