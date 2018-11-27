@@ -1362,6 +1362,61 @@ declare module powerbi.extensibility {
     }
 }
 
+declare module powerbi.extensibility {
+    /** 
+     * Provides an access to local storage for read / write access 
+     */
+    export interface ILocalVisualStorageService {
+        /**
+         * Returns promise that resolves to the data associated with 'key' if it was found or rejects otherwise.
+         * 
+         * @param key - the name of the payload to retrieve
+         * @returns the promise that resolves to the data required or rejects if it wasn't found
+         */
+        get(key: string): IPromise<string>;
+
+        /**
+         * Saves the data to local storage. This data can be later be retrieved using the 'key'.
+         * Returns a promise that resolves to the amount of free space available to caller after the save if there 
+         * is any or rejects otherwise. 
+         * 
+         * @param key - the name of the payload to store
+         * @param data - the payload string to store
+         * @returns the promise resolves to the amount of free space available or rejects if there is no free space to store the data
+         */
+        set(key: string, data: string): IPromise<number>;
+
+        /**
+         * Deletes data associated with 'key' from local storage.
+         * 
+         * @param key - the name of the payload to remove
+         */
+        remove(key: string): void;
+    }
+}
+
+declare module powerbi.extensibility {
+    /** 
+     * An interface for reporting rendering events 
+     */
+    export interface IVisualEventService {
+        /**
+         * Called just before the actual rendering was started.
+         */
+        renderingStarted(options: VisualUpdateOptions): void;
+
+        /**
+         * Called immediately after finishing rendering successfully
+         */
+        renderingFinished(options: VisualUpdateOptions): void;
+
+        /**
+         * Called when rendering failed with optional reason string
+         */
+        renderingFailed(options: VisualUpdateOptions, reason?: string): void;
+    }
+}
+
 declare module powerbi {
     export interface IFilter { }
 }
@@ -1404,6 +1459,8 @@ declare module powerbi.extensibility.visual {
         instanceId: string;
         refreshHostData: () => void;
         createLocalizationManager: () => ILocalizationManager;
+        storageService: ILocalVisualStorageService;
+        eventService: IVisualEventService;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
