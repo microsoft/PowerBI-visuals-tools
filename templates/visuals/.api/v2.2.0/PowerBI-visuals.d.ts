@@ -1362,22 +1362,6 @@ declare module powerbi.extensibility {
     }
 }
 
-declare module powerbi.extensibility {
-    export interface ILocalVisualStorageService {
-        get(key: string): IPromise<string>;
-        set(key: string, data: string): IPromise<number>;
-        remove(key: string): void;
-    }
-}
-
-declare module powerbi.extensibility {
-    export interface IVisualEventService {
-        renderingStarted(options: VisualUpdateOptions): void;
-        renderingFinished(options: VisualUpdateOptions): void;
-        renderingFailed(options: VisualUpdateOptions, reason?: string): void;
-    }
-}
-
 declare module powerbi {
     export interface IFilter { }
 }
@@ -1420,8 +1404,6 @@ declare module powerbi.extensibility.visual {
         instanceId: string;
         refreshHostData: () => void;
         createLocalizationManager: () => ILocalizationManager;
-        storageService: ILocalVisualStorageService;
-        eventService: IVisualEventService;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
