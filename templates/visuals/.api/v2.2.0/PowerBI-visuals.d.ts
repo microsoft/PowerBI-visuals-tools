@@ -1374,7 +1374,7 @@ declare module powerbi.extensibility {
     export interface IVisualEventService {
         renderingStarted(options: VisualUpdateOptions): void;
         renderingFinished(options: VisualUpdateOptions): void;
-		renderingFailed(options: VisualUpdateOptions, reason?: string): void;
+        renderingFailed(options: VisualUpdateOptions, reason?: string): void;
     }
 }
 
