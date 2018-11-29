@@ -35,6 +35,7 @@ let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
 program
+    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
     .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
     .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
@@ -65,13 +66,15 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         generateResources: program.resources || false,
         generatePbiviz: program.pbiviz || false,
         minifyJS: typeof program.minify === 'undefined' ? true : program.minify,
-        minify: typeof program.minify === 'undefined' ? true : program.minify
+        minify: typeof program.minify === 'undefined' ? true : program.minify,
+        target: typeof program.target === 'undefined' ? "es5" : program.target
     }).then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
         compiler.run((err) => {
             if (!err) {
                 ConsoleWriter.info('Package created');
             }
+            process.exit(0);
         });
     }).catch(e => {
         ConsoleWriter.error(e.message);

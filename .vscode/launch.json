@@ -10,6 +10,28 @@
             "name": "Launch Program",
             "cwd": "${workspaceRoot}",
             "program": "${workspaceFolder}\\spec\\jasmine-runner.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "testvisual",
+            "cwd": "E:\\WORKSPACE\\PowerBI\\testTable",
+            "program": "${workspaceFolder}\\bin\\pbiviz-start.js",
+            "args": [
+                "--target",
+                "es5",
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "tornado",
+            "cwd": "E:\\WORKSPACE\\PowerBI\\PowerBI-visuals-Tornado",
+            "program": "${workspaceFolder}\\bin\\pbiviz-start.js",
+            "args": [
+                "--target",
+                "es5"
+            ]
         }
     ]
 }

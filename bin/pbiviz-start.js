@@ -40,6 +40,7 @@ let config = require(confPath);
 let CertificateTools = require("../lib/CertificateTools");
 
 program
+    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
     .option('-p, --port [port]', 'set the port listening on')
     .option('-m, --mute', 'mute error outputs');
 
@@ -68,7 +69,8 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         generateResources: true,
         generatePbiviz: false,
         minifyJS: false,
-        minify: false
+        minify: false,
+        target: typeof program.target === 'undefined' ? "es5" : program.target
     })
     .then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
