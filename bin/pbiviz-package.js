@@ -65,9 +65,9 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         devMode: false,
         generateResources: program.resources || false,
         generatePbiviz: program.pbiviz || false,
-        minifyJS: typeof program.minify === 'undefined' ? true : program.minify,
-        minify: typeof program.minify === 'undefined' ? true : program.minify,
-        target: typeof program.target === 'undefined' ? "es5" : program.target
+        minifyJS: program.minify,
+        minify: program.minify,
+        target: program.target
     }).then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
         compiler.run((err) => {
