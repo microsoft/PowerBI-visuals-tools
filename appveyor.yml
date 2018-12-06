@@ -31,7 +31,7 @@ image:
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js or io.js
-  - ps: Install-Product node 6
+  - ps: Install-Product node 10
   # install modules
   - npm install
 
