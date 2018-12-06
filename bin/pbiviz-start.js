@@ -101,6 +101,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     })
     .catch(e => {
         ConsoleWriter.error(e.message);
+        process.exit(1);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
