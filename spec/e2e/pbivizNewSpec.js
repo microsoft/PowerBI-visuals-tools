@@ -95,7 +95,7 @@ describe("E2E - pbiviz new", () => {
         const visualFilePath = `${visualPath}/src/visual.ts`;
         global.powerbi = {};
         beforeEach(() => {
-            FileSystem.runPbiviz("new", visualName, ' -t default1');
+            FileSystem.runPbiviz("new", visualName, ' -t default1 --force');
 
             writeMetadata(visualPath);
         });
@@ -192,7 +192,7 @@ describe("E2E - pbiviz new", () => {
             process.chdir(visualPath);
             FileSystem.runCMDCommand('npm i', visualPath);
             try {
-                FileSystem.runPbiviz('package', '--no-pbiviz', "--resources");
+                FileSystem.runPbiviz('package', '--no-pbiviz', "--resources --target es6 --no-minify");
             } catch (e) {
                 fail(e);
             }
