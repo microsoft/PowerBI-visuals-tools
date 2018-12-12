@@ -26,23 +26,20 @@
 
 "use strict";
 
-let program = require('commander');
-let VisualPackage = require('../lib/VisualPackage');
-let VisualServer = require('../lib/VisualServer');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let WebPackWrap = require('../lib/WebPackWrap');
+const program = require('commander');
+const VisualPackage = require('../lib/VisualPackage');
+const WebpackDevServer = require("webpack-dev-server");
+const ConsoleWriter = require('../lib/ConsoleWriter');
+const WebPackWrap = require('../lib/WebPackWrap');
 const webpack = require("webpack");
-let CommandHelpManager = require('../lib/CommandHelpManager');
-let options = process.argv;
-
-let confPath = '../config.json';
-let config = require(confPath);
-let CertificateTools = require("../lib/CertificateTools");
+const CommandHelpManager = require('../lib/CommandHelpManager');
+const options = process.argv;
 
 program
     .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
     .option('-p, --port [port]', 'set the port listening on')
-    .option('-m, --mute', 'mute error outputs');
+    .option('-m, --mute', 'mute error outputs')
+    .option('-d, --drop', 'drop outputs into output folder');
 
 for (let i = 0; i < options.length; i++) {
     if (options[i] == '--help' || options[i] == '-h') {
@@ -54,14 +51,7 @@ for (let i = 0; i < options.length; i++) {
 program.parse(options);
 
 let cwd = process.cwd();
-let server, builder;
-
-if (!CertificateTools.getCertFile(config, true)) {
-    CertificateTools.createCertFile(config, true);
-    if (!CertificateTools.getCertFile(config, true)) {
-        ConsoleWriter.error('Certificate wasn\'t created');
-    }
-}
+let server;
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     new WebPackWrap().applyWebpackConfig(visualPackage, {
@@ -70,33 +60,20 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         generatePbiviz: false,
         minifyJS: false,
         minify: false,
-        target: typeof program.target === 'undefined' ? "es5" : program.target
+        target: typeof program.target === 'undefined' ? "es5" : program.target,
+        devServerPort: program.port
     })
     .then((webpackConfig) => {
         let compiler = webpack(webpackConfig);
-        compiler.watch({
-                aggregateTimeout: 1000, // wait so long for more changes
-                poll: false, // use polling instead of native watchers
-                ignored: /node_modules/
-            },
-            function (err) {
-                if (err) {
-                    ConsoleWriter.error('Visual rebuild failed');
-                    ConsoleWriter.error(err);
-                    return;
-                }
-                ConsoleWriter.info('Visual rebuild completed');
-            }
-        );
-
         ConsoleWriter.blank();
         ConsoleWriter.info('Starting server...');
-        server = new VisualServer(visualPackage, program.port);
-        server.start().then(() => {
-            ConsoleWriter.info('Server listening on port ' + server.port + '.');
-        }).catch(e => {
-            ConsoleWriter.error('SERVER ERROR', e);
-            process.exit(1);
+        server = new WebpackDevServer(compiler, {
+            ...webpackConfig.devServer,
+            hot: true,
+            writeToDisk: program.drop
+        });
+        server.listen(webpackConfig.devServer.port, () => {
+            ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
         });
     })
     .catch(e => {
@@ -113,12 +90,8 @@ function stopServer() {
     ConsoleWriter.blank();
     ConsoleWriter.info("Stopping server...");
     if (server) {
-        server.stop();
+        server.close();
         server = null;
-    }
-    if (builder) {
-        builder.stopWatcher();
-        builder = null;
     }
 }
 
