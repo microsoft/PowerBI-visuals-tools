@@ -59,13 +59,13 @@ if (program.args.length > 0) {
     }
 }
 
-function onOpenCertFile() {
+async function onOpenCertFile() {
     let certPath = CertificateTools.getCertFile(config, true);
     
     if (!certPath) {
         ConsoleWriter.error("Certificate not found. The new certificate will be generated");
-        CertificateTools.createCertFile(config, true);
+        await CertificateTools.createCertFile(config, true);
     } else {
-        CertificateTools.openCertFile(config);
+        await CertificateTools.openCertFile(config);
     }
 }
