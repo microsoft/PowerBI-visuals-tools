@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v2.2.0",
+    "PBI_API_VERSION": "v2.3.0",
     "type": "object",
     "properties": {
         "apiVersion": {
