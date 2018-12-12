@@ -26,11 +26,11 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-let _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const _ = require('lodash');
 
-let FileSystem = require('../helpers/FileSystem.js');
+const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
