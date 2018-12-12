@@ -60,7 +60,7 @@ if (program.args.length > 0) {
 }
 
 async function onOpenCertFile() {
-    let certPath = CertificateTools.getCertFile(config, true);
+    let certPath = await CertificateTools.getCertFile(config, true);
     
     if (!certPath) {
         ConsoleWriter.error("Certificate not found. The new certificate will be generated");
