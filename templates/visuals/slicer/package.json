@@ -7,7 +7,7 @@
 		"lint": "tslint -r \"node_modules/tslint-microsoft-contrib\"  \"+(src|test)/**/*.ts\""
 	},	
 	"dependencies": {
-		"powerbi-models": "0.10.0",
+		"powerbi-models": "1.0.13",
     "powerbi-visuals-utils-dataviewutils": "1.2.0"
 	},
 	"devDependencies": {
