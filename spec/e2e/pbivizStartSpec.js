@@ -95,7 +95,7 @@ describe("E2E - pbiviz start", () => {
         let callbackCalled = false;
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
-            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.indexOf("Compiled with warnings") !== -1) {
+            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
                 if (callbackCalled) {
                     return;
                 }
@@ -128,7 +128,7 @@ describe("E2E - pbiviz start", () => {
         let callbackCalled = false;
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
-            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.indexOf("Compiled with warnings") !== -1) {
+            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
                 if (callbackCalled) {
                     return;
                 }
@@ -179,7 +179,7 @@ describe("E2E - pbiviz start", () => {
             let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.indexOf("Compiled with warnings") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
                     if (callbackCalled) {
                         return;
                     }
@@ -215,7 +215,7 @@ describe("E2E - pbiviz start", () => {
             let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.indexOf("Compiled with warnings") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
                     if (callbackCalled) {
                         return;
                     }
@@ -265,7 +265,7 @@ describe("E2E - pbiviz start", () => {
             let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.indexOf("Compiled with warnings") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
                     if (callbackCalled) {
                         return;
                     }
@@ -342,7 +342,7 @@ describe("E2E - pbiviz start", () => {
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
 
-            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.indexOf("Compiled with warnings") !== -1) {
+            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
                 if (callbackCalled) {
                     return;
                 }
@@ -425,7 +425,7 @@ describe("E2E - pbiviz start for R Visuals", () => {
             let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.indexOf("Compiled with warnings") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
                     if (callbackCalled) {
                         return;
                     }
