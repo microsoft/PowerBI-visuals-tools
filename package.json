@@ -46,7 +46,7 @@
     "eslint": "5.6.1",
     "jasmine": "2.8.0",
     "jasmine-spec-reporter": "2.5.0",
-    "ps-tree": "1.1.0",
+    "ps-tree": "1.2.0",
     "request": "2.83.0",
     "tree-kill": "^1.1.0",
     "wrench": "1.5.9"
