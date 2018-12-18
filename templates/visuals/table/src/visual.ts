@@ -25,6 +25,8 @@
 */
 
 "use strict";
+import "@babel/polyfill";
+import "./../style/visual.less";
 import { select } from "d3-selection";
 import { transpose } from "d3-array";
 import { formatPrefix } from "d3-format";

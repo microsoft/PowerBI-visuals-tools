@@ -5,7 +5,7 @@
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 2017,
+        "ecmaVersion": 2018,
         "sourceType": "module"
     },
     "rules": {
@@ -221,7 +221,7 @@
                 "defaultAssignment": true
             }
         ],
-        "no-unused-expressions": "error",
+        "no-unused-expressions": "off",
         "no-use-before-define": "off",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",

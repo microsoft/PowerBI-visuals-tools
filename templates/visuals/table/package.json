@@ -2,9 +2,14 @@
   "name": "visual",
   "devDependencies": {
     "@types/d3": "5.0.0",
-    "d3": "5.5.0",
-    "powerbi-visuals-utils-dataviewutils": "2.0.1",
     "typescript": "2.8.4",
     "powerbi-visuals-api": "~2.2.0"
+  },
+  "dependencies": {
+    "@babel/polyfill": "7.0.0",
+    "@babel/runtime": "^7.2.0",
+    "@babel/runtime-corejs2": "^7.2.0",
+    "d3": "5.5.0",
+    "powerbi-visuals-utils-dataviewutils": "2.0.1"
   }
 }

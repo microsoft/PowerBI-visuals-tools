@@ -34,8 +34,8 @@ let config = require('./../../config.json');
 let CertificateTools = require('./../../lib/CertificateTools');
 
 describe("E2E - pbiviz --install-cert", () => {
-    beforeEach(() => {
-        CertificateTools.createCertFile(config, false);
+    beforeEach((done) => {
+        CertificateTools.createCertFile(config, false).then(done);
     });
 
     describe("pbiviz", () => {

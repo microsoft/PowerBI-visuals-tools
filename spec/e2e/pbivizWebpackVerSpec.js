@@ -26,10 +26,10 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
+const fs = require('fs-extra');
+const path = require('path');
 
-let FileSystem = require('../helpers/FileSystem.js');
+const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
 const semver = require('semver');
 

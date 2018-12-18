@@ -26,13 +26,13 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-let async = require('async');
-let JSZip = require('jszip');
-let _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const async = require('async');
+const JSZip = require('jszip');
+const _ = require('lodash');
 
-let FileSystem = require('../helpers/FileSystem.js');
+const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();

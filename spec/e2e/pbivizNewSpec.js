@@ -37,6 +37,7 @@ const writeMetadata = require("./utils").writeMetadata;
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
+const PBIVIZ_TIMEOUT = 15000;
 
 describe("E2E - pbiviz new", () => {
 
@@ -196,19 +197,21 @@ describe("E2E - pbiviz new", () => {
             } catch (e) {
                 fail(e);
             }
-            fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
-            (err, data) => {
-                if (err) {
-                    fail(err);
-                }
-                global.eval(data); // eslint-disable-line no-eval
-                let settings = global.powerbi.extensibility.visual.VisualSettings.getDefault();
-                expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
-                let visualInstance = new global.powerbi.extensibility.visual.Visual({ element: { innerHTML: null } });
-                visualInstance.update({ dataViews: dataViews });
-                expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
-                done();
-            });
+            setTimeout(() => {
+                fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
+                    (err, data) => {
+                        if (err) {
+                            fail(err);
+                        }
+                        global.eval(data); // eslint-disable-line no-eval
+                        let settings = global.powerbi.extensibility.visual.VisualSettings.getDefault();
+                        expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
+                        let visualInstance = new global.powerbi.extensibility.visual.Visual({ element: { innerHTML: null } });
+                        visualInstance.update({ dataViews: dataViews });
+                        expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
+                        done();
+                    });
+            }, PBIVIZ_TIMEOUT);
         });
     });
 

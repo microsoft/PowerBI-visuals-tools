@@ -26,19 +26,20 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-let async = require('async');
-let request = require('request');
+const fs = require('fs-extra');
+const path = require('path');
+const async = require('async');
+const request = require('request');
 
-let FileSystem = require('../helpers/FileSystem.js');
+const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
-//these tests can take a bit longer
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+// these tests can take a bit longer
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
+const PBIVIZ_TIMEOUT = 10000;
 
 describe("E2E - pbiviz start", () => {
     const visualName = 'visualname';
@@ -69,7 +70,7 @@ describe("E2E - pbiviz start", () => {
         let error;
 
         try {
-            FileSystem.runPbiviz('start');
+            FileSystem.runPbiviz('start', "-d");
         } catch (e) {
             error = e;
         }
@@ -90,10 +91,15 @@ describe("E2E - pbiviz start", () => {
         process.chdir(visualPath);
 
         let pbivizProc;
-        pbivizProc = FileSystem.runPbivizAsync('start');
+        pbivizProc = FileSystem.runPbivizAsync("start", "-d");
+        let callbackCalled = false;
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
-            if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                if (callbackCalled) {
+                    return;
+                }
+                callbackCalled = true;
                 //the end
                 FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
                     expect(error).toBeNull();
@@ -119,9 +125,14 @@ describe("E2E - pbiviz start", () => {
 
         let pbivizProc;
         pbivizProc = FileSystem.runPbivizAsync('start');
+        let callbackCalled = false;
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
-            if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                if (callbackCalled) {
+                    return;
+                }
+                callbackCalled = true;
                 // the end
                 FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
                     expect(error).toBeNull();
@@ -141,7 +152,7 @@ describe("E2E - pbiviz start", () => {
 
         beforeEach(() => {
             process.chdir(visualPath);
-            pbivizProc = FileSystem.runPbivizAsync('start');
+            pbivizProc = FileSystem.runPbivizAsync("start", "-d");
             pbivizProc.stderr.on('data', (data) => {
                 if (data.indexOf("For better development experience") !== -1) {
                     return;
@@ -165,9 +176,14 @@ describe("E2E - pbiviz start", () => {
         it("Should build visual and generate resources in drop folder", (done) => {
             let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
             let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
+            let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                    if (callbackCalled) {
+                        return;
+                    }
+                    callbackCalled = true;
                     // need to wait while tools generate files
                     setTimeout(() => {
                         //check files on filesystem
@@ -190,15 +206,20 @@ describe("E2E - pbiviz start", () => {
                             expect(error).toBeNull();
                             done();
                         });
-                    }, 8000);
+                    }, PBIVIZ_TIMEOUT);
                 }
             });
         });
 
         it("Should serve files from drop folder on port 8080", (done) => {
+            let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                    if (callbackCalled) {
+                        return;
+                    }
+                    callbackCalled = true;
                     // need to wait while tools generate files
                     setTimeout(() => {
                         async.each(
@@ -224,7 +245,7 @@ describe("E2E - pbiviz start", () => {
                                 });
                             }
                         );
-                    }, 8000);
+                    }, PBIVIZ_TIMEOUT);
                 }
             });
         });
@@ -241,9 +262,14 @@ describe("E2E - pbiviz start", () => {
                 return fs.readFileSync(statusPath);
             }
 
+            let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                    if (callbackCalled) {
+                        return;
+                    }
+                    callbackCalled = true;
                     expect(tsChangeCount).toBe(0);
                     expect(lessChangeCount).toBe(0);
                     expect(jsonChangeCount).toBe(0);
@@ -312,10 +338,15 @@ describe("E2E - pbiviz start", () => {
                 throw new Error(data.toString());
             }
         });
+        let callbackCalled = false;
         pbivizProc.stdout.on('data', (data) => {
             let dataStr = data.toString();
 
-            if (dataStr.indexOf("Server listening on port 3333") !== -1) {
+            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                if (callbackCalled) {
+                    return;
+                }
+                callbackCalled = true;
                 async.each(
                     assetFiles,
                     (file, next) => {
@@ -391,9 +422,14 @@ describe("E2E - pbiviz start for R Visuals", () => {
                 return fs.readFileSync(statusPath);
             }
 
+            let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
                 let dataStr = data.toString();
-                if (dataStr.indexOf("Server listening on port 8080") !== -1) {
+                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                    if (callbackCalled) {
+                        return;
+                    }
+                    callbackCalled = true;
                     expect(rChangeCount).toBe(0);
                     lastStatus = getStatus();
 
