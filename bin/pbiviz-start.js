@@ -33,6 +33,8 @@ const ConsoleWriter = require('../lib/ConsoleWriter');
 const WebPackWrap = require('../lib/WebPackWrap');
 const webpack = require("webpack");
 const CommandHelpManager = require('../lib/CommandHelpManager');
+const fs = require('fs-extra');
+const path = require('path');
 const options = process.argv;
 
 program
@@ -47,7 +49,7 @@ for (let i = 0; i < options.length; i++) {
         process.exit(0);
     }
 }
-    
+
 program.parse(options);
 
 let cwd = process.cwd();
@@ -63,23 +65,48 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         target: typeof program.target === 'undefined' ? "es5" : program.target,
         devServerPort: program.port
     })
-    .then((webpackConfig) => {
-        let compiler = webpack(webpackConfig);
-        ConsoleWriter.blank();
-        ConsoleWriter.info('Starting server...');
-        server = new WebpackDevServer(compiler, {
-            ...webpackConfig.devServer,
-            hot: true,
-            writeToDisk: program.drop
+        .then((webpackConfig) => {
+            let compiler = webpack(webpackConfig);
+            ConsoleWriter.blank();
+            ConsoleWriter.info('Starting server...');
+            // webpack dev server serves bundle from disk instead memory
+            if (program.drop) {
+                webpackConfig.devServer.before = (app) => {
+                    let setHeaders = (res) => {
+                        Object.getOwnPropertyNames(webpackConfig.devServer.headers)
+                            .forEach(property => res.header(property, webpackConfig.devServer.headers[property]));
+                    };
+                    let readFile = (file, res) => {
+                        fs.readFile(file).then(function (content) {
+                            res.write(content);
+                            res.end();
+                        });
+                    };
+                    [
+                        'visual.js`',
+                        'visual.css',
+                        'pbiviz.json'
+                    ].forEach(asset => {
+                        app.get(`${webpackConfig.devServer.publicPath}/${asset}`, function (req, res) {
+                            setHeaders(res);
+                            readFile(path.join(webpackConfig.devServer.contentBase, asset), res);
+                        });
+                    });
+                };
+            }
+            server = new WebpackDevServer(compiler, {
+                ...webpackConfig.devServer,
+                hot: !program.drop,
+                writeToDisk: program.drop
+            });
+            server.listen(webpackConfig.devServer.port, () => {
+                ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
+            });
+        })
+        .catch(e => {
+            ConsoleWriter.error(e.message);
+            process.exit(1);
         });
-        server.listen(webpackConfig.devServer.port, () => {
-            ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
-        });
-    })
-    .catch(e => {
-        ConsoleWriter.error(e.message);
-        process.exit(1);
-    });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
     process.exit(1);
