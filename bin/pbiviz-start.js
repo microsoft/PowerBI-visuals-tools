@@ -41,8 +41,7 @@ program
     .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
     .option('-p, --port [port]', 'set the port listening on')
     .option('-m, --mute', 'mute error outputs')
-    .option('-d, --drop', 'drop outputs into output folder')
-    .option('-f, --fast', 'enables transpileOnly and experimentalWatchApi options for TypescriptLoader');
+    .option('-d, --drop', 'drop outputs into output folder');
 
 for (let i = 0; i < options.length; i++) {
     if (options[i] == '--help' || options[i] == '-h') {
@@ -64,8 +63,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         minifyJS: false,
         minify: false,
         target: typeof program.target === 'undefined' ? "es5" : program.target,
-        devServerPort: program.port,
-        fast: program.fast === 'undefined' ? false : program.target
+        devServerPort: program.port
     })
         .then((webpackConfig) => {
             let compiler = webpack(webpackConfig);
