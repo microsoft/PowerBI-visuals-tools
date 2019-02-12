@@ -35,6 +35,11 @@ const webpack = require("webpack");
 const CommandHelpManager = require('../lib/CommandHelpManager');
 const fs = require('fs-extra');
 const path = require('path');
+
+let https = require('https');
+let connect = require('connect');
+let serveStatic = require('serve-static');
+
 const options = process.argv;
 
 program
@@ -65,7 +70,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         target: typeof program.target === 'undefined' ? "es5" : program.target,
         devServerPort: program.port
     })
-        .then((webpackConfig) => {
+        .then(({ webpackConfig, oldProject }) => {
             let compiler = webpack(webpackConfig);
             ConsoleWriter.blank();
             ConsoleWriter.info('Starting server...');
@@ -94,14 +99,33 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
                     });
                 };
             }
-            server = new WebpackDevServer(compiler, {
-                ...webpackConfig.devServer,
-                hot: !program.drop,
-                writeToDisk: program.drop
-            });
-            server.listen(webpackConfig.devServer.port, () => {
-                ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
-            });
+            // server old project by NodeJS server, need to skip build step
+            if (!oldProject) {
+                server = new WebpackDevServer(compiler, {
+                    ...webpackConfig.devServer,
+                    hot: !program.drop,
+                    writeToDisk: program.drop
+                });
+                server.listen(webpackConfig.devServer.port, () => {
+                    ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
+                });
+            } else {
+                const app = connect();
+                app.use((req, res, next) => {
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    next();
+                });
+                app.use(serveStatic(webpackConfig.devServer.contentBase));
+                app.use('/' + webpackConfig.output.publicPath, serveStatic(webpackConfig.devServer.contentBase));
+                server = https.createServer({
+                    pfx: webpackConfig.devServer.https.pfx,
+                    cert: webpackConfig.devServer.https.cert,
+                    key: webpackConfig.devServer.https.key,
+                    passphrase: webpackConfig.devServer.https.passphrase
+                }, app).listen(webpackConfig.devServer, () => {
+                    ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
+                });
+            }
         })
         .catch(e => {
             ConsoleWriter.error(e.message);
