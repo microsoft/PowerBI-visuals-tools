@@ -110,6 +110,20 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
                     ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
                 });
             } else {
+                compiler.watch({
+                        aggregateTimeout: 1000, // wait so long for more changes
+                        poll: false, // use polling instead of native watchers
+                        ignored: /node_modules/
+                    },
+                    function (err) {
+                        if (err) {
+                            ConsoleWriter.error('Visual rebuild failed');
+                            ConsoleWriter.error(err);
+                            return;
+                        }
+                        ConsoleWriter.info('Visual rebuild completed');
+                    }
+                );
                 const app = connect();
                 app.use((req, res, next) => {
                     res.setHeader('Access-Control-Allow-Origin', '*');

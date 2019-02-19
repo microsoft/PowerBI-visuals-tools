@@ -2,6 +2,32 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.0.12
+* Compression option for compressing visual package
+* Use script-loader to load source of visual from old project stucture
+* Fix launch webpack build triggering
+* Update powerbi-visuals-webpack-plugin to 2.1.0
+
+## 3.0.11
+* Add support to import *.css and *.less files
+* Fix reloading capabilities.json
+* Resolve issue of starting dev server after copy certs from global instance
+* Serve old visual project by nodejs server instead webpack dev server
+
+## 3.0.10
+* Resolve dev server certificates from global instance of pbiviz.
+* Replace VisualServer.js by webpack-dev-server
+
+## 3.0.9
+* Set `sourceType` to "unambiguous" for babel configuration
+
+## 3.0.8
+* Update powerbi-visuals-webpack-plugin to 2.0.0
+* Remove minification by babel (remove `babel-preset-minify` package).
+
+## 3.0.7
+* Update powerbi-visuals-webpack-plugin to 1.0.15
+
 ## 3.0.6
 * Install the latest patch of `powerbi-visuals-api`
 * The `pbiviz.json` values of visual templates overrides global template values

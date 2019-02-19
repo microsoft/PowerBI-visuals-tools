@@ -10,6 +10,32 @@
             "name": "Launch Program",
             "cwd": "${workspaceRoot}",
             "program": "${workspaceFolder}\\spec\\jasmine-runner.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "mekko",
+            "cwd": "E:\\WORKSPACE\\PowerBI\\powerbi-visuals-mekkochart-master_v1",
+            "program": "${workspaceFolder}\\bin\\pbiviz-start.js",
+            "args": [
+                "-d"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "flywheel",
+            "cwd": "E:\\WORKSPACE\\PowerBI\\powerbi-visuals-flywheel",
+            "program": "${workspaceFolder}\\bin\\pbiviz-start.js",
+            "args": [
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "visualname package",
+            "cwd": "E:\\WORKSPACE\\PowerBI\\PowerBI-visuals-tools\\spec\\.tmp\\visualname",
+            "program": "${workspaceFolder}\\bin\\pbiviz-package.js"
         }
     ]
 }

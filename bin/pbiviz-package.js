@@ -39,7 +39,8 @@ program
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
     .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
     .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
-    .option('--no-plugin', "Doesn't include a plugin declaration to the package (must be used in conjunction with --no-pbiviz and --resources flags)");
+    .option('--no-plugin', "Doesn't include a plugin declaration to the package (must be used in conjunction with --no-pbiviz and --resources flags)")
+    .option('-c, --compression <compressionLevel>', "Enables compression of visual package", /^(0|1|2|3|4|5|6|7|8|9)$/i, "6");
 
 for (let i = 0; i < options.length; i++) {
     if (options[i] == '--help' || options[i] == '-h') {
@@ -66,12 +67,16 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         generatePbiviz: program.pbiviz || false,
         minifyJS: typeof program.minify === 'undefined' ? true : program.minify,
         minify: typeof program.minify === 'undefined' ? true : program.minify,
-        target: typeof program.target === 'undefined' ? "es5" : program.target
+        target: typeof program.target === 'undefined' ? "es5" : program.target,
+        compression: typeof program.compression === 'undefined' ? 0 : program.compression
     }).then(({ webpackConfig }) => {
         let compiler = webpack(webpackConfig);
-        compiler.run((err) => {
-            if (!err) {
-                ConsoleWriter.info('Package created');
+        compiler.run(function (err, stats) {
+            if (err) {
+                ConsoleWriter.error(`Package wasn't created. ${JSON.stringify(err)}`);
+            }
+            if (stats.compilation.errors.length) {
+                ConsoleWriter.error(`Package wasn't created. ${stats.compilation.errors.length} errors found`);
             }
             process.exit(0);
         });
