@@ -36,7 +36,7 @@ import IViewport = powerbi.IViewport;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 import { VisualSettings } from "./settings";
-export default class Visual implements IVisual {
+export class Visual implements IVisual {
     private imageDiv: HTMLDivElement;
     private imageElement: HTMLImageElement;
     private settings: VisualSettings;

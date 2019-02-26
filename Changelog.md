@@ -4,7 +4,6 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 ## 3.0.12
 * Compression option for compressing visual package
-* Use script-loader to load source of visual from old project stucture
 * Fix launch webpack build triggering
 * Update powerbi-visuals-webpack-plugin to 2.1.0
 
