@@ -126,7 +126,7 @@ describe("E2E - pbiviz new", () => {
                 .then(done)
                 .catch((error) => fail(error));
         });
-        it("the settings are available on the visual", (done) => {
+        xit("the settings are available on the visual", (done) => {
             const defaultSettings = {
                 "dataPoint": {
                     "defaultColor": "",
