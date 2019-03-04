@@ -36,7 +36,7 @@ import DataView = powerbi.DataView;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 import { VisualSettings } from "./settings";
-export default class Visual implements IVisual {
+export class Visual implements IVisual {
     private target: HTMLElement;
     private updateCount: number;
     private settings: VisualSettings;

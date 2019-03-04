@@ -46,7 +46,7 @@ import { VisualViewModel, CategoryViewModel } from "./visualViewModel";
 import { visualTransform } from "./visualTransform";
 
 "use strict";
-export default class Visual implements IVisual {
+export class Visual implements IVisual {
     private target: d3.Selection<any, any, any, any>;
     private table: d3.Selection<any, any, any, any>;
     private tHead: d3.Selection<any, any, any, any>;

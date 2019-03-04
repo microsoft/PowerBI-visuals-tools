@@ -74,7 +74,7 @@ const renderVisualUpdateType: number[] = [
     VisualUpdateType.Resize + VisualUpdateType.ResizeEnd
 ];
 
-export default class Visual implements IVisual {
+export class Visual implements IVisual {
     private rootElement: HTMLElement;
     private headNodes: Node[];
     private bodyNodes: Node[];
