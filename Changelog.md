@@ -1,9 +1,13 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+## pbiviz v2.5.0 
+* Added Analytics Pane support
+Note: API v2.4.0 skipped as it does not include any public changes
 
 ## pbiviz v2.3.0
 * custom visuals now support a landing page
+
 ## pbiviz v2.2.2
 * Update package-lock.json to fix vulnerabilities
 
