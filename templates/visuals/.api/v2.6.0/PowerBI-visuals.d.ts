@@ -1461,6 +1461,7 @@ declare module powerbi.extensibility.visual {
         createLocalizationManager: () => ILocalizationManager;
         storageService: ILocalVisualStorageService;
         eventService: IVisualEventService;
+        switchFocusModeState: (on: boolean) => void;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
@@ -1470,7 +1471,8 @@ declare module powerbi.extensibility.visual {
         viewMode?: ViewMode;
         editMode?: EditMode;
         operationKind?: VisualDataChangeOperationKind;
-        jsonFilters?: IFilter[]; 
+        jsonFilters?: IFilter[];
+        isInFocus?: boolean;
     }
 
     export interface VisualConstructorOptions extends extensibility.VisualConstructorOptions {
