@@ -1,9 +1,9 @@
 {
-  "name": "visual",
+  "name": "circle-card-react",
   "scripts": {
-		"pbiviz": "pbiviz",
-		"start": "pbiviz start",
-		"package": "pbiviz package"
+    "pbiviz": "pbiviz",
+    "start": "pbiviz start",
+    "package": "pbiviz package"
   },
   "dependencies": {
     "@babel/polyfill": "7.0.0",

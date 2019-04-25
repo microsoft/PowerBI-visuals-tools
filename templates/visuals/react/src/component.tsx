@@ -33,7 +33,7 @@ export interface State {
     borderWidth?: number
 }
 
-const initialState: State = {
+export const initialState: State = {
     textLabel: "",
     textValue: "",
     size: 200
