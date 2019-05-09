@@ -9,7 +9,12 @@
             "request": "launch",
             "name": "Launch Program",
             "cwd": "${workspaceRoot}",
-            "program": "${workspaceFolder}\\spec\\jasmine-runner.js"
+            "program": "${workspaceFolder}\\bin\\pbiviz-new.js",
+            "args": [
+                "-t",
+                "circlecard",
+                "mynewsample"
+            ]
         }
     ]
 }

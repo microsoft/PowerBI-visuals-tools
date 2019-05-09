@@ -26,11 +26,13 @@
 
 "use strict";
 
-let program = require('commander');
-let VisualPackage = require('../lib/VisualPackage');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let CommandHelpManager = require('../lib/CommandHelpManager');
-let options = process.argv;
+const program = require('commander');
+const VisualPackage = require('../lib/VisualPackage');
+const ConsoleWriter = require('../lib/ConsoleWriter');
+const CommandHelpManager = require('../lib/CommandHelpManager');
+const TemplateFetcher = require('../lib/TemplateFetcher');
+const config = require('../config.json');
+const options = process.argv;
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
@@ -68,9 +70,19 @@ let generateOptions = {
     apiVersion: program.apiVersion
 };
 
-VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
-    ConsoleWriter.done('Visual creation complete');
-}).catch((e) => {
-    ConsoleWriter.error('Unable to create visual.', e);
-    process.exit(1);
-});
+
+if (config.visualTemplates[generateOptions.template]) {
+    new TemplateFetcher({
+        force: program.force,
+        templateName: generateOptions.template,
+        visualName: visualName,
+        apiVersion: program.apiVersion
+    }).fetch();
+} else {
+    VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
+        ConsoleWriter.done('Visual creation complete');
+    }).catch((e) => {
+        ConsoleWriter.error('Unable to create visual.', e);
+        process.exit(1);
+    });
+}

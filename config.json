@@ -25,5 +25,9 @@
         "certificate": "certs/PowerBICustomVisualTest_public.crt",
         "pfx": "certs/PowerBICustomVisualTest_public.pfx",
         "port": "8080"
+    },
+    "visualTemplates": {
+        "circlecard": "http://github.com/microsoft/powerbi-visuals-circlecard-react/archive/master.zip",
+        "sankey": "http://github.com/microsoft/powerbi-visuals-sankey/archive/master.zip"
     }
 }
