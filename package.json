@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -26,9 +26,9 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
-    "@babel/core": "7.1.6",
+    "@babel/core": "^7.4.3",
     "@babel/polyfill": "7.0.0",
-    "@babel/preset-env": "7.1.6",
+    "@babel/preset-env": "^7.4.3",
     "@babel/runtime": "^7.1.5",
     "@babel/runtime-corejs2": "^7.1.5",
     "async": "2.6.1",
@@ -46,10 +46,11 @@
     "jszip": "3.1.5",
     "less": "3.8.0",
     "less-loader": "4.1.0",
-    "lodash": "4.17.10",
+    "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.4.4",
     "multi-loader": "^0.1.0",
-    "powerbi-visuals-webpack-plugin": "2.1.1",
+    "powerbi-visuals-webpack-plugin": "2.1.2",
+    "request": "2.87.0",
     "script-loader": "^0.7.2",
     "serve-static": "1.13.2",
     "source-map-concat": "1.0.1",
@@ -61,16 +62,15 @@
     "uglifyjs-webpack-plugin": "1.2.7",
     "uuid": "3.3.2",
     "webpack": "^4.16.3",
-    "webpack-bundle-analyzer": "^3.0.2",
-    "webpack-dev-server": "^3.1.14",
+    "webpack-bundle-analyzer": "^3.3.2",
+    "webpack-dev-server": "^3.3.1",
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "devDependencies": {
-    "eslint": "5.10.0",
+    "eslint": "^5.16.0",
     "har-validator": "^5.1.3",
     "jasmine": "2.8.0",
     "jasmine-spec-reporter": "2.5.0",
-    "request": "2.87.0",
     "semver": "^5.6.0",
     "tree-kill": "1.2.0"
   },
