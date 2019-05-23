@@ -1,5 +1,5 @@
 declare namespace powerbi {
-    const enum VisualDataRoleKind {
+    enum VisualDataRoleKind {
         /** Indicates that the role should be bound to something that evaluates to a grouping of values. */
         Grouping = 0,
         /** Indicates that the role should be bound to something that evaluates to a single value in a scope. */
@@ -7,11 +7,11 @@ declare namespace powerbi {
         /** Indicates that the role can be bound to either Grouping or Measure. */
         GroupingOrMeasure = 2,
     }
-    const enum VisualDataChangeOperationKind {
+    enum VisualDataChangeOperationKind {
         Create = 0,
         Append = 1,
     }
-    const enum VisualUpdateType {
+    enum VisualUpdateType {
         Data = 2,
         Resize = 4,
         ViewMode = 8,
@@ -19,7 +19,7 @@ declare namespace powerbi {
         ResizeEnd = 32,
         All = 62,
     }
-    const enum VisualPermissions {
+    enum VisualPermissions {
     }
     const enum CartesianRoleKind {
         X = 0,
@@ -270,12 +270,15 @@ declare module powerbi {
 
 declare module powerbi.visuals {
     import Selector = data.Selector;
-	import SelectorsByColumn = data.SelectorsByColumn;
-
+    import SelectorsByColumn = data.SelectorsByColumn;
+    
+    export interface CustomVisualOpaqueIdentity { }
     export interface ISelectionIdBuilder {
         withCategory(categoryColumn: DataViewCategoryColumn, index: number): this;
         withSeries(seriesColumn: DataViewValueColumns, valueColumn: DataViewValueColumn | DataViewValueColumnGroup): this;
         withMeasure(measureId: string): this;
+        withMatrixNode(matrixNode: DataViewMatrixNode, levels: DataViewHierarchyLevel[]): this;
+        withTable(table: DataViewTable, rowIndex: number): this;
         createSelectionId(): ISelectionId;
     }
     
@@ -451,7 +454,7 @@ declare module powerbi {
 
     export interface DataViewValueColumnGroup {
         values: DataViewValueColumn[];
-        identity?: data.DataRepetitionSelector;
+        identity?: visuals.CustomVisualOpaqueIdentity;
 
         /** The data repetition objects. */
         objects?: DataViewObjects;
@@ -462,7 +465,7 @@ declare module powerbi {
     export interface DataViewValueColumn extends DataViewCategoricalColumn {
         values: PrimitiveValue[];
         highlights?: PrimitiveValue[];
-        identity?: data.DataRepetitionSelector;
+        identity?: visuals.CustomVisualOpaqueIdentity;
     }
 
     // NOTE: The following is needed for backwards compatibility and should be deprecated.  Callers should use
@@ -472,7 +475,7 @@ declare module powerbi {
 
     export interface DataViewCategoryColumn extends DataViewCategoricalColumn {
         values: PrimitiveValue[];
-        identity?: data.DataRepetitionSelector[];
+        identity?: visuals.CustomVisualOpaqueIdentity[];
 
         /** The set of expressions that define the identity for instances of the category.  This must match items in the DataViewScopeIdentity in the identity. */
         identityFields?: data.ISQExpr[];
@@ -510,7 +513,7 @@ declare module powerbi {
         values?: { [id: number]: DataViewTreeNodeValue };
 
         children?: DataViewTreeNode[];
-        identity?: data.DataRepetitionSelector;
+        identity?: visuals.CustomVisualOpaqueIdentity;
 
         /** The data repetition objects. */
         objects?: DataViewObjects;
@@ -534,7 +537,7 @@ declare module powerbi {
     export interface DataViewTable {
         columns: DataViewMetadataColumn[];
 
-        identity?: data.DataRepetitionSelector[];
+        identity?: visuals.CustomVisualOpaqueIdentity[];
 
         /** The set of expressions that define the identity for rows of the table.  This must match items in the DataViewScopeIdentity in the identity. */
         identityFields?: data.ISQExpr[];
@@ -733,8 +736,6 @@ declare module powerbi.data {
     export interface Selector { }
 
     export interface SelectorsByColumn { }
-
-    export interface DataRepetitionSelector { }	
 
     export interface ISemanticFilter { }
 
@@ -1251,6 +1252,8 @@ declare module powerbi.extensibility {
         withCategory(categoryColumn: DataViewCategoryColumn, index: number): this;
         withSeries(seriesColumn: DataViewValueColumns, valueColumn: DataViewValueColumn | DataViewValueColumnGroup): this;
         withMeasure(measureId: string): this;
+        withMatrixNode(matrixNode: DataViewMatrixNode, levels: DataViewHierarchyLevel[]): this;
+        withTable(table: DataViewTable, rowIndex: number): this;
         createSelectionId(): ISelectionId;
     }
 }
