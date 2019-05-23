@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v2.3.0",
+    "PBI_API_VERSION": "v2.6.0",
     "type": "object",
     "properties": {
         "dataRoles": {
@@ -51,6 +51,10 @@
         "supportsLandingPage": {
             "type": "boolean",
             "description": "Indicates whether the visual supports a landing page"
+        },
+        "subtotals": {
+            "description": "Specifies the subtotal customizations applied in the customizeQuery method",
+            "$ref": "#/definitions/subtotals"
         }
     },
     "additionalProperties": false,
@@ -1187,6 +1191,128 @@
                         "operations"
                     ]
                 }
+            ]
+        },
+        "subtotals": {
+            "type": "object",
+            "description": "Specifies the subtotal request customizations applied to the outgoing data query",
+            "properties": {
+                "matrix": {
+                    "description": "Defines the subtotal customizations of the outgoing data query of a matrix-dataview visual",
+                    "$ref": "#/definitions/subtotals.matrix"
+                }
+            },
+            "requires": [
+                "matrix"
+            ]
+        },
+        "subtotals.matrix": {
+            "type": "object",
+            "description": "Specifies the subtotal customizations of the outgoing data query of a matrix-dataview visual",
+            "properties": {
+                "rowSubtotals": {
+                    "type": "object",
+                    "description": "Indicates if the subtotal data should be requested for all fields in the rows field well",
+                    "properties": {
+                        "propertyIdentifier": {
+                            "type": "object",
+                            "properties": {
+                                "objectName": {
+                                    "type": "string"
+                                },
+                                "propertyName": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "defaultValue": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "rowSubtotalsPerLevel": {
+                    "type": "object",
+                    "description": "Indicates if the subtotal data can be toggled for individual fields in the rows field well",
+                    "properties": {
+                        "propertyIdentifier": {
+                            "type": "object",
+                            "properties": {
+                                "objectName": {
+                                    "type": "string"
+                                },
+                                "propertyName": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "defaultValue": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "columnSubtotals": {
+                    "type": "object",
+                    "description": "Indicates if the subtotal data should be requested for all fields in the columns field well",
+                    "properties": {
+                        "propertyIdentifier": {
+                            "type": "object",
+                            "properties": {
+                                "objectName": {
+                                    "type": "string"
+                                },
+                                "propertyName": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "defaultValue": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "columnSubtotalsPerLevel": {
+                    "type": "object",
+                    "description": "Indicates if the subtotal data can be toggled for individual fields in the columns field well",
+                    "properties": {
+                        "propertyIdentifier": {
+                            "type": "object",
+                            "properties": {
+                                "objectName": {
+                                    "type": "string"
+                                },
+                                "propertyName": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "defaultValue": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "levelSubtotalEnabled": {
+                    "type": "object",
+                    "description": "Unlike all other properites, this property is applied to individual rows/columns. The property indicates if the subtotals are requested for the row/column",
+                    "properties": {
+                        "propertyIdentifier": {
+                            "type": "object",
+                            "properties": {
+                                "objectName": {
+                                    "type": "string"
+                                },
+                                "propertyName": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "defaultValue": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            },
+            "requires": [
+                "matrix"
             ]
         }
     }
