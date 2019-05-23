@@ -662,6 +662,10 @@
                             "type": "string",
                             "description": "The localization key for the displayed name in the stringResourced file"
                         },
+                        "objectCategory": {
+                            "type": "number",
+                            "description": "What aspect of the visual this object controlls (1 = Formatting, 2 = Analytics). Formatting: look & feel, colors, axes, labels etc. Analytics: forcasts, trendlines, reference lines and shapes etc."
+                        },
                         "description": {
                             "type": "string",
                             "description": "A description of this object shown to the user as a tooltip"
