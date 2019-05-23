@@ -1,5 +1,5 @@
 declare namespace powerbi {
-    enum VisualDataRoleKind {
+    const enum VisualDataRoleKind {
         /** Indicates that the role should be bound to something that evaluates to a grouping of values. */
         Grouping = 0,
         /** Indicates that the role should be bound to something that evaluates to a single value in a scope. */
@@ -7,11 +7,11 @@ declare namespace powerbi {
         /** Indicates that the role can be bound to either Grouping or Measure. */
         GroupingOrMeasure = 2,
     }
-    enum VisualDataChangeOperationKind {
+    const enum VisualDataChangeOperationKind {
         Create = 0,
         Append = 1,
     }
-    enum VisualUpdateType {
+    const enum VisualUpdateType {
         Data = 2,
         Resize = 4,
         ViewMode = 8,
@@ -19,7 +19,7 @@ declare namespace powerbi {
         ResizeEnd = 32,
         All = 62,
     }
-    enum VisualPermissions {
+    const enum VisualPermissions {
     }
     const enum CartesianRoleKind {
         X = 0,
