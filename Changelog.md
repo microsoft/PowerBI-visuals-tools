@@ -2,7 +2,7 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 3.1.0
+## pbiviz v3.1.0
 * Release. Now Webpack is default builder for Custom Visuals.
 * What’s new in powerbi-visuals-tools v3?
 	* TypeScript v3.0.1 by default
@@ -12,53 +12,66 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 	* Improved API performance
 * For the full details please check [this article](https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/migrating-to-powerbi-visuals-tools-3-0/). 
 
-## 3.0.12
+## pbiviz v2.5.0 
+* Added Analytics Pane support
+Note: API v2.4.0 skipped as it does not include any public changes
+
+## pbiviz v2.3.0
+* custom visuals now support a landing page
+
+## pbiviz v2.2.2
+* Update package-lock.json to fix vulnerabilities
+
+## pbiviz v2.2.1
+* Deprecated `applySelectionFilter` from `ISelectionManager`
+
+## pbiviz v3.0.12 Beta
 * Compression option for compressing visual package
 * Fix launch webpack build triggering
 * Update powerbi-visuals-webpack-plugin to 2.1.0
 
-## 3.0.11
+## pbiviz v3.0.11 Beta
 * Add support to import *.css and *.less files
 * Fix reloading capabilities.json
 * Resolve issue of starting dev server after copy certs from global instance
 * Serve old visual project by nodejs server instead webpack dev server
 
-## 3.0.10
+## pbiviz v3.0.10 Beta
 * Resolve dev server certificates from global instance of pbiviz.
 * Replace VisualServer.js by webpack-dev-server
 
-## 3.0.9
+## pbiviz v3.0.9 Beta
 * Set `sourceType` to "unambiguous" for babel configuration
 
-## 3.0.8
+## pbiviz v3.0.8 Beta
 * Update powerbi-visuals-webpack-plugin to 2.0.0
 * Remove minification by babel (remove `babel-preset-minify` package).
 
-## 3.0.7
+## pbiviz v3.0.7 Beta
 * Update powerbi-visuals-webpack-plugin to 1.0.15
 
-## 3.0.6
+## pbiviz v3.0.6 Beta
 * Install the latest patch of `powerbi-visuals-api`
 * The `pbiviz.json` values of visual templates overrides global template values
 * Remove unnecessary `setApiVersion` and `updateApi` from `VisualGenerator`
 * Fix including styles into visual package
 * Update powerbi-visuals-plugin to version 1.0.13
 
-## pbiviz 3.0.5
+## pbiviz v3.0.5 Beta
 * Prevent using define function in context of module
 
-## pbiviz 3.0.4
+## pbiviz v3.0.4 Beta
 * Update powerbi-visuals-plugin to version 1.0.11
 
-## pbiviz 3.0.3
+## pbiviz v3.0.3 Beta
 * Update powerbi-visuals-plugin to version 1.0.10
 * Remove jasmine-node package
 
-## pbiviz v3.0.2
+## pbiviz v3.0.2 Beta
 * Tools observe changes in `pbiviz.json` and `capabilities.json` files and rebuild the visual.
 * `webpack-visualizer-plugin` replaced by `webpack-bundle-analyzer` to visualize the webpack bundle stats.
 
-## pbiviz v3.0.1
+## pbiviz v3.0.1 Beta
 * Webpack based tools
 
 ## pbiviz v2.0.2 
