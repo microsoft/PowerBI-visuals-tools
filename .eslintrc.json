@@ -5,7 +5,7 @@
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 2017,
+        "ecmaVersion": 2018,
         "sourceType": "module"
     },
     "rules": {
@@ -132,7 +132,7 @@
         "newline-per-chained-call": "off",
         "no-alert": "error",
         "no-array-constructor": "error",
-        "no-await-in-loop": "error",
+        "no-await-in-loop": "off",
         "no-bitwise": "error",
         "no-buffer-constructor": "error",
         "no-caller": "error",
@@ -142,7 +142,7 @@
         "no-div-regex": "error",
         "no-duplicate-imports": "error",
         "no-else-return": "error",
-        "no-empty-function": "off",
+        "no-empty-function": "error",
         "no-eq-null": "error",
         "no-eval": "error",
         "no-extend-native": "error",
@@ -162,7 +162,7 @@
         "no-lonely-if": "error",
         "no-loop-func": "error",
         "no-magic-numbers": "off",
-        "no-mixed-operators": "off",
+        "no-mixed-operators": "error",
         "no-mixed-requires": "error",
         "no-multi-assign": "error",
         "no-multi-spaces": "off",
@@ -221,7 +221,7 @@
                 "defaultAssignment": true
             }
         ],
-        "no-unused-expressions": "error",
+        "no-unused-expressions": "off",
         "no-use-before-define": "off",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
@@ -264,7 +264,7 @@
         "quote-props": "off",
         "quotes": "off",
         "radix": "error",
-        "require-await": "error",
+        "require-await": "warn",
         "require-jsdoc": "off",
         "rest-spread-spacing": "error",
         "semi": "error",

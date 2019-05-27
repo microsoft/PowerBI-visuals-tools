@@ -1,11 +1,12 @@
-module powerbi.visuals.plugins {
-    export var <%= pluginName %> = {
-        name: '<%= pluginName %>',
-        displayName: '<%= visualDisplayName %>',
-        class: '<%= visualClass %>',
-        version: '<%= visualVersion %>',
-        apiVersion: '<%= apiVersion %>',
-        create: (options: extensibility.visual.VisualConstructorOptions) => new powerbi.extensibility.visual.<%= visualGuid %>.<%= visualClass %>(options),
-        custom: true
-    };
+declare var powerbi;
+powerbi.visuals = powerbi.visuals || {};
+powerbi.visuals.plugins = powerbi.visuals.plugins || {};
+powerbi.visuals.plugins["<%= pluginName %>"] = {
+    name: '<%= pluginName %>',
+    displayName: '<%= visualDisplayName %>',
+    class: '<%= visualClass %>',
+    version: '<%= visualVersion %>',
+    apiVersion: '<%= apiVersion %>',
+    create: (options: extensibility.visual.VisualConstructorOptions) => new powerbi.extensibility.visual.<%= visualClass %>(options),
+    custom: true
 }

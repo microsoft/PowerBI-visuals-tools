@@ -28,10 +28,9 @@
 
 let Jasmine = require('jasmine');
 let SpecReporter = require('jasmine-spec-reporter');
-let noop = () => { };
 
 let jrunner = new Jasmine();
-jrunner.configureDefaultReporter({ print: noop });
+jrunner.configureDefaultReporter({ print: () => {} }); // eslint-disable-line no-empty-function
 jasmine.getEnv().addReporter(new SpecReporter());
 jrunner.loadConfigFile();
 jrunner.execute();

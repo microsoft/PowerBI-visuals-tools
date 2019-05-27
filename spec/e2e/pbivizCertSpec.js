@@ -29,22 +29,17 @@
 let fs = require('fs-extra');
 let path = require('path');
 console.log(__dirname);
-let confPath = '../../config.json';
-let config = require(confPath);
+let config = require('./../../config.json');
 
-let FileSystem = require('../helpers/FileSystem.js');
+let CertificateTools = require('./../../lib/CertificateTools');
 
-const tempPath = FileSystem.getTempPath();
-
-describe("E2E - pbiviz --create-cert", () => {
-    beforeEach(() => {
-        FileSystem.resetTempDirectory();
-        process.chdir(tempPath);
-        FileSystem.runPbiviz('', '--create-cert');
+describe("E2E - pbiviz --install-cert", () => {
+    beforeEach((done) => {
+        CertificateTools.createCertFile(config, false).then(done);
     });
 
     describe("pbiviz", () => {
-        it("pbiviz --create-cert command should generate certificate", (done) => {
+        it("pbiviz --install-cert command should generate certificate", (done) => {
             let certPath = path.join(__dirname, "../../", config.server.certificate);
             let keyPath = path.join(__dirname, "../../", config.server.privateKey);
             let pfxPath = path.join(__dirname, "../../", config.server.pfx);
@@ -52,7 +47,7 @@ describe("E2E - pbiviz --create-cert", () => {
             let keyExists = fs.existsSync(keyPath);
             let pfxExists = fs.existsSync(pfxPath);
 
-            let result = certExists && keyExists || pfxExists;
+            let result = (certExists && keyExists) || pfxExists;
 
             expect(result).toBeTruthy();
             done();

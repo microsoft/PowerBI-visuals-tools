@@ -26,17 +26,27 @@
 
 "use strict";
 
-let program = require('commander');
-let VisualPackage = require('../lib/VisualPackage');
-let VisualServer = require('../lib/VisualServer');
-let VisualBuilder = require('../lib/VisualBuilder');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let CommandHelpManager = require('../lib/CommandHelpManager');
-let options = process.argv;
+const program = require('commander');
+const VisualPackage = require('../lib/VisualPackage');
+const WebpackDevServer = require("webpack-dev-server");
+const ConsoleWriter = require('../lib/ConsoleWriter');
+const WebPackWrap = require('../lib/WebPackWrap');
+const webpack = require("webpack");
+const CommandHelpManager = require('../lib/CommandHelpManager');
+const fs = require('fs-extra');
+const path = require('path');
+
+let https = require('https');
+let connect = require('connect');
+let serveStatic = require('serve-static');
+
+const options = process.argv;
 
 program
+    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
     .option('-p, --port [port]', 'set the port listening on')
-    .option('-m, --mute', 'mute error outputs');
+    .option('-m, --mute', 'mute error outputs')
+    .option('-d, --drop', 'drop outputs into output folder');
 
 for (let i = 0; i < options.length; i++) {
     if (options[i] == '--help' || options[i] == '-h') {
@@ -44,56 +54,97 @@ for (let i = 0; i < options.length; i++) {
         process.exit(0);
     }
 }
-    
+
 program.parse(options);
 
 let cwd = process.cwd();
-let server, builder;
+let server;
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-
-    ConsoleWriter.info('Building visual...');
-    let buildOptions = {
-        namespace: visualPackage.config.visual.guid + '_DEBUG',
-        minify: false
-    };
-    builder = new VisualBuilder(visualPackage, buildOptions);
-    builder.build().then(() => {
-        ConsoleWriter.done('build complete');
-
-        builder.startWatcher().then(() => {
-            builder.on('watch_change', changeType => {
-                ConsoleWriter.blank();
-                ConsoleWriter.info(changeType + ' change detected. Rebuilding...');
-            });
-            builder.on('watch_complete', changeType => {
-                ConsoleWriter.done(changeType + ' build complete');
-            });
-            builder.on('watch_error', errors => {
-                if (!program.mute) {
-                    ConsoleWriter.beep();
-                }
-                ConsoleWriter.formattedErrors(errors);
-            });
-
+    new WebPackWrap().applyWebpackConfig(visualPackage, {
+        devMode: true,
+        generateResources: true,
+        generatePbiviz: false,
+        minifyJS: false,
+        minify: false,
+        target: typeof program.target === 'undefined' ? "es5" : program.target,
+        devServerPort: program.port
+    })
+        .then(({ webpackConfig, oldProject }) => {
+            let compiler = webpack(webpackConfig);
             ConsoleWriter.blank();
             ConsoleWriter.info('Starting server...');
-            server = new VisualServer(visualPackage, program.port);
-            server.start().then(() => {
-                ConsoleWriter.info('Server listening on port ' + server.port + '.');
-            }).catch(e => {
-                ConsoleWriter.error('SERVER ERROR', e);
-                process.exit(1);
-            });
+            // webpack dev server serves bundle from disk instead memory
+            if (program.drop) {
+                webpackConfig.devServer.before = (app) => {
+                    let setHeaders = (res) => {
+                        Object.getOwnPropertyNames(webpackConfig.devServer.headers)
+                            .forEach(property => res.header(property, webpackConfig.devServer.headers[property]));
+                    };
+                    let readFile = (file, res) => {
+                        fs.readFile(file).then(function (content) {
+                            res.write(content);
+                            res.end();
+                        });
+                    };
+                    [
+                        'visual.js`',
+                        'visual.css',
+                        'pbiviz.json'
+                    ].forEach(asset => {
+                        app.get(`${webpackConfig.devServer.publicPath}/${asset}`, function (req, res) {
+                            setHeaders(res);
+                            readFile(path.join(webpackConfig.devServer.contentBase, asset), res);
+                        });
+                    });
+                };
+            }
+            // server old project by NodeJS server, need to skip build step
+            if (!oldProject) {
+                server = new WebpackDevServer(compiler, {
+                    ...webpackConfig.devServer,
+                    hot: !program.drop,
+                    writeToDisk: program.drop
+                });
+                server.listen(webpackConfig.devServer.port, () => {
+                    ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
+                });
+            } else {
+                compiler.watch({
+                        aggregateTimeout: 1000, // wait so long for more changes
+                        poll: false, // use polling instead of native watchers
+                        ignored: /node_modules/
+                    },
+                    function (err) {
+                        if (err) {
+                            ConsoleWriter.error('Visual rebuild failed');
+                            ConsoleWriter.error(err);
+                            return;
+                        }
+                        ConsoleWriter.info('Visual rebuild completed');
+                    }
+                );
+                const app = connect();
+                app.use((req, res, next) => {
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    next();
+                });
+                app.use(serveStatic(webpackConfig.devServer.contentBase));
+                app.use('/' + webpackConfig.output.publicPath, serveStatic(webpackConfig.devServer.contentBase));
+                server = https.createServer({
+                    pfx: webpackConfig.devServer.https.pfx,
+                    cert: webpackConfig.devServer.https.cert,
+                    key: webpackConfig.devServer.https.key,
+                    passphrase: webpackConfig.devServer.https.passphrase
+                }, app).listen(webpackConfig.devServer, () => {
+                    ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
+                });
+            }
+        })
+        .catch(e => {
+            ConsoleWriter.error(e.message);
+            process.exit(1);
         });
-
-    }).catch(e => {
-        if (!program.mute) {
-            ConsoleWriter.beep();
-        }
-        ConsoleWriter.formattedErrors(e);
-        process.exit(1);
-    });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
     process.exit(1);
@@ -104,14 +155,11 @@ function stopServer() {
     ConsoleWriter.blank();
     ConsoleWriter.info("Stopping server...");
     if (server) {
-        server.stop();
+        server.close();
         server = null;
-    }
-    if (builder) {
-        builder.stopWatcher();
-        builder = null;
     }
 }
 
 process.on('SIGINT', stopServer);
 process.on('SIGTERM', stopServer);
+

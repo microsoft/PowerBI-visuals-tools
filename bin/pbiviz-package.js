@@ -29,17 +29,18 @@
 let program = require('commander');
 let VisualPackage = require('../lib/VisualPackage');
 let ConsoleWriter = require('../lib/ConsoleWriter');
-let PbivizBuilder = require('../lib/PbivizBuilder');
-let VisualBuilder = require('../lib/VisualBuilder');
+let WebPackWrap = require('../lib/WebPackWrap');
+const webpack = require("webpack");
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
 program
+    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
     .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
     .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
     .option('--no-plugin', "Doesn't include a plugin declaration to the package (must be used in conjunction with --no-pbiviz and --resources flags)")
-    ;
+    .option('-c, --compression <compressionLevel>', "Enables compression of visual package", /^(0|1|2|3|4|5|6|7|8|9)$/i, "6");
 
 for (let i = 0; i < options.length; i++) {
     if (options[i] == '--help' || options[i] == '-h') {
@@ -60,34 +61,53 @@ if (!program.pbiviz && !program.resources) {
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     ConsoleWriter.info('Building visual...');
 
-    let buildOptions = {
-        minify: program.minify,
-        plugin: program.plugin || program.pbiviz
-    };
-
-    let builder = new VisualBuilder(visualPackage, buildOptions);
-
-    builder.build().then(() => {
-        ConsoleWriter.done('build complete');
-        ConsoleWriter.blank();
-        ConsoleWriter.info('Building visual...');
-
-        let packager = new PbivizBuilder(visualPackage, {
-            resources: program.resources,
-            pbiviz: program.pbiviz
-        });
-
-        packager.build().then(() => {
-            ConsoleWriter.done('packaging complete');
-        }).catch(e => {
-            ConsoleWriter.error('PACKAGE ERROR', e);
-            process.exit(1);
+    new WebPackWrap().applyWebpackConfig(visualPackage, {
+        devMode: false,
+        generateResources: program.resources || false,
+        generatePbiviz: program.pbiviz || false,
+        minifyJS: typeof program.minify === 'undefined' ? true : program.minify,
+        minify: typeof program.minify === 'undefined' ? true : program.minify,
+        target: typeof program.target === 'undefined' ? "es5" : program.target,
+        compression: typeof program.compression === 'undefined' ? 0 : program.compression
+    }).then(({ webpackConfig }) => {
+        let compiler = webpack(webpackConfig);
+        compiler.run(function (err, stats) {
+            if (err) {
+                ConsoleWriter.error(`Package wasn't created. ${JSON.stringify(err)}`);
+            }
+            if (stats.compilation.errors.length) {
+                ConsoleWriter.error(`Package wasn't created. ${stats.compilation.errors.length} errors found`);
+            }
+            displayCertificationRules();
+            process.exit(0);
         });
     }).catch(e => {
-        ConsoleWriter.formattedErrors(e);
+        ConsoleWriter.error(e.message);
         process.exit(1);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
     process.exit(1);
 });
+
+function displayCertificationRules() {
+    ConsoleWriter.blank();
+    ConsoleWriter.warn("Please, make sure that the visual source code matches to requirements of certification:");
+    ConsoleWriter.blank();
+    ConsoleWriter.info("Visual must use API v2.5 and above");
+    ConsoleWriter.info("The project repository must:");
+    ConsoleWriter.info("Include package.json and package-lock.json;");
+    ConsoleWriter.info("Not include node_modules folder");
+    ConsoleWriter.info("Run npm install expect no errors");
+    ConsoleWriter.info("Run pbiviz package expect no errors");
+    ConsoleWriter.info("The compiled package of the Custom Visual should match submitted package.");
+    ConsoleWriter.info("npm audit command must not return any alerts with high or moderate level.");
+    ConsoleWriter.info("The project must include Tslint from Microsoft with no overridden configuration, and this command shouldn’t return any tslint errors.");
+    ConsoleWriter.info("https://www.npmjs.com/package/tslint-microsoft-contrib");
+    ConsoleWriter.info("Ensure no arbitrary/dynamic code is run (bad: eval(), unsafe use of settimeout(), requestAnimationFrame(), setinterval(some function with user input).. running user input/data etc.)");
+    ConsoleWriter.info("Ensure DOM is manipulated safely (bad: innerHTML, D3.html(<some user/data input>), unsanitized user input/data directly added to DOM, etc.)");
+    ConsoleWriter.info("Ensure no js errors/exceptions in browser console for any input data. As test dataset please use this sample report");
+    ConsoleWriter.blank();
+    ConsoleWriter.info("Full description of certification requirements you can find in documentation:");
+    ConsoleWriter.info("https://docs.microsoft.com/en-us/power-bi/power-bi-custom-visuals-certified#certification-requirements");
+}

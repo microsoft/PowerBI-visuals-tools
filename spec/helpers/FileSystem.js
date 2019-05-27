@@ -113,7 +113,7 @@ class FileSystem {
      * @param {boolean} [verbose = false] - enables verbose output
      */
     static runPbiviz(command, args, flags, verbose) {
-        let opts = verbose ? null : { stdio: [] };
+        let opts = verbose ? undefined : { stdio: [] }; // eslint-disable-line no-undefined
 
         flags = flags ? ' ' + flags : '';
         args = args ? ' ' + args : '';

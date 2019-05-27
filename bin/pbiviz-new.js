@@ -26,12 +26,13 @@
 
 "use strict";
 
-let program = require('commander');
-let VisualPackage = require('../lib/VisualPackage');
-let VisualGenerator = require('../lib/VisualGenerator');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let CommandHelpManager = require('../lib/CommandHelpManager');
-let options = process.argv;
+const program = require('commander');
+const VisualPackage = require('../lib/VisualPackage');
+const ConsoleWriter = require('../lib/ConsoleWriter');
+const CommandHelpManager = require('../lib/CommandHelpManager');
+const TemplateFetcher = require('../lib/TemplateFetcher');
+const config = require('../config.json');
+const options = process.argv;
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
@@ -54,14 +55,6 @@ if (!args || args.length < 1) {
     process.exit(1);
 }
 
-//pre-check API version before we create anything
-if (program.apiVersion) {
-    if (!VisualGenerator.checkApiVersion(program.apiVersion)) {
-        ConsoleWriter.error('Invalid API version: ' + program.apiVersion);
-        process.exit(1);
-    }
-}
-
 let visualName = args.join(' ');
 let cwd = process.cwd();
 
@@ -77,9 +70,19 @@ let generateOptions = {
     apiVersion: program.apiVersion
 };
 
-VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
-    ConsoleWriter.done('Visual creation complete');
-}).catch((e) => {
-    ConsoleWriter.error('Unable to create visual.', e);
-    process.exit(1);
-});
+
+if (config.visualTemplates[generateOptions.template]) {
+    new TemplateFetcher({
+        force: program.force,
+        templateName: generateOptions.template,
+        visualName: visualName,
+        apiVersion: program.apiVersion
+    }).fetch();
+} else {
+    VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
+        ConsoleWriter.done('Visual creation complete');
+    }).catch((e) => {
+        ConsoleWriter.error('Unable to create visual.', e);
+        process.exit(1);
+    });
+}

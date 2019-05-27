@@ -270,7 +270,7 @@ declare module powerbi {
 
 declare module powerbi.visuals {
     import Selector = data.Selector;
-	import SelectorsByColumn = data.SelectorsByColumn;
+    import SelectorsByColumn = data.SelectorsByColumn;
 
     export interface ISelectionIdBuilder {
         withCategory(categoryColumn: DataViewCategoryColumn, index: number): this;
@@ -761,8 +761,8 @@ declare module powerbi.data {
         DataViewScopeWildcard |
         DataViewRoleWildcard |
         DataViewScopeTotal;
-		
-	export interface SelectorsByColumn { }
+        
+    export interface SelectorsByColumn { }
 }
 ﻿
 
