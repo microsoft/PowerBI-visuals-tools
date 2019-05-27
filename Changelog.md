@@ -5,12 +5,12 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 ## 3.1.0
 * Release. Now Webpack is default builder for Custom Visuals.
 * What’s new in powerbi-visuals-tools v3?
-	• TypeScript v3.0.1 by default
-	• ES6 Modules supported
-	• New versions of D3v5 and other external libraries are supported
-	• Reduced package size
-	• Improved API performance
-    For the full details please check [this article](https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/migrating-to-powerbi-visuals-tools-3-0/). 
+	* TypeScript v3.0.1 by default
+	* ES6 Modules supported
+	* New versions of D3v5 and other external libraries are supported
+	* Reduced package size
+	* Improved API performance
+* For the full details please check [this article](https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/migrating-to-powerbi-visuals-tools-3-0/). 
 
 ## 3.0.12
 * Compression option for compressing visual package
