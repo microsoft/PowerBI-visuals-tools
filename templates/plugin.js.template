@@ -1,0 +1,31 @@
+var powerbi;
+(function (powerbi) {
+    var visuals;
+    (function (visuals) {
+        var plugins;
+        (function (plugins) {
+            plugins.<%= pluginName %> = {
+                name: '<%= pluginName %>',
+                displayName: '<%= visualDisplayName %>',
+                class: '<%= visualClass %>',
+                version: '<%= visualVersion %>',
+                apiVersion: '<%= apiVersion %>',
+                create: function (options) {
+                    if (CustomVisual &&
+                        CustomVisual.default &&
+                        CustomVisual.default.extensibility &&
+                        CustomVisual.default.extensibility.visual &&
+                        CustomVisual.default.extensibility.visual.<%= visualClass %>) {
+                        // for support visuals inside 
+                        return new CustomVisual.default.extensibility.visual.<%= visualClass %>(options);
+                    } else if (CustomVisual.default) {
+                        return new CustomVisual.default(options);
+                    } else {
+                        console.error('Visual instance not found');
+                    }
+                },
+                custom: true
+            };
+        })(plugins = visuals.plugins || (visuals.plugins = {}));
+    })(visuals = powerbi.visuals || (powerbi.visuals = {}));
+})(powerbi || (powerbi = {}));

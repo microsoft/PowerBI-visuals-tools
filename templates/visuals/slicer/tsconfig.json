@@ -1,17 +1,19 @@
 {
     "compilerOptions": {
-        "allowJs": true,
+        "allowJs": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "ES5",
+        "target": "es6",
         "sourceMap": true,
-        "out": "./.tmp/build/visual.js"
+        "outDir": "./.tmp/build/",
+        "moduleResolution": "node",
+        "declaration": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ]
     },
     "files": [
-        ".api/v2.6.0/PowerBI-visuals.d.ts",
-        "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.d.ts",
-		"node_modules/powerbi-models/dist/models-noexports.d.ts",				
-        "src/settings.ts",
-        "src/visual.ts"
+        "./src/visual.ts"
     ]
 }

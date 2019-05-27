@@ -1,39 +1,77 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
-## pbiviz v2.5.0 
-* Added Analytics Pane support
-Note: API v2.4.0 skipped as it does not include any public changes
 
-## pbiviz v2.3.0
-* custom visuals now support a landing page
+## 3.1.0
+* Release. Now Webpack is default builder for Custom Visuals.
+* What’s new in powerbi-visuals-tools v3?
+	• TypeScript v3.0.1 by default
+	• ES6 Modules supported
+	• New versions of D3v5 and other external libraries are supported
+	• Reduced package size
+	• Improved API performance
+    For the full details please check [this article](https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/migrating-to-powerbi-visuals-tools-3-0/). 
 
-## pbiviz v2.2.2
-* Update package-lock.json to fix vulnerabilities
+## 3.0.12
+* Compression option for compressing visual package
+* Fix launch webpack build triggering
+* Update powerbi-visuals-webpack-plugin to 2.1.0
 
-## pbiviz v2.2.1
-* Deprecated `applySelectionFilter` from `ISelectionManager`
+## 3.0.11
+* Add support to import *.css and *.less files
+* Fix reloading capabilities.json
+* Resolve issue of starting dev server after copy certs from global instance
+* Serve old visual project by nodejs server instead webpack dev server
 
-## pbiviz v2.2.0
-* Custom visuals now support context menu
+## 3.0.10
+* Resolve dev server certificates from global instance of pbiviz.
+* Replace VisualServer.js by webpack-dev-server
 
-## pibviz v2.1.2
+## 3.0.9
+* Set `sourceType` to "unambiguous" for babel configuration
+
+## 3.0.8
+* Update powerbi-visuals-webpack-plugin to 2.0.0
+* Remove minification by babel (remove `babel-preset-minify` package).
+
+## 3.0.7
+* Update powerbi-visuals-webpack-plugin to 1.0.15
+
+## 3.0.6
+* Install the latest patch of `powerbi-visuals-api`
+* The `pbiviz.json` values of visual templates overrides global template values
+* Remove unnecessary `setApiVersion` and `updateApi` from `VisualGenerator`
+* Fix including styles into visual package
+* Update powerbi-visuals-plugin to version 1.0.13
+
+## pbiviz 3.0.5
+* Prevent using define function in context of module
+
+## pbiviz 3.0.4
+* Update powerbi-visuals-plugin to version 1.0.11
+
+## pbiviz 3.0.3
+* Update powerbi-visuals-plugin to version 1.0.10
 * Remove jasmine-node package
 
-## pibviz v2.1.1
-* Fix vulnerabilities
+## pbiviz v3.0.2
+* Tools observe changes in `pbiviz.json` and `capabilities.json` files and rebuild the visual.
+* `webpack-visualizer-plugin` replaced by `webpack-bundle-analyzer` to visualize the webpack bundle stats.
 
-## pibviz v2.1.0
-* use Custom Visuals Selection id's instead of old Selection id's 
-* remove Semantic Query dependency inside the iFrame
-* Serialize DataView and remove multiple DataView types
+## pbiviz v3.0.1
+* Webpack based tools
 
-## pbiviz v1.13.1
-* Added support of parameter `supportsSynchronizingFilterState`
-* Added support of parameter `filterState` for properties that makes property a part of filtration model
+## pbiviz v2.0.2 
+* Skip precompilation for the visual with ES6 modules
 
-## pbiviz v1.13.0
-* Expanded `host.colorPalette` now expose a boolean `isHighContrast` flag and several non-data colors (including `foreground`, `foregroundSelected`, `background` and `hyperlink` all of which are required for high-contrast accessibility support)
+## pbiviz v2.0.1
+* Update package.json. Fix package installation
+
+## pbiviz v2.0.0
+* TypeScript external modules support
+
+## pbiviz v1.12.1
+* Generate certificates on development server starts 
 
 ## pbiviz v1.11.3
 * Resolve PowerShell params issue on Win8.

@@ -11,8 +11,9 @@
     "build": {
         "precompileFolder": ".tmp/precompile",
         "dropFolder": ".tmp/drop",
-        "js": "visual.js",
-        "css": "visual.css"
+        "js": "tmp.visual.js",
+        "css": "visual.css",
+        "stats": "../../webpack.statistics.html"
     },
     "package": {
         "dropFolder": "dist"
@@ -20,9 +21,12 @@
     "server": {
         "root": "webRoot",
         "assetsRoute": "/assets",
-        "privateKey":"certs/PowerBICustomVisualTest_private.key",
-        "certificate":"certs/PowerBICustomVisualTest_public.crt",
-        "pfx":"certs/PowerBICustomVisualTest_public.pfx",
-        "port":"8080"
+        "privateKey": "certs/PowerBICustomVisualTest_private.key",
+        "certificate": "certs/PowerBICustomVisualTest_public.crt",
+        "pfx": "certs/PowerBICustomVisualTest_public.pfx",
+        "port": "8080"
+    },
+    "visualTemplates": {
+        "circlecard": "http://github.com/microsoft/powerbi-visuals-circlecard-react/archive/master.zip"
     }
 }

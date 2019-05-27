@@ -26,11 +26,12 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-let _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const _ = require('lodash');
 
-let FileSystem = require('../helpers/FileSystem.js');
+const FileSystem = require('../helpers/FileSystem.js');
+const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -42,8 +43,10 @@ describe("E2E - pbiviz update", () => {
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName);
+        FileSystem.runPbiviz('new', visualName, ' -t default1 --force');
         process.chdir(visualPath);
+
+        writeMetadata(visualPath);
     });
 
     afterEach(() => {
@@ -93,7 +96,7 @@ describe("E2E - pbiviz update", () => {
         expect(stat.isDirectory()).toBe(true);
     });
 
-    it("Should update to version specified and update pbiviz.json, tsconfig.json, and .vscode/settings.json", () => {
+    it("Should update to version specified and update pbiviz.json, tsconfig.json", () => {
         let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
         expect(pbivizJson.apiVersion).not.toBe('1.0.0');
 
@@ -121,19 +124,5 @@ describe("E2E - pbiviz update", () => {
         let tsConfig = fs.readJsonSync(path.join(visualPath, 'tsconfig.json'));
         let typeDefIndex = _.findIndex(tsConfig.files, i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
         expect(tsConfig.files[typeDefIndex]).toBe('.api/v1.0.0/PowerBI-visuals.d.ts');
-
-        //.vscode/settings.json should've been set to the correct schemas
-        let vsCodeSettings = fs.readJsonSync(path.join(visualPath, '.vscode', 'settings.json'));
-        let vsCodeMatches = 0;
-        vsCodeSettings['json.schemas'].forEach((item, idx) => {
-            if (item.url.match(/.api\/.+\/schema.pbiviz.json$/)) {
-                expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.pbiviz.json');
-                vsCodeMatches++;
-            } else if (item.url.match(/.api\/.+\/schema.capabilities.json$/)) {
-                expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.capabilities.json');
-                vsCodeMatches++;
-            }
-        });  
-        expect(vsCodeMatches).toBe(2);                    
-    });    
+    });
 });
