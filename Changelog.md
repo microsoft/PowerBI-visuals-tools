@@ -2,6 +2,13 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.1
+* Add `base64-inline-loader` to load images
+
+## 3.1.0 (Release)
+* New template loader from GitHub
+* Update packages
+
 ## 3.0.12
 * Compression option for compressing visual package
 * Fix launch webpack build triggering
