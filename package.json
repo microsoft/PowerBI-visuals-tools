@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -31,12 +31,13 @@
     "@babel/preset-env": "7.4.5",
     "@babel/runtime": "7.4.5",
     "@babel/runtime-corejs2": "7.4.5",
-    "core-js": "^2.6.8",
     "async": "2.6.1",
     "babel-loader": "8.0.6",
+    "base64-inline-loader": "^1.1.1",
     "chalk": "2.4.2",
     "commander": "2.16.0",
     "connect": "3.6.6",
+    "core-js": "^2.6.8",
     "css-loader": "2.1.1",
     "expose-loader": "0.7.5",
     "extra-watch-webpack-plugin": "1.0.3",

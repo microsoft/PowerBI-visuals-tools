@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.1
+* Add `base64-inline-loader` to load images
+
 ## pbiviz v3.1.0
 * Release. Now Webpack is default builder for Custom Visuals.
 * What’s new in powerbi-visuals-tools v3?
