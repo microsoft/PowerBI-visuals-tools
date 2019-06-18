@@ -24,7 +24,8 @@
 *  THE SOFTWARE.
 */
 "use strict";
-import "@babel/polyfill";
+
+import "core-js/stable";
 import "./../style/visual.less";
 import powerbi from "powerbi-visuals-api";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;

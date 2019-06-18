@@ -2,6 +2,12 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.2
+* Add extensions for *.svg *.eot files to `base64-inline-loader` configuration
+* Exclude `code-js` package to process by Babel
+* Include `@babel/plugin-syntax-dynamic-import` plugin for Babel
+* Update `core-js` package to version 3.x.x.
+
 ## 3.1.1
 * Add `base64-inline-loader` to load images
 

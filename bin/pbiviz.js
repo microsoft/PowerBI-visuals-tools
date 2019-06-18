@@ -42,7 +42,7 @@ program
     .command('start', 'Start the current visual')
     .command('package', 'Package the current visual into a pbiviz file')
     .command('update [version]', 'Updates the api definitions and schemas in the current visual. Changes the version if specified')
-    .option('--install-cert', 'Install localhost certificate', onOpenCertFile);
+    .option('--install-cert', 'Creates and installs localhost certificate', onOpenCertFile);
 
 //prepend logo to help screen
 if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
