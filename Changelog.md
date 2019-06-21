@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.3
+* Remove `@babel/polyfill`
+* Replace `webpack-visualizer-plugin` by `webpack-bundle-analyzer`
+
 ## 3.1.2
 * Add extensions for *.svg *.eot files to `base64-inline-loader` configuration
 * Exclude `code-js` package to process by Babel
