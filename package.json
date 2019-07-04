@@ -10,7 +10,9 @@
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
     "eslint": "eslint bin lib spec",
     "clean-tests": "node spec/clean-tests.js",
-    "debug-tests": "npm run clean-tests && npm run eslint && npm run jasmine-inspect"
+    "debug-tests": "npm run clean-tests && npm run eslint && npm run jasmine-inspect",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
@@ -65,7 +67,8 @@
     "uuid": "3.3.2",
     "webpack": "4.32.2",
     "webpack-bundle-analyzer": "3.3.2",
-    "webpack-dev-server": "3.4.1"
+    "webpack-dev-server": "3.4.1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "acorn": "^6.1.1",
@@ -78,5 +81,6 @@
   },
   "engines": {
     "node": "^10.0.0"
-  }
+  },
+  "snyk": true
 }
