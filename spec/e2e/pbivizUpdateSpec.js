@@ -28,7 +28,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const _ = require('lodash');
+const lodashFindIndex = require('lodash.findindex');
 
 const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
@@ -122,7 +122,7 @@ describe("E2E - pbiviz update", () => {
 
         //tsconfig should've been updated
         let tsConfig = fs.readJsonSync(path.join(visualPath, 'tsconfig.json'));
-        let typeDefIndex = _.findIndex(tsConfig.files, i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
+        let typeDefIndex = lodashFindIndex(tsConfig.files, i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
         expect(tsConfig.files[typeDefIndex]).toBe('.api/v1.0.0/PowerBI-visuals.d.ts');
     });
 });

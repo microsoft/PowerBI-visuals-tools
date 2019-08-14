@@ -27,7 +27,7 @@
 "use strict";
 
 let Jasmine = require('jasmine');
-let SpecReporter = require('jasmine-spec-reporter');
+let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
 let jrunner = new Jasmine();
 jrunner.configureDefaultReporter({ print: () => {} }); // eslint-disable-line no-empty-function

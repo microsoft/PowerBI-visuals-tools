@@ -30,7 +30,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const async = require('async');
 const JSZip = require('jszip');
-const _ = require('lodash');
+const lodashIsEqual = require('lodash.isequal');
 
 const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
@@ -314,7 +314,7 @@ describe("E2E - pbiviz package", () => {
                 readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json'))
             )
             .then((pbivizJson) => {
-                expect(_.isEqual(pbivizJson.stringResources, validStringResources)).toBeTruthy();
+                expect(lodashIsEqual(pbivizJson.stringResources, validStringResources)).toBeTruthy();
                 done();
             })
             .catch((err) => {
@@ -365,7 +365,7 @@ describe("E2E - pbiviz package", () => {
                 readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json'))
             )
             .then((pbivizJson) => {
-                expect(_.isEqual(pbivizJson.stringResources, validStringResources)).toBeTruthy();
+                expect(lodashIsEqual(pbivizJson.stringResources, validStringResources)).toBeTruthy();
                 done();
             })
             .catch((err) => {
@@ -434,7 +434,7 @@ describe("E2E - pbiviz package", () => {
             )
             .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json')))
             .then((pbivizJson) => {
-                expect(_.isEqual(pbivizJson.stringResources, validStringResources)).toBeTruthy();
+                expect(lodashIsEqual(pbivizJson.stringResources, validStringResources)).toBeTruthy();
                 done();
             })
             .catch((err) => {

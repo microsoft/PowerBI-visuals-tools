@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.4
+* Packages update
+
 ## 3.1.3
 * Remove `@babel/polyfill`
 * Replace `webpack-visualizer-plugin` by `webpack-bundle-analyzer`
