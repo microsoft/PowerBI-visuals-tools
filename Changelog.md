@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.5
+* Templates update
+
 ## 3.1.4
 * Packages update
 
