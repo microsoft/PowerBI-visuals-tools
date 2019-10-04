@@ -83,7 +83,7 @@ export class Visual implements IVisual {
     }
 
     private static parseSettings(dataView: DataView): VisualSettings {
-        return VisualSettings.parse(dataView) as VisualSettings;
+        return <VisualSettings>VisualSettings.parse(dataView);
     }
     /**
      * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the

@@ -109,7 +109,7 @@ export class Visual implements IVisual {
     }
 
     private static parseSettings(dataView: DataView): VisualSettings {
-        return VisualSettings.parse(dataView) as VisualSettings;
+        return <VisualSettings>VisualSettings.parse(dataView);
     }
 
     public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions):
