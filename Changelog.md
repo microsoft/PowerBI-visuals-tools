@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.6
+* Fix webpack configureation include regex
+* Templates update
+
 ## 3.1.5
 * Templates update
 
