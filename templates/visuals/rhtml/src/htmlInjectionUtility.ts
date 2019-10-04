@@ -1,13 +1,13 @@
 "use strict";
 let injectorCounter: number = 0;
-export function ResetInjector(): void {
+export function resetInjector(): void {
   injectorCounter = 0;
 }
 
 export function injectorReady(): boolean {
   return injectorCounter === 0;
 }
-export function ParseElement(el: HTMLElement, target: HTMLElement): Node[] {
+export function parseElement(el: HTMLElement, target: HTMLElement): Node[] {
   let arr: Node[] = [];
   if (!el || !el.hasChildNodes()) {
     return;
@@ -39,11 +39,12 @@ function createScriptNode(refNode: Element): HTMLElement {
       };
     }
   }
+  // tslint:disable-next-line
   script.innerHTML = refNode.innerHTML;
   return script;
 }
 
-export function RunHTMLWidgetRenderer(): void {
+export function runHTMLWidgetRenderer(): void {
   // rendering HTML which was created by HTMLWidgets package
   // wait till all tje script elements are loaded
   let intervalVar: number = window.setInterval(() => {

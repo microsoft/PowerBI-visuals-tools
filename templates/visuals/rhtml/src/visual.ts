@@ -35,7 +35,7 @@ import IViewport = powerbi.IViewport;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 import { VisualSettings } from "./settings";
-import { ParseElement, ResetInjector, RunHTMLWidgetRenderer } from "./htmlInjectionUtility";
+import { parseElement, resetInjector, runHTMLWidgetRenderer } from "./htmlInjectionUtility";
 
 enum VisualUpdateType {
     Data = 2,
@@ -116,6 +116,7 @@ export class Visual implements IVisual {
     }
 
     public onResizing(finalViewport: IViewport): void {
+        // tslint:disable-next-line
         /* add code to handle resizing of the view port */
     }
 
@@ -124,7 +125,7 @@ export class Visual implements IVisual {
         // the code is injected to the 'head' and 'body' sections.
         // if the visual was already rendered, the previous DOM elements are cleared
 
-        ResetInjector();
+        resetInjector();
 
         if (!payloadBase64) {
             return;
@@ -133,6 +134,7 @@ export class Visual implements IVisual {
         // create 'virtual' HTML, so parsing is easier
         let el: HTMLHtmlElement = document.createElement("html");
         try {
+            // tslint:disable-next-line
             el.innerHTML = window.atob(payloadBase64);
         } catch (err) {
             return;
@@ -148,7 +150,7 @@ export class Visual implements IVisual {
             let headList: NodeListOf<HTMLHeadElement> = el.getElementsByTagName("head");
             if (headList && headList.length > 0) {
                 let head: HTMLHeadElement = headList[0];
-                this.headNodes = ParseElement(head, document.head);
+                this.headNodes = parseElement(head, document.head);
             }
         }
 
@@ -160,14 +162,14 @@ export class Visual implements IVisual {
         let bodyList: NodeListOf<HTMLBodyElement> = el.getElementsByTagName("body");
         if (bodyList && bodyList.length > 0) {
             let body: HTMLBodyElement = bodyList[0];
-            this.bodyNodes = ParseElement(body, this.rootElement);
+            this.bodyNodes = parseElement(body, this.rootElement);
         }
 
-        RunHTMLWidgetRenderer();
+        runHTMLWidgetRenderer();
     }
 
     private static parseSettings(dataView: DataView): VisualSettings {
-        return VisualSettings.parse(dataView) as VisualSettings;
+        return <VisualSettings>VisualSettings.parse(dataView);
     }
 
     /**

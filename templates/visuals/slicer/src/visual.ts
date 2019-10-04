@@ -47,7 +47,7 @@ export class Visual implements IVisual {
         console.log("Visual constructor", options);
         this.target = options.element;
         this.updateCount = 0;
-        if (typeof document !== "undefined") {
+        if (document) {
             const new_p: HTMLElement = document.createElement("p");
             new_p.appendChild(document.createTextNode("Update count:"));
             const new_em: HTMLElement = document.createElement("em");
@@ -61,13 +61,13 @@ export class Visual implements IVisual {
     public update(options: VisualUpdateOptions) {
         this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         console.log("Visual update", options);
-        if (typeof this.textNode !== "undefined") {
+        if (this.textNode) {
             this.textNode.textContent = (this.updateCount++).toString();
         }
     }
 
     private static parseSettings(dataView: DataView): VisualSettings {
-        return VisualSettings.parse(dataView) as VisualSettings;
+        return <VisualSettings>VisualSettings.parse(dataView);
     }
     /** 
      * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
