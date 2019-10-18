@@ -61,7 +61,7 @@ describe("E2E - pbiviz new", () => {
         let template = 'default';
         let visualPath = path.join(tempPath, visualName);
 
-        FileSystem.runPbiviz('new', visualName, ' -t default1');
+        FileSystem.runPbiviz('new', visualName, ' -t default');
 
         writeMetadata(visualPath);
 
@@ -399,11 +399,11 @@ describe("E2E - pbiviz new", () => {
             let vsCodeSettings = fs.readJsonSync(path.join(visualPath, '.vscode', 'settings.json'));
             let vsCodeMatches = 0;
             vsCodeSettings['json.schemas'].forEach((item, idx) => {
-                if (item.url.match(/.api\/.+\/schema.pbiviz.json$/)) {
-                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.pbiviz.json');
+                if (item.url.indexOf("schema.pbiviz.json") > -1) {
+                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./node_modules/powerbi-visuals-api/schema.pbiviz.json');
                     vsCodeMatches++;
-                } else if (item.url.match(/.api\/.+\/schema.capabilities.json$/)) {
-                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.capabilities.json');
+                } else if (item.url.indexOf("schema.capabilities.json")  > -1) {
+                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./node_modules/powerbi-visuals-api/schema.capabilities.json');
                     vsCodeMatches++;
                 }
             });

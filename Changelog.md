@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.7
+* Fix vscode workspace settings template
+* Fix certificate tool error handling
+
 ## 3.1.6
 * Fix webpack configureation include regex
 * Templates update

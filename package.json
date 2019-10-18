@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -56,7 +56,7 @@
     "lodash.template": "4.5.0",
     "mini-css-extract-plugin": "0.8.0",
     "multi-loader": "0.1.0",
-    "powerbi-visuals-webpack-plugin": "2.1.4",
+    "powerbi-visuals-webpack-plugin": "2.2.0",
     "request": "2.88.0",
     "script-loader": "0.7.2",
     "serve-static": "1.14.1",

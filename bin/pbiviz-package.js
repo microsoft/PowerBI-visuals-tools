@@ -35,11 +35,11 @@ let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
 program
-    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
-    .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
-    .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
-    .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
-    .option('--no-plugin', "Doesn't include a plugin declaration to the package (must be used in conjunction with --no-pbiviz and --resources flags)")
+    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart', 'es5')
+    .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)", false)
+    .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)", false)
+    .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)", true)
+    .option('--no-plugin', "Doesn't include a plugin declaration to the package (must be used in conjunction with --no-pbiviz and --resources flags)", false)
     .option('-c, --compression <compressionLevel>', "Enables compression of visual package", /^(0|1|2|3|4|5|6|7|8|9)$/i, "6");
 
 for (let i = 0; i < options.length; i++) {
@@ -63,12 +63,12 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
     new WebPackWrap().applyWebpackConfig(visualPackage, {
         devMode: false,
-        generateResources: program.resources || false,
-        generatePbiviz: program.pbiviz || false,
-        minifyJS: typeof program.minify === 'undefined' ? true : program.minify,
-        minify: typeof program.minify === 'undefined' ? true : program.minify,
-        target: typeof program.target === 'undefined' ? "es5" : program.target,
-        compression: typeof program.compression === 'undefined' ? 0 : program.compression
+        generateResources: program.resources,
+        generatePbiviz: program.pbiviz,
+        minifyJS: program.minify,
+        minify: program.minify,
+        target: program.target,
+        compression: program.compression
     }).then(({ webpackConfig }) => {
         let compiler = webpack(webpackConfig);
         compiler.run(function (err, stats) {
