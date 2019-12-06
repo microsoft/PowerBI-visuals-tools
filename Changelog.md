@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.9
+* Fix loading the old visual projects
+* Fix loading old [`formattingutils`](https://github.com/microsoft/powerbi-visuals-utils-formattingutils/tree/72a136aca836e60042be35b1cd2ae10a07837ba8) in the old visual projects.
+
 ## 3.1.8
 * Update `powerbi-visuals-webpack-plugin` to 2.2.1
 
