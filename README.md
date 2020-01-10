@@ -23,7 +23,7 @@ Before you can get started you'll need to install the tools. This should only ta
 
 Before you can run (or install) the command line tools you must install NodeJS.
 
-* NodeJS 4.0+ Required (5.0 recommended) - [Download NodeJS](https://nodejs.org)
+* NodeJS 10.0+ Required - [Download NodeJS](https://nodejs.org)
 
 #### Installation
 
@@ -46,9 +46,9 @@ Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-vis
 
 You can learn more about using these tools in the following guides
 
-* [Installation Guide](https://github.com/Microsoft/PowerBI-visuals/tree/master/tools)
-* [Usage Guide](https://github.com/Microsoft/PowerBI-visuals/blob/master/tools/usage.md)
-* [Debugging Guide](https://github.com/Microsoft/PowerBI-visuals/blob/master/tools/debugging.md)
+* [Installation Guide](https://docs.microsoft.com/en-us/power-bi/developer/visuals/custom-visual-develop-tutorial#setting-up-the-developer-environment)
+* [Usage Guide](https://docs.microsoft.com/en-us/power-bi/developer/visuals/custom-visual-develop-tutorial#creating-a-custom-visual)
+* [Debugging Guide](https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/how-to-debug)
 
 ## PowerBI Visuals Tools Changes
 
@@ -56,8 +56,7 @@ You can learn more about using these tools in the following guides
 
 ## Visuals API Changes
 
-* [API Roadmap](https://github.com/Microsoft/PowerBI-visuals/blob/master/Roadmap/README.md)
-* [API Change Log](https://github.com/Microsoft/PowerBI-visuals/blob/master/ChangeLog.md)
+* [API Change Log](https://github.com/microsoft/PowerBI-visuals-tools/blob/master/Changelog.md)
 
 ## Contributing
 
