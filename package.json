@@ -10,7 +10,8 @@
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
     "eslint": "eslint bin lib spec",
     "clean-tests": "node spec/clean-tests.js",
-    "debug-tests": "npm run clean-tests && npm run eslint && npm run jasmine-inspect"
+    "debug-tests": "npm run clean-tests && npm run eslint && npm run jasmine-inspect",
+    "preinstall": "npx npm-force-resolutions"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
@@ -56,6 +57,7 @@
     "lodash.template": "4.5.0",
     "mini-css-extract-plugin": "0.9.0",
     "multi-loader": "0.1.0",
+    "npm-force-resolutions": "0.0.3",
     "powerbi-visuals-webpack-plugin": "2.2.2",
     "request": "2.88.0",
     "script-loader": "0.7.2",
@@ -83,5 +85,8 @@
   },
   "engines": {
     "node": "^10.0.0"
+  },
+  "resolutions": {
+    "serialize-javascript": "^2.1.2"
   }
 }
