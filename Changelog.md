@@ -3,7 +3,7 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
 ## 3.1.10
-* Packages update
+* Packages update: Uglify-js is replaced by Terser
 
 ## 3.1.9
 * Fix loading the old visual projects
