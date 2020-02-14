@@ -147,7 +147,7 @@ export class Visual implements IVisual {
                 let tempNode: Node = this.headNodes.pop();
                 document.head.removeChild(tempNode);
             }
-            let headList: NodeListOf<HTMLHeadElement> = el.getElementsByTagName("head");
+            let headList: HTMLCollectionOf<HTMLHeadElement> = el.getElementsByTagName("head");
             if (headList && headList.length > 0) {
                 let head: HTMLHeadElement = headList[0];
                 this.headNodes = parseElement(head, document.head);
@@ -159,7 +159,7 @@ export class Visual implements IVisual {
             let tempNode: Node = this.bodyNodes.pop();
             this.rootElement.removeChild(tempNode);
         }
-        let bodyList: NodeListOf<HTMLBodyElement> = el.getElementsByTagName("body");
+        let bodyList: HTMLCollectionOf<HTMLBodyElement> = el.getElementsByTagName("body");
         if (bodyList && bodyList.length > 0) {
             let body: HTMLBodyElement = bodyList[0];
             this.bodyNodes = parseElement(body, this.rootElement);
