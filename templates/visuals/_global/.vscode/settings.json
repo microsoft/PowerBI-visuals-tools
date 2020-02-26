@@ -10,6 +10,9 @@
     "files.exclude": {
         ".tmp": true
     },
+    "files.associations": {
+        "*.resjson": "json"
+    },
     "search.exclude": {
         ".tmp": true,
         "typings": true
