@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.12
+* Command package rolling back to fix issues with some commands running
+
 ## 3.1.11
 * Packages update. Fixed https://github.com/microsoft/PowerBI-visuals-tools/issues/304
 
