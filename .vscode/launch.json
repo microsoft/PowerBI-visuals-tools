@@ -7,6 +7,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Debug cert install",
+            "program": "${workspaceFolder}/bin/pbiviz.js",
+            "args": [
+                "--install-cert"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Program",
             "cwd": "${workspaceRoot}",
             "program": "${workspaceFolder}\\bin\\pbiviz-new.js",

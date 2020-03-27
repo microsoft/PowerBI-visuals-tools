@@ -26,12 +26,12 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-console.log(__dirname);
-let config = require('./../../config.json');
+const fs = require('fs-extra');
+const path = require('path');
 
-let CertificateTools = require('./../../lib/CertificateTools');
+const config = require('./../../config.json');
+
+const CertificateTools = require('./../../lib/CertificateTools');
 
 describe("E2E - pbiviz --install-cert", () => {
     beforeEach((done) => {
@@ -40,14 +40,14 @@ describe("E2E - pbiviz --install-cert", () => {
 
     describe("pbiviz", () => {
         it("pbiviz --install-cert command should generate certificate", (done) => {
-            let certPath = path.join(__dirname, "../../", config.server.certificate);
-            let keyPath = path.join(__dirname, "../../", config.server.privateKey);
-            let pfxPath = path.join(__dirname, "../../", config.server.pfx);
-            let certExists = fs.existsSync(certPath);
-            let keyExists = fs.existsSync(keyPath);
-            let pfxExists = fs.existsSync(pfxPath);
+            const certPath = path.join(__dirname, "../../", config.server.certificate);
+            const keyPath = path.join(__dirname, "../../", config.server.privateKey);
+            const pfxPath = path.join(__dirname, "../../", config.server.pfx);
+            const certExists = fs.existsSync(certPath);
+            const keyExists = fs.existsSync(keyPath);
+            const pfxExists = fs.existsSync(pfxPath);
 
-            let result = (certExists && keyExists) || pfxExists;
+            const result = (certExists && keyExists) || pfxExists;
 
             expect(result).toBeTruthy();
             done();

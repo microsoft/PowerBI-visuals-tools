@@ -27,13 +27,25 @@
 
 "use strict";
 
-let confPath = '../config.json';
-let program = require('commander');
-let npmPackage = require('../package.json');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let config = require(confPath);
-let args = process.argv;
-let CertificateTools = require("../lib/CertificateTools");
+const program = require('commander');
+
+const args = process.argv;
+const confPath = '../config.json';
+const config = require(confPath);
+const npmPackage = require('../package.json');
+const ConsoleWriter = require('../lib/ConsoleWriter');
+const CertificateTools = require("../lib/CertificateTools");
+
+const onOpenCertFile = async () => {
+    const certPath = await CertificateTools.getCertFile(config, true);
+
+    if (!certPath) {
+        ConsoleWriter.error("Certificate not found. The new certificate will be generated");
+        await CertificateTools.createCertFile(config, true);
+    } else {
+        await CertificateTools.openCertFile(config);
+    }
+};
 
 program
     .version(npmPackage.version)
@@ -52,20 +64,9 @@ if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
 program.parse(args);
 
 if (program.args.length > 0) {
-    let validCommands = program.commands.map(c => c.name());
+    const validCommands = program.commands.map(c => c.name());
     if (validCommands.indexOf(program.args[0]) === -1) {
         ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
         process.exit(1);
-    }
-}
-
-async function onOpenCertFile() {
-    let certPath = await CertificateTools.getCertFile(config, true);
-    
-    if (!certPath) {
-        ConsoleWriter.error("Certificate not found. The new certificate will be generated");
-        await CertificateTools.createCertFile(config, true);
-    } else {
-        await CertificateTools.openCertFile(config);
     }
 }
