@@ -8,7 +8,7 @@
     "test": "npm run clean-tests && npm run eslint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
-    "eslint": "eslint bin lib spec",
+    "lint": "eslint bin lib spec",
     "clean-tests": "node spec/clean-tests.js",
     "debug-tests": "npm run clean-tests && npm run eslint && npm run jasmine-inspect"
   },
