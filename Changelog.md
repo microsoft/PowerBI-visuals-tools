@@ -2,7 +2,7 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 3.1.13
+## 3.1.14
 * Fix output library name for debug mode
 
 ## 3.1.12
