@@ -68,7 +68,7 @@
     "uuid": "7.0.2",
     "webpack": "4.42.1",
     "webpack-bundle-analyzer": "3.6.1",
-    "webpack-dev-server": "3.10.3"
+    "webpack-dev-server": "3.11.0"
   },
   "devDependencies": {
     "acorn": "7.1.1",
