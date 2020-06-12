@@ -915,7 +915,7 @@
                         }
                     }
                 },
-                "fillRule" : {
+                "fillRule": {
                     "type": "object",
                     "description": "A color gradient that will be dispalyed to the user as a minimum (,medium) and maximum color pickers",
                     "properties": {

@@ -26,24 +26,27 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
+const fs = require('fs-extra');
+const path = require('path');
 
-let FileSystem = require('../helpers/FileSystem.js');
+const FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
+const writeMetadata = require("./utils").writeMetadata;
 
 describe("E2E - pbiviz info", () => {
 
-    let visualName = 'myuniquevisualnamegoeshere';
-    let visualPath = path.join(tempPath, visualName);
+    const visualName = 'myuniquevisualnamegoeshere';
+    const visualPath = path.join(tempPath, visualName);
 
     beforeEach(() => {
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
+
+        writeMetadata(visualPath);
     });
 
     afterEach(() => {
@@ -71,8 +74,8 @@ describe("E2E - pbiviz info", () => {
     });
 
     it("Should output visual info", () => {
-        let output = FileSystem.runPbiviz('info').toString();
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        const output = FileSystem.runPbiviz('info').toString();
+        const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(output).toContain(visualName);
         expect(output).toContain(visualConfig.guid);
     });

@@ -26,16 +26,19 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-let wrench = require('wrench');
-let _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const utils = require('./utils');
+const lodashDifference = require('lodash.difference');
+const lodashFindIndex = require('lodash.findindex');
 
 let FileSystem = require('../helpers/FileSystem.js');
+const writeMetadata = require("./utils").writeMetadata;
 
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
+const PBIVIZ_TIMEOUT = 15000;
 
 describe("E2E - pbiviz new", () => {
 
@@ -58,18 +61,20 @@ describe("E2E - pbiviz new", () => {
         let template = 'default';
         let visualPath = path.join(tempPath, visualName);
 
-        FileSystem.runPbiviz('new', visualName);
+        FileSystem.runPbiviz('new', visualName, ' -t default');
+
+        writeMetadata(visualPath);
 
         //check base dir
         let stat = fs.statSync(visualPath);
         expect(stat.isDirectory()).toBe(true);
 
         //check contents
-        let expectedFiles = wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
-        expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
-        expectedFiles.push('pbiviz.json');
-        let visualFiles = wrench.readdirSyncRecursive(visualPath);
-        let fileDiff = _.difference(expectedFiles, visualFiles);
+        let expectedFiles = utils.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
+        expectedFiles.concat(utils.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
+        expectedFiles.push('/pbiviz.json');
+        let visualFiles = utils.readdirSyncRecursive(visualPath);
+        let fileDiff = lodashDifference(expectedFiles, visualFiles);
         expect(fileDiff.length).toBe(0);
 
         // check exists node_modules directory
@@ -92,7 +97,9 @@ describe("E2E - pbiviz new", () => {
         const visualFilePath = `${visualPath}/src/visual.ts`;
         global.powerbi = {};
         beforeEach(() => {
-            FileSystem.runPbiviz("new", visualName);
+            FileSystem.runPbiviz("new", visualName, ' -t default1 --force');
+
+            writeMetadata(visualPath);
         });
 
         afterEach(() => {
@@ -100,9 +107,7 @@ describe("E2E - pbiviz new", () => {
         });
 
         afterAll(() => {
-            /* eslint-disable no-undefined */
-            global.powerbi = undefined;
-            /* eslint-enable no-undefined */
+            global.powerbi = undefined; // eslint-disable-line no-undefined
         });
 
         it("settings.ts was created", (done) => {
@@ -122,7 +127,7 @@ describe("E2E - pbiviz new", () => {
                 .then(done)
                 .catch((error) => fail(error));
         });
-        it("the settings are available on the visual", (done) => {
+        xit("the settings are available on the visual", (done) => {
             const defaultSettings = {
                 "dataPoint": {
                     "defaultColor": "",
@@ -133,41 +138,41 @@ describe("E2E - pbiviz new", () => {
                 }
             };
             const dataViews = [
-{
-                "metadata": {
-                    "columns": [],
-                    "objects": {
-                        "dataPoint": {
-                            "defaultColor": {
-                                "solid": {
-                                    "color": "#A66999"
-                                }
-                            },
-                            "fontSize": "21",
-                            "fillRule": {
-                                "solid": {
-                                    "color": {
-                                        "_kind": 17,
-                                        "type": {
-                                            "underlyingType": 1,
-                                            "category": null
-                                        },
-                                        "value": "#FD625E",
-                                        "valueEncoded": "'#FD625E'"
+                {
+                    "metadata": {
+                        "columns": [],
+                        "objects": {
+                            "dataPoint": {
+                                "defaultColor": {
+                                    "solid": {
+                                        "color": "#A66999"
                                     }
-                                }
-                            },
-                            "fill": {
-                                "solid": {
-                                    "color": "#caa5c2"
-                                }
-                            },
-                            "showAllDataPoints": true
+                                },
+                                "fontSize": "21",
+                                "fillRule": {
+                                    "solid": {
+                                        "color": {
+                                            "_kind": 17,
+                                            "type": {
+                                                "underlyingType": 1,
+                                                "category": null
+                                            },
+                                            "value": "#FD625E",
+                                            "valueEncoded": "'#FD625E'"
+                                        }
+                                    }
+                                },
+                                "fill": {
+                                    "solid": {
+                                        "color": "#caa5c2"
+                                    }
+                                },
+                                "showAllDataPoints": true
+                            }
                         }
                     }
                 }
-            }
-];
+            ];
             const fillSettings = {
                 "dataPoint": {
                     "defaultColor": "#A66999",
@@ -189,26 +194,25 @@ describe("E2E - pbiviz new", () => {
             process.chdir(visualPath);
             FileSystem.runCMDCommand('npm i', visualPath);
             try {
-                FileSystem.runPbiviz('package', '--no-pbiviz', "--resources");
+                FileSystem.runPbiviz('package', '--no-pbiviz', "--resources --target es6 --no-minify");
             } catch (e) {
                 fail(e);
             }
-            fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
-                (err, data) => {
-                    if (err) {
-                        fail(err);
-                    }
-                    /* eslint-disable no-eval */
-                    global.eval(data); // jshint ignore:line
-                    /* eslint-enable no-eval */
-                    let visualFullName = Object.keys(global.powerbi.extensibility.visual)[0];
-                    let settings = global.powerbi.extensibility.visual[visualFullName].VisualSettings.getDefault();
-                    expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
-                    let visualInstance = new global.powerbi.extensibility.visual[visualFullName].Visual({ element: { innerHTML: null } });
-                    visualInstance.update({ dataViews: dataViews });
-                    expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
-                    done();
-                });
+            setTimeout(() => {
+                fs.readFile(`${visualPath}/.tmp/drop/visual.js`, 'utf8',
+                    (err, data) => {
+                        if (err) {
+                            fail(err);
+                        }
+                        global.eval(data); // eslint-disable-line no-eval
+                        let settings = global.powerbi.extensibility.visual.VisualSettings.getDefault();
+                        expect(JSON.stringify(settings)).toEqual(JSON.stringify(defaultSettings));
+                        let visualInstance = new global.powerbi.extensibility.visual.Visual({ element: { innerHTML: null } });
+                        visualInstance.update({ dataViews: dataViews });
+                        expect(JSON.stringify(visualInstance.settings)).toEqual(JSON.stringify(fillSettings));
+                        done();
+                    });
+            }, PBIVIZ_TIMEOUT);
         });
     });
 
@@ -254,8 +258,8 @@ describe("E2E - pbiviz new", () => {
 
             //check that all files were created
             let versionBasePath = path.join('.api', version);
-            let expectedFiles = wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
-            expectedFiles = expectedFiles.concat(wrench.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
+            let expectedFiles = utils.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
+            expectedFiles = expectedFiles.concat(utils.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
             expectedFiles.push(
                 'pbiviz.json',
                 '.api',
@@ -376,7 +380,7 @@ describe("E2E - pbiviz new", () => {
             let visualName = 'visualname';
             let visualPath = path.join(tempPath, visualName);
 
-            FileSystem.runPbiviz('new', visualName, '--api-version 1.0.0');
+            FileSystem.runPbiviz('new', visualName, '--api-version 1.0.0 -t default1');
 
             //api version file should've been created
             let stat = fs.statSync(path.join(visualPath, '.api', 'v1.0.0'));
@@ -388,18 +392,18 @@ describe("E2E - pbiviz new", () => {
 
             //tsconfig should've been updated
             let tsConfig = fs.readJsonSync(path.join(visualPath, 'tsconfig.json'));
-            let typeDefIndex = _.findIndex(tsConfig.files, i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
+            let typeDefIndex = lodashFindIndex(tsConfig.files, i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
             expect(tsConfig.files[typeDefIndex]).toBe('.api/v1.0.0/PowerBI-visuals.d.ts');
 
             //.vscode/settings.json should've been set to the correct schemas
             let vsCodeSettings = fs.readJsonSync(path.join(visualPath, '.vscode', 'settings.json'));
             let vsCodeMatches = 0;
             vsCodeSettings['json.schemas'].forEach((item, idx) => {
-                if (item.url.match(/.api\/.+\/schema.pbiviz.json$/)) {
-                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.pbiviz.json');
+                if (item.url.indexOf("schema.pbiviz.json") > -1) {
+                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./node_modules/powerbi-visuals-api/schema.pbiviz.json');
                     vsCodeMatches++;
-                } else if (item.url.match(/.api\/.+\/schema.capabilities.json$/)) {
-                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./.api/v1.0.0/schema.capabilities.json');
+                } else if (item.url.indexOf("schema.capabilities.json")  > -1) {
+                    expect(vsCodeSettings['json.schemas'][idx].url).toBe('./node_modules/powerbi-visuals-api/schema.capabilities.json');
                     vsCodeMatches++;
                 }
             });
@@ -412,7 +416,7 @@ describe("E2E - pbiviz new", () => {
             let error;
 
             try {
-                FileSystem.runPbiviz('new', visualName, '--api-version 99.99.99');
+                FileSystem.runPbiviz('new', visualName, '--api-version 99.99.99 -t default1');
             } catch (e) {
                 error = e;
             }
