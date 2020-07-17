@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "3.1.14",
+  "version": "3.1.15",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -32,21 +32,21 @@
     "@babel/runtime": "7.9.2",
     "@babel/runtime-corejs3": "7.9.2",
     "async": "3.2.0",
-    "babel-loader": "8.1.0",
-    "base64-inline-loader": "1.1.1",
+    "babel-loader": "^8.1.0",
+    "base64-inline-loader": "^1.1.1",
     "chalk": "3.0.0",
     "commander": "4.1.1",
     "connect": "3.7.0",
     "core-js": "3.6.4",
-    "css-loader": "3.4.2",
+    "css-loader": "^3.4.2",
     "expose-loader": "0.7.5",
-    "extra-watch-webpack-plugin": "1.0.3",
+    "extra-watch-webpack-plugin": "^1.0.3",
     "friendly-errors-webpack-plugin": "1.7.0",
     "fs-extra": "9.0.0",
     "json-loader": "0.5.7",
     "jsonschema": "1.2.5",
     "jszip": "3.2.2",
-    "less": "3.11.1",
+    "less": "^3.11.1",
     "less-loader": "5.0.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.defaults": "4.2.0",
@@ -54,21 +54,21 @@
     "lodash.findindex": "4.6.0",
     "lodash.isequal": "4.5.0",
     "lodash.template": "4.5.0",
-    "mini-css-extract-plugin": "0.9.0",
+    "mini-css-extract-plugin": "^0.9.0",
     "multi-loader": "0.1.0",
-    "powerbi-visuals-webpack-plugin": "2.2.4",
-    "request": "2.88.2",
+    "powerbi-visuals-webpack-plugin": "^2.2.5",
+    "request": "^2.88.2",
     "script-loader": "0.7.2",
     "serve-static": "1.14.1",
     "source-map-concat": "1.0.1",
-    "style-loader": "1.1.3",
+    "style-loader": "^1.1.3",
     "ts-loader": "6.2.2",
     "tsc-watch": "4.2.3",
     "typescript": "3.8.3",
     "uuid": "7.0.2",
-    "webpack": "4.42.1",
+    "webpack": "^4.42.1",
     "webpack-bundle-analyzer": "3.6.1",
-    "webpack-dev-server": "3.11.0"
+    "webpack-dev-server": "^3.11.0"
   },
   "devDependencies": {
     "acorn": "7.1.1",
@@ -80,6 +80,6 @@
     "tree-kill": "1.2.2"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   }
 }

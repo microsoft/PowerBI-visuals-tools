@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.15
+* Webpack plugin update
+* npm audit package-lock patch
+
 ## 3.1.14
 * Fix output library name for debug mode
 
