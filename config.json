@@ -24,8 +24,7 @@
         "privateKey": "certs/PowerBICustomVisualTest_private.key",
         "certificate": "certs/PowerBICustomVisualTest_public.crt",
         "pfx": "certs/PowerBICustomVisualTest_public.pfx",
-        "port": "8080",
-        "passphrase": "4224833599944733"
+        "port": "8080"
     },
     "visualTemplates": {
         "circlecard": "http://github.com/microsoft/powerbi-visuals-circlecard-react/archive/master.zip"
