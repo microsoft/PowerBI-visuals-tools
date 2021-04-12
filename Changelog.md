@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.16
+* Added visuals compatibility with webpack v5
+* Removed lodash: _.template, ._findindex, .difference
+* Packages update
+
 ## 3.1.15
 * Webpack plugin update
 * npm audit package-lock patch
