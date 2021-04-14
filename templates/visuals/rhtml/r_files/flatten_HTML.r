@@ -97,7 +97,7 @@ FindSrcReplacement <- function(str)
   # finds reference to 'plotly' js and replaces with a version from CDN
   # This allows the HTML to be smaller, since this script is not fully embedded in it
   str <- iconv(str, to="UTF-8")
-  pattern = "plotlyjs-(\\w.+)/plotly-latest.min.js"
+  pattern = "plotly-(\\w.+)/plotly-latest.min.js"
   match1=regexpr(pattern, str)
   attr(match1, 'useBytes') <- FALSE
   strMatch=regmatches(str, match1, invert = FALSE)
