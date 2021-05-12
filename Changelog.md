@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.1.19
+* Added webpack config falback setting for Node.js polyfil support in webpack 5+"
+
 ## 3.1.18
 * Removed deprecated packages
 
