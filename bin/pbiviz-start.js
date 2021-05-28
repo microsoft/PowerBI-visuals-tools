@@ -60,7 +60,6 @@ program.parse(options);
 let cwd = process.cwd();
 let server;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    ConsoleWriter.info("TEST START!!!!!!!...");
     new WebPackWrap().applyWebpackConfig(visualPackage, {
         devMode: true,
         generateResources: true,
@@ -142,7 +141,6 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             }
         })
         .catch(e => {
-            ConsoleWriter.info("TEST cath error");
             ConsoleWriter.error(e.message);
             process.exit(1);
         });
