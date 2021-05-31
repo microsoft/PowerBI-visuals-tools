@@ -59,7 +59,6 @@ program.parse(options);
 
 let cwd = process.cwd();
 let server;
-
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     new WebPackWrap().applyWebpackConfig(visualPackage, {
         devMode: true,
