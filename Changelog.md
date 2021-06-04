@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+
+## 3.2.2
+* Removed npm-force-resolutions package
+
 ## 3.2.1
 * Fixed preinstall to prevent instalation failure because of npm-force-resolutions
 * Fixed pbiviz.json dependencies option usage
