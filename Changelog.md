@@ -2,6 +2,8 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.2.4
+* Updated dependency to powerbi-visuals-webpack-plugin
 
 ## 3.2.2
 * Removed npm-force-resolutions package
