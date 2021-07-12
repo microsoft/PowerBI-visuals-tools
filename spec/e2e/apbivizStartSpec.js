@@ -49,6 +49,7 @@ describe("E2E - pbiviz start", () => {
     const assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
 
     beforeEach(() => {
+        console.log('TEST going to RESET!!!!!');
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--force');
@@ -174,18 +175,23 @@ describe("E2E - pbiviz start", () => {
         });
 
         it("Should build visual and generate resources in drop folder", (done) => {
+            console.log('TEST INSIDE A TEST1!!!!!');
             let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
             let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
             let callbackCalled = false;
             pbivizProc.stdout.on('data', (data) => {
+                console.log('TEST INSIDE A TEST2!!!!!');
                 let dataStr = data.toString();
                 if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+                    console.log('TEST INSIDE A TEST3!!!!!');
                     if (callbackCalled) {
+                        console.log('TEST INSIDE A TEST - callbackCalled - !!!!!');
                         return;
                     }
                     callbackCalled = true;
                     // need to wait while tools generate files
                     setTimeout(() => {
+                        
                         //check files on filesystem
                         expect(fs.statSync(dropPath).isDirectory()).toBe(true);
                         assetFiles.forEach(file => {
