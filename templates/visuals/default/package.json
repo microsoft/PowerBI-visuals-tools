@@ -1,5 +1,11 @@
 {
   "name": "visual",
+  "description": "default_template_value",
+  "repository": {
+    "type": "default_template_value",
+    "url": "default_template_value"
+  },
+  "license": "MIT",
   "scripts": {
     "pbiviz": "pbiviz",
     "start": "pbiviz start",

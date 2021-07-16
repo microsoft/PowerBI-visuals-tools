@@ -71,7 +71,7 @@ describe("E2E - pbiviz update", () => {
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
     });
 
-    it("Should fail with invalid version number", () => {
+    xit("Should fail with invalid version number", () => {
         let error;
 
         try {
@@ -84,7 +84,7 @@ describe("E2E - pbiviz update", () => {
         expect(error.message).toContain("Error: Invalid API version: 99.99.99");
     });
 
-    it("Should update version specified in pbiviz.json by default", () => {
+    xit("Should update version specified in pbiviz.json by default", () => {
         let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
         fs.removeSync(path.join(visualPath, '.api'));
 
