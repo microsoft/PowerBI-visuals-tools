@@ -59,6 +59,11 @@ if (!program.pbiviz && !program.resources) {
 }
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
+    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.8.0')) {
+        ConsoleWriter.error(`Package wasn't created, your current API is '${visualPackage.config.apiVersion}'.
+        Please use 'powerbi-visuals-api' 3.8.0 or above to build a visual.`);
+        process.exit(9);
+    }
     ConsoleWriter.info('Building visual...');
 
     new WebPackWrap().applyWebpackConfig(visualPackage, {
@@ -94,7 +99,7 @@ function displayCertificationRules() {
     ConsoleWriter.blank();
     ConsoleWriter.warn("Please, make sure that the visual source code matches to requirements of certification:");
     ConsoleWriter.blank();
-    ConsoleWriter.info("Visual must use API v2.5 and above");
+    ConsoleWriter.info("Visual must use API v3.8 and above");
     ConsoleWriter.info("The project repository must:");
     ConsoleWriter.info("Include package.json and package-lock.json;");
     ConsoleWriter.info("Not include node_modules folder");

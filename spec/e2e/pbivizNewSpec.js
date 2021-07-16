@@ -373,7 +373,7 @@ describe("E2E - pbiviz new", () => {
         expect(testFileError2.code).toBe('ENOENT');
     });
 
-    describe("--api-version flag", () => {
+    xdescribe("--api-version flag", () => {
         it("Should generate new visual with specified version", () => {
             let visualName = 'visualname';
             let visualPath = path.join(tempPath, visualName);
@@ -408,7 +408,7 @@ describe("E2E - pbiviz new", () => {
             expect(vsCodeMatches).toBe(2);
         });
 
-        it("Should fail with invalid version number", () => {
+        xit("Should fail with invalid version number", () => {
             let visualName = 'visualname';
 
             let error;
