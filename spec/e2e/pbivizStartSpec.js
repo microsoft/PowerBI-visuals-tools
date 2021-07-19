@@ -39,7 +39,22 @@ const startPath = process.cwd();
 
 // these tests can take a bit longer
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
-const PBIVIZ_TIMEOUT = 10000;
+
+let startChecker = (proc) => new Promise((resolve) => {
+    proc.stdout.on('data', (data) => {
+        let dataStr = data.toString();
+        if (dataStr.indexOf("Compiled successfully.") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+            resolve();
+        }
+    });
+});
+
+let procKiller = (proc, done) => {
+    FileSystem.killProcess(proc, 'SIGTERM', (error) => {
+        expect(error).toBeNull();
+        done();
+    });
+};
 
 describe("E2E - pbiviz start", () => {
     const visualName = 'visualname';
@@ -153,100 +168,54 @@ describe("E2E - pbiviz start", () => {
         beforeEach(() => {
             process.chdir(visualPath);
             pbivizProc = FileSystem.runPbivizAsync("start", "-d");
-            pbivizProc.stderr.on('data', (data) => {
-                if (data.indexOf("For better development experience") !== -1) {
-                    return;
-                }
-                if (data.indexOf("https://microsoft.github.io/") !== -1) {
-                    return;
-                }
-                if (data.toString().indexOf("DeprecationWarning") !== -1) {
-                    return;
-                }
-                if (data.toString().indexOf("warn   No such file or directory") !== -1) {
-                    return;
-                }
-                throw new Error(data.toString());
-            });
-            pbivizProc.on('error', (error) => {
-                throw new Error(error.toString());
-            });
         });
 
         it("Should build visual and generate resources in drop folder", (done) => {
             let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
             let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
-            let callbackCalled = false;
-            pbivizProc.stdout.on('data', (data) => {
-                let dataStr = data.toString();
-                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
-                    if (callbackCalled) {
-                        return;
-                    }
-                    callbackCalled = true;
-                    // need to wait while tools generate files
-                    setTimeout(() => {
-                        //check files on filesystem
-                        expect(fs.statSync(dropPath).isDirectory()).toBe(true);
-                        assetFiles.forEach(file => {
-                            let filePath = path.join(dropPath, file);
-                            expect(fs.statSync(filePath).isFile()).toBe(true);
-                        });
-                        //check metadata
-                        let pbivizPath = path.join(dropPath, 'pbiviz.json');
-                        let pbiviz = fs.readJsonSync(pbivizPath);
-                        //should append "_DEBUG" to guid to avoid collisions
-                        visualConfig.guid += "_DEBUG";
-                        expect(pbiviz.visual).toEqual(visualConfig);
-                        expect(pbiviz.capabilities).toEqual(visualCapabilities);
-                        expect(pbiviz.content.js).toBeDefined();
-                        expect(pbiviz.content.css).toBeDefined();
-                        expect(pbiviz.content.iconBase64).toBeDefined();
-                        FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
-                            expect(error).toBeNull();
-                            done();
-                        });
-                    }, PBIVIZ_TIMEOUT);
-                }
+            startChecker(pbivizProc).then(() => {
+                //check files on filesystem
+                expect(fs.statSync(dropPath).isDirectory()).toBe(true);
+                assetFiles.forEach(file => {
+                    let filePath = path.join(dropPath, file);
+                    expect(fs.statSync(filePath).isFile()).toBe(true);
+                });
+                //check metadata
+                let pbivizPath = path.join(dropPath, 'pbiviz.json');
+                let pbiviz = fs.readJsonSync(pbivizPath);
+                //should append "_DEBUG" to guid to avoid collisions
+                visualConfig.guid += "_DEBUG";
+                expect(pbiviz.visual).toEqual(visualConfig);
+                expect(pbiviz.capabilities).toEqual(visualCapabilities);
+                expect(pbiviz.content.js).toBeDefined();
+                expect(pbiviz.content.css).toBeDefined();
+                expect(pbiviz.content.iconBase64).toBeDefined();
+                procKiller(pbivizProc, done);
             });
         });
 
         it("Should serve files from drop folder on port 8080", (done) => {
-            let callbackCalled = false;
-            pbivizProc.stdout.on('data', (data) => {
-                let dataStr = data.toString();
-                if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
-                    if (callbackCalled) {
-                        return;
+            startChecker(pbivizProc).then(() => {
+                async.each(
+                    assetFiles,
+                    (file, next) => {
+                        let filePath = path.join(dropPath, file);
+                        request({
+                            url: 'https://localhost:8080/assets/' + file,
+                            //allow self signed cert
+                            strictSSL: false
+                        }, (error, response, body) => {
+                            expect(error).toBeNull();
+                            expect(response.statusCode).toBe(200);
+                            expect(body).toBe(fs.readFileSync(filePath).toString());
+                            next();
+                        });
+                    },
+                    error => {
+                        if (error) { throw error; }
+                        procKiller(pbivizProc, done);
                     }
-                    callbackCalled = true;
-                    // need to wait while tools generate files
-                    setTimeout(() => {
-                        async.each(
-                            assetFiles,
-                            (file, next) => {
-                                let filePath = path.join(dropPath, file);
-                                request({
-                                    url: 'https://localhost:8080/assets/' + file,
-                                    //allow self signed cert
-                                    strictSSL: false
-                                }, (error, response, body) => {
-                                    expect(error).toBeNull();
-                                    expect(response.statusCode).toBe(200);
-                                    expect(body).toBe(fs.readFileSync(filePath).toString());
-                                    next();
-                                });
-                            },
-                            error => {
-                                if (error) { throw error; }
-                                FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
-                                    expect(error).toBeNull();
-                                    done();
-                                });
-                            }
-                        );
-                    }, PBIVIZ_TIMEOUT);
-                }
+                );
             });
         });
 
