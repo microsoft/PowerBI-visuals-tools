@@ -28,7 +28,6 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const lodashFindIndex = require('lodash.findindex');
 
 const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
@@ -72,7 +71,7 @@ describe("E2E - pbiviz update", () => {
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
     });
 
-    it("Should fail with invalid version number", () => {
+    xit("Should fail with invalid version number", () => {
         let error;
 
         try {
@@ -85,7 +84,7 @@ describe("E2E - pbiviz update", () => {
         expect(error.message).toContain("Error: Invalid API version: 99.99.99");
     });
 
-    it("Should update version specified in pbiviz.json by default", () => {
+    xit("Should update version specified in pbiviz.json by default", () => {
         let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
         fs.removeSync(path.join(visualPath, '.api'));
 
@@ -122,7 +121,7 @@ describe("E2E - pbiviz update", () => {
 
         //tsconfig should've been updated
         let tsConfig = fs.readJsonSync(path.join(visualPath, 'tsconfig.json'));
-        let typeDefIndex = lodashFindIndex(tsConfig.files, i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
+        let typeDefIndex = tsConfig.files.findIndex(i => i.match(/.api\/.+\/PowerBI-visuals.d.ts$/));
         expect(tsConfig.files[typeDefIndex]).toBe('.api/v1.0.0/PowerBI-visuals.d.ts');
     });
 });
