@@ -2,12 +2,16 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-# 3.3.0
+
+# 3.3.1
+* Fixed certificate issues
+* Fixed an issue when previous API version was used for a new package build
+
+## 3.3.0
 ### **⚠ BREAKING CHANGES**
 * Starting from tools version 3.3.0, it expects usage of ["powerbi-visuals-api": ">=3.8.0"](https://github.com/microsoft/powerbi-visuals-api/blob/master/CHANGELOG.md#382)
 ### **Features**
 * Added support for CV modal dialog
----
 
 ## 3.2.2
 * Removed npm-force-resolutions package
