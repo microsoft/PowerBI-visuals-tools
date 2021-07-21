@@ -2,6 +2,38 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+
+# 3.3.1
+* Fixed certificate issues
+* Fixed an issue when previous API version was used for a new package build
+
+## 3.3.0
+### **⚠ BREAKING CHANGES**
+* Starting from tools version 3.3.0, it expects usage of ["powerbi-visuals-api": ">=3.8.0"](https://github.com/microsoft/powerbi-visuals-api/blob/master/CHANGELOG.md#382)
+### **Features**
+* Added support for CV modal dialog
+
+## 3.2.2
+* Removed npm-force-resolutions package
+
+## 3.2.1
+* Fixed preinstall to prevent instalation failure because of npm-force-resolutions
+* Fixed pbiviz.json dependencies option usage
+
+## 3.2.0
+* Fixed LessCompiler for old visuals
+
+## 3.1.19
+* Fixed webpack Node.js polyfill issue in webpack 5+"
+
+## 3.1.18
+* Removed deprecated packages
+
+## 3.1.16
+* Added visuals compatibility with webpack v5
+* Removed lodash: _.template, ._findindex, .difference
+* Packages update
+
 ## 3.1.15
 * Webpack plugin update
 * npm audit package-lock patch
