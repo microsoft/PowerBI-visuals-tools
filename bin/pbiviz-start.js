@@ -36,10 +36,6 @@ const CommandHelpManager = require('../lib/CommandHelpManager');
 const fs = require('fs-extra');
 const path = require('path');
 
-let https = require('https');
-let connect = require('connect');
-let serveStatic = require('serve-static');
-
 const options = process.argv;
 
 program
@@ -60,9 +56,9 @@ program.parse(options);
 let cwd = process.cwd();
 let server;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.8.0')) {
+    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.2.0')) {
         ConsoleWriter.error(`Can't start the visual because of the current API is '${visualPackage.config.apiVersion}'.
-        Please use 'powerbi-visuals-api' 3.8.0 or above to build a visual.`);
+        Please use 'powerbi-visuals-api' 3.2.0 or above to build a visual.`);
         throw new Error(`Invalid API version.`);
     }
     new WebPackWrap().applyWebpackConfig(visualPackage, {
@@ -74,7 +70,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         target: typeof program.target === 'undefined' ? "es5" : program.target,
         devServerPort: program.port
     })
-        .then(({ webpackConfig, oldProject }) => {
+        .then(({ webpackConfig }) => {
             let compiler = webpack(webpackConfig);
             ConsoleWriter.blank();
             ConsoleWriter.info('Starting server...');
@@ -103,47 +99,16 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
                     });
                 };
             }
-            // server old project by NodeJS server, need to skip build step
-            if (!oldProject) {
-                server = new WebpackDevServer(compiler, {
-                    ...webpackConfig.devServer,
-                    hot: !program.drop,
-                    writeToDisk: program.drop
-                });
-                server.listen(webpackConfig.devServer.port, () => {
-                    ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
-                });
-            } else {
-                compiler.watch({
-                        aggregateTimeout: 1000, // wait so long for more changes
-                        poll: false, // use polling instead of native watchers
-                        ignored: /node_modules/
-                    },
-                    function (err) {
-                        if (err) {
-                            ConsoleWriter.error('Visual rebuild failed');
-                            ConsoleWriter.error(err);
-                            return;
-                        }
-                        ConsoleWriter.info('Visual rebuild completed');
-                    }
-                );
-                const app = connect();
-                app.use((req, res, next) => {
-                    res.setHeader('Access-Control-Allow-Origin', '*');
-                    next();
-                });
-                app.use(serveStatic(webpackConfig.devServer.contentBase));
-                app.use('/' + webpackConfig.output.publicPath, serveStatic(webpackConfig.devServer.contentBase));
-                server = https.createServer({
-                    pfx: webpackConfig.devServer.https.pfx,
-                    cert: webpackConfig.devServer.https.cert,
-                    key: webpackConfig.devServer.https.key,
-                    passphrase: webpackConfig.devServer.https.passphrase
-                }, app).listen(webpackConfig.devServer, () => {
-                    ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
-                });
-            }
+
+            server = new WebpackDevServer(compiler, {
+                ...webpackConfig.devServer,
+                hot: !program.drop,
+                writeToDisk: program.drop
+            });
+            server.listen(webpackConfig.devServer.port, () => {
+                ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
+            });
+
         })
         .catch(e => {
             ConsoleWriter.error(e.message);

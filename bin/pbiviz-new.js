@@ -36,8 +36,7 @@ const options = process.argv;
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)')
-    .option('--api-version [version]', 'use a specific api version (1.0.0, 1.1.0, 1.2.0, ...)');
+    .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)');
 
 for (let i = 0; i < options.length; i++) {
     if (options[i] == '--help' || options[i] == '-h') {
@@ -64,8 +63,8 @@ if (program.force) {
     ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
 }
 
-if (program.apiVersion && parseFloat(program.apiVersion) < parseFloat('3.8.0')) {
-    ConsoleWriter.error(`Visual creation failed, please use 'powerbi-visuals-api' 3.8.0 or above to build a visual.`);
+if (program.apiVersion && parseFloat(program.apiVersion) < parseFloat('3.2.0')) {
+    ConsoleWriter.error(`Visual creation failed, please use 'powerbi-visuals-api' 3.2.0 or above to build a visual.`);
     process.exit(9);
 }
 

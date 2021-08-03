@@ -99,16 +99,4 @@ describe("E2E - webpack tools", () => {
             .toBe(semver.minor(packageJson.dependencies["powerbi-visuals-api"].replace(/\^|\~/, ""))); // eslint-disable-line no-useless-escape
     });
 
-    it("Should install powerbi-visual-api with version from pbiviz.json on `pbiviz update`", () => {
-        let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
-        removeApi();
-        FileSystem.runPbiviz('update');
-
-        let packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
-        expect(packageJson.dependencies["powerbi-visuals-api"]).toBeDefined();
-        expect(semver.major(pbivizJson.apiVersion))
-            .toBe(semver.major(packageJson.dependencies["powerbi-visuals-api"].replace(/\^|\~/, ""))); // eslint-disable-line no-useless-escape
-        expect(semver.minor(pbivizJson.apiVersion))
-            .toBe(semver.minor(packageJson.dependencies["powerbi-visuals-api"].replace(/\^|\~/, ""))); // eslint-disable-line no-useless-escape
-    });
 });

@@ -12,7 +12,7 @@
     "core-js": "3.2.1"
   },
   "devDependencies": {
-    "powerbi-visuals-api": "~3.8.2",
+    "powerbi-visuals-api": "~3.8.0",
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.5.5",
     "@babel/runtime-corejs2": "^7.5.5",

@@ -16,7 +16,7 @@
     "@babel/runtime": "^7.5.5",
     "@babel/runtime-corejs2": "^7.5.5",
     "@types/d3": "5.7.2",
-    "powerbi-visuals-api": "~3.8.2",
+    "powerbi-visuals-api": "~3.8.0",
     "tslint": "^5.18.0",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "3.6.3"

@@ -18,7 +18,7 @@
     "@types/d3": "5.7.2",
     "d3": "5.12.0",
     "powerbi-visuals-utils-dataviewutils": "2.2.1",
-    "powerbi-visuals-api": "~3.8.2",
+    "powerbi-visuals-api": "~3.8.0",
     "core-js": "3.2.1"
   },
   "devDependencies": {
