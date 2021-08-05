@@ -59,9 +59,9 @@ if (!program.pbiviz && !program.resources) {
 }
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.8.0')) {
+    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.2.0')) {
         ConsoleWriter.error(`Package wasn't created, your current API is '${visualPackage.config.apiVersion}'.
-        Please use 'powerbi-visuals-api' 3.8.0 or above to build a visual.`);
+        Please use 'powerbi-visuals-api' 3.2.0 or above to build a visual.`);
         process.exit(9);
     }
     ConsoleWriter.info('Building visual...');

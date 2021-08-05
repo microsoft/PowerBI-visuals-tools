@@ -64,8 +64,8 @@ if (program.force) {
     ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
 }
 
-if (program.apiVersion && parseFloat(program.apiVersion) < parseFloat('3.8.0')) {
-    ConsoleWriter.error(`Visual creation failed, please use 'powerbi-visuals-api' 3.8.0 or above to build a visual.`);
+if (program.apiVersion && parseFloat(program.apiVersion) < parseFloat('3.2.0')) {
+    ConsoleWriter.error(`Visual creation failed, please use 'powerbi-visuals-api' 3.2.0 or above to build a visual.`);
     process.exit(9);
 }
 

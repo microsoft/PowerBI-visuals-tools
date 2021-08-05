@@ -2,8 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+# 3.3.2
+* Extended `"powerbi-visuals-api"` usage up to version 3.2.0 and higher
 
-# 3.3.1
+## 3.3.1
 * Fixed certificate issues
 * Fixed an issue when previous API version was used for a new package build
 
