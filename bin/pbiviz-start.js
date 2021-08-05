@@ -60,9 +60,9 @@ program.parse(options);
 let cwd = process.cwd();
 let server;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.8.0')) {
+    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.2.0')) {
         ConsoleWriter.error(`Can't start the visual because of the current API is '${visualPackage.config.apiVersion}'.
-        Please use 'powerbi-visuals-api' 3.8.0 or above to build a visual.`);
+        Please use 'powerbi-visuals-api' 3.2.0 or above to build a visual.`);
         throw new Error(`Invalid API version.`);
     }
     new WebPackWrap().applyWebpackConfig(visualPackage, {
