@@ -2,11 +2,13 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-# 3.3.2
-* Extended `"powerbi-visuals-api"` usage up to version 3.2.0 and higher
-* Removed old API ( ^2.6.0 and bellow) templates logic
+# 3.4.0
+* Removed old API ( 2.6.0 and bellow) templates logic
 * Removed `pbiviz-update` method
-* Removed `--api [version]` flag usage
+* Removed `--api [version]` flag
+
+## 3.3.2
+* Extended `"powerbi-visuals-api"` usage up to version 3.2.0 and higher
 
 ## 3.3.1
 * Fixed certificate issues

@@ -27,6 +27,8 @@
 "use strict";
 
 const program = require('commander');
+const compareVersions = require("compare-versions");
+const config = require('../config.json');
 const VisualPackage = require('../lib/VisualPackage');
 const WebpackDevServer = require("webpack-dev-server");
 const ConsoleWriter = require('../lib/ConsoleWriter');
@@ -37,6 +39,7 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const options = process.argv;
+const minAPIversion = config.constants.minAPIversion;
 
 program
     .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
@@ -56,9 +59,9 @@ program.parse(options);
 let cwd = process.cwd();
 let server;
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.2.0')) {
+    if (visualPackage.config.apiVersion && compareVersions.compare(visualPackage.config.apiVersion, minAPIversion, "<")) {
         ConsoleWriter.error(`Can't start the visual because of the current API is '${visualPackage.config.apiVersion}'.
-        Please use 'powerbi-visuals-api' 3.2.0 or above to build a visual.`);
+        Please use 'powerbi-visuals-api' ${minAPIversion} or above to build a visual.`);
         throw new Error(`Invalid API version.`);
     }
     new WebPackWrap().applyWebpackConfig(visualPackage, {
