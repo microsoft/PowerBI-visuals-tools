@@ -103,7 +103,7 @@ function displayCertificationRules() {
     ConsoleWriter.blank();
     ConsoleWriter.warn("Please, make sure that the visual source code matches to requirements of certification:");
     ConsoleWriter.blank();
-    ConsoleWriter.info("Visual must use API v3.8 and above");
+    ConsoleWriter.info("Visual must use API v3.2 and above");
     ConsoleWriter.info("The project repository must:");
     ConsoleWriter.info("Include package.json and package-lock.json;");
     ConsoleWriter.info("Not include node_modules folder");
