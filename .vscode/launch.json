@@ -4,17 +4,15 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "cwd": "${workspaceRoot}",
-            "program": "${workspaceFolder}\\bin\\pbiviz-new.js",
-            "args": [
-                "-t",
-                "circlecard",
-                "mynewsample"
-            ]
+            "name": "Launch Program t1",
+            "cwd": "${workspaceFolder}\\testGround\\t1",
+            "program": "${workspaceFolder}\\bin\\pbiviz.js",
+            "args": ["start"]
         }
     ]
 }

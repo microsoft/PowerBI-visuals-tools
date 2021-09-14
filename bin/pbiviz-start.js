@@ -79,7 +79,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             ConsoleWriter.info('Starting server...');
             // webpack dev server serves bundle from disk instead memory
             if (program.drop) {
-                webpackConfig.devServer.before = (app) => {
+                webpackConfig.devServer.onBeforeSetupMiddleware = (devServer) => {
                     let setHeaders = (res) => {
                         Object.getOwnPropertyNames(webpackConfig.devServer.headers)
                             .forEach(property => res.header(property, webpackConfig.devServer.headers[property]));
@@ -95,22 +95,26 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
                         'visual.css',
                         'pbiviz.json'
                     ].forEach(asset => {
-                        app.get(`${webpackConfig.devServer.publicPath}/${asset}`, function (req, res) {
+                        devServer.app.get(`${webpackConfig.devServer.publicPath}/${asset}`, function (req, res) {
                             setHeaders(res);
-                            readFile(path.join(webpackConfig.devServer.contentBase, asset), res);
+                            readFile(path.join(webpackConfig.devServer.static.directory, asset), res);
                         });
                     });
                 };
             }
 
-            server = new WebpackDevServer(compiler, {
+            server = new WebpackDevServer({
                 ...webpackConfig.devServer,
-                hot: !program.drop,
-                writeToDisk: program.drop
-            });
-            server.listen(webpackConfig.devServer.port, () => {
+                hot: false,
+                devMiddleware: {
+                    writeToDisk: program.drop    
+                }
+            }, compiler);
+
+            (async () => {
+                await server.start();
                 ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
-            });
+            })();
 
         })
         .catch(e => {
