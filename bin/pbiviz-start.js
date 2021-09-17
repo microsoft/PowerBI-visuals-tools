@@ -66,6 +66,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
     }
     new WebPackWrap().applyWebpackConfig(visualPackage, {
         devMode: true,
+        devtool: "source-map",
         generateResources: true,
         generatePbiviz: false,
         minifyJS: false,
