@@ -43,7 +43,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 let startChecker = (proc) => new Promise((resolve) => {
     proc.stdout.on('data', (data) => {
         let dataStr = data.toString();
-        if (dataStr.indexOf("Compiled successfully.") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+        if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
             resolve();
         }
     });

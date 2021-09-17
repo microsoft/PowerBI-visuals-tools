@@ -105,9 +105,10 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
             server = new WebpackDevServer({
                 ...webpackConfig.devServer,
+                client: false,
                 hot: false,
                 devMiddleware: {
-                    writeToDisk: program.drop    
+                    writeToDisk: true    
                 }
             }, compiler);
 
