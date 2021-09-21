@@ -26,13 +26,17 @@
 
 "use strict";
 
-let program = require('commander');
-let VisualPackage = require('../lib/VisualPackage');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let WebPackWrap = require('../lib/WebPackWrap');
+const program = require('commander');
+const compareVersions = require("compare-versions");
+const config = require('../config.json');
+const VisualPackage = require('../lib/VisualPackage');
+const ConsoleWriter = require('../lib/ConsoleWriter');
+const WebPackWrap = require('../lib/WebPackWrap');
 const webpack = require("webpack");
-let CommandHelpManager = require('../lib/CommandHelpManager');
+const CommandHelpManager = require('../lib/CommandHelpManager');
+
 let options = process.argv;
+const minAPIversion = config.constants.minAPIversion;
 
 program
     .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart', 'es5')
@@ -59,9 +63,9 @@ if (!program.pbiviz && !program.resources) {
 }
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    if (parseFloat(visualPackage.config.apiVersion) < parseFloat('3.2.0')) {
+    if (visualPackage.config.apiVersion && compareVersions.compare(visualPackage.config.apiVersion, minAPIversion, "<")) {
         ConsoleWriter.error(`Package wasn't created, your current API is '${visualPackage.config.apiVersion}'.
-        Please use 'powerbi-visuals-api' 3.2.0 or above to build a visual.`);
+        Please use 'powerbi-visuals-api' ${minAPIversion} or above to build a visual.`);
         process.exit(9);
     }
     ConsoleWriter.info('Building visual...');
@@ -99,7 +103,7 @@ function displayCertificationRules() {
     ConsoleWriter.blank();
     ConsoleWriter.warn("Please, make sure that the visual source code matches to requirements of certification:");
     ConsoleWriter.blank();
-    ConsoleWriter.info("Visual must use API v3.8 and above");
+    ConsoleWriter.info(`Visual must use API v${minAPIversion} and above`);
     ConsoleWriter.info("The project repository must:");
     ConsoleWriter.info("Include package.json and package-lock.json;");
     ConsoleWriter.info("Not include node_modules folder");

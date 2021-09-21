@@ -43,7 +43,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 let startChecker = (proc) => new Promise((resolve) => {
     proc.stdout.on('data', (data) => {
         let dataStr = data.toString();
-        if (dataStr.indexOf("Compiled successfully.") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+        if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
             resolve();
         }
     });
@@ -92,74 +92,6 @@ describe("E2E - pbiviz start", () => {
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
-    });
-
-    xit("Should build visual with API 1.5 and check that it is started correctly (string resources doesn't exist)", (done) => {
-        const visualName = 'api150visual';
-        const visualPath = path.join(tempPath, visualName);
-
-        process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--api-version 1.5.0 -t default1');
-
-        //api version file should've been created
-        
-        process.chdir(visualPath);
-
-        let pbivizProc;
-        pbivizProc = FileSystem.runPbivizAsync("start", "-d");
-        let callbackCalled = false;
-        pbivizProc.stdout.on('data', (data) => {
-            let dataStr = data.toString();
-            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
-                if (callbackCalled) {
-                    return;
-                }
-                callbackCalled = true;
-                //the end
-                FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
-                    expect(error).toBeNull();
-                    done();
-                });
-            }
-        });
-        pbivizProc.stderr.on('data', (data) => {
-            if (data.toString().indexOf("DeprecationWarning") === -1) {
-                throw new Error(data.toString());
-            }
-        });
-    });
-
-    xit("Should build visual with API 1.6 and check that it is started correctly (string resources exists)", (done) => {
-        const visualName = 'api150visual';
-        const visualPath = path.join(tempPath, visualName);
-
-        process.chdir(tempPath);
-        FileSystem.runPbiviz('new', visualName, '--api-version 1.6.0 -t default1');
-
-        process.chdir(visualPath);
-
-        let pbivizProc;
-        pbivizProc = FileSystem.runPbivizAsync('start');
-        let callbackCalled = false;
-        pbivizProc.stdout.on('data', (data) => {
-            let dataStr = data.toString();
-            if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
-                if (callbackCalled) {
-                    return;
-                }
-                callbackCalled = true;
-                // the end
-                FileSystem.killProcess(pbivizProc, 'SIGTERM', (error) => {
-                    expect(error).toBeNull();
-                    done();
-                });
-            }
-        });
-        pbivizProc.stderr.on('data', (data) => {
-            if (data.toString().indexOf("DeprecationWarning") === -1) {
-                throw new Error(data.toString());
-            }
-        });
     });
 
     describe("Build and Server", () => {

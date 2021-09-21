@@ -15,6 +15,14 @@
                 "circlecard",
                 "mynewsample"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program t1",
+            "cwd": "${workspaceFolder}\\testGround\\t1",
+            "program": "${workspaceFolder}\\bin\\pbiviz.js",
+            "args": ["start"]
         }
     ]
 }

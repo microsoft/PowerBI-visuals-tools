@@ -8,6 +8,9 @@
     "generate": {
         "apiVersion": "3.8.0"
     },
+    "constants": {
+        "minAPIversion": "3.2.0"
+    },
     "build": {
         "precompileFolder": ".tmp/precompile",
         "dropFolder": ".tmp/drop",
