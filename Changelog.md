@@ -3,6 +3,7 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
 # 3.4.0
+### **⚠ BREAKING CHANGES**
 * Removed old API ( 2.6.0 and bellow) templates logic
 * Removed `pbiviz-update` method
 * Removed `--api [version]` flag
