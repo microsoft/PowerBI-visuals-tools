@@ -9,7 +9,7 @@
   "dependencies": {
     "d3": "5.10.0",
     "powerbi-visuals-utils-dataviewutils": "^2.2.1",
-    "core-js": "3.2.1"
+    "core-js": "3.18.1"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.4.4",

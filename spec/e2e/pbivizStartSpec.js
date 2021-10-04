@@ -29,8 +29,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const async = require('async');
-const request = require('request');
-
+const https = require('https');
 const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
 
@@ -42,8 +41,8 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 
 let startChecker = (proc) => new Promise((resolve) => {
     proc.stdout.on('data', (data) => {
-        let dataStr = data.toString();
-        if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+        let dataStr = (data.toString()).toLowerCase();
+        if ((dataStr.indexOf("compiled") !== -1 && dataStr.indexOf("successfully") !== -1) || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
             resolve();
         }
     });
@@ -108,10 +107,14 @@ describe("E2E - pbiviz start", () => {
             startChecker(pbivizProc).then(() => {
                 //check files on filesystem
                 expect(fs.statSync(dropPath).isDirectory()).toBe(true);
-                assetFiles.forEach(file => {
-                    let filePath = path.join(dropPath, file);
-                    expect(fs.statSync(filePath).isFile()).toBe(true);
-                });
+                try {
+                    assetFiles.forEach(file => {
+                        let filePath = path.join(dropPath, file);
+                        expect(fs.statSync(filePath).isFile()).toBe(true);
+                    });
+                } catch (error) {
+                    expect(error).toBeNull();
+                }
                 //check metadata
                 let pbivizPath = path.join(dropPath, 'pbiviz.json');
                 let pbiviz = fs.readJsonSync(pbivizPath);
@@ -128,26 +131,56 @@ describe("E2E - pbiviz start", () => {
 
         it("Should serve files from drop folder on port 8080", (done) => {
             startChecker(pbivizProc).then(() => {
-                async.each(
-                    assetFiles,
-                    (file, next) => {
-                        let filePath = path.join(dropPath, file);
-                        request({
-                            url: 'https://localhost:8080/assets/' + file,
-                            //allow self signed cert
-                            strictSSL: false
-                        }, (error, response, body) => {
-                            expect(error).toBeNull();
-                            expect(response.statusCode).toBe(200);
-                            expect(body).toBe(fs.readFileSync(filePath).toString());
-                            next();
+                assetFiles.forEach((file) => {
+                    let filePath = path.join(dropPath, file);
+                    const options = {
+                        host: 'localhost',
+                        hostname: 'localhost',
+                        port: 8080,
+                        path: '/assets/' + file,
+                        method: 'GET',
+                        rejectUnauthorized: false
+                    };
+
+                    let request = (options) => {
+                        return new Promise((resolve, reject) => {
+                            try {
+                                https.get(options, (res) => {
+                                    let response = {
+                                        statusCode: res.statusCode,
+                                        body: []
+                                    };
+                                    let body = [];
+                                    res.on('error', (error) => {
+                                        reject(error);
+                                    })
+                                        .on('data', (chunk) => {
+                                            body.push(chunk);
+                                        })
+                                        .on('end', () => {
+                                            response.body = Buffer.concat(body).toString();
+                                            // at this point, `body` has the entire request body stored in it as a string
+                                            resolve(response);
+                                        });
+                                });
+                            } catch (error) {
+                                reject(error);
+                            }
+
                         });
-                    },
-                    error => {
-                        if (error) { throw error; }
-                        procKiller(pbivizProc, done);
-                    }
-                );
+                    };
+
+                    request(options)
+                        .catch((error) => {
+                            expect(error).toBeNull();
+                        })
+                        .then(response => {
+                            expect(response.statusCode).toBe(200, 'response statusCode error');
+                            expect(response.body.toString()).toBe(fs.readFileSync(filePath).toString());
+                        });
+                });
+
+                procKiller(pbivizProc, done);
             });
         });
 
