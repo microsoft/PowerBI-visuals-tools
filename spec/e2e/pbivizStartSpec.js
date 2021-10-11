@@ -129,60 +129,168 @@ describe("E2E - pbiviz start", () => {
             });
         });
 
+        // let downloadFile = (url, fileName) => {
+        //     return new Promise((resolve, reject) => {
+        //         const templateUrl = url;
+        //         const fileStream = fs.createWriteStream(`.${path.sep}${fileName}`);
+        //         const request = (url) => {
+        //             https.get(url, (res) => {
+        //                 switch (res.statusCode) {
+        //                     case 301:
+        //                     case 302:
+        //                         request(res.headers.location);
+        //                         break;
+        //                     case 200:
+        //                         res.pipe(fileStream);
+        //                         fileStream.on('close', () => resolve(fileStream));
+        //                         res.on('error', (error) => reject(error));
+        //                         break;
+        //                     default:
+        //                         reject(res.statusCode);
+        //                 }
+        //             })
+        //                 .on('error', (error) => reject(error));
+        //         };
+
+        //         request(templateUrl);
+        //     });
+        // };
+
         it("Should serve files from drop folder on port 8080", (done) => {
             startChecker(pbivizProc).then(() => {
-                assetFiles.forEach((file) => {
-                    let filePath = path.join(dropPath, file);
-                    const options = {
-                        host: 'localhost',
-                        hostname: 'localhost',
-                        port: 8080,
-                        path: '/assets/' + file,
-                        method: 'GET',
-                        rejectUnauthorized: false
-                    };
 
-                    let request = (options) => {
-                        return new Promise((resolve, reject) => {
-                            try {
-                                https.get(options, (res) => {
-                                    let response = {
-                                        statusCode: res.statusCode,
-                                        body: []
-                                    };
-                                    let body = [];
-                                    res.on('error', (error) => {
-                                        reject(error);
-                                    })
-                                        .on('data', (chunk) => {
-                                            body.push(chunk);
-                                        })
-                                        .on('end', () => {
-                                            response.body = Buffer.concat(body).toString();
-                                            // at this point, `body` has the entire request body stored in it as a string
-                                            resolve(response);
+                async.each(
+                    assetFiles,
+                    (file, next) => {
+                        let filePath = path.join(dropPath, file);
+                        const options = {
+                            host: 'localhost',
+                            hostname: 'localhost',
+                            port: 8080,
+                            path: '/assets/' + file,
+                            method: 'GET',
+                            rejectUnauthorized: false
+                        };
+
+                        // downloadFile(options, file)
+                        //     .then((response) => {
+                        //         // console.log(`+++++++++++==========+++++++\r\n\r\n${fs.readFileSync(response.path).toString()}`);
+                        //         let fileD = fs.readFileSync(response.path).toString();
+                        //         let fileC = fs.readFileSync(filePath).toString();
+                        //         expect(fileD).toBe(fileC);
+                        //         next();
+                        //     })
+                        //     .catch((err) => expect(err).toBeNull);
+
+                        let request = (options) => {
+                                return new Promise((resolve, reject) => {
+                                    try {
+                                        https.get(options, (res) => {
+                                            let response = {
+                                                name: file,
+                                                statusCode: res.statusCode,
+                                                body: []
+                                            };
+                                            let body = [];
+                                            res.on('error', (error) => {
+                                                reject(error);
+                                            })
+                                                .on('data', (chunk) => {
+                                                    body.push(chunk);
+                                                })
+                                                .on('end', () => {
+                                                    response.body = Buffer.concat(body).toString();
+                                                    // at this point, `body` has the entire request body stored in it as a string
+                                                    resolve(response);
+                                                });
                                         });
+                                    } catch (error) {
+                                        reject(error);
+                                    }
+            
                                 });
-                            } catch (error) {
-                                reject(error);
-                            }
+                            };
+            
+                            request(options)
+                                .catch((error) => {
+                                    expect(error).toBeNull();
+                                    next();
+                                })
+                                .then(response => {
+                                    expect(response.statusCode).toBe(200, 'response statusCode error');
+                                    expect(response.body.toString()).toBe(fs.readFileSync(filePath).toString());
+                                    next();
+                                });
+                        
+                    },
+                    error => {
+                        if (error) { throw error; }
+                        procKiller(pbivizProc, done);
+                    }
+                );
 
-                        });
-                    };
+                // assetFiles.forEach(async (file) => {
+                //     let filePath = path.join(dropPath, file);
+                //     const options = {
+                //         host: 'localhost',
+                //         hostname: 'localhost',
+                //         port: 8080,
+                //         path: '/assets/' + file,
+                //         method: 'GET',
+                //         rejectUnauthorized: false
+                //     };
 
-                    request(options)
-                        .catch((error) => {
-                            expect(error).toBeNull();
-                        })
-                        .then(response => {
-                            expect(response.statusCode).toBe(200, 'response statusCode error');
-                            expect(response.body.toString()).toBe(fs.readFileSync(filePath).toString());
-                        });
-                });
+                //     await downloadFile(options, file)
+                //         .then((response) => {
+                //             console.log(`+++++++++++==========+++++++\r\n\r\n${fs.readFileSync(response.path).toString()}`);
+                //             expect(fs.readFileSync(response.path).toString()).toBe(fs.readFileSync(filePath).toString());
+                //         })
+                //         .catch((err) => expect(err).toBeNull);
 
-                procKiller(pbivizProc, done);
+
+                // let request = (options) => {
+                //     return new Promise((resolve, reject) => {
+                //         try {
+                //             https.get(options, (res) => {
+                //                 let response = {
+                //                     statusCode: res.statusCode,
+                //                     body: []
+                //                 };
+                //                 let body = [];
+                //                 res.on('error', (error) => {
+                //                     reject(error);
+                //                 })
+                //                     .on('data', (chunk) => {
+                //                         body.push(chunk);
+                //                     })
+                //                     .on('end', () => {
+                //                         response.body = Buffer.concat(body).toString();
+                //                         // at this point, `body` has the entire request body stored in it as a string
+                //                         resolve(response);
+                //                     });
+                //             });
+                //         } catch (error) {
+                //             reject(error);
+                //         }
+
+                //     });
+                // };
+
+                // request(options)
+                //     .catch((error) => {
+                //         expect(error).toBeNull();
+                //     })
+                //     .then(response => {
+                //         expect(response.statusCode).toBe(200, 'response statusCode error');
+                //         expect(response.body.toString()).toBe(fs.readFileSync(filePath).toString());
+                //     });
+
             });
+
+
         });
+        //     procKiller(pbivizProc, done);
+        // });
 
         // TODO rewrite this UT because build sequence is different
         xit("Should rebuild files on change and update status", (done) => {
