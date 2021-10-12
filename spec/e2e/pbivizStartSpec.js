@@ -163,6 +163,7 @@ describe("E2E - pbiviz start", () => {
                 async.each(
                     assetFiles,
                     (file, next) => {
+                        let errorMessage = `error in request to "${file}" response,`;
                         let filePath = path.join(dropPath, file);
                         const options = {
                             host: 'localhost',
@@ -174,19 +175,25 @@ describe("E2E - pbiviz start", () => {
                         };
 
                         request(options, file)
-                            .catch((error) => {
-                                expect(error).toBeNull();
+                            .then(response => {
+                                let desiredStatusCode = 200;
+                                let resBody = response.body.toString();
+                                let comparisonBody = fs.existsSync(filePath) ? fs.readFileSync(filePath).toString() : null;
+                                expect(response.statusCode).withContext(`${errorMessage} statusCode`).toBe(desiredStatusCode);
+                                expect(resBody).withContext(`${errorMessage} body`).toBe(comparisonBody);
                                 next();
                             })
-                            .then(response => {
-                                expect(response.statusCode).toBe(200, 'response statusCode error');
-                                expect(response.body.toString()).toBe(fs.readFileSync(filePath).toString());
-                                next();
+                            .catch((error) => {
+                                expect(error).toBeNull();
+                                next(`request to "${file}" error.`);
                             });
                     },
                     error => {
-                        if (error) { throw error; }
-                        procKiller(pbivizProc, done);
+                        if (error) {
+                            procKiller(pbivizProc, done);
+                        } else {
+                            procKiller(pbivizProc, done);
+                        }
                     }
                 );
             });
