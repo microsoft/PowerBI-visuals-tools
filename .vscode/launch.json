@@ -34,7 +34,7 @@
                 "new",
                 "-t",
                 "circlecard",
-                "mynewsample",
+                "circlecard-sample",
                 "-f"
             ]
         },

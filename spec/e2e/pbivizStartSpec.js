@@ -29,9 +29,10 @@
 const fs = require('fs-extra');
 const path = require('path');
 const async = require('async');
-const https = require('https');
 const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
+const download = require("../../lib/utils").download;
+const createFolder = require("../../lib/utils").createFolder;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -52,34 +53,6 @@ let procKiller = (proc, done) => {
     FileSystem.killProcess(proc, 'SIGTERM', (error) => {
         expect(error).toBeNull();
         done();
-    });
-};
-
-let request = (options, responseName) => {
-    return new Promise((resolve, reject) => {
-        try {
-            https.get(options, (res) => {
-                let response = {
-                    name: responseName || null,
-                    statusCode: res.statusCode,
-                    body: []
-                };
-                let body = [];
-                res.on('error', (error) => {
-                    reject(error);
-                })
-                    .on('data', (chunk) => {
-                        body.push(chunk);
-                    })
-                    .on('end', () => {
-                        response.body = Buffer.concat(body).toString();
-                        // at this point, `body` has the entire request body stored in it as a string
-                        resolve(response);
-                    });
-            });
-        } catch (error) {
-            reject(error);
-        }
     });
 };
 
@@ -165,6 +138,8 @@ describe("E2E - pbiviz start", () => {
                     (file, next) => {
                         let errorMessage = `error in request to "${file}" response,`;
                         let filePath = path.join(dropPath, file);
+                        let testFolder = createFolder("./testFolder");
+                        let testFile = path.join(testFolder, file);
                         const options = {
                             host: 'localhost',
                             hostname: 'localhost',
@@ -174,13 +149,11 @@ describe("E2E - pbiviz start", () => {
                             rejectUnauthorized: false
                         };
 
-                        request(options, file)
-                            .then(response => {
-                                let desiredStatusCode = 200;
-                                let resBody = response.body.toString();
+                        download(options, testFile)
+                            .then(() => {
+                                let downloadedBody = fs.existsSync(testFile) ? fs.readFileSync(testFile).toString() : null;
                                 let comparisonBody = fs.existsSync(filePath) ? fs.readFileSync(filePath).toString() : null;
-                                expect(response.statusCode).withContext(`${errorMessage} statusCode`).toBe(desiredStatusCode);
-                                expect(resBody).withContext(`${errorMessage} body`).toBe(comparisonBody);
+                                expect(downloadedBody).withContext(`${errorMessage} body`).toBe(comparisonBody);
                                 next();
                             })
                             .catch((error) => {
