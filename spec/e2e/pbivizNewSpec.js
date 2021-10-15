@@ -94,17 +94,14 @@ describe("E2E - pbiviz new", () => {
     describe(`Should download 'Circlecard' visual archive from the repo`, () => {
         let template = 'circlecard';
 
-        it(`Verifiy size`, () => {
+        it(`Verifiy size`, async () => {
             const folder = createFolder(template);
             const archiveSize = 49558;
             const archiveName = path.join(folder, `${template}Archive.zip`);
-            download(config.visualTemplates[template], archiveName)
-                .then(async () => {
-                    const stats = await fsPromises.stat(archiveName);
-                    await expect(stats.size).toBe(archiveSize);
-
-                    await fsPromises.unlink(archiveName);
-                });
+            await download(config.visualTemplates[template], archiveName);
+            const stats = await fsPromises.stat(archiveName);
+            await expect(stats.size).toBe(archiveSize);
+            await fsPromises.unlink(archiveName);
         });
 
     });
