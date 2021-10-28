@@ -30,6 +30,6 @@
         "port": "8080"
     },
     "visualTemplates": {
-        "circlecard": "http://github.com/microsoft/powerbi-visuals-circlecard-react/archive/master.zip"
+        "circlecard": "https://codeload.github.com/microsoft/powerbi-visuals-circlecard-react/zip/master"
     }
 }

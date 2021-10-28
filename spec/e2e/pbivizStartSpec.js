@@ -29,10 +29,10 @@
 const fs = require('fs-extra');
 const path = require('path');
 const async = require('async');
-const request = require('request');
-
 const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
+const download = require("../../lib/utils").download;
+const createFolder = require("../../lib/utils").createFolder;
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -42,8 +42,8 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 
 let startChecker = (proc) => new Promise((resolve) => {
     proc.stdout.on('data', (data) => {
-        let dataStr = data.toString();
-        if (dataStr.indexOf("Compiled successfully") !== -1 || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
+        let dataStr = (data.toString()).toLowerCase();
+        if ((dataStr.indexOf("compiled") !== -1 && dataStr.indexOf("successfully") !== -1) || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
             resolve();
         }
     });
@@ -108,10 +108,14 @@ describe("E2E - pbiviz start", () => {
             startChecker(pbivizProc).then(() => {
                 //check files on filesystem
                 expect(fs.statSync(dropPath).isDirectory()).toBe(true);
-                assetFiles.forEach(file => {
-                    let filePath = path.join(dropPath, file);
-                    expect(fs.statSync(filePath).isFile()).toBe(true);
-                });
+                try {
+                    assetFiles.forEach(file => {
+                        let filePath = path.join(dropPath, file);
+                        expect(fs.statSync(filePath).isFile()).toBe(true);
+                    });
+                } catch (error) {
+                    expect(error).toBeNull();
+                }
                 //check metadata
                 let pbivizPath = path.join(dropPath, 'pbiviz.json');
                 let pbiviz = fs.readJsonSync(pbivizPath);
@@ -126,30 +130,48 @@ describe("E2E - pbiviz start", () => {
             });
         });
 
+
         it("Should serve files from drop folder on port 8080", (done) => {
             startChecker(pbivizProc).then(() => {
                 async.each(
                     assetFiles,
                     (file, next) => {
+                        let errorMessage = `error in request to "${file}" response,`;
                         let filePath = path.join(dropPath, file);
-                        request({
-                            url: 'https://localhost:8080/assets/' + file,
-                            //allow self signed cert
-                            strictSSL: false
-                        }, (error, response, body) => {
-                            expect(error).toBeNull();
-                            expect(response.statusCode).toBe(200);
-                            expect(body).toBe(fs.readFileSync(filePath).toString());
-                            next();
-                        });
+                        let testFolder = createFolder("./testFolder");
+                        let testFile = path.join(testFolder, file);
+                        const options = {
+                            host: 'localhost',
+                            hostname: 'localhost',
+                            port: 8080,
+                            path: '/assets/' + file,
+                            method: 'GET',
+                            rejectUnauthorized: false
+                        };
+
+                        download(options, testFile)
+                            .then(() => {
+                                let downloadedBody = fs.existsSync(testFile) ? fs.readFileSync(testFile).toString() : null;
+                                let comparisonBody = fs.existsSync(filePath) ? fs.readFileSync(filePath).toString() : null;
+                                expect(downloadedBody).withContext(`${errorMessage} body`).toBe(comparisonBody);
+                                next();
+                            })
+                            .catch((error) => {
+                                expect(error).toBeNull();
+                                next(`request to "${file}" error.`);
+                            });
                     },
                     error => {
-                        if (error) { throw error; }
-                        procKiller(pbivizProc, done);
+                        if (error) {
+                            procKiller(pbivizProc, done);
+                        } else {
+                            procKiller(pbivizProc, done);
+                        }
                     }
                 );
             });
         });
+
 
         // TODO rewrite this UT because build sequence is different
         xit("Should rebuild files on change and update status", (done) => {

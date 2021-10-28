@@ -2,6 +2,12 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.4.2
+
+* Migrated from `request` lib to node `https` standard method
+* Removed `friendly-errors-webpack-plugin` usage
+* Removed or updated deprecated dependencies
+
 ## 3.4.1
 
 * Fixed certificate verification for 'non-english' environment

@@ -19,10 +19,38 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program t1",
+            "name": "pbiviz-start t1",
             "cwd": "${workspaceFolder}\\testGround\\t1",
             "program": "${workspaceFolder}\\bin\\pbiviz.js",
             "args": ["start"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "pbiviz-new circle",
+            "cwd": "${workspaceFolder}\\testGround",
+            "program": "${workspaceFolder}\\bin\\pbiviz.js",
+            "args": [
+                "new",
+                "-t",
+                "circlecard",
+                "circlecard-sample",
+                "-f"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test pbiviz-start",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceFolder}\\bin\\pbiviz.js",
+            "args": [
+                "new",
+                "-t",
+                "circlecard",
+                "mynewsample",
+                "-f"
+            ]
         }
     ]
 }

@@ -28,10 +28,14 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const fsPromises = require("fs").promises;
 const utils = require('./utils');
 
-let FileSystem = require('../helpers/FileSystem.js');
+const FileSystem = require('../helpers/FileSystem.js');
 const writeMetadata = require("./utils").writeMetadata;
+const download = require("../../lib/utils").download;
+const createFolder = require("../../lib/utils").createFolder;
+const config = require("../../config.json");
 
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
@@ -87,7 +91,23 @@ describe("E2E - pbiviz new", () => {
         expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
     });
 
+    describe(`Should download 'Circlecard' visual archive from the repo`, () => {
+        let template = 'circlecard';
+
+        it(`Verifiy size`, async () => {
+            const folder = createFolder(template);
+            const archiveSize = 49558;
+            const archiveName = path.join(folder, `${template}Archive.zip`);
+            await download(config.visualTemplates[template], archiveName);
+            const stats = await fsPromises.stat(archiveName);
+            await expect(stats.size).toBe(archiveSize);
+            await fsPromises.unlink(archiveName);
+        });
+
+    });
+
     describe('Should generate new visual using specified template', () => {
+
         it('table', () => {
             const template = 'table';
 
@@ -112,12 +132,20 @@ describe("E2E - pbiviz new", () => {
             testGeneratedVisualByTemplateName(template);
         });
 
+        it('circlecard', () => {
+            const template = 'circlecard';
+
+            testGeneratedVisualByTemplateName(template);
+        });
+
         function testGeneratedVisualByTemplateName(template) {
             let visualName = 'visualname',
                 visualPath = path.join(tempPath, visualName);
 
             FileSystem.runPbiviz('new', visualName, `--template ${template}`);
-            FileSystem.runCMDCommand('npm i', visualPath, startPath);
+            if (template !== 'circlecard') {
+                FileSystem.runCMDCommand('npm i', visualPath, startPath);
+            }
 
             //check base dir exists
             let stat = fs.statSync(visualPath);
@@ -128,8 +156,13 @@ describe("E2E - pbiviz new", () => {
 
             //check pbiviz.json config file
             let visualConfig = pbivizJson.visual;
-            expect(visualConfig.name).toBe(visualName);
-            expect(visualConfig.displayName).toBe(visualName);
+            if (template === 'circlecard') {
+                expect(visualConfig.name).toBe('reactCircleCard');
+                expect(visualConfig.displayName).toBe('ReactCircleCard');
+            } else {
+                expect(visualConfig.name).toBe(visualName);
+                expect(visualConfig.displayName).toBe(visualName);
+            }
             expect(visualConfig.guid).toBeDefined();
             expect(visualConfig.guid).toMatch(/^[a-zA-Z0-9]+$/g);
             expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
