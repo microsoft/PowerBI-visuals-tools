@@ -6,7 +6,7 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 * Updated webpack assets compilation
 * Added environment logging for debugging purposes
-* Fixed certificate date verification according to regional setting
+* Fixed certificate date verification for different regional settings
 
 ## 3.4.2
 
