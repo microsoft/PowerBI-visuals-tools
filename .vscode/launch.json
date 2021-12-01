@@ -27,6 +27,22 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "pbiviz-start t1 Linux",
+            "cwd": "${workspaceFolder}/testGround/t1",
+            "program": "${workspaceFolder}/bin/pbiviz.js",
+            "args": ["start"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "pbiviz-package t1",
+            "cwd": "${workspaceFolder}\\testGround\\t1",
+            "program": "${workspaceFolder}\\bin\\pbiviz.js",
+            "args": ["package"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "pbiviz-new circle",
             "cwd": "${workspaceFolder}\\testGround",
             "program": "${workspaceFolder}\\bin\\pbiviz.js",

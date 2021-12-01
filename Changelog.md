@@ -2,11 +2,18 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 3.4.3
+
+* Updated webpack assets compilation
+* Added environment logging for debugging purposes
+* Fixed certificate date verification for different regional settings
+
 ## 3.4.2
 
 * Migrated from `request` lib to node `https` standard method
 * Removed `friendly-errors-webpack-plugin` usage
 * Removed or updated deprecated dependencies
+* Fixed vulnerabilities
 
 ## 3.4.1
 
