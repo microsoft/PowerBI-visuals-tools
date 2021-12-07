@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.0.0
+* This release version includes changes from previous betta versions: 3.4.0, 3.4.1, 3.4.2, 3.4.3.
+
 ## 3.4.3
 
 * Updated webpack assets compilation
