@@ -35,6 +35,8 @@ let config = require(confPath);
 let args = process.argv;
 let CertificateTools = require("../lib/CertificateTools");
 
+ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`);
+
 program
     .version(npmPackage.version)
     .command('new [name]', 'Create a new visual')

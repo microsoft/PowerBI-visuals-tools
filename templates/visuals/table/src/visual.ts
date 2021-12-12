@@ -26,7 +26,6 @@
 
 "use strict";
 
-import "core-js/stable";
 import "./../style/visual.less";
 import { select } from "d3-selection";
 import { transpose } from "d3-array";
