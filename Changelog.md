@@ -2,7 +2,7 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 4.0.1
+## 4.0.2
 * Fix custom visual package upload to desktop version of PowerBI
 * Removed environment logging in this version 
 * Downgraded "powerbi-visuals-webpack-plugin"
