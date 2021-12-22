@@ -39,7 +39,6 @@ let options = process.argv;
 const minAPIversion = config.constants.minAPIversion;
 
 program
-    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart', 'es5')
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)", false)
     .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)", false)
     .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)", true)
@@ -76,7 +75,6 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         generatePbiviz: program.pbiviz,
         minifyJS: program.minify,
         minify: program.minify,
-        target: program.target,
         compression: program.compression
     }).then(({ webpackConfig }) => {
         let compiler = webpack(webpackConfig);

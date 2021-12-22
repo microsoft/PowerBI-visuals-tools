@@ -8,13 +8,9 @@
   },
   "dependencies": {
     "d3": "5.10.0",
-    "powerbi-visuals-utils-dataviewutils": "^2.2.1",
-    "core-js": "3.18.1"
+    "powerbi-visuals-utils-dataviewutils": "^2.2.1"
   },
   "devDependencies": {
-    "@babel/polyfill": "^7.4.4",
-    "@babel/runtime": "^7.5.5",
-    "@babel/runtime-corejs2": "^7.5.5",
     "@types/d3": "5.7.2",
     "powerbi-visuals-api": "~3.8.0",
     "tslint": "^5.18.0",

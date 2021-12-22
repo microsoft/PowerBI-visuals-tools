@@ -42,7 +42,6 @@ const options = process.argv;
 const minAPIversion = config.constants.minAPIversion;
 
 program
-    .option('-t, --target [target]', 'Enable babel loader to compile JS into ES5 standart')
     .option('-p, --port [port]', 'set the port listening on')
     .option('-m, --mute', 'mute error outputs')
     .option('-d, --drop', 'drop outputs into output folder');
@@ -71,7 +70,6 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         generatePbiviz: false,
         minifyJS: false,
         minify: false,
-        target: typeof program.target === 'undefined' ? "es5" : program.target,
         devServerPort: program.port
     })
         .then(({ webpackConfig }) => {

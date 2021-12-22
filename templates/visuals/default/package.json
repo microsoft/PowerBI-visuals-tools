@@ -13,13 +13,10 @@
     "lint": "tslint -c tslint.json -p tsconfig.json"
   },
   "dependencies": {
-    "@babel/runtime": "7.6.0",
-    "@babel/runtime-corejs2": "7.6.0",
     "@types/d3": "5.7.2",
     "d3": "5.12.0",
     "powerbi-visuals-utils-dataviewutils": "2.2.1",
-    "powerbi-visuals-api": "~3.8.0",
-    "core-js": "^3.18.1"
+    "powerbi-visuals-api": "~3.8.0"
   },
   "devDependencies": {
     "ts-loader": "6.1.0",

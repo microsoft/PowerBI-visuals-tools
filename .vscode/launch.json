@@ -22,7 +22,9 @@
             "name": "pbiviz-start t1",
             "cwd": "${workspaceFolder}\\testGround\\t1",
             "program": "${workspaceFolder}\\bin\\pbiviz.js",
-            "args": ["start"]
+            "args": [
+                "start"
+            ]
         },
         {
             "type": "node",
