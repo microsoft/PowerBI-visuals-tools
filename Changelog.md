@@ -2,7 +2,7 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 4.0.3
+## 4.0.3 - 4.0.4
 ### **⚠ BREAKING CHANGES**
 * Removed polyfills and 'Internet Explorer` browser support
 * Removed `--target` option for `pbiviz-start` and `pbiviz-package` commands
