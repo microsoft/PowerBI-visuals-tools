@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./lib/VisualPackage.js",
   "scripts": {
@@ -26,8 +26,7 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
-    "assert": "^2.0.0",
-    "async": "3.2.2",
+    "async": "^3.2.3",
     "base64-inline-loader": "^2.0.1",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
@@ -71,7 +70,7 @@
     "vm-browserify": "^1.1.2",
     "webpack": "^5.51.1",
     "webpack-bundle-analyzer": "4.4.2",
-    "webpack-dev-server": "^4.1.0"
+    "webpack-dev-server": "^4.8.1"
   },
   "devDependencies": {
     "eslint": "^7.31.0",

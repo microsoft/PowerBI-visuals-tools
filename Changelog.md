@@ -2,6 +2,8 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.0.5
+* Updated dependencies, fixed npm audit issues
 ## 4.0.3 - 4.0.4
 ### **⚠ BREAKING CHANGES**
 * Removed polyfills and 'Internet Explorer` browser support
