@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
+    "assert": "^2.0.0",
     "async": "^3.2.3",
     "base64-inline-loader": "^2.0.1",
     "browserify-zlib": "^0.2.0",
