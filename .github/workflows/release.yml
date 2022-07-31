@@ -1,0 +1,35 @@
+name: build
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    environment: automated-release
+    runs-on: ubuntu-latest
+    env: 
+      GH_TOKEN: ${{secrets.GH_TOKEN}}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Add config details
+      run: |
+        git config --global user.name ${{secrets.NAME}}
+        git config --global user.email ${{secrets.EMAIL}}
+    - name: Move release to draft
+      run: gh release edit $TAG_NAME --draft=true
+      env:
+        TAG_NAME: ${{ github.event.release.tag_name }}
+    - name: Run npm install, build and test
+      run: |
+        npm i
+        npm run build --if-present
+        npm run test
+        npm run lint
+    - run: zip -r lib.zip lib || echo "Nothing to archive"
+    - name: Upload production artifacts
+      run: |
+        gh release upload $TAG_NAME "lib.zip#build" || echo "Nothing to upload in assets"
+        gh release edit $TAG_NAME --draft=false
+      env:
+        TAG_NAME: ${{ github.event.release.tag_name }}
