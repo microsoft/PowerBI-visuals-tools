@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "d3": "5.10.0",
-    "powerbi-visuals-utils-dataviewutils": "^2.2.1"
+    "powerbi-visuals-utils-formattingmodel": "5.0.0"
   },
   "devDependencies": {
     "@types/d3": "5.7.2",
-    "powerbi-visuals-api": "~3.8.0",
+    "powerbi-visuals-api": "5.0.0",
     "tslint": "^5.18.0",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "3.6.3"

@@ -25,7 +25,27 @@
  */
 "use strict";
 
-import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
-import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
+import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 
-<%= visualSettingsClasses %>
+import FormattingSettingsModel = formattingSettings.Model;
+// import FormattingSettingsCard = formattingSettings.Card;
+// import FormattingSettingsSlice = formattingSettings.Slice;
+
+// TODO: fill all visual settings here
+// class DataPointCardSettings extends FormattingSettingsCard {
+//     fill = new formattingSettings.ColorPicker({
+//         name: "fill", // Property name from capabilities.json
+//         displayName: "Fill",
+//         value: { value: "#000000" }
+//     });
+
+//     name: string = "dataPoint"; // Object name from capabilities.json
+//     displayName: string = "Data colors";
+//     slices: Array<FormattingSettingsSlice> = [this.fill];
+// }
+
+export class VisualFormattingSettingsModel extends FormattingSettingsModel {
+    // TODO: fill all visual settings here
+    // public dataPointCardSettings: FormattingSettingsCard = new DataPointCardSettings();
+    // cards = [this.dataPointCardSettings];
+}
