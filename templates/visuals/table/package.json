@@ -11,7 +11,7 @@
     "powerbi-visuals-utils-formattingmodel": "5.0.0"
   },
   "devDependencies": {
-    "powerbi-visuals-api": "5.0.0",
+    "powerbi-visuals-api": "5.1.0",
     "@types/d3": "5.7.2",
     "tslint": "^5.18.0",
     "tslint-microsoft-contrib": "^6.2.0",
