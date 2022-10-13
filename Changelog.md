@@ -4,7 +4,7 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 ## 4.0.6
 Update templates visuals to:
-* Support new visuals-api version 5.0.0
+* Support new visuals-api version 5.1.0
 * Replace `enumerateObjectInstances` by `getFormattingModel` API
 * Import and use `powerbi-visuals-utils-formattingmodel`
 
