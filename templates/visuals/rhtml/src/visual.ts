@@ -46,7 +46,6 @@ enum VisualUpdateType {
 }
 
 // below is a snippet of a definition for an object which will contain the property values
-// selected by the users
 /*class settingsCardSettings extends FormattingSettingsCard {
     lineColor: FormattingSettingsSlice =  new formattingSettings.ColorPicker({
         name: "lineColor",
