@@ -58,5 +58,6 @@
       }
     }
   },
-  "suppressDefaultTitle": true
+  "suppressDefaultTitle": true,
+  "privileges": []
 }
