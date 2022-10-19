@@ -25,17 +25,16 @@
 */
 "use strict";
 import powerbi from "powerbi-visuals-api";
+import { formattingSettings, FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
+
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import VisualObjectInstance = powerbi.VisualObjectInstance;
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
-import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
-import { VisualSettings } from "./settings";
 import { parseElement, resetInjector, runHTMLWidgetRenderer } from "./htmlInjectionUtility";
+import { VisualFormattingSettingsModel } from "./settings";
 
 enum VisualUpdateType {
     Data = 2,
@@ -47,19 +46,30 @@ enum VisualUpdateType {
 }
 
 // below is a snippet of a definition for an object which will contain the property values
-// selected by the users
-/*interface VisualSettings {
-    lineColor: string;
+/*class settingsCardSettings extends FormattingSettingsCard {
+    lineColor: FormattingSettingsSlice =  new formattingSettings.ColorPicker({
+        name: "lineColor",
+        displayName: "Line Color",
+        value: { value: "#000000" }
+    });
+
+    name: string = "settings";
+    displayName: string = "Visual Settings";
+    description: string = "Visual Settings Tooltip";
+    slices: Array<FormattingSettingsSlice> = [this.lineColor];
+}
+
+export class VisualFormattingSettingsModel extends FormattingSettingsModel {
+    settingsCard = new settingsCardSettings();
+
+    cards = [this.settingsCard];
 }*/
 
 // to allow this scenario you should first the following JSON definition to the capabilities.json file
 // under the "objects" property:
 // "settings": {
-//     "displayName": "Visual Settings",
-//     "description": "Visual Settings Tooltip",
 //     "properties": {
 //         "lineColor": {
-//         "displayName": "Line Color",
 //         "type": { "fill": { "solid": { "color": true }}}
 //         }
 //     }
@@ -78,9 +88,11 @@ export class Visual implements IVisual {
     private rootElement: HTMLElement;
     private headNodes: Node[];
     private bodyNodes: Node[];
-    private settings: VisualSettings;
+    private formattingSettings: VisualFormattingSettingsModel;
+    private formattingSettingsService: FormattingSettingsService;
 
     public constructor(options: VisualConstructorOptions) {
+        this.formattingSettingsService = new FormattingSettingsService();
         if (options && options.element) {
             this.rootElement = options.element;
         }
@@ -89,7 +101,6 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions): void {
-
         if (!options ||
             !options.type ||
             !options.viewport ||
@@ -98,8 +109,9 @@ export class Visual implements IVisual {
             !options.dataViews[0]) {
             return;
         }
+
         const dataView: DataView = options.dataViews[0];
-        this.settings = Visual.parseSettings(dataView);
+        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews);
 
         let payloadBase64: string = null;
         if (dataView.scriptResult && dataView.scriptResult.payloadBase64) {
@@ -168,17 +180,11 @@ export class Visual implements IVisual {
         runHTMLWidgetRenderer();
     }
 
-    private static parseSettings(dataView: DataView): VisualSettings {
-        return <VisualSettings>VisualSettings.parse(dataView);
-    }
-
     /**
-     * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the
-     * objects and properties you want to expose to the users in the property pane.
-     *
+     * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
+     * This method is called once every time we open properties pane or when the user edit any format property. 
      */
-    public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions):
-        VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
-        return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
     }
 }
