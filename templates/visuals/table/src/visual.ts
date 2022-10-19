@@ -26,24 +26,23 @@
 
 "use strict";
 
-import "./../style/visual.less";
-import { select } from "d3-selection";
 import { transpose } from "d3-array";
 import { formatPrefix } from "d3-format";
+import { select } from "d3-selection";
+import "./../style/visual.less";
 
 import powerbi from "powerbi-visuals-api";
+import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
+
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import VisualObjectInstance = powerbi.VisualObjectInstance;
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
-import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
-import { VisualSettings } from "./settings";
-import { VisualViewModel, CategoryViewModel } from "./visualViewModel";
+import { VisualFormattingSettingsModel } from "./settings";
 import { visualTransform } from "./visualTransform";
+import { CategoryViewModel, VisualViewModel } from "./visualViewModel";
 
 "use strict";
 export class Visual implements IVisual {
@@ -51,9 +50,12 @@ export class Visual implements IVisual {
     private table: d3.Selection<any, any, any, any>;
     private tHead: d3.Selection<any, any, any, any>;
     private tBody: d3.Selection<any, any, any, any>;
-    private settings: VisualSettings;
+    private formattingSettings: VisualFormattingSettingsModel;
+    private formattingSettingsService: FormattingSettingsService;
 
     constructor(options: VisualConstructorOptions) {
+        this.formattingSettingsService = new FormattingSettingsService();
+
         let target: d3.Selection<any, any, any, any> = this.target = select(options.element).append("div")
             .classed("powerbi-demo-wrapper", true);
 
@@ -72,7 +74,8 @@ export class Visual implements IVisual {
         if (!viewModel) {
             return;
         }
-        this.settings = Visual.parseSettings(options.dataViews[0]);
+
+        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews);
         this.updateContainerViewports(options.viewport);
 
         let transposedSeries: any[][] = transpose(viewModel.values.map((d: any) => d.values.map((d: any) => d)));
@@ -107,12 +110,11 @@ export class Visual implements IVisual {
         return formatPrefix("d", this.round(d, 2))(d);
     }
 
-    private static parseSettings(dataView: DataView): VisualSettings {
-        return <VisualSettings>VisualSettings.parse(dataView);
-    }
-
-    public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions):
-        VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
-        return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
+    /**
+     * Returns properties pane formatting model content hierarchies, properties and latest formatting values, Then populate properties pane.
+     * This method is called once every time we open properties pane or when the user edit any format property. 
+     */
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
     }
 }

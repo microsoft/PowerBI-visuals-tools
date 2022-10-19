@@ -26,7 +26,33 @@
 
 "use strict";
 
-import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
-import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
+import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 
-<%= visualSettingsClasses %>
+import FormattingSettingsCard = formattingSettings.Card;
+import FormattingSettingsSlice = formattingSettings.Slice;
+import FormattingSettingsModel = formattingSettings.Model;
+
+
+/**
+ * General Formatting Card
+ */
+class generalCardSettings extends FormattingSettingsCard {
+    filter: FormattingSettingsSlice = undefined;
+    setFilter: FormattingSettingsSlice = undefined;
+    setFilterEnabled: FormattingSettingsSlice = undefined;
+
+    name: string = "general";
+    displayName: string = "General";
+    slices: Array<FormattingSettingsSlice> = [this.filter, this.setFilter, this.setFilterEnabled];
+}
+
+/**
+* Visual settings model class
+*
+*/
+export class VisualFormattingSettingsModel extends FormattingSettingsModel {
+    // Create formatting settings model formatting cards
+    generalCard = new generalCardSettings();
+
+    cards = [this.generalCard];
+}
