@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.0.7
+* Updated dependencies 
+* fixed vulnerabilities
+
 ## 4.0.6
 Update templates visuals to:
 * Support new visuals-api version 5.1.0
