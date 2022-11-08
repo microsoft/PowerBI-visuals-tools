@@ -3,8 +3,9 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
 ## 4.0.7
-* Updated dependencies 
-* fixed vulnerabilities
+* StringResources (Localizations) are supported in Developer Mode.
+* Update `powerbi-visuals-webpack-plugin` to 3.1.0
+* Fixed vulnerabilities
 
 ## 4.0.6
 Update templates visuals to:
