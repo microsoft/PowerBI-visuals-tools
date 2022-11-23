@@ -79,7 +79,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
             ConsoleWriter.info('Starting server...');
             // webpack dev server serves bundle from disk instead memory
             if (program.drop) {
-                webpackConfig.devServer.onBeforeSetupMiddleware = (devServer) => {
+                webpackConfig.devServer.setupMiddlewares = (middlewares, devServer) => {
                     let setHeaders = (res) => {
                         Object.getOwnPropertyNames(webpackConfig.devServer.headers)
                             .forEach(property => res.header(property, webpackConfig.devServer.headers[property]));
@@ -100,6 +100,8 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
                             readFile(path.join(webpackConfig.devServer.static.directory, asset), res);
                         });
                     });
+
+                    return middlewares;
                 };
             }
 

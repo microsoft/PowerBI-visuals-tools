@@ -79,8 +79,8 @@
     "semver": "7.3.8",
     "tree-kill": "1.2.2"
   },
-  "optionalDependencies": { 
-    "fsevents": "*" 
+  "optionalDependencies": {
+    "fsevents": "*"
   },
   "engines": {
     "node": ">=12.0.0"
