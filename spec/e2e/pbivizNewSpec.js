@@ -96,11 +96,11 @@ describe("E2E - pbiviz new", () => {
 
         it(`Verifiy size`, async () => {
             const folder = createFolder(template);
-            const archiveSize = 49558;
+            const archiveSize = 10000;
             const archiveName = path.join(folder, `${template}Archive.zip`);
             await download(config.visualTemplates[template], archiveName);
             const stats = await fsPromises.stat(archiveName);
-            await expect(stats.size).toBe(archiveSize);
+            await expect(stats.size).toBeGreaterThanOrEqual(archiveSize);
             await fsPromises.unlink(archiveName);
         });
 
