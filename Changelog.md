@@ -2,6 +2,8 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.0.9
+* Fixed vulnerabilities
 ## 4.0.8
 * Reverted to stable version
 * Removed vulnerabilities
