@@ -3,7 +3,7 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
 ## 4.1.0
-* Added loader to reduce localizations size.
+* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` verison 5.1 and higher
 * Fixed vulnerabilities
 
 ## 4.0.9
