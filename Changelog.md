@@ -2,8 +2,13 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.1.0
+* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` verison 5.1 and higher
+* Fixed vulnerabilities
+
 ## 4.0.9
 * Fixed vulnerabilities
+
 ## 4.0.8
 * Reverted to stable version
 * Removed vulnerabilities
@@ -22,6 +27,7 @@ Update templates visuals to:
 
 ## 4.0.5
 * Updated dependencies, fixed npm audit issues
+
 ## 4.0.3 - 4.0.4
 ### **⚠ BREAKING CHANGES**
 * Removed polyfills and 'Internet Explorer` browser support
