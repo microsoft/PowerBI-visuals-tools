@@ -1,6 +1,9 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+## 4.2.0
+* Fixed vulnerabilities
+* Updated `powerbi-visuals-webpack-plugin` to 3.2.0
 
 ## 4.1.0
 * Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` verison 5.1 and higher
