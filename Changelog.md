@@ -1,6 +1,10 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+
+## 4.2.1
+* Replaced `base64-inline-loader` with webpack `asset/inline`
+
 ## 4.2.0
 * Fixed vulnerabilities
 * Updated `powerbi-visuals-webpack-plugin` to 3.2.0
