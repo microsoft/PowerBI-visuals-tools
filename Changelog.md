@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.2.2
+* Implemented new flag `--no-stats` to disable statistics files
+* Fixed vulnerabilities
+
 ## 4.2.1
 * Replaced `base64-inline-loader` with webpack `asset/inline`
 
