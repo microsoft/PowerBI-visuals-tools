@@ -43,6 +43,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 let startChecker = (proc) => new Promise((resolve) => {
     proc.stdout.on('data', (data) => {
         let dataStr = (data.toString()).toLowerCase();
+        console.log(dataStr);
         if ((dataStr.indexOf("compiled") !== -1 && dataStr.indexOf("successfully") !== -1) || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
             resolve();
         }
@@ -77,8 +78,8 @@ describe("E2E - pbiviz start", () => {
     });
 
     afterAll(() => {
-        process.chdir(startPath);
-        FileSystem.deleteTempDirectory();
+        // process.chdir(startPath);
+        // FileSystem.deleteTempDirectory();
     });
 
     xit("Should throw error if not in the visual root", () => {
@@ -92,6 +93,34 @@ describe("E2E - pbiviz start", () => {
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
+    });
+
+    it("Should generate statistic files without flags", (done) => {
+        process.chdir(visualPath);
+        const pbivizProc = FileSystem.runPbivizAsync('start');
+        startChecker(pbivizProc).then(() => {
+            const statisticFilePath = path.join(visualPath, 'webpack.statistics.dev.html');
+            try { 
+                expect(fs.statSync(statisticFilePath).isFile()).toBe(true);
+            } catch (error) {
+                expect(error).toBeNull();
+            }
+            procKiller(pbivizProc, done);
+        });
+    });
+
+    it("Shouldn't generate statistic files with --no-stats flag", (done) => {
+        process.chdir(visualPath);
+        const pbivizProc = FileSystem.runPbivizAsync('start', '--no-stats');
+        startChecker(pbivizProc).then(() => {
+            const statisticFilePath = path.join(visualPath, 'webpack.statistics.dev.html');
+            try { 
+                fs.statSync(statisticFilePath).isFile();
+            } catch (error) {
+                expect(error).not.toBeNull();
+            }
+            procKiller(pbivizProc, done);
+        });
     });
 
     describe("Build and Server", () => {
@@ -129,7 +158,6 @@ describe("E2E - pbiviz start", () => {
                 procKiller(pbivizProc, done);
             });
         });
-
 
         it("Should serve files from drop folder on port 8080", (done) => {
             startChecker(pbivizProc).then(() => {

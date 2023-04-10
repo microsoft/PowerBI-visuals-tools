@@ -48,11 +48,9 @@ program
     .option('-d, --drop', 'drop outputs into output folder')
     .option('--no-stats', "Doesn't generate statistics files");
 
-for (let i = 0; i < options.length; i++) {
-    if (options[i] == '--help' || options[i] == '-h') {
-        program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-        process.exit(0);
-    }
+if (options.some(option => option === '--help' || option === '-h')) {
+    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
+    process.exit(0);
 }
 
 program.parse(options);
@@ -73,7 +71,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         minifyJS: false,
         minify: false,
         devServerPort: program.port,
-        disableStats: program.stats
+        disableStats: !program.stats
     })
         .then(({ webpackConfig }) => {
             let compiler = webpack(webpackConfig);
