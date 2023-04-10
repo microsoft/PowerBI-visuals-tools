@@ -443,6 +443,26 @@ describe("E2E - pbiviz package", () => {
             });
     });
 
+    it("Should generate statistic files without flags", () => {
+        FileSystem.runPbiviz('package');
+        const statisticFilePath = path.join(visualPath, 'webpack.statistics.prod.html');
+        try { 
+            expect(fs.statSync(statisticFilePath).isFile()).toBe(true);
+        } catch (error) {
+            expect(error).toBeNull();
+        }
+    });
+
+    it("Shouldn't generate statistic files with --no-stats flag", () => {
+        FileSystem.runPbiviz('package', '--no-stats');
+        const statisticFilePath = path.join(visualPath, 'webpack.statistics.prod.html');
+        try { 
+            fs.statSync(statisticFilePath).isFile();
+        } catch (error) {
+            expect(error).not.toBeNull();
+        }
+    });
+
 });
 
 function mkDirPromise(path) {
