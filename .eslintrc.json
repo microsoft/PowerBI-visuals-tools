@@ -5,7 +5,7 @@
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 2018,
+        "ecmaVersion": 2023,
         "sourceType": "module"
     },
     "rules": {
@@ -205,7 +205,6 @@
         "no-shadow-restricted-names": "error",
         "no-spaced-func": "error",
         "no-sync": "off",
-        "no-tabs": "error",
         "no-template-curly-in-string": "error",
         "no-ternary": "off",
         "no-throw-literal": "error",

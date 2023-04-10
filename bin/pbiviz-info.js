@@ -32,11 +32,9 @@ let ConsoleWriter = require('../lib/ConsoleWriter');
 let CommandHelpManager = require('../lib/CommandHelpManager');
 let options = process.argv;
 
-for (let i = 0; i < options.length; i++) {
-    if (options[i] == '--help' || options[i] == '-h') {
-        program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-        process.exit(0);
-    }
+if (options.some(option => option === '--help' || option === '-h')) {
+    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
+    process.exit(0);
 }
 
 program.parse(options);

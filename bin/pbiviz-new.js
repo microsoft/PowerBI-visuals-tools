@@ -38,11 +38,9 @@ program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
     .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)');
 
-for (let i = 0; i < options.length; i++) {
-    if (options[i] == '--help' || options[i] == '-h') {
-        program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-        process.exit(0);
-    }
+if (options.some(option => option === '--help' || option === '-h')) {
+    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
+    process.exit(0);
 }
 
 program.parse(options);

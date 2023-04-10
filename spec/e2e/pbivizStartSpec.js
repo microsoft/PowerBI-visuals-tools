@@ -94,6 +94,34 @@ describe("E2E - pbiviz start", () => {
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
     });
 
+    it("Should generate statistic files without flags", (done) => {
+        process.chdir(visualPath);
+        const pbivizProc = FileSystem.runPbivizAsync('start');
+        startChecker(pbivizProc).then(() => {
+            const statisticFilePath = path.join(visualPath, 'webpack.statistics.dev.html');
+            try { 
+                expect(fs.statSync(statisticFilePath).isFile()).toBe(true);
+            } catch (error) {
+                expect(error).toBeNull();
+            }
+            procKiller(pbivizProc, done);
+        });
+    });
+
+    it("Shouldn't generate statistic files with --no-stats flag", (done) => {
+        process.chdir(visualPath);
+        const pbivizProc = FileSystem.runPbivizAsync('start', '--no-stats');
+        startChecker(pbivizProc).then(() => {
+            const statisticFilePath = path.join(visualPath, 'webpack.statistics.dev.html');
+            try { 
+                fs.statSync(statisticFilePath).isFile();
+            } catch (error) {
+                expect(error).not.toBeNull();
+            }
+            procKiller(pbivizProc, done);
+        });
+    });
+
     describe("Build and Server", () => {
         let pbivizProc;
 
@@ -129,7 +157,6 @@ describe("E2E - pbiviz start", () => {
                 procKiller(pbivizProc, done);
             });
         });
-
 
         it("Should serve files from drop folder on port 8080", (done) => {
             startChecker(pbivizProc).then(() => {

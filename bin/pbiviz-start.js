@@ -28,15 +28,16 @@
 
 const program = require('commander');
 const compareVersions = require("compare-versions");
+const fs = require('fs-extra');
+const path = require('path');
+const webpack = require("webpack");
+
 const config = require('../config.json');
 const VisualPackage = require('../lib/VisualPackage');
 const WebpackDevServer = require("webpack-dev-server");
 const ConsoleWriter = require('../lib/ConsoleWriter');
 const WebPackWrap = require('../lib/WebPackWrap');
-const webpack = require("webpack");
 const CommandHelpManager = require('../lib/CommandHelpManager');
-const fs = require('fs-extra');
-const path = require('path');
 
 const options = process.argv;
 const minAPIversion = config.constants.minAPIversion;
@@ -44,13 +45,12 @@ const minAPIversion = config.constants.minAPIversion;
 program
     .option('-p, --port [port]', 'set the port listening on')
     .option('-m, --mute', 'mute error outputs')
-    .option('-d, --drop', 'drop outputs into output folder');
+    .option('-d, --drop', 'drop outputs into output folder')
+    .option('--no-stats', "Doesn't generate statistics files");
 
-for (let i = 0; i < options.length; i++) {
-    if (options[i] == '--help' || options[i] == '-h') {
-        program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-        process.exit(0);
-    }
+if (options.some(option => option === '--help' || option === '-h')) {
+    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
+    process.exit(0);
 }
 
 program.parse(options);
@@ -70,7 +70,8 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
         generatePbiviz: false,
         minifyJS: false,
         minify: false,
-        devServerPort: program.port
+        devServerPort: program.port,
+        disableStats: !program.stats
     })
         .then(({ webpackConfig }) => {
             let compiler = webpack(webpackConfig);
