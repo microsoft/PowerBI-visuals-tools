@@ -2,7 +2,7 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 4.2.2
+## 4.3.0
 * Implemented new flag `--no-stats` to disable statistics files
 * Fixed vulnerabilities
 

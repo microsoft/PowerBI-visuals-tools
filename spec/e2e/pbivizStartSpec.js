@@ -43,7 +43,6 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 180000;
 let startChecker = (proc) => new Promise((resolve) => {
     proc.stdout.on('data', (data) => {
         let dataStr = (data.toString()).toLowerCase();
-        console.log(dataStr);
         if ((dataStr.indexOf("compiled") !== -1 && dataStr.indexOf("successfully") !== -1) || dataStr.match(/Compiled with\s*(\d)* warnings/) !== null) {
             resolve();
         }
@@ -78,8 +77,8 @@ describe("E2E - pbiviz start", () => {
     });
 
     afterAll(() => {
-        // process.chdir(startPath);
-        // FileSystem.deleteTempDirectory();
+        process.chdir(startPath);
+        FileSystem.deleteTempDirectory();
     });
 
     xit("Should throw error if not in the visual root", () => {

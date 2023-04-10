@@ -100,7 +100,23 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
 function displayCertificationRules() {
     ConsoleWriter.blank();
-    ConsoleWriter.warn("Please, make sure that the visual source code matches to requirements of certification");
+    ConsoleWriter.warn("Please, make sure that the visual source code matches to requirements of certification:");
+    ConsoleWriter.blank();
+    ConsoleWriter.info(`Visual must use API v${minAPIversion} and above`);
+    ConsoleWriter.info("The project repository must:");
+    ConsoleWriter.info("Include package.json and package-lock.json;");
+    ConsoleWriter.info("Not include node_modules folder");
+    ConsoleWriter.info("Run npm install expect no errors");
+    ConsoleWriter.info("Run pbiviz package expect no errors");
+    ConsoleWriter.info("The compiled package of the Custom Visual should match submitted package.");
+    ConsoleWriter.info("npm audit command must not return any alerts with high or moderate level.");
+    ConsoleWriter.info("The project must include Tslint from Microsoft with no overridden configuration, and this command shouldn’t return any tslint errors.");
+    ConsoleWriter.info("https://www.npmjs.com/package/tslint-microsoft-contrib");
+    ConsoleWriter.info("Ensure no arbitrary/dynamic code is run (bad: eval(), unsafe use of settimeout(), requestAnimationFrame(), setinterval(some function with user input).. running user input/data etc.)");
+    ConsoleWriter.info("Ensure DOM is manipulated safely (bad: innerHTML, D3.html(<some user/data input>), unsanitized user input/data directly added to DOM, etc.)");
+    ConsoleWriter.info("Ensure no js errors/exceptions in browser console for any input data. As test dataset please use this sample report");
+    ConsoleWriter.blank();
     ConsoleWriter.info("Full description of certification requirements you can find in documentation:");
     ConsoleWriter.info("https://docs.microsoft.com/en-us/power-bi/power-bi-custom-visuals-certified#certification-requirements");
 }
+
