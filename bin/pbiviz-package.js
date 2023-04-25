@@ -101,7 +101,7 @@ VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
 
 async function checkCertificationRules(config) {
     const featuresTotalLog = {
-        deprecation: (count) => `${count} deprecated ${count > 1 ? "features" : "feature"} are going to be required soon, please update your visual:`,
+        deprecation: (count) => `${count} ${count > 1 ? "features" : "feature"} are going to be required soon, please update your visual:`,
         warn: (count) => `Your visual doesn't support ${count} ${count > 1 ? "features" : "feature"} recommended for all custom visuals:`,
         info: (count) => `Your visual can be improved by adding ${count} ${count > 1 ? "features" : "feature"}:`
     };
