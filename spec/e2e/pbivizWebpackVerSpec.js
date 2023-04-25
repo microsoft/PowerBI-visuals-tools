@@ -59,9 +59,8 @@ describe("E2E - webpack tools", () => {
 
     let removeApi = () => {
         let packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
-        packageJson.dependencies = {
-            "powerbi-visuals-utils-dataviewutils": "2.0.1"
-        };
+        delete packageJson.dependencies["powerbi-visuals-api"];
+
         fs.writeJsonSync(path.join(visualPath, 'package.json'), packageJson);
         
         fs.removeSync(path.join(visualPath, "node_modules", "powerbi-visuals-api"));

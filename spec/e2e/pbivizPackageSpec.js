@@ -504,9 +504,8 @@ describe("E2E - pbiviz package", () => {
         };
 
         it("Should display warnings after building visual", (done) => {
-            const expectedKeywords = [
+            const expectedFeatures = [
                 "conditional formatting",
-                "mobile friendly",
                 "file download",
                 "launch url",
                 "local storage",
@@ -515,8 +514,9 @@ describe("E2E - pbiviz package", () => {
                 "analytics pane"
             ];
             try {
-                startChecker(FileSystem.runPbivizAsync('package'), expectedKeywords)
+                startChecker(FileSystem.runPbivizAsync('package'), expectedFeatures)
                     .then((foundKeywords) => {
+                        expect(foundKeywords.length).toBe(expectedFeatures.length);
                         expectedFeatures.forEach((feature) => {
                             expect(foundKeywords).toContain(feature);
                         });

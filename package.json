@@ -40,7 +40,6 @@
     "domain-browser": "^4.22.0",
     "events": "^3.3.0",
     "extra-watch-webpack-plugin": "^1.0.3",
-    "fs": "^0.0.1-security",
     "fs-extra": "^11.1.1",
     "https-browserify": "^1.0.0",
     "json-loader": "0.5.7",
