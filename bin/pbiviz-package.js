@@ -27,17 +27,16 @@
 "use strict";
 
 const program = require('commander');
-const compareVersions = require("compare-versions");
 const webpack = require("webpack");
+const chalk = require('chalk');
 
-const config = require('../config.json');
+const featureAnalyzer = require('../lib/VisualFeaturesPrecheck');
 const VisualPackage = require('../lib/VisualPackage');
 const ConsoleWriter = require('../lib/ConsoleWriter');
 const WebPackWrap = require('../lib/WebPackWrap');
 const CommandHelpManager = require('../lib/CommandHelpManager');
 
 let options = process.argv;
-const minAPIversion = config.constants.minAPIversion;
 
 program
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
@@ -62,61 +61,68 @@ if (!program.pbiviz && !program.resources) {
 }
 
 VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    if (visualPackage.config.apiVersion && compareVersions.compare(visualPackage.config.apiVersion, minAPIversion, "<")) {
-        ConsoleWriter.error(`Package wasn't created, your current API is '${visualPackage.config.apiVersion}'.
-        Please use 'powerbi-visuals-api' ${minAPIversion} or above to build a visual.`);
-        process.exit(9);
-    }
-    ConsoleWriter.info('Building visual...');
+    preBuildRules(visualPackage.config).then(() => {
+        ConsoleWriter.info('Building visual...');
 
-    new WebPackWrap().applyWebpackConfig(visualPackage, {
-        devMode: false,
-        generateResources: program.resources,
-        generatePbiviz: program.pbiviz,
-        minifyJS: program.minify,
-        minify: program.minify,
-        compression: program.compression, 
-        disableStats: !program.stats
-    }).then(({ webpackConfig }) => {
-        let compiler = webpack(webpackConfig);
-        compiler.run(function (err, stats) {
-            if (err) {
-                ConsoleWriter.error(`Package wasn't created. ${JSON.stringify(err)}`);
-            }
-            if (stats.compilation.errors.length) {
-                ConsoleWriter.error(`Package wasn't created. ${stats.compilation.errors.length} errors found`);
-            }
-            displayCertificationRules();
-            process.exit(0);
+        new WebPackWrap().applyWebpackConfig(visualPackage, {
+            devMode: false,
+            generateResources: program.resources,
+            generatePbiviz: program.pbiviz,
+            minifyJS: program.minify,
+            minify: program.minify,
+            compression: program.compression, 
+            disableStats: !program.stats
+        }).then(({ webpackConfig }) => {
+            let compiler = webpack(webpackConfig);
+            compiler.run(function (err, stats) {
+                checkCertificationRules(visualPackage.config).then(() => {
+                    ConsoleWriter.blank();
+                    if (err) {
+                        ConsoleWriter.error(`Package wasn't created. ${JSON.stringify(err)}`);
+                    }
+                    if (stats.compilation.errors.length) {
+                        stats.compilation.errors.forEach(error => ConsoleWriter.error(error.message));
+                        ConsoleWriter.error(`Package wasn't created. ${stats.compilation.errors.length} errors found.`);
+                    }
+                    if (!err && !stats.compilation.errors.length) {
+                        ConsoleWriter.done('Build completed successfully');
+                    }
+                });
+            });
+        }).catch(e => {
+            ConsoleWriter.error(e.message);
+            process.exit(1);
         });
-    }).catch(e => {
-        ConsoleWriter.error(e.message);
-        process.exit(1);
     });
 }).catch(e => {
     ConsoleWriter.error('LOAD ERROR', e);
     process.exit(1);
 });
 
-function displayCertificationRules() {
-    ConsoleWriter.blank();
-    ConsoleWriter.warn("Please, make sure that the visual source code matches to requirements of certification:");
-    ConsoleWriter.blank();
-    ConsoleWriter.info(`Visual must use API v${minAPIversion} and above`);
-    ConsoleWriter.info("The project repository must:");
-    ConsoleWriter.info("Include package.json and package-lock.json;");
-    ConsoleWriter.info("Not include node_modules folder");
-    ConsoleWriter.info("Run npm install expect no errors");
-    ConsoleWriter.info("Run pbiviz package expect no errors");
-    ConsoleWriter.info("The compiled package of the Custom Visual should match submitted package.");
-    ConsoleWriter.info("npm audit command must not return any alerts with high or moderate level.");
-    ConsoleWriter.info("The project must include Tslint from Microsoft with no overridden configuration, and this command shouldn’t return any tslint errors.");
-    ConsoleWriter.info("https://www.npmjs.com/package/tslint-microsoft-contrib");
-    ConsoleWriter.info("Ensure no arbitrary/dynamic code is run (bad: eval(), unsafe use of settimeout(), requestAnimationFrame(), setinterval(some function with user input).. running user input/data etc.)");
-    ConsoleWriter.info("Ensure DOM is manipulated safely (bad: innerHTML, D3.html(<some user/data input>), unsanitized user input/data directly added to DOM, etc.)");
-    ConsoleWriter.info("Ensure no js errors/exceptions in browser console for any input data. As test dataset please use this sample report");
-    ConsoleWriter.blank();
-    ConsoleWriter.info("Full description of certification requirements you can find in documentation:");
-    ConsoleWriter.info("https://docs.microsoft.com/en-us/power-bi/power-bi-custom-visuals-certified#certification-requirements");
+async function checkCertificationRules(config) {
+    const featuresTotalLog = {
+        deprecation: (count) => `${count} deprecated ${count > 1 ? "features" : "feature"} are going to be required soon, please update your visual:`,
+        warn: (count) => `Your visual doesn't support ${count} ${count > 1 ? "features" : "feature"} recommended for all custom visuals:`,
+        info: (count) => `Your visual can be improved by adding ${count} ${count > 1 ? "features" : "feature"}:`
+    };
+    const logs = await featureAnalyzer.unsupportedFeatureList(config);
+    for (const [featureSeverity, logsArray] of Object.entries(logs)) {
+        if (logsArray.length) {
+            const totalLog = featuresTotalLog[featureSeverity](logsArray.length);
+
+            ConsoleWriter.blank();
+            ConsoleWriter[featureSeverity](totalLog);
+            ConsoleWriter.blank();
+            logsArray.forEach(log => ConsoleWriter[featureSeverity](chalk.bold(log)));
+        }
+    }
 }
 
+async function preBuildRules(config) {
+    const errors = await featureAnalyzer.preBuildCheck(config);
+    if (errors.length) {
+        ConsoleWriter.error(`Package wasn't created. ${errors.length} errors found before compilation`);
+        errors.forEach(error => ConsoleWriter.error(error));
+        process.exit(1);
+    }
+}
