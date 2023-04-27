@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.3.1
+* Fixed path to localization loader
+
 ## 4.3.0
 * Implemented new flag `--no-stats` to disable statistics files
 * Fixed vulnerabilities
