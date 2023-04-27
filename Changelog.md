@@ -17,7 +17,7 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Updated `powerbi-visuals-webpack-plugin` to 3.2.0
 
 ## 4.1.0
-* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` verison 5.1 and higher
+* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` version 5.1 and higher
 * Fixed vulnerabilities
 
 ## 4.0.9
@@ -28,7 +28,7 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Removed vulnerabilities
 
 ## 4.0.7
-### **⚠ NOT RECOMENDED** - critical bugs discovered for some cases
+### **⚠ NOT RECOMMENDED** - critical bugs discovered for some cases
 * StringResources (Localizations) are supported in Developer Mode.
 * Update `powerbi-visuals-webpack-plugin` to 3.1.0
 * Fixed vulnerabilities
