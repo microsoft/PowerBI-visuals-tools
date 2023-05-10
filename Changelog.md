@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 4.3.2
+* LocalizationLoader was moved in `powerbi-visuals-webpack-plugin`
+
 ## 4.3.1
 * Fixed path to localization loader
 
