@@ -26,17 +26,14 @@
 
 "use strict";
 
-const program = require('commander');
-const webpack = require("webpack");
-const chalk = require('chalk');
 
-const featureAnalyzer = require('../lib/VisualFeaturesPrecheck');
-const VisualPackage = require('../lib/VisualPackage');
-const ConsoleWriter = require('../lib/ConsoleWriter');
-const WebPackWrap = require('../lib/WebPackWrap');
-const CommandHelpManager = require('../lib/CommandHelpManager');
+import CommandHelpManager from '../lib/CommandHelpManager.js';
+import ConsoleWriter from '../lib/ConsoleWriter.js';
+import VisualManager from '../lib/VisualManager.js';
+import program from 'commander';
 
-let options = process.argv;
+const rootPath = process.cwd();
+const options = process.argv;
 
 program
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
@@ -53,76 +50,22 @@ if (options.some(option => option === '--help' || option === '-h')) {
 
 program.parse(options);
 
-let cwd = process.cwd();
-
 if (!program.pbiviz && !program.resources) {
     ConsoleWriter.error('Nothing to build. Cannot use --no-pbiviz without --resources');
     process.exit(1);
 }
 
-VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    preBuildRules(visualPackage.config).then(() => {
-        ConsoleWriter.info('Building visual...');
-
-        new WebPackWrap().applyWebpackConfig(visualPackage, {
-            devMode: false,
-            generateResources: program.resources,
-            generatePbiviz: program.pbiviz,
-            minifyJS: program.minify,
-            minify: program.minify,
-            compression: program.compression, 
-            disableStats: !program.stats
-        }).then(({ webpackConfig }) => {
-            let compiler = webpack(webpackConfig);
-            compiler.run(function (err, stats) {
-                checkCertificationRules(visualPackage.config).then(() => {
-                    ConsoleWriter.blank();
-                    if (err) {
-                        ConsoleWriter.error(`Package wasn't created. ${JSON.stringify(err)}`);
-                    }
-                    if (stats.compilation.errors.length) {
-                        stats.compilation.errors.forEach(error => ConsoleWriter.error(error.message));
-                        ConsoleWriter.error(`Package wasn't created. ${stats.compilation.errors.length} errors found.`);
-                    }
-                    if (!err && !stats.compilation.errors.length) {
-                        ConsoleWriter.done('Build completed successfully');
-                    }
-                });
-            });
-        }).catch(e => {
-            ConsoleWriter.error(e.message);
-            process.exit(1);
-        });
-    });
-}).catch(e => {
-    ConsoleWriter.error('LOAD ERROR', e);
-    process.exit(1);
-});
-
-async function checkCertificationRules(config) {
-    const featuresTotalLog = {
-        deprecation: (count) => `${count} ${count > 1 ? "features" : "feature"} are going to be required soon, please update your visual:`,
-        warn: (count) => `Your visual doesn't support ${count} ${count > 1 ? "features" : "feature"} recommended for all custom visuals:`,
-        info: (count) => `Your visual can be improved by adding ${count} ${count > 1 ? "features" : "feature"}:`
-    };
-    const logs = await featureAnalyzer.unsupportedFeatureList(config);
-    for (const [featureSeverity, logsArray] of Object.entries(logs)) {
-        if (logsArray.length) {
-            const totalLog = featuresTotalLog[featureSeverity](logsArray.length);
-
-            ConsoleWriter.blank();
-            ConsoleWriter[featureSeverity](totalLog);
-            ConsoleWriter.blank();
-            logsArray.forEach(log => ConsoleWriter[featureSeverity](chalk.bold(log)));
-        }
-    }
+const webpackOptions = {
+    devMode: false,
+    generateResources: program.resources,
+    generatePbiviz: program.pbiviz,
+    minifyJS: program.minify,
+    minify: program.minify,
+    compression: program.compression, 
+    disableStats: !program.stats
 }
 
-async function preBuildRules(config) {
-    const errors = await featureAnalyzer.preBuildCheck(config);
-    if (errors.length) {
-        ConsoleWriter.error(`Package wasn't created. ${errors.length} errors found before compilation`);
-        errors.forEach(error => ConsoleWriter.error(error));
-        process.exit(1);
-    }
-}
+const visualManager = new VisualManager(rootPath);
+visualManager
+    .validateVisualCode()
+    .generatePackage(webpackOptions)

@@ -26,12 +26,14 @@
 
 "use strict";
 
-const program = require('commander');
-const VisualPackage = require('../lib/VisualPackage');
-const ConsoleWriter = require('../lib/ConsoleWriter');
-const CommandHelpManager = require('../lib/CommandHelpManager');
-const TemplateFetcher = require('../lib/TemplateFetcher');
-const config = require('../config.json');
+import CommandHelpManager from '../lib/CommandHelpManager.js';
+import ConsoleWriter from '../lib/ConsoleWriter.js';
+import TemplateFetcher from '../lib/TemplateFetcher.js';
+import VisualPackage from '../lib/Visual.js';
+import  program from 'commander';
+import { readJsonFromRoot } from '../lib/utils.js';
+
+const config = readJsonFromRoot('config.json');
 const options = process.argv;
 
 program
@@ -68,15 +70,15 @@ let generateOptions = {
 
 if (config.visualTemplates[generateOptions.template]) {
     new TemplateFetcher({
-        force: program.force,
         templateName: generateOptions.template,
-        visualName: visualName
+        visualName: visualName,
+        apiVersion: undefined
     }).fetch();
 } else {
-    VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
+    VisualPackage.createVisual(cwd, visualName, generateOptions).then(() => {
         ConsoleWriter.done('Visual creation complete');
     }).catch((e) => {
-        ConsoleWriter.error('Unable to create visual.\n', e);
+        ConsoleWriter.error(['Unable to create visual.\n', e]);
         process.exit(1);
     });
 }

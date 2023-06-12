@@ -27,13 +27,15 @@
 
 "use strict";
 
-let confPath = '../config.json';
-let program = require('commander');
-let npmPackage = require('../package.json');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let config = require(confPath);
+import { createCertFile, getCertFile, openCertFile } from "../lib/CertificateTools.js";
+import ConsoleWriter from '../lib/ConsoleWriter.js';
+import  program from 'commander';
+import { readJsonFromRoot } from '../lib/utils.js';
+
+const config = readJsonFromRoot('config.json');
+const npmPackage = readJsonFromRoot('package.json');
+
 let args = process.argv;
-let CertificateTools = require("../lib/CertificateTools");
 
 ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`);
 
@@ -61,12 +63,12 @@ if (program.args.length > 0) {
 }
 
 async function onOpenCertFile() {
-    let certPath = await CertificateTools.getCertFile(config, true);
+    let certPath = await getCertFile(config, true);
     
     if (!certPath) {
         ConsoleWriter.error("Certificate not found. The new certificate will be generated");
-        await CertificateTools.createCertFile(config, true);
+        await createCertFile(config, true);
     } else {
-        await CertificateTools.openCertFile(config);
+        await openCertFile(config);
     }
 }

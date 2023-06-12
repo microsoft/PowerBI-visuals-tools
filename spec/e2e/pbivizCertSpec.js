@@ -29,9 +29,9 @@
 let fs = require('fs-extra');
 let path = require('path');
 console.log(__dirname);
-let config = require('./../../config.json');
+let config = require('../../config.json');
 
-let CertificateTools = require('./../../lib/CertificateTools');
+let CertificateTools = require('../../lib/CertificateTools.js');
 
 describe("E2E - pbiviz --install-cert", () => {
     beforeEach((done) => {

@@ -26,18 +26,19 @@
 
 "use strict";
 
-const program = require('commander');
-const compareVersions = require("compare-versions");
-const fs = require('fs-extra');
-const path = require('path');
-const webpack = require("webpack");
+import CommandHelpManager from '../lib/CommandHelpManager.js';
+import ConsoleWriter from '../lib/ConsoleWriter.js';
+import VisualPackage from '../lib/Visual.js';
+import WebPackWrap from '../lib/WebPackWrap.js';
+import  WebpackDevServer from "webpack-dev-server";
+import  compareVersions from "compare-versions";
+import fs from 'fs-extra';
+import  path from 'path';
+import  program from 'commander';
+import { readJsonFromRoot } from '../lib/utils.js';
+import  webpack from "webpack";
 
-const config = require('../config.json');
-const VisualPackage = require('../lib/VisualPackage');
-const WebpackDevServer = require("webpack-dev-server");
-const ConsoleWriter = require('../lib/ConsoleWriter');
-const WebPackWrap = require('../lib/WebPackWrap');
-const CommandHelpManager = require('../lib/CommandHelpManager');
+const config = readJsonFromRoot('config.json');
 
 const options = process.argv;
 const minAPIversion = config.constants.minAPIversion;
@@ -57,7 +58,7 @@ program.parse(options);
 
 let cwd = process.cwd();
 let server;
-VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
+new VisualPackage(cwd).then((visualPackage) => {
     if (visualPackage.config.apiVersion && compareVersions.compare(visualPackage.config.apiVersion, minAPIversion, "<")) {
         ConsoleWriter.error(`Can't start the visual because of the current API is '${visualPackage.config.apiVersion}'.
         Please use 'powerbi-visuals-api' ${minAPIversion} or above to build a visual.`);

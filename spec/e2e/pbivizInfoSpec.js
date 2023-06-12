@@ -33,7 +33,7 @@ const FileSystem = require('../helpers/FileSystem.js');
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
-const writeMetadata = require("./utils").writeMetadata;
+const writeMetadata = require("./utils.js").writeMetadata;
 
 describe("E2E - pbiviz info", () => {
 

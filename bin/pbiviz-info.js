@@ -26,10 +26,9 @@
 
 "use strict";
 
-let program = require('commander');
-let VisualPackage = require('../lib/VisualPackage');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let CommandHelpManager = require('../lib/CommandHelpManager');
+import CommandHelpManager from '../lib/CommandHelpManager.js';
+import Visual from '../lib/Visual.js';
+import program from 'commander';
 let options = process.argv;
 
 if (options.some(option => option === '--help' || option === '-h')) {
@@ -41,14 +40,4 @@ program.parse(options);
 
 let cwd = process.cwd();
 
-VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    let info = visualPackage.config;
-    if (info) {
-        ConsoleWriter.infoTable(info);
-    } else {
-        ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
-    }
-}).catch((e) => {
-    ConsoleWriter.error('LOAD ERROR', e);
-    process.exit(1);
-});
+new Visual(cwd).displayInfo();

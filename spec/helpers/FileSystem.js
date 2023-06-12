@@ -40,7 +40,7 @@ class FileSystem {
         return new Promise((resolve, reject) => {
             fs.exists(fileName, (exist) => {
                 if (exist) {
-                    resolve();
+                    resolve(true);
                 } else {
                     reject(new Error(`File ${fileName} was expected to exist but not found...`));
                 }
@@ -62,12 +62,12 @@ class FileSystem {
 
     static expectFileToMatch(fileName, regEx) {
         return FileSystem.readFile(fileName)
-            .then(content => {
+            .then((content) => {
                 if (typeof regEx == 'string') {
-                    if (content.indexOf(regEx) == -1) {
+                    if ((content).indexOf(regEx) == -1) {
                         throw new Error(`File "${fileName}" did not contain "${regEx}"...`);
                     }
-                } else if (!content.match(regEx)) {
+                } else if (!(content).match(regEx)) {
                         throw new Error(`File "${fileName}" did not contain "${regEx}"...`);
                     }
             });
