@@ -29,7 +29,7 @@
 import CommandHelpManager from '../lib/CommandHelpManager.js';
 import ConsoleWriter from '../lib/ConsoleWriter.js';
 import TemplateFetcher from '../lib/TemplateFetcher.js';
-import VisualPackage from '../lib/Visual.js';
+import VisualManager from '../lib/VisualManager.js';
 import  program from 'commander';
 import { readJsonFromRoot } from '../lib/utils.js';
 
@@ -38,7 +38,7 @@ const options = process.argv;
 
 program
     .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)');
+    .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)', 'default');
 
 if (options.some(option => option === '--help' || option === '-h')) {
     program.help(CommandHelpManager.createSubCommandHelpCallback(options));
@@ -57,28 +57,9 @@ if (!args || args.length < 1) {
 let visualName = args.join(' ');
 let cwd = process.cwd();
 
-ConsoleWriter.info('Creating new visual');
-
-if (program.force) {
-    ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
-}
-
 let generateOptions = {
     force: program.force,
     template: program.template
 };
 
-if (config.visualTemplates[generateOptions.template]) {
-    new TemplateFetcher({
-        templateName: generateOptions.template,
-        visualName: visualName,
-        apiVersion: undefined
-    }).fetch();
-} else {
-    VisualPackage.createVisual(cwd, visualName, generateOptions).then(() => {
-        ConsoleWriter.done('Visual creation complete');
-    }).catch((e) => {
-        ConsoleWriter.error(['Unable to create visual.\n', e]);
-        process.exit(1);
-    });
-}
+VisualManager.createVisual(cwd, visualName, generateOptions)

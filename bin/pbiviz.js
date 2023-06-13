@@ -45,11 +45,11 @@ program
     .command('info', 'Display info about the current visual')
     .command('start', 'Start the current visual')
     .command('package', 'Package the current visual into a pbiviz file')
-    .option('--install-cert', 'Creates and installs localhost certificate', onOpenCertFile);
+    .option('--install-cert', 'Creates and installs localhost certificate', createCertificate);
 
 //prepend logo to help screen
 if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
-    ConsoleWriter.logo();
+    ConsoleWriter.logoVisualization();
 }
 
 program.parse(args);
@@ -62,7 +62,7 @@ if (program.args.length > 0) {
     }
 }
 
-async function onOpenCertFile() {
+async function createCertificate() {
     let certPath = await getCertFile(config, true);
     
     if (!certPath) {

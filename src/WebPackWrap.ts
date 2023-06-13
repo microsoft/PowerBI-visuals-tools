@@ -66,8 +66,8 @@ export default class WebPackWrap {
                 stdout,
                 stderr
             } = await exec(`npm install --save powerbi-visuals-api@${apiVersion}`);
-            ConsoleWriter.info(stdout);
-            ConsoleWriter.warn(stderr);
+            if (stdout) ConsoleWriter.info(stdout);
+            if (stderr) ConsoleWriter.warning(stderr);
             return true;
         } catch (ex) {
             if (ex.message.indexOf("No matching version found for powerbi-visuals-api") !== -1) {
@@ -147,13 +147,13 @@ export default class WebPackWrap {
             const subprocess = await exec('npm list powerbi-visuals-api version')
             apiVersionInstalled = subprocess.stdout.match(regexFullVersion)[0];
         } catch (err) {
-            ConsoleWriter.warn(`"powerbi-visuals-api" is not installed`);
+            ConsoleWriter.warning(`"powerbi-visuals-api" is not installed`);
         }
         // if the powerbi-visual-api package wasn't installed
         // install the powerbi-visual-api, with version from apiVersion in pbiviz.json
         // or the latest API, if apiVersion is absent in pbiviz.json
         if (!apiVersionInstalled || !this.pbiviz.apiVersion || this.pbiviz.apiVersion.match(regexMinorVersion)[0] != apiVersionInstalled.match(regexMinorVersion)[0]) {
-            ConsoleWriter.warn(`installed "powerbi-visuals-api" version - "${apiVersionInstalled}", is not match with the version specified in pbviz.json - "${this.pbiviz.apiVersion}".`);
+            ConsoleWriter.warning(`installed "powerbi-visuals-api" version - "${apiVersionInstalled}", is not match with the version specified in pbviz.json - "${this.pbiviz.apiVersion}".`);
             await this.installAPIpackage();
         }
 

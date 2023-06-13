@@ -65,7 +65,8 @@ const webpackOptions = {
     disableStats: !program.stats
 }
 
-const visualManager = new VisualManager(rootPath);
-visualManager
-    .validateVisualCode()
-    .generatePackage(webpackOptions)
+new VisualManager(rootPath)
+    .validateVisual()
+    .initializeWebpack(webpackOptions)
+    .then(visualManager => visualManager.generatePackage())
+

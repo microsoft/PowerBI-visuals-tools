@@ -27,7 +27,7 @@
 "use strict";
 
 import CommandHelpManager from '../lib/CommandHelpManager.js';
-import Visual from '../lib/Visual.js';
+import VisualManager from '../lib/VisualManager.js';
 import program from 'commander';
 let options = process.argv;
 
@@ -40,4 +40,4 @@ program.parse(options);
 
 let cwd = process.cwd();
 
-new Visual(cwd).displayInfo();
+new VisualManager(cwd).displayInfo();

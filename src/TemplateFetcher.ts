@@ -15,7 +15,7 @@ export default class TemplateFetcher {
     private folderName: string;
     private apiVersion: string;
 
-    constructor({ templateName, visualName, apiVersion }) {
+    constructor(templateName: string, visualName: string, apiVersion: string) {
         this.templateName = templateName;
         this.visualName = visualName;
         this.folderName = `${this.visualName}`;
@@ -38,7 +38,7 @@ export default class TemplateFetcher {
         const fileName = path.join(folder, "template.zip");
         await fs.unlink(`.${path.sep}${fileName}`, (err) => {
             if (err) {
-                ConsoleWriter.warn(`.${path.sep}${fileName} was not deleted`);
+                ConsoleWriter.warning(`.${path.sep}${fileName} was not deleted`);
             }
         });
     }
@@ -97,7 +97,7 @@ export default class TemplateFetcher {
                     ConsoleWriter.error(`Error code: ${error.code}`);
                     ConsoleWriter.error(`Signal received: ${error.signal}`);
                 }
-                ConsoleWriter.warn(stderr);
+                ConsoleWriter.warning(stderr);
                 ConsoleWriter.info(stdout);
                 resolve(true);
             });

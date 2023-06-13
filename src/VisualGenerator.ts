@@ -155,7 +155,7 @@ export default class VisualGenerator {
      * @param {object} options - specify options for the visual generator
      * @returns {Promise<string>} - promise resolves with the path to the newly created package 
      */
-    static generate(targetPath, visualName, options) {
+    static generateVisual(targetPath, visualName, options): Promise<string> {
         return new Promise((resolve, reject) => {
             const buildOptions = lodashDefaults(options, defaultOptions);
             if (!buildOptions.apiVersion || compareVersions.compare(buildOptions.apiVersion, minAPIversion, "<")) {
@@ -168,7 +168,7 @@ export default class VisualGenerator {
             }
 
             if (!validTemplate(buildOptions.template)) {
-                return reject(new Error('Invalid template'));
+                return reject(new Error(`Invalid template "${buildOptions.template}"`));
             }
 
             const visualPath = path.join(targetPath, visualOptions.name);

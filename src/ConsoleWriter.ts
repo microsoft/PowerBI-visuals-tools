@@ -74,7 +74,7 @@ export default class ConsoleWriter {
      * 
      * @param {array} args - arguments passed through to console.warn
      */
-    static warn(args) {
+    static warning(args) {
         const tag = preferredChalk.bgYellow.black(' warn  ');
         console.warn.apply(this, prependLogTag(tag, args));
     }
@@ -151,7 +151,7 @@ export default class ConsoleWriter {
     /**
      * Outputs ascii art of the PowerBI logo
      */
-    static logo() {
+    static logoVisualization() {
         const logoText = fs.readFileSync(path.join(getRootPath(), 'assets', 'logo.txt')).toString();
         console.info(preferredChalk.bold.yellow(logoText));
     }

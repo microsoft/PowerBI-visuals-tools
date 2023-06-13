@@ -26,7 +26,8 @@
 
 "use strict";
 
-import webpack, { Configuration, Stats } from "webpack";
+import webpack, { Compiler, Stats } from "webpack";
+import  WebpackDevServer from "webpack-dev-server";
 import childProcess from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
@@ -38,7 +39,13 @@ import WebpackWrap, { WebpackOptions } from './WebPackWrap.js';
 import Package from './Package.js';
 import { Visual } from "./Visual.js";
 import { FeatureManager, Logs } from "./FeatureManager.js";
-import { Stage } from "./Features/FeatureTypes.js";
+import { Severity, Stage } from "./Features/FeatureTypes.js";
+import TemplateFetcher from "./TemplateFetcher.js";
+
+interface GenerateOptions {
+    force: boolean;
+    template: string;
+}
 
 const globalConfig = readJsonFromRoot('config.json');
 const PBIVIZ_FILE = 'pbiviz.json';
@@ -47,26 +54,21 @@ const PBIVIZ_FILE = 'pbiviz.json';
  * Represents an instance of a visual package based on file path
  */
 export default class VisualManager {
-    public config;
-    public capabilities;
     public basePath: string;
-    public webpackConfig: Configuration;
-    public visual: Visual;
-    public package: Package;
-    public featureManager: FeatureManager;
+    private pbivizConfig;
+    private capabilities;
+    private webpackConfig;
+    private visual: Visual;
+    private package: Package;
+    private featureManager: FeatureManager;
+    private compiler: Compiler;
+    private webpackDevServer: WebpackDevServer;
 
-    /**
-     * Creates a VisualPackage instance
-     * 
-     * @param {string} rootPath - file path to root of visual package
-     */
     constructor(rootPath: string) {
         if(this.doesPBIVIZExists()) {
             this.basePath = rootPath;
-            this.config = readJsonFromVisual(PBIVIZ_FILE);
-            this.capabilities = readJsonFromVisual("capabilities.json");
-            const packageJSON = readJsonFromVisual("package.json");
-            this.visual = new Visual(this.capabilities, this.config, packageJSON);
+            this.pbivizConfig = readJsonFromVisual(PBIVIZ_FILE, this.basePath);
+            this.createVisualInstance();
         } else {
             new Error(PBIVIZ_FILE + ' not found. You must be in the root of a visual project to run this command.')
         }
@@ -76,7 +78,62 @@ export default class VisualManager {
         return fs.existsSync(PBIVIZ_FILE);
     }
 
-    public validateVisualCode() {
+    public createVisualInstance() {
+        this.capabilities = readJsonFromVisual("capabilities.json", this.basePath);
+        const packageJSON = readJsonFromVisual("package.json", this.basePath);
+        this.visual = new Visual(this.capabilities, this.pbivizConfig, packageJSON);
+    }
+
+    public async initializeWebpack(webpackOptions: WebpackOptions) {
+        const webpackWrap = new WebpackWrap();
+        this.webpackConfig = await webpackWrap.generateWebpackConfig(this, webpackOptions)
+
+        this.compiler = webpack(this.webpackConfig);
+
+        return this;
+    }
+
+    public generatePackage() {
+        const callback = (err: Error, stats: Stats) => {
+            this.createPackageInstance();
+            const logs = this.validatePackage();
+            this.outputResults(logs);
+            this.parseCompilationResults(err, stats)
+        }
+        this.compiler.run(callback);
+    }
+
+    public startWebpackServer(generateDropFiles: boolean = false) {
+        ConsoleWriter.blank();
+        ConsoleWriter.info('Starting server...');
+        try {
+            if (generateDropFiles) {
+                this.prepareDropFiles();
+            }
+
+            this.webpackDevServer = new WebpackDevServer({
+                ...this.webpackConfig.devServer,
+                client: false,
+                hot: false,
+                devMiddleware: {
+                    writeToDisk: true    
+                }
+            }, this.compiler);
+
+            (async () => {
+                await this.webpackDevServer.start();
+                ConsoleWriter.info(`Server listening on port ${this.webpackConfig.devServer.port}`);
+            })();
+
+            process.on('SIGINT', this.stopServer);
+            process.on('SIGTERM', this.stopServer);
+        } catch (e) {
+            ConsoleWriter.error(e.message);
+            process.exit(1);
+        }
+    }
+
+    public validateVisual() {
         this.featureManager = new FeatureManager()
         const { ok, logs } = this.featureManager.validate(Stage.PreBuild, this.visual);
         this.outputResults(logs);
@@ -101,30 +158,15 @@ export default class VisualManager {
             warn: `Visual doesn't support some features recommended for all custom visuals:`,
             info: `Visual can be improved by adding some features:`
         };
-        this.outputErrors(featuresTotalLog.errors, errors);
-        this.outputErrors(featuresTotalLog.deprecation, deprecation);
-        this.outputWarningLogs(featuresTotalLog.warn, warnings);
-        this.outputInfoLogs(featuresTotalLog.info, info);
-    }
-
-    public async generatePackage(webpackOptions: WebpackOptions) {
-        const webpackWrap = new WebpackWrap();
-        this.webpackConfig = await webpackWrap.generateWebpackConfig(this, webpackOptions)
-
-        const compiler = webpack(this.webpackConfig);
-        compiler.run((err: Error, stats: Stats) => {
-            this.parseCompilationResultsCallback(err, stats)
-            this.createPackageInstance();
-            const logs = this.validatePackage();
-            this.outputResults(logs);
-        });
-
-        return this;
+        this.outputLogsWithHeadMessage(featuresTotalLog.errors, errors, Severity.Error);
+        this.outputLogsWithHeadMessage(featuresTotalLog.deprecation, deprecation, Severity.Deprecation);
+        this.outputLogsWithHeadMessage(featuresTotalLog.warn, warnings, Severity.Warning);
+        this.outputLogsWithHeadMessage(featuresTotalLog.info, info, Severity.Info);
     }
     
     public displayInfo() {
-        if (this.config) {
-            ConsoleWriter.infoTable(this.config);
+        if (this.pbivizConfig) {
+            ConsoleWriter.infoTable(this.pbivizConfig);
         } else {
             ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
         }
@@ -132,26 +174,34 @@ export default class VisualManager {
 
     /**
      * Creates a new visual package
-     * 
-     * @param {string} rootPath - file path to root of visual package
-     * @param {string} visualName - name of the visual to create in the rootPath
-     * @param {object} generateOptions - options for the visual generator
-     * <VisualPackage>} - instance of newly created visual package
      */
-    static createVisual(rootPath: string, visualName: string, generateOptions: object) {
-        return VisualGenerator.generate(rootPath, visualName, generateOptions)
-            .then((visualPath: string) => VisualManager.installPackages(visualPath).then(() => visualPath))
-            .then((visualPath) => new VisualManager(visualPath));
+    static async createVisual(rootPath: string, visualName: string, generateOptions: GenerateOptions): Promise<VisualManager | void> {
+        ConsoleWriter.info('Creating new visual');
+        if (generateOptions.force) {
+            ConsoleWriter.warning('Running with force flag. Existing files will be overwritten');
+        }
+
+        try {
+            const config = readJsonFromRoot('config.json');
+            if(config.visualTemplates[generateOptions.template]){
+                new TemplateFetcher( generateOptions.template, visualName, undefined )
+                    .fetch();
+                return;
+            }
+            const newVisualPath = await VisualGenerator.generateVisual(rootPath, visualName, generateOptions)
+            await VisualManager.installPackages(newVisualPath).then(() => ConsoleWriter.done('Visual creation complete'))
+
+            return new VisualManager(newVisualPath);
+        } catch (error) {
+            ConsoleWriter.error(['Unable to create visual.\n', error]);
+            process.exit(1);
+        }
     }
 
     /**
      * Install npm dependencies for visual
-     * @param {string} rootPath - file path to root of visual package
-     * @static
-     * @returns {Promise<void>}
-     * @memberof VisualPackage
      */
-    static installPackages(visualPath: string) {
+    static installPackages(visualPath: string): Promise<void> {
         return new Promise(function (resolve, reject) {
             ConsoleWriter.info('Installing packages...');
             childProcess.exec(`npm install`, { cwd: visualPath },
@@ -160,18 +210,52 @@ export default class VisualManager {
                         reject(new Error('Package install failed.'));
                     } else {
                         ConsoleWriter.info('Installed packages.');
-                        resolve(true);
+                        resolve();
                     }
                 });
         });
     }
 
+    private prepareDropFiles() {
+        this.webpackConfig.devServer.onBeforeSetupMiddleware = (devServer) => {
+            const { headers, publicPath, static: { directory } } = this.webpackConfig.devServer;
+            const assets = [ 'visual.js`', 'visual.css', 'pbiviz.json' ]
+
+            const setHeaders = (res) => {
+                Object.getOwnPropertyNames(headers)
+                    .forEach(property => res.header(property, headers[property]));
+            };
+            const readFile = (file, res) => {
+                fs.readFile(file).then(function (content) {
+                    res.write(content);
+                    res.end();
+                });
+            };
+
+            assets.forEach(asset => {
+                devServer.app.get(`${publicPath}/${asset}`, function (req, res) {
+                    setHeaders(res);
+                    readFile(path.join(directory, asset), res);
+                });
+            });
+        };
+    }
+
+    private stopServer() {
+        ConsoleWriter.blank();
+        ConsoleWriter.info("Stopping server...");
+        if (this.webpackDevServer) {
+            this.webpackDevServer.close();
+            this.webpackDevServer = null;
+        }
+    }
+
     private createPackageInstance() {
-        const pathToJSContent = path.join((this.config.build ?? globalConfig.build).dropFolder, "visual.js");
+        const pathToJSContent = path.join((this.pbivizConfig.build ?? globalConfig.build).dropFolder, "visual.js");
         this.package = new Package(pathToJSContent, this.capabilities, this.visual.visualType);
     }
 
-    private parseCompilationResultsCallback(err: Error, stats: Stats) {
+    private parseCompilationResults(err: Error, stats: Stats) {
         ConsoleWriter.blank();
         if (err) {
             ConsoleWriter.error(`Package wasn't created. ${JSON.stringify(err)}`);
@@ -185,39 +269,29 @@ export default class VisualManager {
         }
     }
 
-    private outputErrors(headMessage: string, errors: string[]) {
-        if(!errors.length) {
+    private outputLogsWithHeadMessage(headMessage: string, logs: string[], severity: Severity) {
+        if(!logs.length) {
             return;
         }
+        let outputLog;
+        switch(severity) {
+            case Severity.Error || Severity.Deprecation:
+                outputLog = ConsoleWriter.error;
+                break;
+            case Severity.Warning:
+                outputLog = ConsoleWriter.warning;
+                break;
+            default:
+                outputLog = ConsoleWriter.info;
+                break;
+        }
+
         if(headMessage) {
-            ConsoleWriter.error(headMessage);
+            outputLog(headMessage);
             ConsoleWriter.blank();
         }
-        errors.forEach(error => ConsoleWriter.error(error));
-        ConsoleWriter.blank();
-    }
-    
-    private outputWarningLogs(headMessage: string, warnings: string[]) {
-        if(!warnings.length) {
-            return;
-        }
-        if(headMessage) {
-            ConsoleWriter.warn(headMessage);
-            ConsoleWriter.blank();
-        }
-        warnings.forEach(warn => ConsoleWriter.warn(warn));
-        ConsoleWriter.blank();
-    }
-    
-    private outputInfoLogs(headMessage: string, infoMessages: string[]) {
-        if(!infoMessages.length) {
-            return;
-        }
-        if(headMessage) {
-            ConsoleWriter.info(headMessage);
-            ConsoleWriter.blank();
-        }
-        infoMessages.forEach(info => ConsoleWriter.info(info));
+
+        logs.forEach(error => outputLog(error));
         ConsoleWriter.blank();
     }
 }

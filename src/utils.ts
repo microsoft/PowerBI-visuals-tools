@@ -29,7 +29,7 @@ export function readJsonFromRoot(filePath: string) {
     return JSON.parse(fs.readFileSync(path.join(getRootPath(), filePath), "utf8"));
 }
 
-export function readJsonFromVisual(filePath: string) {
-    return JSON.parse(fs.readFileSync(path.join(process.cwd(), filePath), "utf8"));
+export function readJsonFromVisual(filePath: string, visualPath?: string) {
+    return JSON.parse(fs.readFileSync(path.join(visualPath ?? process.cwd(), filePath), "utf8"));
 }
 
