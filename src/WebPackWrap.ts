@@ -138,7 +138,7 @@ export default class WebPackWrap {
     }
 
     async configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig) {
-        const pluginConfiguration = lodashCloneDeep(visualPackage.config);
+        const pluginConfiguration = lodashCloneDeep(visualPackage.pbivizConfig);
         //(?=\D*$) - positive look-ahead to find last version symbols and exclude any non-digit symbols after the version.
         const regexFullVersion = /(?:\d+\.?){1,3}(?=\D*$)/;
         const regexMinorVersion = /\d+(?:\.\d+)?/;
@@ -283,11 +283,11 @@ export default class WebPackWrap {
         this.pbiviz = readJsonFromVisual('pbiviz.json');
 
         const capabilitiesPath = this.pbiviz.capabilities;
-        visualPackage.config.capabilities = capabilitiesPath;
+        visualPackage.pbivizConfig.capabilities = capabilitiesPath;
 
         const dependenciesPath = this.pbiviz.dependencies && path.join(process.cwd(), this.pbiviz.dependencies);
         const dependenciesFile = fs.existsSync(dependenciesPath) && JSON.parse(fs.readFileSync(dependenciesPath));
-        visualPackage.config.dependencies = typeof dependenciesFile === 'object' ? dependenciesFile : {};
+        visualPackage.pbivizConfig.dependencies = typeof dependenciesFile === 'object' ? dependenciesFile : {};
 
         await WebPackWrap.prepareFoldersAndFiles(visualPackage);
 

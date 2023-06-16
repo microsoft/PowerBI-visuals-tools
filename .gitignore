@@ -2,7 +2,6 @@
 node_modules
 *.log
 /bin
-/lib
 spec/.tmp
 /certs
 /testGround

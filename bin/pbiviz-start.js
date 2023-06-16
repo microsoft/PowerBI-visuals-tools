@@ -26,24 +26,16 @@
 
 "use strict";
 
-import CommandHelpManager from '../lib/CommandHelpManager.js';
 import VisualManager from '../lib/VisualManager.js';
-import program from 'commander';
-
-const options = process.argv;
+import { program } from 'commander';
 
 program
+    .usage('[options]')
     .option('-p, --port [port]', 'set the port listening on')
     .option('-m, --mute', 'mute error outputs')
     .option('-d, --drop', 'drop outputs into output folder')
-    .option('--no-stats', "Doesn't generate statistics files");
-
-if (options.some(option => option === '--help' || option === '-h')) {
-    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-    process.exit(0);
-}
-
-program.parse(options);
+    .option('--no-stats', "Doesn't generate statistics files")
+    .parse();
 
 const webpackOptions = {
     devMode: true,

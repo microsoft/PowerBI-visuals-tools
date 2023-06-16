@@ -1,4 +1,4 @@
-import  compareVersions from "compare-versions";
+import { compareVersions } from "compare-versions";
 import { VisualType } from "./Features/FeatureTypes.js";
 
 export class Visual {

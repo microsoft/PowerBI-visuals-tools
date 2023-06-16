@@ -28,12 +28,10 @@
 
 import { getRootPath, readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
-import fs from 'fs-extra';
 import { exec as nodeExec } from 'child_process';
-import  os from 'os';
-import  path from 'path';
-
-const config = readJsonFromRoot('config.json');
+import fs from 'fs-extra';
+import os from 'os';
+import path from 'path';
 
 const certSafePeriod = 1000 * 60 * 60 * 24;
 const rootPath = getRootPath();
@@ -60,7 +58,19 @@ function exec(command, callback?): Promise<string> {
 
 }
 
-export async function createCertFile(config, open) {
+export async function createCertificate() {
+    const config = readJsonFromRoot('config.json');
+    const certPath = await getCertFile(config, true);
+    
+    if (!certPath) {
+        ConsoleWriter.error("Certificate not found. The new certificate will be generated");
+        await createCertFile(config, true);
+    } else {
+        await openCertFile(config);
+    }
+}
+
+async function createCertFile(config, open) {
     ConsoleWriter.info(`Generating a new certificate...`);
     const subject = "localhost";
     const keyLength = 2048;
@@ -123,9 +133,11 @@ export async function createCertFile(config, open) {
                     }
                     break;
                 case "win32":
+                    // eslint-disable-next-line no-case-declarations
                     let passphrase = "";
                     // for windows 7 and others
                     // 6.1 - Windows 7
+                    // eslint-disable-next-line no-case-declarations
                     const osVersion = os.release().split(".");
                     if ((Number(osVersion[0]) === 6 && Number(osVersion[1]) === 1) || Number(osVersion[0]) < 6) {
                         await removeCertFiles(certPath, keyPath, pfxPath);
@@ -218,7 +230,7 @@ export async function createCertFile(config, open) {
     }
 }
 
-export async function getCertFile(config, silent?) {
+async function getCertFile(config, silent?) {
     if (typeof silent === "undefined") {
         silent = false;
     }
@@ -243,7 +255,7 @@ export async function getCertFile(config, silent?) {
     return null;
 }
 
-export async function openCertFile(config) {
+async function openCertFile(config) {
     const certPath = await getCertFile(config);
 
     if (!certPath) {
@@ -291,7 +303,7 @@ export async function removeCertFiles(certPath, keyPath, pfxPath?) {
     }
 }
 
-export async function getGlobalPbivizCerts() {
+async function getGlobalPbivizCerts(config) {
     const options: CertificateOptions = {};
     try {
         const location = ((await exec('npm ls -g powerbi-visuals-tools'))).split("\n")[0];
@@ -317,6 +329,7 @@ export async function getGlobalPbivizCerts() {
 }
 
 export async function resolveCertificate() {
+    const config = readJsonFromRoot('config.json');
     const options: CertificateOptions = {};
     const keyPath = path.join(rootPath, config.server.privateKey);
     const certPath = path.join(rootPath, config.server.certificate);
@@ -340,7 +353,7 @@ export async function resolveCertificate() {
     if ((!options.cert && !options.pfx) || !CertFileVerified) {
         ConsoleWriter.warning("Local valid certificate not found.");
         ConsoleWriter.info("Checking global instance of pbiviz certificate...");
-        const globalPbivizOptions = await getGlobalPbivizCerts();
+        const globalPbivizOptions = await getGlobalPbivizCerts(config);
 
         if (!globalPbivizOptions.cert && !globalPbivizOptions.pfx) {
             await createCertFile(config, true);

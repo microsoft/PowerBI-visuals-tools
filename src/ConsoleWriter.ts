@@ -151,9 +151,8 @@ export default class ConsoleWriter {
     /**
      * Outputs ascii art of the PowerBI logo
      */
-    static logoVisualization() {
-        const logoText = fs.readFileSync(path.join(getRootPath(), 'assets', 'logo.txt')).toString();
-        console.info(preferredChalk.bold.yellow(logoText));
+    static getLogoVisualization() {
+        return fs.readFileSync(path.join(getRootPath(), 'assets', 'logo.txt')).toString();
     }
 
     /**

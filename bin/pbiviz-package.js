@@ -27,44 +27,39 @@
 "use strict";
 
 
-import CommandHelpManager from '../lib/CommandHelpManager.js';
 import ConsoleWriter from '../lib/ConsoleWriter.js';
 import VisualManager from '../lib/VisualManager.js';
-import program from 'commander';
-
-const rootPath = process.cwd();
-const options = process.argv;
+import { Option, program } from 'commander';
 
 program
+    .usage('[options]')
     .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
     .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
     .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
     .option('--no-plugin', "Doesn't include a plugin declaration to the package (must be used in conjunction with --no-pbiviz and --resources flags)")
     .option('--no-stats', "Doesn't generate statistics files")
-    .option('-c, --compression <compressionLevel>', "Enables compression of visual package", /^(0|1|2|3|4|5|6|7|8|9)$/i, "6");
+    .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
+        .choices([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+        .default(6)
+    )
+    .parse();
 
-if (options.some(option => option === '--help' || option === '-h')) {
-    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-    process.exit(0);
-}
-
-program.parse(options);
-
-if (!program.pbiviz && !program.resources) {
+const options = program.opts();
+if (!options.pbiviz && !options.resources) {
     ConsoleWriter.error('Nothing to build. Cannot use --no-pbiviz without --resources');
     process.exit(1);
 }
 
 const webpackOptions = {
     devMode: false,
-    generateResources: program.resources,
-    generatePbiviz: program.pbiviz,
-    minifyJS: program.minify,
-    minify: program.minify,
-    compression: program.compression, 
-    disableStats: !program.stats
+    generateResources: options.resources,
+    generatePbiviz: options.pbiviz,
+    minifyJS: options.minify,
+    minify: options.minify,
+    compression: options.compression, 
+    disableStats: !options.stats
 }
-
+const rootPath = process.cwd();
 new VisualManager(rootPath)
     .validateVisual()
     .initializeWebpack(webpackOptions)

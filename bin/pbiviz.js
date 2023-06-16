@@ -27,48 +27,23 @@
 
 "use strict";
 
-import { createCertFile, getCertFile, openCertFile } from "../lib/CertificateTools.js";
+import { createCertificate } from "../lib/CertificateTools.js";
 import ConsoleWriter from '../lib/ConsoleWriter.js';
-import  program from 'commander';
 import { readJsonFromRoot } from '../lib/utils.js';
+import { program } from 'commander';
 
-const config = readJsonFromRoot('config.json');
 const npmPackage = readJsonFromRoot('package.json');
-
-let args = process.argv;
-
-ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`);
 
 program
     .version(npmPackage.version)
-    .command('new [name]', 'Create a new visual')
+    .command('new <name>', 'Create a new visual')
     .command('info', 'Display info about the current visual')
     .command('start', 'Start the current visual')
     .command('package', 'Package the current visual into a pbiviz file')
     .option('--install-cert', 'Creates and installs localhost certificate', createCertificate);
 
-//prepend logo to help screen
-if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
-    ConsoleWriter.logoVisualization();
-}
-
-program.parse(args);
-
-if (program.args.length > 0) {
-    let validCommands = program.commands.map(c => c.name());
-    if (validCommands.indexOf(program.args[0]) === -1) {
-        ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
-        process.exit(1);
-    }
-}
-
-async function createCertificate() {
-    let certPath = await getCertFile(config, true);
-    
-    if (!certPath) {
-        ConsoleWriter.error("Certificate not found. The new certificate will be generated");
-        await createCertFile(config, true);
-    } else {
-        await openCertFile(config);
-    }
-}
+programm
+    .showHelpAfterError('Run "pbiviz help" for usage instructions.')
+    .addHelpText('beforeAll', ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`))
+    .addHelpText('before', ConsoleWriter.getLogoVisualization())
+    .parse();

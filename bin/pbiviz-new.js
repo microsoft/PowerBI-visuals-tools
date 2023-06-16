@@ -26,40 +26,28 @@
 
 "use strict";
 
-import CommandHelpManager from '../lib/CommandHelpManager.js';
-import ConsoleWriter from '../lib/ConsoleWriter.js';
-import TemplateFetcher from '../lib/TemplateFetcher.js';
 import VisualManager from '../lib/VisualManager.js';
-import  program from 'commander';
-import { readJsonFromRoot } from '../lib/utils.js';
+import { program, Option } from 'commander';
 
-const config = readJsonFromRoot('config.json');
-const options = process.argv;
+let newVisualName = ""
 
 program
+    .usage("<argument> [options]")
+    .argument('<visualName>', 'name of new visual')
     .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)', 'default');
+    .addOption(new Option('-t, --template [template]', 'use a specific template')
+        .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml'])
+        .default('default')
+    )
+    .action((visualName) => {
+        newVisualName = visualName;
+    })
+    .parse();
 
-if (options.some(option => option === '--help' || option === '-h')) {
-    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-    process.exit(0);
-}
-
-program.parse(options);
-
-let args = program.args;
-
-if (!args || args.length < 1) {
-    ConsoleWriter.error("You must enter a visual name");
-    process.exit(1);
-}
-
-let visualName = args.join(' ');
-let cwd = process.cwd();
-
-let generateOptions = {
-    force: program.force,
-    template: program.template
+const options = program.opts();
+const generateOptions = {
+    force: options.force,
+    template: options.template
 };
-
-VisualManager.createVisual(cwd, visualName, generateOptions)
+const cwd = process.cwd();
+VisualManager.createVisual(cwd, newVisualName, generateOptions)

@@ -26,18 +26,6 @@
 
 "use strict";
 
-import CommandHelpManager from '../lib/CommandHelpManager.js';
 import VisualManager from '../lib/VisualManager.js';
-import program from 'commander';
-let options = process.argv;
 
-if (options.some(option => option === '--help' || option === '-h')) {
-    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-    process.exit(0);
-}
-
-program.parse(options);
-
-let cwd = process.cwd();
-
-new VisualManager(cwd).displayInfo();
+new VisualManager(process.cwd()).displayInfo();

@@ -55,7 +55,7 @@ const PBIVIZ_FILE = 'pbiviz.json';
  */
 export default class VisualManager {
     public basePath: string;
-    private pbivizConfig;
+    public pbivizConfig;
     private capabilities;
     private webpackConfig;
     private visual: Visual;

@@ -28,10 +28,10 @@
 
 import { v4 } from 'uuid';
 import { getRootPath, readJsonFromRoot } from './utils.js';
-import  compareVersions from "compare-versions";
+import { compareVersions } from "compare-versions";
 import fs from 'fs-extra';
 import lodashDefaults from 'lodash.defaults';
-import  path from 'path';
+import path from 'path';
 import template from '../templates/pbiviz-json-template.js';
 
 const config = readJsonFromRoot('config.json');
@@ -158,7 +158,7 @@ export default class VisualGenerator {
     static generateVisual(targetPath, visualName, options): Promise<string> {
         return new Promise((resolve, reject) => {
             const buildOptions = lodashDefaults(options, defaultOptions);
-            if (!buildOptions.apiVersion || compareVersions.compare(buildOptions.apiVersion, minAPIversion, "<")) {
+            if (!buildOptions.apiVersion || compareVersions(buildOptions.apiVersion, minAPIversion) === -1) {
                 return reject(new Error(`Can not generate a visual with an API below than ${minAPIversion}, current API is '${buildOptions.apiVersion}'.`));
             }
             const visualOptions = generateVisualOptions(visualName, buildOptions.apiVersion);
