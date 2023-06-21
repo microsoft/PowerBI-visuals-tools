@@ -28,7 +28,7 @@ export interface WebpackOptions {
     minifyJS: boolean;
     minify: boolean;
     compression: number;
-    disableStats: boolean;
+    stats: boolean;
     devServerPort?: number;
     fast?: boolean;
 }
@@ -189,7 +189,7 @@ export default class WebPackWrap {
         statsFilename = statsFilename?.split(".").slice(0, -1).join(".");
         statsFilename = `${statsFilename}.${options.devMode ? "dev" : "prod"}.html`;
 
-        if (!options.disableStats) {
+        if (options.stats) {
             this.webpackConfig.plugins.push(
                 new BundleAnalyzerPlugin({
                     reportFilename: path.join(statsLocation, statsFilename),
@@ -277,7 +277,7 @@ export default class WebPackWrap {
         devServerPort: 8080,
         fast: false,
         compression: 0,
-        disableStats: false
+        stats: true
     }) {
         const tsconfig = readJsonFromVisual('tsconfig.json');
         this.pbiviz = readJsonFromVisual('pbiviz.json');

@@ -70,7 +70,7 @@ export async function createCertificate() {
     }
 }
 
-async function createCertFile(config, open) {
+export async function createCertFile(config, open) {
     ConsoleWriter.info(`Generating a new certificate...`);
     const subject = "localhost";
     const keyLength = 2048;

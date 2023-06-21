@@ -65,13 +65,17 @@ export default class VisualManager {
     private webpackDevServer: WebpackDevServer;
 
     constructor(rootPath: string) {
-        if(this.doesPBIVIZExists()) {
             this.basePath = rootPath;
+    }
+
+    public prepareVisual() {
+        if (this.doesPBIVIZExists()) {
             this.pbivizConfig = readJsonFromVisual(PBIVIZ_FILE, this.basePath);
             this.createVisualInstance();
         } else {
-            new Error(PBIVIZ_FILE + ' not found. You must be in the root of a visual project to run this command.')
+            throw new Error(PBIVIZ_FILE + ' not found. You must be in the root of a visual project to run this command.')
         }
+        return this;
     }
 
     public doesPBIVIZExists() {

@@ -26,19 +26,21 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-let childProcess = require('child_process');
-let treeKill = require('tree-kill');
+import fs from 'fs-extra';
+import path from 'path';
+import childProcess from 'child_process';
+import treeKill from 'tree-kill';
+import { getRootPath } from '../../lib/utils.js';
 
-const TEMP_DIR = path.join(__dirname, '..', '.tmp');
-const BIN_PATH = path.join(__dirname, '..', '..', 'bin', 'pbiviz.js');
-const TEMPLATE_PATH = path.join(__dirname, '..', '..', 'templates');
+const rootPath = getRootPath();
+const TEMP_DIR = path.join(rootPath, 'spec/.tmp');
+const BIN_PATH = path.join(rootPath, 'bin/pbiviz.js');
+const TEMPLATE_PATH = path.join(rootPath, 'templates');
 
-class FileSystem {
+export default class FileSystem {
     static expectFileToExist(fileName) {
         return new Promise((resolve, reject) => {
-            fs.exists(fileName, (exist) => {
+            fs.existsSync(fileName, (exist) => {
                 if (exist) {
                     resolve(true);
                 } else {
@@ -169,5 +171,3 @@ class FileSystem {
     }
 
 }
-
-module.exports = FileSystem;

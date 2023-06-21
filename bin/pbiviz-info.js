@@ -28,4 +28,6 @@
 
 import VisualManager from '../lib/VisualManager.js';
 
-new VisualManager(process.cwd()).displayInfo();
+new VisualManager(process.cwd())
+    .prepareVisual()
+    .displayInfo();

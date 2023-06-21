@@ -57,10 +57,11 @@ const webpackOptions = {
     minifyJS: options.minify,
     minify: options.minify,
     compression: options.compression, 
-    disableStats: !options.stats
+    stats: options.stats
 }
 const rootPath = process.cwd();
 new VisualManager(rootPath)
+    .prepareVisual()
     .validateVisual()
     .initializeWebpack(webpackOptions)
     .then(visualManager => visualManager.generatePackage())

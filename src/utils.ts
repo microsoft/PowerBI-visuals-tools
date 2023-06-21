@@ -25,8 +25,12 @@ export function getRootPath(): string {
     return path.join(pathToDirectory, "../..");
 }
 
+export function readFileFromRoot(filePath: string) {
+    return fs.readFileSync(path.join(getRootPath(), filePath), "utf8")
+}
+
 export function readJsonFromRoot(filePath: string) {
-    return JSON.parse(fs.readFileSync(path.join(getRootPath(), filePath), "utf8"));
+    return JSON.parse(readFileFromRoot(filePath));
 }
 
 export function readJsonFromVisual(filePath: string, visualPath?: string) {

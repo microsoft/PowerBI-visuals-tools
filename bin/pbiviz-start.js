@@ -45,10 +45,11 @@ const webpackOptions = {
     minifyJS: false,
     minify: false,
     devServerPort: program.port,
-    disableStats: !program.stats
+    stats: program.stats
 }
 const visualManager = new VisualManager(process.cwd())
 await visualManager
+    .prepareVisual()
     .validateVisual()
     .initializeWebpack(webpackOptions)
 visualManager.startWebpackServer(program.drop)

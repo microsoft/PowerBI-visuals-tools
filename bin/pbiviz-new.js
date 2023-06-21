@@ -36,7 +36,7 @@ program
     .argument('<visualName>', 'name of new visual')
     .option('-f, --force', 'force creation (overwrites folder if exists)')
     .addOption(new Option('-t, --template [template]', 'use a specific template')
-        .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml'])
+        .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml', 'circlecard'])
         .default('default')
     )
     .action((visualName) => {
@@ -49,5 +49,4 @@ const generateOptions = {
     force: options.force,
     template: options.template
 };
-const cwd = process.cwd();
-VisualManager.createVisual(cwd, newVisualName, generateOptions)
+VisualManager.createVisual(process.cwd(), newVisualName, generateOptions)

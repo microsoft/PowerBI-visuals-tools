@@ -42,7 +42,7 @@ program
     .command('package', 'Package the current visual into a pbiviz file')
     .option('--install-cert', 'Creates and installs localhost certificate', createCertificate);
 
-programm
+program
     .showHelpAfterError('Run "pbiviz help" for usage instructions.')
     .addHelpText('beforeAll', ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`))
     .addHelpText('before', ConsoleWriter.getLogoVisualization())
