@@ -1,8 +1,8 @@
 import { compareVersions } from "compare-versions";
-import { VisualType } from "./Features/FeatureTypes.js";
+import { VisualFeatureType } from "./Features/FeatureTypes.js";
 
 export class Visual {
-    public visualType: VisualType;
+    public visualFeatureType: VisualFeatureType;
     private capabilities;
     private config;
     private packageJSON;
@@ -11,7 +11,7 @@ export class Visual {
     constructor(capabilities, config, packageJson) {
         this.capabilities = capabilities;
         this.config = config;
-        this.visualType = this.getVisualType();
+        this.visualFeatureType = this.getVisualFeatureType();
         this.packageJSON = packageJson;
         this.visualVersion = config.visual.version;
     }
@@ -28,12 +28,16 @@ export class Visual {
         return this.visualVersion.split(".").length === length
     }
 
-    private getVisualType() {
-        let type = VisualType.Default;
-        if(this.capabilities?.dataViewMappings?.some(dataView => dataView.matrix)){
-            type = VisualType.Matrix;
-        } else if (this.capabilities?.objects?.general?.properties?.filter?.type?.filter) {
-            type = VisualType.Slicer;
+    private getVisualFeatureType() {
+        let type = VisualFeatureType.Default;
+        const isMatrixSupported = this.capabilities?.dataViewMappings?.some(dataView => dataView.matrix)
+        const isSlicer = Boolean(this.capabilities?.objects?.general?.properties?.filter?.type?.filter)
+        if(isSlicer && isMatrixSupported){
+            type = VisualFeatureType.All;
+        } else if (isSlicer) {
+            type = VisualFeatureType.Slicer;
+        } else if (isMatrixSupported) {
+            type = VisualFeatureType.Matrix;
         }
         return type;
     }

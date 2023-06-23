@@ -1,17 +1,9 @@
 import { Severity, Stage } from "./Features/FeatureTypes.js";
-import {
-    AdvancedEditMode, AllowInteractions, AnalyticsPane, Bookmarks, 
-    ColorPalette, ConditionalFormatting, ContextMenu, DrillDown, 
-    FetchMoreData, FileDownload, FormatPane, HighContrast, 
-    HighlightData, KeyboardNavigation, LandingPage, LaunchURL,
-    Localizations, LocalStorage, ModalDialog, RenderingEvents,
-    SelectionAcrossVisuals, SyncSlicer, Tooltips, TotalSubTotal,
-    WarningIcon, APIVersion, ESLint, VisualVersion
-} from "./Features/index.js";
+import * as features from "./Features/index.js";
 import { Visual } from "./Visual.js";
 import Package from "./Package.js";
 
-export interface Status {
+export interface ValidationStats {
     ok: boolean,
     logs: Logs
 }
@@ -24,18 +16,10 @@ export interface Logs {
 }
 
 export class FeatureManager {
-    public features = [ 
-        AdvancedEditMode, AllowInteractions, AnalyticsPane, Bookmarks, 
-        ColorPalette, ConditionalFormatting, ContextMenu, DrillDown, 
-        FetchMoreData, FileDownload, FormatPane, HighContrast, 
-        HighlightData, KeyboardNavigation, LandingPage, LaunchURL,
-        Localizations, LocalStorage, ModalDialog, RenderingEvents,
-        SelectionAcrossVisuals, SyncSlicer, Tooltips, TotalSubTotal,
-        WarningIcon, APIVersion, ESLint, VisualVersion
-    ];
+    public features = Object.keys(features).map(key =>  features[key]);
 
-    public validate(stage: Stage, sourceInstance: Visual | Package): Status {
-        const status: Status = {
+    public validate(stage: Stage, sourceInstance: Visual | Package): ValidationStats {
+        const status: ValidationStats = {
             ok: true,
             logs: {
                 errors: [],
@@ -45,8 +29,8 @@ export class FeatureManager {
             }
         }
         this.features.forEach(feature => {
-            if (feature.stage == stage && (feature.visualType & sourceInstance.visualType)) {
-                if(!feature.isSupported(<any>sourceInstance)) {
+            if (feature.stage == stage && (feature.visualFeatureType & sourceInstance.visualFeatureType)) {
+                if(!feature.isSupported(sourceInstance)) {
                     switch(feature.severity) {
                         case Severity.Error:
                             status.ok = false;

@@ -34,8 +34,8 @@ export interface WebpackOptions {
 }
 
 export default class WebPackWrap {
-    private pbiviz: any;
-    private webpackConfig: any;
+    private pbiviz;
+    private webpackConfig;
 
     static async prepareFoldersAndFiles(visualPackage) {
         const tmpFolder = path.join(visualPackage.basePath, ".tmp");
@@ -237,7 +237,7 @@ export default class WebPackWrap {
     }
 
     async prepareWebPackConfig(visualPackage, options, tsconfig) {
-        this.webpackConfig = (<any>Object.assign({}, await import('./webpack.config.js'))).default;
+        this.webpackConfig = Object.assign({}, await import('./webpack.config.js')).default;
         if (options.minifyJS) {
             this.enableOptimization();
         }

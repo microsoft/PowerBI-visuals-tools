@@ -1,11 +1,11 @@
 import Package from "../Package.js";
 import { Visual } from "../Visual.js";
-import { Severity, Stage, VisualType } from "./FeatureTypes.js";
+import { Severity, Stage, VisualFeatureType } from "./FeatureTypes.js";
 
 export default abstract class BaseFeature {
     public static severity: Severity
     public static stage: Stage
-    public static visualType: VisualType
+    public static visualFeatureType: VisualFeatureType
     public static featureName: string
     public static documentationLink: string
     public static errorMessage: string

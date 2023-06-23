@@ -256,7 +256,8 @@ export default class VisualManager {
 
     private createPackageInstance() {
         const pathToJSContent = path.join((this.pbivizConfig.build ?? globalConfig.build).dropFolder, "visual.js");
-        this.package = new Package(pathToJSContent, this.capabilities, this.visual.visualType);
+        const sourceCode = fs.readFileSync(pathToJSContent, "utf8");
+        this.package = new Package(sourceCode, this.capabilities, this.visual.visualFeatureType);
     }
 
     private parseCompilationResults(err: Error, stats: Stats) {

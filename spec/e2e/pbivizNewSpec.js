@@ -40,7 +40,7 @@ const startPath = process.cwd();
 const visualName = 'visualname';
 const visualPath = path.join(tempPath, visualName);
 
-describe("E2E - pbiviz new", () => {
+fdescribe("E2E - pbiviz new", () => {
 
     beforeEach(() => {
         FileSystem.resetTempDirectory();

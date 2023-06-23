@@ -26,8 +26,7 @@
 
 "use strict";
 
-import fs from 'fs-extra';
-import { VisualType } from "./Features/FeatureTypes.js";
+import { VisualFeatureType } from "./Features/FeatureTypes.js";
 
 /**
  * Represents an instance of a visual package based on file path
@@ -35,12 +34,12 @@ import { VisualType } from "./Features/FeatureTypes.js";
 export default class Package {
     private sourceCode: string;
     private capabilities: object;
-    public visualType: VisualType;
+    public visualFeatureType: VisualFeatureType;
 
-    constructor(pathToSourceCode: string, capabilities: object, visualType: VisualType) {
-        this.sourceCode = fs.readFileSync(pathToSourceCode, "utf8");
+    constructor(sourceCode: string, capabilities: object, visualFeatureType: VisualFeatureType) {
+        this.sourceCode = sourceCode;
         this.capabilities = capabilities;
-        this.visualType = visualType;
+        this.visualFeatureType = visualFeatureType;
     }
     
     public contain(keyword: string) {
