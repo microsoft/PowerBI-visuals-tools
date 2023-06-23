@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
-import  https from "https";
-import  path from "path";
+import https from "https";
+import path from "path";
 
 export function download(url, pathToFile) {
     return new Promise((resolve, reject) => {
