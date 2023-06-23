@@ -28,6 +28,7 @@ jobs:
     - run: npm run build --if-present
     - run: npm run lint
     - run: ls
+    - run: echo ${{ github.workspace }}
     - run: npm test
       env:
         CI: true
