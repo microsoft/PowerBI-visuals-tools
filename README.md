@@ -41,7 +41,7 @@ pbiviz
 ```
 
 ## How to build a visual?
-Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-visuals)
+Refer to our [documentation repository](https://learn.microsoft.com/en-us/power-bi/developer/visuals/)
 
 ## Usage
 
