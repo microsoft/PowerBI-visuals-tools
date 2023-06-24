@@ -76,7 +76,7 @@
     "eslint": "^8.36.0",
     "jasmine": "4.6.0",
     "jasmine-spec-reporter": "7.0.0",
-    "semver": "7.3.8",
+    "semver": "7.5.2",
     "tree-kill": "1.2.2"
   },
   "engines": {
