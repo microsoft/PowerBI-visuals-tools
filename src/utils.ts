@@ -26,7 +26,7 @@ export function getRootPath(): string {
 }
 
 export function readFileFromRoot(filePath: string) {
-    return fs.readFileSync(path.join(getRootPath(), filePath), "utf8")
+    return fs.readFileSync(new URL(filePath, import.meta.url), "utf8");
 }
 
 export function readJsonFromRoot(filePath: string) {

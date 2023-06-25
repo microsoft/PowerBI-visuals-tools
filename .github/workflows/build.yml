@@ -27,10 +27,6 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run build --if-present
-    - run: ls
-    - run: pwd
-    - run: find config.json
-    - run: sudo find config.json
     - run: npm test
       env:
         CI: true
