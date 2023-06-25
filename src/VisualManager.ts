@@ -39,7 +39,7 @@ import WebpackWrap, { WebpackOptions } from './WebPackWrap.js';
 import Package from './Package.js';
 import { Visual } from "./Visual.js";
 import { FeatureManager, Logs } from "./FeatureManager.js";
-import { Severity, Stage } from "./Features/FeatureTypes.js";
+import { Severity, Stage } from "./features/FeatureTypes.js";
 import TemplateFetcher from "./TemplateFetcher.js";
 
 interface GenerateOptions {

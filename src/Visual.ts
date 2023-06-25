@@ -1,5 +1,5 @@
 import { compareVersions } from "compare-versions";
-import { VisualFeatureType } from "./Features/FeatureTypes.js";
+import { VisualFeatureType } from "./features/FeatureTypes.js";
 
 export class Visual {
     public visualFeatureType: VisualFeatureType;

@@ -1,5 +1,5 @@
-import { Severity, Stage } from "./Features/FeatureTypes.js";
-import * as features from "./Features/index.js";
+import { Severity, Stage } from "./features/FeatureTypes.js";
+import * as features from "./features/index.js";
 import { Visual } from "./Visual.js";
 import Package from "./Package.js";
 

@@ -26,7 +26,7 @@
 
 "use strict";
 
-import { VisualFeatureType } from "./Features/FeatureTypes.js";
+import { VisualFeatureType } from "./features/FeatureTypes.js";
 
 /**
  * Represents an instance of a visual package based on file path
