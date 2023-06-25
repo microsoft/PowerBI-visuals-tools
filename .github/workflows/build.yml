@@ -27,6 +27,12 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - run: npm run build --if-present
+    - run: ls home/runner/work/PowerBI-visuals-tools/PowerBI-visuals-tools/lib/features
+    - run: ls home/runner/work/PowerBI-visuals-tools/PowerBI-visuals-tools/lib
+    - run: ls home/runner/work/PowerBI-visuals-tools/PowerBI-visuals-tools
+    - run: ls home/runner/work/PowerBI-visuals-tools
+    - run: ls home/runner/work/PowerBI-visuals-tools
+    - run: ls home/runner/work
     - run: npm test
       env:
         CI: true

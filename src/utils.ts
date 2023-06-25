@@ -21,7 +21,7 @@ export function createFolder(folderName): string {
 }
 
 export function getRootPath(): string {
-    const pathToDirectory = import.meta.url.split("file://")[1];
+    const pathToDirectory = import.meta.url.split("file:///")[1];
     return path.join(pathToDirectory, "../..");
 }
 
