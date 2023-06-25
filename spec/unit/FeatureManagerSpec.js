@@ -26,12 +26,10 @@
 
 "use strict";
 
-import { readJsonFromRoot } from '../../lib/utils.js';
 import * as features from '../../lib/features/index.js';
 import Package from '../../lib/Package.js';
 import { Stage, VisualFeatureType } from '../../lib/features/FeatureTypes.js';
-
-const config = readJsonFromRoot('config.json')
+import config from '../../config.json' assert {type: 'json'};
 
 describe("Features", () => {
     describe("Visual", () => {

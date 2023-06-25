@@ -31,7 +31,6 @@ import path from 'path';
 import { getRootPath, readJsonFromRoot } from '../../lib/utils.js';
 import { createCertFile } from '../../lib/CertificateTools.js';
 import config from '../../config.json' assert {type: 'json'};
-// const config = readJsonFromRoot('config.json');
 
 describe("E2E - pbiviz --install-cert", () => {
     beforeEach((done) => {
