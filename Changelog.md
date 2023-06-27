@@ -2,11 +2,6 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 4.4.0
-* Integrated PAC validation
-* Migrated to eslint
-* Fixed vulnerabilities
-
 ## 4.3.2
 * LocalizationLoader has been moved to `powerbi-visuals-webpack-plugin`
 

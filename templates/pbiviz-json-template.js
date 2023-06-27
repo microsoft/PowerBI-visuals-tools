@@ -1,11 +1,11 @@
-export default function (options) {
+module.exports = function (options) {
     return `{
     "visual": {
         "name": "${options.name}",
         "displayName": "${options.displayName}",
         "guid": "${options.guid}",
         "visualClassName": "${options.visualClassName}",
-        "version": "1.0.0.0",
+        "version": "1.0.0",
         "description": "",
         "supportUrl": "",
         "gitHubUrl": ""

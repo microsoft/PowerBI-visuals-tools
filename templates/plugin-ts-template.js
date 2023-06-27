@@ -1,4 +1,4 @@
-export default function (options) {
+module.exports = function (options) {
     return `declare var powerbi;
 powerbi.visuals = powerbi.visuals || {};
 powerbi.visuals.plugins = powerbi.visuals.plugins || {};
