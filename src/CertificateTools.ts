@@ -35,7 +35,7 @@ import path from 'path';
 
 const certSafePeriod = 1000 * 60 * 60 * 24;
 const rootPath = getRootPath();
-const confPath = '../config.json';
+const confPath = '/config.json';
 
 interface CertificateOptions {
     passphrase?: string;
@@ -164,7 +164,7 @@ export async function createCertFile(config, open) {
                         // for 10
                         passphrase = Math.random().toString().substring(2);
                         config.server.passphrase = passphrase;
-                        fs.writeFileSync(path.join(rootPath, "dist", confPath), JSON.stringify(config));
+                        fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
 
                         createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
                             `   New-SelfSignedCertificate ` +
@@ -184,7 +184,7 @@ export async function createCertFile(config, open) {
                         // for window 10 / server 2016
                         passphrase = Math.random().toString().substring(2);
                         config.server.passphrase = passphrase;
-                        fs.writeFileSync(path.join(rootPath, "dist", confPath), JSON.stringify(config));
+                        fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
 
                         createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
                             `   New-SelfSignedCertificate ` +
@@ -395,7 +395,7 @@ export async function resolveCertificate() {
                 // eslint-disable-next-line require-atomic-updates
                 config.server.passphrase = globalPbivizOptions.passphrase;
             }
-            await fs.writeFile(path.join(rootPath, "dist", confPath), JSON.stringify(config));
+            await fs.writeFile(path.join(rootPath, confPath), JSON.stringify(config));
         }
     }
     return options;
