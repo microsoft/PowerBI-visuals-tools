@@ -26,20 +26,19 @@
 
 "use strict";
 
-const fs = require('fs-extra');
-const path = require('path');
-const fsPromises = require("fs").promises;
-const utils = require('./utils');
-
-const FileSystem = require('../helpers/FileSystem.js');
-const writeMetadata = require("./utils").writeMetadata;
-const download = require("../../lib/utils").download;
-const createFolder = require("../../lib/utils").createFolder;
-const config = require("../../config.json");
+import fs from 'fs-extra';
+import path from 'path';
+import { promises as fsPromises } from "fs";
+import FileSystem from '../helpers/FileSystem.js';
+import { writeMetadata, readdirSyncRecursive } from "./utils.js";
+import { download, createFolder } from "../../lib/utils.js";
+import config from '../../config.json' assert {type: 'json'};
 
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
+const visualName = 'visualname';
+const visualPath = path.join(tempPath, visualName);
 
 describe("E2E - pbiviz new", () => {
 
@@ -53,37 +52,34 @@ describe("E2E - pbiviz new", () => {
     });
 
     afterAll(() => {
-        process.chdir(startPath);
         FileSystem.deleteTempDirectory();
     });
 
     it("Should generate new visual with default template", () => {
-        let visualName = 'visualname';
-        let template = 'default';
-        let visualPath = path.join(tempPath, visualName);
+        const template = 'default';
 
         FileSystem.runPbiviz('new', visualName, ' -t default');
 
         writeMetadata(visualPath);
 
         //check base dir
-        let stat = fs.statSync(visualPath);
+        const stat = fs.statSync(visualPath);
         expect(stat.isDirectory()).toBe(true);
 
         //check contents
-        let expectedFiles = utils.readdirSyncRecursive(path.join(templatePath, 'visuals', template));
-        expectedFiles.concat(utils.readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
+        const expectedFiles = readdirSyncRecursive(path.join(templatePath, 'visuals', template));
+        expectedFiles.concat(readdirSyncRecursive(path.join(templatePath, 'visuals', '_global')));
         expectedFiles.push('/pbiviz.json');
-        let visualFiles = utils.readdirSyncRecursive(visualPath);
-        let fileDiff = [expectedFiles, visualFiles].reduce((a, b) => a.filter(c => !b.includes(c)));
+        const visualFiles = readdirSyncRecursive(visualPath);
+        const fileDiff = [expectedFiles, visualFiles].reduce((a, b) => a.filter(c => !b.includes(c)));
         expect(fileDiff.length).toBe(0);
 
         // check exists node_modules directory
-        let nodeModulesDirStat = fs.statSync(path.join(visualPath, "node_modules"));
+        const nodeModulesDirStat = fs.statSync(path.join(visualPath, "node_modules"));
         expect(nodeModulesDirStat.isDirectory()).toBe(true);
 
         //check pbiviz.json config file
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
         expect(visualConfig.name).toBe(visualName);
         expect(visualConfig.displayName).toBe(visualName);
         expect(visualConfig.guid).toBeDefined();
@@ -92,7 +88,7 @@ describe("E2E - pbiviz new", () => {
     });
 
     describe(`Should download 'Circlecard' visual archive from the repo`, () => {
-        let template = 'circlecard';
+        const template = 'circlecard';
 
         it(`Verifiy size`, async () => {
             const folder = createFolder(template);
@@ -107,6 +103,33 @@ describe("E2E - pbiviz new", () => {
     });
 
     describe('Should generate new visual using specified template', () => {
+
+        function testGeneratedVisualByTemplateName(template) {
+            FileSystem.runPbiviz('new', visualName, `--template ${template}`);
+            if (template !== 'circlecard') {
+                FileSystem.runCMDCommand('npm i', visualPath, startPath);
+            }
+
+            //check base dir exists
+            const stat = fs.statSync(visualPath);
+            expect(stat.isDirectory()).toBe(true);
+
+            //read pbiviz json generated in visual
+            const pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
+
+            //check pbiviz.json config file
+            const visualConfig = pbivizJson.visual;
+            if (template === 'circlecard') {
+                expect(visualConfig.name).toBe('reactCircleCard');
+                expect(visualConfig.displayName).toBe('ReactCircleCard');
+            } else {
+                expect(visualConfig.name).toBe(visualName);
+                expect(visualConfig.displayName).toBe(visualName);
+            }
+            expect(visualConfig.guid).toBeDefined();
+            expect(visualConfig.guid).toMatch(/^[a-zA-Z0-9]+$/g);
+            expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
+        }
 
         it('table', () => {
             const template = 'table';
@@ -137,55 +160,24 @@ describe("E2E - pbiviz new", () => {
 
             testGeneratedVisualByTemplateName(template);
         });
-
-        function testGeneratedVisualByTemplateName(template) {
-            let visualName = 'visualname',
-                visualPath = path.join(tempPath, visualName);
-
-            FileSystem.runPbiviz('new', visualName, `--template ${template}`);
-            if (template !== 'circlecard') {
-                FileSystem.runCMDCommand('npm i', visualPath, startPath);
-            }
-
-            //check base dir exists
-            let stat = fs.statSync(visualPath);
-            expect(stat.isDirectory()).toBe(true);
-
-            //read pbiviz json generated in visual
-            let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
-
-            //check pbiviz.json config file
-            let visualConfig = pbivizJson.visual;
-            if (template === 'circlecard') {
-                expect(visualConfig.name).toBe('reactCircleCard');
-                expect(visualConfig.displayName).toBe('ReactCircleCard');
-            } else {
-                expect(visualConfig.name).toBe(visualName);
-                expect(visualConfig.displayName).toBe(visualName);
-            }
-            expect(visualConfig.guid).toBeDefined();
-            expect(visualConfig.guid).toMatch(/^[a-zA-Z0-9]+$/g);
-            expect(visualConfig.guid.substr(0, visualName.length)).toBe(visualName);
-        }
     });
 
     it("Should convert multi-word visual name to camelCase", () => {
-        let visualDisplayName = 'My Visual Name here';
-        let visualName = 'myVisualNameHere';
-        FileSystem.runPbiviz('new', visualDisplayName);
+        const visualDisplayName = 'Visual Name';
+        const expectedVisualName = 'visualName';
+        FileSystem.runPbiviz('new', `"${visualDisplayName}"`);
 
-        let visualPath = path.join(tempPath, visualName);
-        let stat = fs.statSync(visualPath);
+        const stat = fs.statSync(visualPath);
         expect(stat.isDirectory()).toBe(true);
 
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        expect(visualConfig.name).toBe(visualName);
+        const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        expect(visualConfig.name).toBe(expectedVisualName);
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });
 
     it("Should throw error if the visual name invalid", () => {
-        let invalidVisualName = '12test';
         let error;
+        let invalidVisualName = '12test';
         try {
             FileSystem.runPbiviz('new', invalidVisualName);
         }
@@ -215,9 +207,7 @@ describe("E2E - pbiviz new", () => {
     });
 
     it("Should throw error if the visual already exists", () => {
-        let visualName = 'visualname';
         let error;
-
         FileSystem.runPbiviz('new', visualName);
 
         try {
@@ -228,12 +218,11 @@ describe("E2E - pbiviz new", () => {
 
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
+
     });
 
     it("Should overwrite existing visual with force flag", () => {
-        let visualName = 'visualname';
-        let visualPath = path.join(tempPath, visualName);
-        let visualTestFilePath = path.join(visualPath, 'testFile.txt');
+        const visualTestFilePath = path.join(visualPath, 'testFile.txt');
         let visualNewError, testFileError1, testFileError2;
 
         FileSystem.runPbiviz('new', visualName);

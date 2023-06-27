@@ -26,13 +26,12 @@
 
 "use strict";
 
-const fs = require('fs-extra');
-const path = require('path');
-const async = require('async');
-const FileSystem = require('../helpers/FileSystem.js');
-const writeMetadata = require("./utils").writeMetadata;
-const download = require("../../lib/utils").download;
-const createFolder = require("../../lib/utils").createFolder;
+import fs from 'fs-extra';
+import path from 'path';
+import async from 'async';
+import FileSystem from '../helpers/FileSystem.js';
+import { writeMetadata } from "./utils.js";
+import { download, createFolder } from "../../lib/utils.js";
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();

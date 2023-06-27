@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 *.log
+/lib
 spec/.tmp
 /certs
 /testGround

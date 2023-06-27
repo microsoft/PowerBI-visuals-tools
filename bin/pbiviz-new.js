@@ -26,57 +26,27 @@
 
 "use strict";
 
-const program = require('commander');
-const VisualPackage = require('../lib/VisualPackage');
-const ConsoleWriter = require('../lib/ConsoleWriter');
-const CommandHelpManager = require('../lib/CommandHelpManager');
-const TemplateFetcher = require('../lib/TemplateFetcher');
-const config = require('../config.json');
-const options = process.argv;
+import VisualManager from '../lib/VisualManager.js';
+import { program, Option } from 'commander';
+
+let newVisualName = ""
 
 program
+    .usage("<argument> [options]")
+    .argument('<visualName>', 'name of new visual')
     .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .option('-t, --template [template]', 'use a specific template (default, table, slicer, rvisual, rhtml)');
+    .addOption(new Option('-t, --template [template]', 'use a specific template')
+        .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml', 'circlecard'])
+        .default('default')
+    )
+    .action((visualName) => {
+        newVisualName = visualName;
+    })
+    .parse();
 
-if (options.some(option => option === '--help' || option === '-h')) {
-    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-    process.exit(0);
-}
-
-program.parse(options);
-
-let args = program.args;
-
-if (!args || args.length < 1) {
-    ConsoleWriter.error("You must enter a visual name");
-    process.exit(1);
-}
-
-let visualName = args.join(' ');
-let cwd = process.cwd();
-
-ConsoleWriter.info('Creating new visual');
-
-if (program.force) {
-    ConsoleWriter.warn('Running with force flag. Existing files will be overwritten');
-}
-
-let generateOptions = {
-    force: program.force,
-    template: program.template
+const options = program.opts();
+const generateOptions = {
+    force: options.force,
+    template: options.template
 };
-
-if (config.visualTemplates[generateOptions.template]) {
-    new TemplateFetcher({
-        force: program.force,
-        templateName: generateOptions.template,
-        visualName: visualName
-    }).fetch();
-} else {
-    VisualPackage.createVisualPackage(cwd, visualName, generateOptions).then(() => {
-        ConsoleWriter.done('Visual creation complete');
-    }).catch((e) => {
-        ConsoleWriter.error('Unable to create visual.\n', e);
-        process.exit(1);
-    });
-}
+VisualManager.createVisual(process.cwd(), newVisualName, generateOptions)

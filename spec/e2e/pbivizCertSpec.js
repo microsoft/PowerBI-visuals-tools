@@ -26,28 +26,28 @@
 
 "use strict";
 
-let fs = require('fs-extra');
-let path = require('path');
-console.log(__dirname);
-let config = require('./../../config.json');
-
-let CertificateTools = require('./../../lib/CertificateTools');
+import fs from 'fs-extra';
+import path from 'path';
+import { getRootPath, readJsonFromRoot } from '../../lib/utils.js';
+import { createCertFile } from '../../lib/CertificateTools.js';
+import config from '../../config.json' assert {type: 'json'};
 
 describe("E2E - pbiviz --install-cert", () => {
     beforeEach((done) => {
-        CertificateTools.createCertFile(config, false).then(done);
+        createCertFile(config, false).then(done);
     });
 
     describe("pbiviz", () => {
         it("pbiviz --install-cert command should generate certificate", (done) => {
-            let certPath = path.join(__dirname, "../../", config.server.certificate);
-            let keyPath = path.join(__dirname, "../../", config.server.privateKey);
-            let pfxPath = path.join(__dirname, "../../", config.server.pfx);
-            let certExists = fs.existsSync(certPath);
-            let keyExists = fs.existsSync(keyPath);
-            let pfxExists = fs.existsSync(pfxPath);
+            const rootPath = getRootPath();
+            const certPath = path.join(rootPath, config.server.certificate);
+            const keyPath = path.join(rootPath, config.server.privateKey);
+            const pfxPath = path.join(rootPath, config.server.pfx);
+            const certExists = fs.existsSync(certPath);
+            const keyExists = fs.existsSync(keyPath);
+            const pfxExists = fs.existsSync(pfxPath);
 
-            let result = (certExists && keyExists) || pfxExists;
+            const result = (certExists && keyExists) || pfxExists;
 
             expect(result).toBeTruthy();
             done();
