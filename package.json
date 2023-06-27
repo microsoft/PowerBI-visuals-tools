@@ -5,9 +5,8 @@
   "main": "./lib/VisualManager.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
     "start": "node ./bin/pbiviz.js",
-    "test": "npm run build && npm run clean-tests && npm run lint && npm run jasmine",
+    "test": "npm run clean-tests && npm run lint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
     "lint": "npx eslint . --ext .ts,.tsx",
