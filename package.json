@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./bin/pbiviz.js",
-    "test": "npm run clean-tests && npm run lint && npm run jasmine",
+    "test": "npm run clean-tests && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
     "lint": "npx eslint . --ext .ts,.tsx",

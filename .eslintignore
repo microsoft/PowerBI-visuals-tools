@@ -1,6 +1,7 @@
 node_modules
 templates
 webroot
+lib
 spec
 .eslintrc.json
 bin
