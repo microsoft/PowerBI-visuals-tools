@@ -37,6 +37,7 @@ program
     .option('--no-stats', "Doesn't generate statistics files")
     .parse();
 
+const options = program.opts();
 const webpackOptions = {
     devMode: true,
     devtool: "source-map",
@@ -44,13 +45,13 @@ const webpackOptions = {
     generatePbiviz: false,
     minifyJS: false,
     minify: false,
-    devServerPort: program.port,
-    stats: program.stats
+    devServerPort: options.port,
+    stats: options.stats
 }
 const visualManager = new VisualManager(process.cwd())
 await visualManager
     .prepareVisual()
     .validateVisual()
     .initializeWebpack(webpackOptions)
-visualManager.startWebpackServer(program.drop)
+visualManager.startWebpackServer(options.drop)
 
