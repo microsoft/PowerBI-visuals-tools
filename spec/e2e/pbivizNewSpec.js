@@ -31,9 +31,9 @@ import path from 'path';
 import { promises as fsPromises } from "fs";
 import FileSystem from '../helpers/FileSystem.js';
 import { writeMetadata, readdirSyncRecursive } from "./utils.js";
-import { download, createFolder } from "../../lib/utils.js";
-import config from '../../config.json' assert {type: 'json'};
+import { download, createFolder, readJsonFromRoot } from "../../lib/utils.js";
 
+const config = readJsonFromRoot('config.json');
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();

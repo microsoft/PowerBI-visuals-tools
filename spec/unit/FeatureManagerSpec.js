@@ -29,7 +29,9 @@
 import * as features from '../../lib/features/index.js';
 import Package from '../../lib/Package.js';
 import { Stage, VisualFeatureType } from '../../lib/features/FeatureTypes.js';
-import config from '../../config.json' assert {type: 'json'};
+import { readJsonFromRoot } from '../../lib/utils.js';
+
+const config = readJsonFromRoot('config.json');
 
 describe("Features", () => {
     describe("Visual", () => {
