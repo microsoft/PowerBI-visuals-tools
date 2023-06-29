@@ -1,10 +1,10 @@
 
 import { getRootPath, readJsonFromRoot } from './utils.js';
 import { LocalizationLoader } from "powerbi-visuals-webpack-plugin";
-import  MiniCssExtractPlugin from "mini-css-extract-plugin";
-import  TerserPlugin from "terser-webpack-plugin";
-import  path from "path";
-import  webpack from "webpack";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import TerserPlugin from "terser-webpack-plugin";
+import path from "path";
+import webpack from "webpack";
 
 const config = readJsonFromRoot("/config.json");
 

@@ -27,7 +27,7 @@
 "use strict";
 
 import webpack, { Compiler, Stats } from "webpack";
-import  WebpackDevServer from "webpack-dev-server";
+import WebpackDevServer from "webpack-dev-server";
 import childProcess from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';

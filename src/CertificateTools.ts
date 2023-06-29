@@ -299,7 +299,7 @@ export async function removeCertFiles(certPath, keyPath, pfxPath?) {
 async function getGlobalPbivizCerts(config) {
     const options: CertificateOptions = {};
     try {
-        const location = ((await exec('npm ls -g powerbi-visuals-tools'))).split("\n")[0];
+        const location = (await exec('npm ls -g powerbi-visuals-tools')).split("\n")[0];
         const certPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.certificate);
         const keyPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.privateKey);
         const pfxPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.pfx);

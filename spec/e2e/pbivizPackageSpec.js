@@ -38,27 +38,6 @@ import { writeMetadata } from "./utils.js";
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
-const startChecker = (proc, keywords = []) => new Promise((resolve) => {
-    const foundMessages = [];
-    let totalLog = "";
-    // listen for all warnings and errors
-    proc.stderr.on('data', (data) => {
-        totalLog += (data.toString()).toLowerCase();
-    });
-    // listen for all info messages
-    proc.stdout.on('data', (data) => {
-        totalLog += (data.toString()).toLowerCase();
-    });
-    proc.on('exit', () => {
-        keywords.forEach((keyword) => {
-            if (totalLog.indexOf(keyword.toLowerCase()) !== -1) {
-                foundMessages.push(keyword);
-            }
-        });
-        resolve(foundMessages);
-    });
-});
-
 describe("E2E - pbiviz package", () => {
 
     const visualName = 'visualname';
@@ -84,30 +63,35 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should throw error if not in the visual root", () => {
+        let error;
         process.chdir(tempPath);
 
         try {
             FileSystem.runPbiviz('package');
-        } catch (error) {
-            expect(error).toBeDefined();
-            expect(error.status).toBe(1);
-            expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
+        } catch (e) {
+            error = e;
         }
+        expect(error).toBeDefined();
+        expect(error.status).toBe(1);
+        expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
     });
 
     it("Should throw error if there is nothing to produce", () => {
+        let error;
         process.chdir(tempPath);
 
         try {
             FileSystem.runPbiviz('package', '--no-pbiviz');
-        } catch (error) {
-            expect(error).toBeDefined();
-            expect(error.status).toBe(1);
-            expect(error.message).toContain("Nothing to build. Cannot use --no-pbiviz without --resources");
+        } catch (e) {
+            error = e;
         }
+        expect(error).toBeDefined();
+        expect(error.status).toBe(1);
+        expect(error.message).toContain("Nothing to build. Cannot use --no-pbiviz without --resources");
     });
 
     it("Should create a pbiviz file and no resources folder with no flags", () => {
+        let error;
         FileSystem.runPbiviz('package');
 
         const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
@@ -115,10 +99,11 @@ describe("E2E - pbiviz package", () => {
 
         try {
             fs.accessSync(resourcesPath);
-        } catch (error) {
-            expect(error).toBeDefined();
-            expect(error.code).toBe('ENOENT');
+        } catch (e) {
+            error = e
         }
+        expect(error).toBeDefined();
+        expect(error.code).toBe('ENOENT');
 
         expect(fs.statSync(pbivizPath).isFile()).toBe(true);
     });
@@ -134,6 +119,7 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should not create pbiviz file with --no-pbiviz flag", () => {
+        let error
         FileSystem.runPbiviz('package', undefined, '--no-pbiviz --resources');
 
         const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
@@ -141,10 +127,11 @@ describe("E2E - pbiviz package", () => {
 
         try {
             fs.accessSync(pbivizPath);
-        } catch (error) {
-            expect(error).toBeDefined();
-            expect(error.code).toBe('ENOENT');
+        } catch (e) {
+            error = e
         }
+        expect(error).toBeDefined();
+        expect(error.code).toBe('ENOENT');
 
         expect(fs.statSync(resourcesPath).isDirectory()).toBe(true);
     });
@@ -505,18 +492,21 @@ function writeJsonPromise(path, jsonObject) {
 }
 
 function testMissingScript(fname) {
+    let error;
     fs.unlinkSync(fname);
 
     try {
         FileSystem.runPbiviz('package');
-    } catch (error) {
-        expect(error).toBeDefined();
-        expect(error.status).toBe(1);
-        expect(error.message).toContain("Failed updating visual capabilities");
+    } catch (e) {
+        error = e
     }
+    expect(error).toBeDefined();
+    expect(error.status).toBe(1);
+    expect(error.message).toContain("Failed updating visual capabilities");
 }
 
 function testErrorInDependencies() {
+    let error;
     const invalidDependencies = [
         {
             invalidPropertyName: "ddd"
@@ -527,11 +517,12 @@ function testErrorInDependencies() {
 
     try {
         FileSystem.runPbiviz('package');
-    } catch (error) {
-        expect(error).toBeDefined();
-        expect(error.status).toBe(1);
-        expect(error.message).toContain("JSON  dependencies.json :  instance is not of a type(s) object");
+    } catch (e) {
+        error = e;
     }
+    expect(error).toBeDefined();
+    expect(error.status).toBe(1);
+    expect(error.message).toContain("JSON  dependencies.json :  instance is not of a type(s) object");
 }
 
 function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies) {

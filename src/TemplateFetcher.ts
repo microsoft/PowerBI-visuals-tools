@@ -1,11 +1,11 @@
 
 import { createFolder, download, readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
-import  JSZip from 'jszip';
+import JSZip from 'jszip';
 import VisualGenerator from "./VisualGenerator.js";
 import { exec } from 'child_process';
 import fs from 'fs-extra';
-import  path from 'path';
+import path from 'path';
 
 const config = readJsonFromRoot('config.json');
 

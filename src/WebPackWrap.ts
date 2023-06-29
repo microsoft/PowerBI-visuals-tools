@@ -1,10 +1,10 @@
 "use strict";
 
 import fs from 'fs-extra';
-import  os from 'os';
-import  path from 'path';
-import  webpack from 'webpack';
-import  util from'util';
+import os from 'os';
+import path from 'path';
+import webpack from 'webpack';
+import util from'util';
 import { exec as processExec } from 'child_process';
 const exec = util.promisify(processExec);
 import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';

@@ -26,10 +26,10 @@
 
 "use strict";
 
-import  chalk from 'chalk';
-import  fs from 'fs';
-import  os from 'os';
-import  path from 'path';
+import chalk from 'chalk';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { getRootPath } from './utils.js';
 
 const preferredChalk = os.platform() === 'darwin' ? chalk.bold : chalk;

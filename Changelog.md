@@ -2,8 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 4.4.0
+## 5.0.0
 * Integrated PAC validation
+* Migrated to TypeScript
 * Migrated to eslint
 * Fixed vulnerabilities
 
