@@ -37,7 +37,7 @@ import config from '../../config.json' assert {type: 'json'};
 const tempPath = FileSystem.getTempPath();
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
-const visualName = 'visualname';
+const visualName = 'visualName';
 const visualPath = path.join(tempPath, visualName);
 
 describe("E2E - pbiviz new", () => {
@@ -164,14 +164,13 @@ describe("E2E - pbiviz new", () => {
 
     it("Should convert multi-word visual name to camelCase", () => {
         const visualDisplayName = 'Visual Name';
-        const expectedVisualName = 'visualName';
         FileSystem.runPbiviz('new', `"${visualDisplayName}"`);
 
         const stat = fs.statSync(visualPath);
         expect(stat.isDirectory()).toBe(true);
 
         const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        expect(visualConfig.name).toBe(expectedVisualName);
+        expect(visualConfig.name).toBe(visualName);
         expect(visualConfig.displayName).toBe(visualDisplayName);
     });
 

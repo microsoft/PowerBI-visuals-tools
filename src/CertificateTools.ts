@@ -26,12 +26,13 @@
 
 "use strict";
 
-import { getRootPath, readJsonFromRoot } from './utils.js';
-import ConsoleWriter from './ConsoleWriter.js';
 import { exec as nodeExec } from 'child_process';
 import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
+import crypto from "crypto"
+import { getRootPath, readJsonFromRoot } from './utils.js';
+import ConsoleWriter from './ConsoleWriter.js';
 
 const certSafePeriod = 1000 * 60 * 60 * 24;
 const rootPath = getRootPath();
@@ -159,13 +160,12 @@ export async function createCertFile(config, open) {
                         }
                         break;
                     }
+                    passphrase = crypto.getRandomValues(new Uint32Array(1))[0].toString().substring(2);
+                    config.server.passphrase = passphrase;
+                    fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
                     // for windows 8 / 8.1 / server 2012 R2 /
                     if (Number(osVersion[0]) === 6 && (Number(osVersion[1]) === 2 || Number(osVersion[1]) === 3)) {
                         // for 10
-                        passphrase = Math.random().toString().substring(2);
-                        config.server.passphrase = passphrase;
-                        fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
-
                         createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
                             `   New-SelfSignedCertificate ` +
                             `       -DnsName localhost ` +
@@ -177,15 +177,8 @@ export async function createCertFile(config, open) {
                             `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
 
                         await exec(`${startCmd} "${createCertCommand}"`);
-                        if (await fs.exists(pfxPath)) {
-                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`);
-                        }
                     } else {
                         // for window 10 / server 2016
-                        passphrase = Math.random().toString().substring(2);
-                        config.server.passphrase = passphrase;
-                        fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
-
                         createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
                             `   New-SelfSignedCertificate ` +
                             `       -DnsName localhost ` +
@@ -204,9 +197,9 @@ export async function createCertFile(config, open) {
                             `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
 
                         await exec(`${startCmd} "${createCertCommand}"`);
-                        if (await fs.exists(pfxPath)) {
-                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`);
-                        }
+                    }
+                    if (await fs.exists(pfxPath)) {
+                        ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`);
                     }
                     break;
                 default:
