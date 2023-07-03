@@ -51,7 +51,6 @@ const webpackOptions = {
 const visualManager = new VisualManager(process.cwd())
 await visualManager
     .prepareVisual()
-    .validateVisual()
     .initializeWebpack(webpackOptions)
 visualManager.startWebpackServer(options.drop)
 

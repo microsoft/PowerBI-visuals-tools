@@ -56,7 +56,7 @@ export default class VisualManager {
     private webpackDevServer: WebpackDevServer;
 
     constructor(rootPath: string) {
-            this.basePath = rootPath;
+        this.basePath = rootPath;
     }
 
     public prepareVisual() {
