@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /*
  *  Power BI Visual CLI
  *
@@ -26,25 +27,25 @@
 
 "use strict";
 
-const fs = require('fs-extra');
-const path = require('path');
-const async = require('async');
-const JSZip = require('jszip');
-const lodashIsEqual = require('lodash.isequal');
-
-const FileSystem = require('../helpers/FileSystem.js');
-const writeMetadata = require("./utils").writeMetadata;
+import fs from 'fs-extra';
+import path from 'path';
+import async from 'async';
+import JSZip from 'jszip';
+import lodashIsEqual from 'lodash.isequal';
+import FileSystem from '../helpers/FileSystem.js';
+import { writeMetadata } from "./utils.js";
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
 
 describe("E2E - pbiviz package", () => {
 
-    let visualName = 'visualname';
-    let visualPath = path.join(tempPath, visualName);
+    const visualName = 'visualname';
+    const visualPath = path.join(tempPath, visualName);
     let visualPbiviz = {};
 
     beforeEach(() => {
+        process.chdir(startPath);
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
@@ -54,10 +55,6 @@ describe("E2E - pbiviz package", () => {
         writeMetadata(visualPath);
 
         visualPbiviz = JSON.parse(fs.readFileSync(path.join(visualPath, 'pbiviz.json'), { encoding: "utf8" }));
-    });
-
-    afterEach(() => {
-        process.chdir(startPath);
     });
 
     afterAll(() => {
@@ -94,61 +91,61 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should create a pbiviz file and no resources folder with no flags", () => {
+        let error;
         FileSystem.runPbiviz('package');
 
-        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
-        let resourcesPath = path.join(visualPath, 'dist', 'resources');
+        const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
+        const resourcesPath = path.join(visualPath, 'dist', 'resources');
 
-        let resourcesError;
         try {
             fs.accessSync(resourcesPath);
         } catch (e) {
-            resourcesError = e;
+            error = e
         }
+        expect(error).toBeDefined();
+        expect(error.code).toBe('ENOENT');
 
-        expect(resourcesError).toBeDefined();
-        expect(resourcesError.code).toBe('ENOENT');
         expect(fs.statSync(pbivizPath).isFile()).toBe(true);
     });
 
     it("Should create a pbiviz file and resource folder with --resources flag", () => {
-        FileSystem.runPbiviz('package', false, '--resources');
+        FileSystem.runPbiviz('package', undefined, '--resources');
 
-        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
-        let resourcesPath = path.join(visualPath, 'dist', 'resources');
+        const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
+        const resourcesPath = path.join(visualPath, 'dist', 'resources');
 
         expect(fs.statSync(pbivizPath).isFile()).toBe(true);
         expect(fs.statSync(resourcesPath).isDirectory()).toBe(true);
     });
 
     it("Should not create pbiviz file with --no-pbiviz flag", () => {
-        FileSystem.runPbiviz('package', false, '--no-pbiviz --resources');
+        let error
+        FileSystem.runPbiviz('package', undefined, '--no-pbiviz --resources');
 
-        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
-        let resourcesPath = path.join(visualPath, 'dist', 'resources');
+        const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
+        const resourcesPath = path.join(visualPath, 'dist', 'resources');
 
-        let pbivizError;
         try {
             fs.accessSync(pbivizPath);
         } catch (e) {
-            pbivizError = e;
+            error = e
         }
+        expect(error).toBeDefined();
+        expect(error.code).toBe('ENOENT');
 
-        expect(pbivizError).toBeDefined();
-        expect(pbivizError.code).toBe('ENOENT');
         expect(fs.statSync(resourcesPath).isDirectory()).toBe(true);
     });
 
     it("Should correctly generate pbiviz file", (done) => {
         FileSystem.runPbiviz('package');
 
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
-        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
-        let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
+        const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        const visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
+        const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + visualPbiviz.visual.version + '.pbiviz');
+        const pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
 
-        let zipContents = fs.readFileSync(pbivizPath);
-        let jszip = new JSZip();
+        const zipContents = fs.readFileSync(pbivizPath);
+        const jszip = new JSZip();
         jszip.loadAsync(zipContents)
             .then((zip) => {
                 async.parallel([
@@ -156,7 +153,7 @@ describe("E2E - pbiviz package", () => {
                     (next) => {
                         zip.file('package.json').async('string')
                             .then((content) => {
-                                let data = JSON.parse(content);
+                                const data = JSON.parse(content);
                                 expect(data.resources.length).toBe(1);
                                 expect(data.resources[0].file).toBe(pbivizResourcePath);
                                 expect(data.visual).toEqual(visualConfig);
@@ -168,7 +165,7 @@ describe("E2E - pbiviz package", () => {
                     (next) => {
                         zip.file(pbivizResourcePath).async('string')
                             .then((content) => {
-                                let data = JSON.parse(content);
+                                const data = JSON.parse(content);
                                 expect(data.visual).toEqual(visualConfig);
                                 expect(data.capabilities).toEqual(visualCapabilities);
                                 expect(data.content.js).toBeDefined();
@@ -189,19 +186,19 @@ describe("E2E - pbiviz package", () => {
     });
 
     it("Should correctly generate resources folder", () => {
-        FileSystem.runPbiviz('package', false, '--no-pbiviz --resources');
+        FileSystem.runPbiviz('package', undefined, '--no-pbiviz --resources');
 
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
-        let resourcesPath = path.join(visualPath, 'dist', 'resources');
-        let pbivizPath = path.join(resourcesPath, visualPbiviz.visual.guid + '.pbiviz.json');
+        const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        const visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
+        const resourcesPath = path.join(visualPath, 'dist', 'resources');
+        const pbivizPath = path.join(resourcesPath, visualPbiviz.visual.guid + '.pbiviz.json');
 
         expect(fs.statSync(resourcesPath).isDirectory()).toBe(true);
         expect(fs.statSync(path.join(resourcesPath, 'visual.prod.js')).isFile()).toBe(true);
         expect(fs.statSync(path.join(resourcesPath, 'visual.prod.css')).isFile()).toBe(true);
         expect(fs.statSync(pbivizPath).isFile()).toBe(true);
 
-        let pbiviz = fs.readJsonSync(pbivizPath);
+        const pbiviz = fs.readJsonSync(pbivizPath);
         expect(pbiviz.visual).toEqual(visualConfig);
         expect(pbiviz.capabilities).toEqual(visualCapabilities);
         expect(pbiviz.content.js).toBeDefined();
@@ -212,41 +209,41 @@ describe("E2E - pbiviz package", () => {
     // tets can't check the minification, because in input the plugin gets minified version, 
     // plugin can't create two version js file for compare
     xit("Should minify assets by default", () => {
-        FileSystem.runPbiviz('package', false, '--resources --no-pbiviz');
+        FileSystem.runPbiviz('package', undefined, '--resources --no-pbiviz');
 
-        let js = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.js'));
+        const js = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.js'));
 
-        let prodJs = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.prod.js'));
+        const prodJs = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.prod.js'));
 
         expect(js.size).toBeGreaterThan(prodJs.size);
     });
 
     it("Should skip minification with --no-minify flag", () => {
-        FileSystem.runPbiviz('package', false, '--resources --no-pbiviz --no-minify');
+        FileSystem.runPbiviz('package', undefined, '--resources --no-pbiviz --no-minify');
 
-        let js = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.js'));
+        const js = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.js'));
 
-        let prodJs = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.prod.js'));
+        const prodJs = fs.statSync(path.join(visualPath, 'dist', 'resources', 'visual.prod.js'));
 
         expect(js.size).toBe(prodJs.size);
     });
 
     it("Should set all versions in metadata equal", (done) => {
-        let visualVersion = "1.2.3";
+        const visualVersion = "1.2.3.4";
 
-        let pbivizJsonPath = path.join(visualPath, 'pbiviz.json');
-        let pbiviz = fs.readJsonSync(pbivizJsonPath);
+        const pbivizJsonPath = path.join(visualPath, 'pbiviz.json');
+        const pbiviz = fs.readJsonSync(pbivizJsonPath);
         pbiviz.visual.version = visualVersion;
         fs.writeFileSync(pbivizJsonPath, JSON.stringify(pbiviz));
         FileSystem.runCMDCommand('npm i', visualPath);
         FileSystem.runPbiviz('package');
 
-        let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-        let pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + pbiviz.visual.version + '.pbiviz');
-        let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
+        const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+        const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + pbiviz.visual.version + '.pbiviz');
+        const pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
 
-        let zipContents = fs.readFileSync(pbivizPath);
-        let jszip = new JSZip();
+        const zipContents = fs.readFileSync(pbivizPath);
+        const jszip = new JSZip();
         jszip.loadAsync(zipContents)
             .then((zip) => {
                 async.parallel([
@@ -254,7 +251,7 @@ describe("E2E - pbiviz package", () => {
                     next => {
                         zip.file('package.json').async('string')
                             .then((content) => {
-                                let data = JSON.parse(content);
+                                const data = JSON.parse(content);
                                 expect(data.visual.version).toEqual(visualVersion);
                                 expect(data.version).toEqual(visualVersion);
                                 next();
@@ -265,7 +262,7 @@ describe("E2E - pbiviz package", () => {
                     next => {
                         zip.file(pbivizResourcePath).async('string')
                             .then((content) => {
-                                let data = JSON.parse(content);
+                                const data = JSON.parse(content);
                                 expect(data.visual.version).toEqual(visualVersion);
                                 next();
                             })
@@ -308,7 +305,7 @@ describe("E2E - pbiviz package", () => {
                 return writeJsonPromise('pbiviz.json', pbivizJson);
             })
             .then(() => 
-                FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources')
+                FileSystem.runPbiviz('package', undefined, '--no-pbiviz --no-minify --resources')
             )
             .then(() => 
                 readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json'))
@@ -359,7 +356,7 @@ describe("E2E - pbiviz package", () => {
                         .then(() => writeJsonPromise('stringResources/ru-RU/resources.resjson', ResJsonRuLocalization))
                 ]))
             .then(() => 
-                FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources')
+                FileSystem.runPbiviz('package', undefined, '--no-pbiviz --no-minify --resources')
             )
             .then(() => 
                 readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json'))
@@ -430,7 +427,7 @@ describe("E2E - pbiviz package", () => {
                 return writeJsonPromise('pbiviz.json', pbivizJson);
             })
             .then(() => 
-                FileSystem.runPbiviz('package', false, '--no-pbiviz --no-minify --resources')
+                FileSystem.runPbiviz('package', undefined, '--no-pbiviz --no-minify --resources')
             )
             .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json')))
             .then((pbivizJson) => {
@@ -457,12 +454,11 @@ describe("E2E - pbiviz package", () => {
         FileSystem.runPbiviz('package', '--no-stats');
         const statisticFilePath = path.join(visualPath, 'webpack.statistics.prod.html');
         try { 
-            fs.statSync(statisticFilePath).isFile();
+            expect(fs.statSync(statisticFilePath).isFile()).toBe(false);
         } catch (error) {
             expect(error).not.toBeNull();
         }
     });
-
 });
 
 function mkDirPromise(path) {
@@ -502,7 +498,7 @@ function testMissingScript(fname) {
     try {
         FileSystem.runPbiviz('package');
     } catch (e) {
-        error = e;
+        error = e
     }
     expect(error).toBeDefined();
     expect(error.status).toBe(1);
@@ -511,7 +507,7 @@ function testMissingScript(fname) {
 
 function testErrorInDependencies() {
     let error;
-    let invalidDependencies = [
+    const invalidDependencies = [
         {
             invalidPropertyName: "ddd"
         }
@@ -536,10 +532,10 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
 
     FileSystem.runPbiviz('package');
 
-    let visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
-    let visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
-    let pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
-    let pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
+    const visualConfig = fs.readJsonSync(path.join(visualPath, 'pbiviz.json')).visual;
+    const visualCapabilities = fs.readJsonSync(path.join(visualPath, 'capabilities.json'));
+    const pbivizPath = path.join(visualPath, 'dist', visualName + '.pbiviz');
+    const pbivizResourcePath = `resources/${visualConfig.guid}.pbiviz.json`;
 
     visualCapabilities.dataViewMappings[0].scriptResult.script.scriptSourceDefault = scriptSourceDefault;
 
@@ -548,8 +544,8 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
         dependencies = fs.readJsonSync(path.join(visualPath, 'dependencies.json'));
     }
 
-    let zipContents = fs.readFileSync(pbivizPath);
-    let jszip = new JSZip();
+    const zipContents = fs.readFileSync(pbivizPath);
+    const jszip = new JSZip();
     jszip.loadAsync(zipContents)
         .then((zip) => {
             async.parallel([
@@ -557,7 +553,7 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
                 (next) => {
                     zip.file('package.json').async('string')
                         .then((content) => {
-                            let data = JSON.parse(content);
+                            const data = JSON.parse(content);
                             expect(data.resources.length).toBe(1);
                             expect(data.resources[0].file).toBe(pbivizResourcePath);
                             expect(data.visual).toEqual(visualConfig);
@@ -569,7 +565,7 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
                 (next) => {
                     zip.file(pbivizResourcePath).async('string')
                         .then((content) => {
-                            let data = JSON.parse(content);
+                            const data = JSON.parse(content);
                             expect(data.visual).toEqual(visualConfig);
                             expect(data.capabilities).toEqual(visualCapabilities);
                             expect(data.content.js).toBeDefined();
@@ -593,8 +589,8 @@ function testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, re
 // new tools doesn't support R visuals build. coming soon
 xdescribe("E2E - pbiviz package for R Visual template", () => {
 
-    let visualName = 'visualname';
-    let visualPath = path.join(tempPath, visualName);
+    const visualName = 'visualname';
+    const visualPath = path.join(tempPath, visualName);
 
     beforeEach(() => {
         FileSystem.resetTempDirectory();
@@ -622,14 +618,14 @@ xdescribe("E2E - pbiviz package for R Visual template", () => {
     });
 
     it("Should correctly generate pbiviz file for R Visual template - no dependencies file", (done) => {
-        let scriptSourceDefault = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
-        let removeDependencies = true;
+        const scriptSourceDefault = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+        const removeDependencies = true;
         testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
     });
 
     it("Should correctly generate pbiviz file for R Visual template", (done) => {
-        let scriptSourceDefault = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
-        let removeDependencies = false;
+        const scriptSourceDefault = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+        const removeDependencies = false;
         testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
     });
 });
@@ -637,13 +633,13 @@ xdescribe("E2E - pbiviz package for R Visual template", () => {
 // new tools doesn't support R visuals build. coming soon
 xdescribe("E2E - pbiviz package for R HTML template", () => {
 
-    let visualName = 'visualname';
-    let visualPath = path.join(tempPath, visualName);
+    const visualName = 'visualname';
+    const visualPath = path.join(tempPath, visualName);
 
     function getScriptSourceDefault() {
-        let FlattenScriptContent = fs.readFileSync(path.join(visualPath, 'r_files/flatten_HTML.r')).toString();
-        let scriptContent = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
-        let pattern = "source('./r_files/flatten_HTML.r')";
+        const FlattenScriptContent = fs.readFileSync(path.join(visualPath, 'r_files/flatten_HTML.r')).toString();
+        const scriptContent = fs.readFileSync(path.join(visualPath, 'script.r')).toString();
+        const pattern = "source('./r_files/flatten_HTML.r')";
         return scriptContent.replace(pattern, FlattenScriptContent);
     }
 
@@ -677,14 +673,14 @@ xdescribe("E2E - pbiviz package for R HTML template", () => {
     });
 
     it("Should correctly generate pbiviz file for R HTML template - no dependencies file", (done) => {
-        let scriptSourceDefault = getScriptSourceDefault();
-        let removeDependencies = true;
+        const scriptSourceDefault = getScriptSourceDefault();
+        const removeDependencies = true;
         testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
     });
 
     it("Should correctly generate pbiviz file for R HTML template", (done) => {
-        let scriptSourceDefault = getScriptSourceDefault();
-        let removeDependencies = false;
+        const scriptSourceDefault = getScriptSourceDefault();
+        const removeDependencies = false;
         testPbivizPackage(done, visualPath, visualName, scriptSourceDefault, removeDependencies);
     });
 });

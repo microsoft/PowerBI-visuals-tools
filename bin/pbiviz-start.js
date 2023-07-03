@@ -26,117 +26,32 @@
 
 "use strict";
 
-const program = require('commander');
-const compareVersions = require("compare-versions");
-const fs = require('fs-extra');
-const path = require('path');
-const webpack = require("webpack");
-
-const config = require('../config.json');
-const VisualPackage = require('../lib/VisualPackage');
-const WebpackDevServer = require("webpack-dev-server");
-const ConsoleWriter = require('../lib/ConsoleWriter');
-const WebPackWrap = require('../lib/WebPackWrap');
-const CommandHelpManager = require('../lib/CommandHelpManager');
-
-const options = process.argv;
-const minAPIversion = config.constants.minAPIversion;
+import VisualManager from '../lib/VisualManager.js';
+import { program } from 'commander';
 
 program
+    .usage('[options]')
     .option('-p, --port [port]', 'set the port listening on')
     .option('-m, --mute', 'mute error outputs')
     .option('-d, --drop', 'drop outputs into output folder')
-    .option('--no-stats', "Doesn't generate statistics files");
+    .option('--no-stats', "Doesn't generate statistics files")
+    .parse();
 
-if (options.some(option => option === '--help' || option === '-h')) {
-    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-    process.exit(0);
+const options = program.opts();
+const webpackOptions = {
+    devMode: true,
+    devtool: "source-map",
+    generateResources: true,
+    generatePbiviz: false,
+    minifyJS: false,
+    minify: false,
+    devServerPort: options.port,
+    stats: options.stats
 }
-
-program.parse(options);
-
-let cwd = process.cwd();
-let server;
-VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    if (visualPackage.config.apiVersion && compareVersions.compare(visualPackage.config.apiVersion, minAPIversion, "<")) {
-        ConsoleWriter.error(`Can't start the visual because of the current API is '${visualPackage.config.apiVersion}'.
-        Please use 'powerbi-visuals-api' ${minAPIversion} or above to build a visual.`);
-        throw new Error(`Invalid API version.`);
-    }
-    new WebPackWrap().applyWebpackConfig(visualPackage, {
-        devMode: true,
-        devtool: "source-map",
-        generateResources: true,
-        generatePbiviz: false,
-        minifyJS: false,
-        minify: false,
-        devServerPort: program.port,
-        disableStats: !program.stats
-    })
-        .then(({ webpackConfig }) => {
-            let compiler = webpack(webpackConfig);
-            ConsoleWriter.blank();
-            ConsoleWriter.info('Starting server...');
-            // webpack dev server serves bundle from disk instead memory
-            if (program.drop) {
-                webpackConfig.devServer.onBeforeSetupMiddleware = (devServer) => {
-                    let setHeaders = (res) => {
-                        Object.getOwnPropertyNames(webpackConfig.devServer.headers)
-                            .forEach(property => res.header(property, webpackConfig.devServer.headers[property]));
-                    };
-                    let readFile = (file, res) => {
-                        fs.readFile(file).then(function (content) {
-                            res.write(content);
-                            res.end();
-                        });
-                    };
-                    [
-                        'visual.js`',
-                        'visual.css',
-                        'pbiviz.json'
-                    ].forEach(asset => {
-                        devServer.app.get(`${webpackConfig.devServer.publicPath}/${asset}`, function (req, res) {
-                            setHeaders(res);
-                            readFile(path.join(webpackConfig.devServer.static.directory, asset), res);
-                        });
-                    });
-                };
-            }
-
-            server = new WebpackDevServer({
-                ...webpackConfig.devServer,
-                client: false,
-                hot: false,
-                devMiddleware: {
-                    writeToDisk: true    
-                }
-            }, compiler);
-
-            (async () => {
-                await server.start();
-                ConsoleWriter.info(`Server listening on port ${webpackConfig.devServer.port}`);
-            })();
-
-        })
-        .catch(e => {
-            ConsoleWriter.error(e.message);
-            process.exit(1);
-        });
-}).catch(e => {
-    ConsoleWriter.error('LOAD ERROR', e);
-    process.exit(1);
-});
-
-//clean up
-function stopServer() {
-    ConsoleWriter.blank();
-    ConsoleWriter.info("Stopping server...");
-    if (server) {
-        server.close();
-        server = null;
-    }
-}
-
-process.on('SIGINT', stopServer);
-process.on('SIGTERM', stopServer);
+const visualManager = new VisualManager(process.cwd())
+await visualManager
+    .prepareVisual()
+    .validateVisual()
+    .initializeWebpack(webpackOptions)
+visualManager.startWebpackServer(options.drop)
 

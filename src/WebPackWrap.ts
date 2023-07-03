@@ -1,58 +1,73 @@
 "use strict";
 
-const fs = require('fs-extra');
-const os = require('os');
-const path = require('path');
-const webpack = require('webpack');
-const config = require('../config.json');
-const { PowerBICustomVisualsWebpackPlugin } = require('powerbi-visuals-webpack-plugin');
-const encoding = "utf8";
-const ConsoleWriter = require('../lib/ConsoleWriter');
-const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
-const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-const CertificateTools = require("../lib/CertificateTools");
-const visualPlugin = "visualPlugin.ts";
-const lodashCloneDeep = require('lodash.clonedeep');
-const npmPackage = require('../package.json');
+import fs from 'fs-extra';
+import os from 'os';
+import path from 'path';
+import webpack from 'webpack';
+import util from'util';
+import { exec as processExec } from 'child_process';
+const exec = util.promisify(processExec);
+import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { PowerBICustomVisualsWebpackPlugin } from 'powerbi-visuals-webpack-plugin';
+import ConsoleWriter from './ConsoleWriter.js';
+import { resolveCertificate } from "./CertificateTools.js";
+import lodashCloneDeep from 'lodash.clonedeep';
+import { readJsonFromRoot, readJsonFromVisual } from './utils.js'
 
-class WebPackGenerator {
+const config = readJsonFromRoot('config.json');
+const npmPackage = readJsonFromRoot('package.json');
+
+const visualPlugin = "visualPlugin.ts";
+const encoding = "utf8";
+
+export interface WebpackOptions {
+    devMode: boolean;
+    generateResources: boolean;
+    generatePbiviz: boolean;
+    minifyJS: boolean;
+    minify: boolean;
+    compression: number;
+    stats: boolean;
+    devServerPort?: number;
+    fast?: boolean;
+}
+
+export default class WebPackWrap {
+    private pbiviz;
+    private webpackConfig;
 
     static async prepareFoldersAndFiles(visualPackage) {
-        let tmpFolder = path.join(visualPackage.basePath, ".tmp");
-        let precompileFolder = path.join(visualPackage.basePath, config.build.precompileFolder);
-        let dropFolder = path.join(visualPackage.basePath, config.build.dropFolder);
-        let packgeDropFolder = path.join(visualPackage.basePath, config.package.dropFolder);
-        let visualPluginFile = path.join(visualPackage.basePath, config.build.precompileFolder, visualPlugin);
+        const tmpFolder = path.join(visualPackage.basePath, ".tmp");
+        const precompileFolder = path.join(visualPackage.basePath, config.build.precompileFolder);
+        const dropFolder = path.join(visualPackage.basePath, config.build.dropFolder);
+        const packageDropFolder = path.join(visualPackage.basePath, config.package.dropFolder);
+        const visualPluginFile = path.join(visualPackage.basePath, config.build.precompileFolder, visualPlugin);
         await fs.ensureDir(tmpFolder);
         await fs.ensureDir(precompileFolder);
         await fs.ensureDir(dropFolder);
-        await fs.ensureDir(packgeDropFolder);
+        await fs.ensureDir(packageDropFolder);
         await fs.createFile(visualPluginFile);
     }
 
     static loadAPIPackage() {
         try {
-            let basePath = require.resolve("powerbi-visuals-api", {
-                paths: [process.cwd()]
-            });
-            return require(basePath);
+            return import("file://" + path.join(process.cwd(), "node_modules", "powerbi-visuals-api", "index.js"));
         } catch (ex) {
             return null;
         }
     }
 
     async installAPIpackage() {
-        let apiVersion = this.pbiviz.apiVersion ? `~${this.pbiviz.apiVersion}` : "latest";
+        const apiVersion = this.pbiviz.apiVersion ? `~${this.pbiviz.apiVersion}` : "latest";
         try {
             ConsoleWriter.info(`Installing API: ${apiVersion}...`);
-            let {
+            const {
                 stdout,
                 stderr
             } = await exec(`npm install --save powerbi-visuals-api@${apiVersion}`);
-            ConsoleWriter.info(stdout);
-            ConsoleWriter.warn(stderr);
+            if (stdout) ConsoleWriter.info(stdout);
+            if (stderr) ConsoleWriter.warning(stderr);
             return true;
         } catch (ex) {
             if (ex.message.indexOf("No matching version found for powerbi-visuals-api") !== -1) {
@@ -72,12 +87,12 @@ class WebPackGenerator {
     }
 
     async configureDevServer(visualPackage, port = 8080) {
-        let options = await CertificateTools.resolveCertificate();
+        const options = await resolveCertificate();
 
         this.webpackConfig.devServer = {
             ...this.webpackConfig.devServer,
             hot: false,
-            port: port || config.server.port,
+            port,
             static: {
                 directory: path.join(visualPackage.basePath, config.build.dropFolder),
                 publicPath: config.server.assetsRoute
@@ -95,13 +110,11 @@ class WebPackGenerator {
     }
 
     configureVisualPlugin(options, tsconfig, visualPackage) {
-        const visualJSFilePath = visualPackage.buildPath(tsconfig.compilerOptions.out || tsconfig.compilerOptions.outDir);
+        const visualJSFilePath = tsconfig.compilerOptions.out || tsconfig.compilerOptions.outDir;
         this.webpackConfig.output.path = path.join(visualPackage.basePath, config.build.dropFolder);
         this.webpackConfig.output.filename = "[name]";
-        let visualPluginPath = path.join(process.cwd(), config.build.precompileFolder, visualPlugin);
-        this.webpackConfig.plugins.push(
-            new webpack.WatchIgnorePlugin({ paths: [visualPluginPath] })
-        );
+        const visualPluginPath = path.join(process.cwd(), config.build.precompileFolder, visualPlugin);
+        this.webpackConfig.watchOptions.ignored.push(visualPluginPath)
         if (tsconfig.compilerOptions.out) {
             this.webpackConfig.entry = {
                 "visual.js": visualJSFilePath
@@ -114,37 +127,39 @@ class WebPackGenerator {
     }
 
     async getEnvironmentDetails() {
-        let env = {};
-        env.nodeVersion = process.versions.node;
-        env.osPlatform = await os.platform();
-        env.osVersion = await os.version ? os.version() : "undefined";
-        env.osReleaseVersion = await os.release();
-        env.toolsVersion = npmPackage.version;
+        const env = {
+            nodeVersion: process.versions.node,
+            osPlatform: await os.platform(),
+            osVersion: await os.version ?? "undefined",
+            osReleaseVersion: await os.release(),
+            toolsVersion: npmPackage.version
+        };
         return env;
     }
 
     async configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig) {
-        let pluginConfiguration = lodashCloneDeep(visualPackage.config);
+        const pluginConfiguration = lodashCloneDeep(visualPackage.pbivizConfig);
         //(?=\D*$) - positive look-ahead to find last version symbols and exclude any non-digit symbols after the version.
-        let regexFullVersion = /(?:\d+\.?){1,3}(?=\D*$)/;
-        let regexMinorVersion = /\d+(?:\.\d+)?/;
+        const regexFullVersion = /(?:\d+\.?){1,3}(?=\D*$)/;
+        const regexMinorVersion = /\d+(?:\.\d+)?/;
         let apiVersionInstalled;
         try {
-            apiVersionInstalled = (await exec('npm list powerbi-visuals-api version')).stdout.match(regexFullVersion)[0];
+            const subprocess = await exec('npm list powerbi-visuals-api version')
+            apiVersionInstalled = subprocess.stdout.match(regexFullVersion)[0];
         } catch (err) {
-            ConsoleWriter.warn(`"powerbi-visuals-api" is not installed`);
+            ConsoleWriter.warning(`"powerbi-visuals-api" is not installed`);
         }
         // if the powerbi-visual-api package wasn't installed
         // install the powerbi-visual-api, with version from apiVersion in pbiviz.json
         // or the latest API, if apiVersion is absent in pbiviz.json
-        if (!apiVersionInstalled || (typeof this.pbiviz.apiVersion !== "undefined" && this.pbiviz.apiVersion.match(regexMinorVersion)[0] != apiVersionInstalled.match(regexMinorVersion)[0])) {
-            ConsoleWriter.warn(`installed "powerbi-visuals-api" version - "${apiVersionInstalled}", is not match with the version specified in pbviz.json - "${this.pbiviz.apiVersion}".`);
+        if (!apiVersionInstalled || !this.pbiviz.apiVersion || this.pbiviz.apiVersion.match(regexMinorVersion)[0] != apiVersionInstalled.match(regexMinorVersion)[0]) {
+            ConsoleWriter.warning(`installed "powerbi-visuals-api" version - "${apiVersionInstalled}", is not match with the version specified in pbviz.json - "${this.pbiviz.apiVersion}".`);
             await this.installAPIpackage();
         }
 
         // pluginConfiguration.env = await this.getEnvironmentDetails();
 
-        let api = WebPackGenerator.loadAPIPackage(visualPackage);
+        const api = await WebPackWrap.loadAPIPackage();
         pluginConfiguration.apiVersion = api.version;
         pluginConfiguration.capabilitiesSchema = api.schemas.capabilities;
         pluginConfiguration.pbivizSchema = api.schemas.pbiviz;
@@ -167,16 +182,16 @@ class WebPackGenerator {
     }
 
     async appendPlugins(options, visualPackage, tsconfig) {
-        let pluginConfiguration = await this.configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig);
+        const pluginConfiguration = await this.configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig);
 
         let statsFilename = config.build.stats.split("/").pop();
-        let statsLocation = config.build.stats.split("/").slice(0, -1).join(path.sep);
-        statsFilename = statsFilename.split(".").slice(0, -1).join(".");
+        const statsLocation = config.build.stats.split("/").slice(0, -1).join(path.sep);
+        statsFilename = statsFilename?.split(".").slice(0, -1).join(".");
         statsFilename = `${statsFilename}.${options.devMode ? "dev" : "prod"}.html`;
 
-        if (!options.disableStats) {
+        if (options.stats) {
             this.webpackConfig.plugins.push(
-                new Visualizer({
+                new BundleAnalyzerPlugin({
                     reportFilename: path.join(statsLocation, statsFilename),
                     openAnalyzer: false,
                     analyzerMode: `static`
@@ -186,12 +201,7 @@ class WebPackGenerator {
         this.webpackConfig.plugins.push(
             new PowerBICustomVisualsWebpackPlugin(pluginConfiguration),
             new ExtraWatchWebpackPlugin({
-                files: [visualPackage.buildPath(this.pbiviz.capabilities)]
-            }),
-            new webpack.ProvidePlugin({
-                window: 'realWindow',
-                define: 'fakeDefine',
-                powerbi: 'globalPowerbi'
+                files: this.pbiviz.capabilities
             })
         );
 
@@ -205,7 +215,7 @@ class WebPackGenerator {
         }
     }
 
-    useLoader({
+    async useLoader({
         fast = false
     }) {
         let tsOptions = {};
@@ -219,7 +229,7 @@ class WebPackGenerator {
             test: /(\.ts)x?$/,
             use: [
                 {
-                    loader: require.resolve('ts-loader'),
+                    loader: 'ts-loader',
                     options: tsOptions
                 }
             ]
@@ -227,7 +237,7 @@ class WebPackGenerator {
     }
 
     async prepareWebPackConfig(visualPackage, options, tsconfig) {
-        this.webpackConfig = require('./webpack.config');
+        this.webpackConfig = Object.assign({}, await import('./webpack.config.js')).default;
         if (options.minifyJS) {
             this.enableOptimization();
         }
@@ -239,7 +249,7 @@ class WebPackGenerator {
         await this.appendPlugins(options, visualPackage, tsconfig);
         await this.configureDevServer(visualPackage, options.devServerPort);
         await this.configureVisualPlugin(options, tsconfig, visualPackage);
-        this.useLoader({
+        await this.useLoader({
             fast: options.fast
         });
 
@@ -247,8 +257,8 @@ class WebPackGenerator {
     }
 
     async assemblyExternalJSFiles(visualPackage) {
-        let externalJSFilesContent = "";
-        let externalJSFilesPath = path.join(visualPackage.basePath, config.build.precompileFolder, "externalJS.js");
+        const externalJSFilesContent = "";
+        const externalJSFilesPath = path.join(visualPackage.basePath, config.build.precompileFolder, "externalJS.js");
         await fs.writeFile(
             externalJSFilesPath,
             externalJSFilesContent, {
@@ -258,7 +268,7 @@ class WebPackGenerator {
         return externalJSFilesPath;
     }
 
-    async applyWebpackConfig(visualPackage, options = {
+    async generateWebpackConfig(visualPackage, options: WebpackOptions = {
         devMode: false,
         generateResources: false,
         generatePbiviz: false,
@@ -267,27 +277,22 @@ class WebPackGenerator {
         devServerPort: 8080,
         fast: false,
         compression: 0,
-        disableStats: false
+        stats: true
     }) {
-        const tsconfigPath = visualPackage.buildPath('tsconfig.json');
-        const tsconfig = require(tsconfigPath);
+        const tsconfig = readJsonFromVisual('tsconfig.json');
+        this.pbiviz = readJsonFromVisual('pbiviz.json');
 
-        this.pbivizJsonPath = visualPackage.buildPath('pbiviz.json');
-        this.pbiviz = require(this.pbivizJsonPath);
-
-        const capabliliesPath = this.pbiviz.capabilities;
-        visualPackage.config.capabilities = capabliliesPath;
+        const capabilitiesPath = this.pbiviz.capabilities;
+        visualPackage.pbivizConfig.capabilities = capabilitiesPath;
 
         const dependenciesPath = this.pbiviz.dependencies && path.join(process.cwd(), this.pbiviz.dependencies);
-        const dependenciesFile = fs.existsSync(dependenciesPath) && require(dependenciesPath);
-        visualPackage.config.dependencies = typeof dependenciesFile === 'object' ? dependenciesFile : {};
+        const dependenciesFile = fs.existsSync(dependenciesPath) && JSON.parse(fs.readFileSync(dependenciesPath));
+        visualPackage.pbivizConfig.dependencies = typeof dependenciesFile === 'object' ? dependenciesFile : {};
 
-        await WebPackGenerator.prepareFoldersAndFiles(visualPackage);
+        await WebPackWrap.prepareFoldersAndFiles(visualPackage);
 
-        let webpackConfig = await this.prepareWebPackConfig(visualPackage, options, tsconfig);
+        const webpackConfig = await this.prepareWebPackConfig(visualPackage, options, tsconfig);
 
-        return { webpackConfig };
+        return webpackConfig;
     }
 }
-
-module.exports = WebPackGenerator;

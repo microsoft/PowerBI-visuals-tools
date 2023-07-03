@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.0.0
+* Migrated to TypeScript
+* Migrated to eslint
+* Fixed vulnerabilities
+
 ## 4.3.2
 * LocalizationLoader has been moved to `powerbi-visuals-webpack-plugin`
 

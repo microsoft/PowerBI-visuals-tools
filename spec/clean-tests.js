@@ -26,6 +26,6 @@
 
 "use strict";
 
-let FileSystem = require('./helpers/FileSystem.js');
+import FileSystem from './helpers/FileSystem.js';
 
 FileSystem.deleteTempDirectory();
