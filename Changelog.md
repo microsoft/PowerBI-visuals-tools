@@ -6,6 +6,8 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Migrated to TypeScript
 * Migrated to eslint
 * Fixed vulnerabilities
+* Migrated to newest CommanderJS
+* Migrated to NodeJS 18.0 **⚠**
 
 ## 4.3.2
 * LocalizationLoader has been moved to `powerbi-visuals-webpack-plugin`
