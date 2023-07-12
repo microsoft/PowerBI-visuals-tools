@@ -30,7 +30,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
 import FileSystem from '../helpers/FileSystem.js';
-import { writeMetadata } from "./utils.js";
+import { writeMetadata } from "./testUtils.js";
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();

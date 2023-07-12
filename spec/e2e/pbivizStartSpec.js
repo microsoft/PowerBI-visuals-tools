@@ -30,7 +30,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import async from 'async';
 import FileSystem from '../helpers/FileSystem.js';
-import { writeMetadata } from "./utils.js";
+import { writeMetadata } from "./testUtils.js";
 import { download, createFolder } from "../../lib/utils.js";
 
 const tempPath = FileSystem.getTempPath();

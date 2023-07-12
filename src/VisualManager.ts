@@ -68,10 +68,6 @@ export default class VisualManager {
         return this;
     }
 
-    public doesPBIVIZExists() {
-        return fs.existsSync(PBIVIZ_FILE);
-    }
-
     public async initializeWebpack(webpackOptions: WebpackOptions) {
         const webpackWrap = new WebpackWrap();
         this.webpackConfig = await webpackWrap.generateWebpackConfig(this, webpackOptions)
@@ -168,6 +164,10 @@ export default class VisualManager {
                     }
                 });
         });
+    }
+
+    private doesPBIVIZExists() {
+        return fs.existsSync(PBIVIZ_FILE);
     }
 
     private prepareDropFiles() {

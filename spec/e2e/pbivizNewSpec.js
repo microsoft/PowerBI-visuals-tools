@@ -30,7 +30,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { promises as fsPromises } from "fs";
 import FileSystem from '../helpers/FileSystem.js';
-import { writeMetadata, readdirSyncRecursive } from "./utils.js";
+import { writeMetadata, readdirSyncRecursive } from "./testUtils.js";
 import { download, createFolder, readJsonFromRoot } from "../../lib/utils.js";
 
 const config = readJsonFromRoot('config.json');

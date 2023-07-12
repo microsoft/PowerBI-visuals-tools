@@ -33,7 +33,7 @@ import async from 'async';
 import JSZip from 'jszip';
 import lodashIsEqual from 'lodash.isequal';
 import FileSystem from '../helpers/FileSystem.js';
-import { writeMetadata } from "./utils.js";
+import { writeMetadata } from "./testUtils.js";
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();

@@ -29,8 +29,6 @@
 import VisualManager from '../lib/VisualManager.js';
 import { program, Option } from 'commander';
 
-let newVisualName = ""
-
 program
     .usage("<argument> [options]")
     .argument('<visualName>', 'name of new visual')
@@ -39,12 +37,10 @@ program
         .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml', 'circlecard'])
         .default('default')
     )
-    .action((visualName) => {
-        newVisualName = visualName;
-    })
     .parse();
 
 const options = program.opts();
+const newVisualName = program.args[0];
 const generateOptions = {
     force: options.force,
     template: options.template
