@@ -38,7 +38,6 @@ const rootPath = process.cwd();
 const program = new Command();
 
 const pbiviz = program
-    .command('pbiviz')
     .version(npmPackage.version)
     .option('--install-cert', 'Creates and installs localhost certificate', createCertificate)
     .showHelpAfterError('Run "pbiviz help" for usage instructions.')
@@ -71,7 +70,7 @@ pbiviz
     .option('-d, --drop', 'drop outputs into output folder')
     .option('--no-stats', "Doesn't generate statistics files")
     .action(async (options) => {
-        CommandManager.new(options, rootPath);
+        CommandManager.start(options, rootPath);
     });
 
 pbiviz
@@ -86,7 +85,7 @@ pbiviz
         .default('6')
     )
     .action((options) => {
-        CommandManager.new(options, rootPath);
+        CommandManager.package(options, rootPath);
     });
 
 program.parse(process.argv);
