@@ -27,8 +27,9 @@ export interface WebpackOptions {
     generatePbiviz: boolean;
     minifyJS: boolean;
     minify: boolean;
-    compression: number;
     stats: boolean;
+    compression?: number;
+    devtool?: string;
     devServerPort?: number;
     fast?: boolean;
 }
@@ -236,7 +237,7 @@ export default class WebPackWrap {
         });
     }
 
-    async prepareWebPackConfig(visualPackage, options, tsconfig) {
+    async prepareWebPackConfig(visualPackage, options: WebpackOptions, tsconfig) {
         this.webpackConfig = Object.assign({}, await import('./webpack.config.js')).default;
         if (options.minifyJS) {
             this.enableOptimization();
