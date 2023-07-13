@@ -4,7 +4,7 @@ import VisualManager from './VisualManager.js';
 import { WebpackOptions } from './WebPackWrap.js';
 
 interface StartOptions {
-    port: string,
+    port: number,
     stats: boolean,
     drop: boolean
 }
@@ -31,7 +31,7 @@ export default class CommandManager {
             generatePbiviz: false,
             minifyJS: false,
             minify: false,
-            devServerPort: +options.port,
+            devServerPort: options.port,
             stats: options.stats
         }
         const visualManager = new VisualManager(rootPath)
