@@ -26,7 +26,7 @@
 
 "use strict";
 
-import { v4 } from 'uuid';
+import crypto from 'crypto';
 import { getRootPath, readJsonFromRoot } from './utils.js';
 import { compareVersions } from "compare-versions";
 import fs from 'fs-extra';
@@ -194,7 +194,7 @@ export default class VisualGenerator {
      * Generates a random GUID for your visual
      */
     static generateVisualGuid() {
-        return v4().replace(/-/g, '').toUpperCase();
+        return crypto.randomUUID().replace(/-/g, '').toUpperCase();
     }
 
     /**
