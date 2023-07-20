@@ -3,13 +3,13 @@
         "allowJs": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "es6",
+        "target": "es2022",
         "sourceMap": true,
         "outDir": "./.tmp/build/",
         "moduleResolution": "node",
         "declaration": true,
         "lib": [
-            "es2015",
+            "es2022",
             "dom"
         ]
     },

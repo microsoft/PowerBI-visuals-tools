@@ -1,15 +1,21 @@
-const fs = require('fs-extra');
-const path = require('path');
-const config = require('../config.json');
-const JSZip = require('jszip');
-const VisualGenerator = require("./VisualGenerator");
-const { exec } = require('child_process');
-const ConsoleWriter = require('../lib/ConsoleWriter');
-const download = require('./utils').download;
-const createFolder = require('./utils').createFolder;
 
-class TemplateFetcher {
-    constructor({ templateName, visualName, apiVersion }) {
+import { createFolder, download, readJsonFromRoot } from './utils.js';
+import ConsoleWriter from './ConsoleWriter.js';
+import JSZip from 'jszip';
+import VisualGenerator from "./VisualGenerator.js";
+import { exec } from 'child_process';
+import fs from 'fs-extra';
+import path from 'path';
+
+const config = readJsonFromRoot('config.json');
+
+export default class TemplateFetcher {
+    private templateName: string;
+    private visualName: string;
+    private folderName: string;
+    private apiVersion: string;
+
+    constructor(templateName: string, visualName: string, apiVersion: string) {
         this.templateName = templateName;
         this.visualName = visualName;
         this.folderName = `${this.visualName}`;
@@ -17,7 +23,7 @@ class TemplateFetcher {
     }
 
     fetch() {
-        let folder = createFolder.call(this, this.folderName);
+        const folder = createFolder.call(this, this.folderName);
         download.call(this, config.visualTemplates[this.templateName], path.join(folder, "template.zip"))
             .then(this.extractFiles.bind(this))
             .then(this.removeZipFile.bind(this))
@@ -32,7 +38,7 @@ class TemplateFetcher {
         const fileName = path.join(folder, "template.zip");
         await fs.unlink(`.${path.sep}${fileName}`, (err) => {
             if (err) {
-                ConsoleWriter.warn(`.${path.sep}${fileName} was not deleted`);
+                ConsoleWriter.warning(`.${path.sep}${fileName} was not deleted`);
             }
         });
     }
@@ -50,8 +56,8 @@ class TemplateFetcher {
                 await fs.ensureDir(dest);
             } else {
                 // write files into dirs                       for exclude parent folder
-                const dest = path.join(path.dirname(filePath), path.join(path.dirname(filename), "..", filename.split("/").pop(0)));
-                const content = await zip.file(filename).async('nodebuffer');
+                const dest = path.join(path.dirname(filePath), path.join(path.dirname(filename), "..", filename.split("/").pop() ?? ""));
+                const content = await zip.file(filename)?.async('nodebuffer');
                 await fs.writeFile(dest, content);
             }
         }
@@ -91,12 +97,12 @@ class TemplateFetcher {
                     ConsoleWriter.error(`Error code: ${error.code}`);
                     ConsoleWriter.error(`Signal received: ${error.signal}`);
                 }
-                ConsoleWriter.warn(stderr);
+                ConsoleWriter.warning(stderr);
                 ConsoleWriter.info(stdout);
-                resolve();
+                resolve(true);
             });
             child.on("error", (er) => {
-                ConsoleWriter.log(er);
+                ConsoleWriter.error(er);
                 reject();
             });
             child.on("exit", (code) => {
@@ -114,5 +120,3 @@ class TemplateFetcher {
         ConsoleWriter.info("Run `npm run package` to create visual package");
     }
 }
-
-module.exports = TemplateFetcher;

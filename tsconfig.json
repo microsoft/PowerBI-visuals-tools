@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "allowJs": false,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "declaration": false,
+      "sourceMap": false,
+      "module": "ES2022",
+      "moduleResolution": "node",
+      "target": "ES2022",
+      "lib": [
+        "ES2022",
+        "dom"
+      ],
+      "outDir": "lib"
+    },
+    "include": [
+      "src/**/*.ts"
+    ]
+  }

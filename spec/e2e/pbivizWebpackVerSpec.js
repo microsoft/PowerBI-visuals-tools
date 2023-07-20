@@ -26,12 +26,11 @@
 
 "use strict";
 
-const fs = require('fs-extra');
-const path = require('path');
-
-const FileSystem = require('../helpers/FileSystem.js');
-const writeMetadata = require("./utils").writeMetadata;
-const semver = require('semver');
+import fs from 'fs-extra';
+import path from 'path';
+import semver from 'semver';
+import FileSystem from '../helpers/FileSystem.js';
+import { writeMetadata } from "./testUtils.js";
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
@@ -57,11 +56,10 @@ describe("E2E - webpack tools", () => {
         FileSystem.deleteTempDirectory();
     });
 
-    let removeApi = () => {
-        let packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
-        packageJson.dependencies = {
-            "powerbi-visuals-utils-dataviewutils": "2.0.1"
-        };
+    const removeApi = () => {
+        const packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
+        delete packageJson.dependencies["powerbi-visuals-api"];
+
         fs.writeJsonSync(path.join(visualPath, 'package.json'), packageJson);
         
         fs.removeSync(path.join(visualPath, "node_modules", "powerbi-visuals-api"));
@@ -70,28 +68,28 @@ describe("E2E - webpack tools", () => {
     it("Should not add empty dependencies option into visual config", () => {
         FileSystem.runPbiviz('package');
 
-        let packageJson = fs.readJsonSync(path.join(visualPath, '.tmp/drop/pbiviz.json'));
+        const packageJson = fs.readJsonSync(path.join(visualPath, '.tmp/drop/pbiviz.json'));
         expect(packageJson.dependencies).not.toBeDefined();
     });
 
     it("Should install the latest powerbi-visual-api if apiVersion is undefined", () => {
-        let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
+        const pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
         pbivizJson.apiVersion = null;
         fs.writeJsonSync(path.join(visualPath, 'pbiviz.json'), pbivizJson);
 
         removeApi();
         FileSystem.runPbiviz('package');
 
-        let packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
+        const packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
         expect(packageJson.dependencies["powerbi-visuals-api"]).toBeDefined();
     });
 
     it("Should install powerbi-visual-api with version from pbiviz.json on 'pbiviz start/package'", () => {
-        let pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
+        const pbivizJson = fs.readJsonSync(path.join(visualPath, 'pbiviz.json'));
         removeApi();
         FileSystem.runPbiviz('package');
 
-        let packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
+        const packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
         expect(packageJson.dependencies["powerbi-visuals-api"]).toBeDefined();
         expect(semver.major(pbivizJson.apiVersion))
             .toBe(semver.major(packageJson.dependencies["powerbi-visuals-api"].replace(/\^|\~/, ""))); // eslint-disable-line no-useless-escape

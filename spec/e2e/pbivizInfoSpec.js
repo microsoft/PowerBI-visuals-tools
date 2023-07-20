@@ -26,31 +26,27 @@
 
 "use strict";
 
-const fs = require('fs-extra');
-const path = require('path');
-
-const FileSystem = require('../helpers/FileSystem.js');
+import fs from 'fs-extra';
+import path from 'path';
+import FileSystem from '../helpers/FileSystem.js';
+import { writeMetadata } from "./testUtils.js";
 
 const tempPath = FileSystem.getTempPath();
 const startPath = process.cwd();
-const writeMetadata = require("./utils").writeMetadata;
 
 describe("E2E - pbiviz info", () => {
 
-    const visualName = 'myuniquevisualnamegoeshere';
+    const visualName = 'myvisualname';
     const visualPath = path.join(tempPath, visualName);
 
     beforeEach(() => {
+        process.chdir(startPath);
         FileSystem.resetTempDirectory();
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
 
         writeMetadata(visualPath);
-    });
-
-    afterEach(() => {
-        process.chdir(startPath);
     });
 
     afterAll(() => {
@@ -71,6 +67,7 @@ describe("E2E - pbiviz info", () => {
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
         expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
+
     });
 
     it("Should output visual info", () => {

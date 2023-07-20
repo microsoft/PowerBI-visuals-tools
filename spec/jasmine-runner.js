@@ -26,11 +26,11 @@
 
 "use strict";
 
-let Jasmine = require('jasmine');
-let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+import jasmine from 'jasmine';
+import { SpecReporter } from 'jasmine-spec-reporter';
 
-let jrunner = new Jasmine();
-jrunner.configureDefaultReporter({ print: () => {} }); // eslint-disable-line no-empty-function
-jasmine.getEnv().addReporter(new SpecReporter());
+let jrunner = new jasmine();
+jrunner.configureDefaultReporter({ print: () => {} });
+jrunner.addReporter(new SpecReporter());
 jrunner.loadConfigFile();
 jrunner.execute();

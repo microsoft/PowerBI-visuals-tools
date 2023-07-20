@@ -26,15 +26,17 @@
 
 "use strict";
 
-const fs = require('fs-extra');
-const path = require('path');
-const uuid = require('uuid');
-const compareVersions = require("compare-versions");
-const config = require('../config.json');
-const lodashDefaults = require('lodash.defaults');
-const template = require('../templates/pbiviz-json-template');
+import crypto from 'crypto';
+import { getRootPath, readJsonFromRoot } from './utils.js';
+import { compareVersions } from "compare-versions";
+import fs from 'fs-extra';
+import lodashDefaults from 'lodash.defaults';
+import path from 'path';
+import template from '../templates/pbiviz-json-template.js';
 
-const VISUAL_TEMPLATES_PATH = path.join(__dirname, '..', config.templates.visuals);
+const config = readJsonFromRoot('config.json');
+
+const VISUAL_TEMPLATES_PATH = path.join(getRootPath(), config.templates.visuals);
 const API_VERSION = config.generate.apiVersion;
 const minAPIversion = config.constants.minAPIversion;
 
@@ -78,7 +80,7 @@ function createPbiVizJson(visualPath, options, templateName) {
     let data = template(options);
 
     // write out the target file content
-    let targetPath = path.join(visualPath, 'pbiviz.json');
+    const targetPath = path.join(visualPath, 'pbiviz.json');
     fs.writeFileSync(targetPath, data);
 
     let templatePath = path.join(VISUAL_TEMPLATES_PATH, templateName);
@@ -88,7 +90,7 @@ function createPbiVizJson(visualPath, options, templateName) {
         data = fs.readJsonSync(targetPath);
 
         //override externalJS settings with those of the local template file
-        let templateData = fs.readJsonSync(templatePath);
+        const templateData = fs.readJsonSync(templatePath);
         for (const objKey of Object.keys(templateData)) {
             data[objKey] = templateData[objKey];
         }
@@ -144,7 +146,7 @@ const defaultOptions = {
     externalJS: []
 };
 
-class VisualGenerator {
+export default class VisualGenerator {
     /**
      * Generates a new visual
      * 
@@ -153,23 +155,23 @@ class VisualGenerator {
      * @param {object} options - specify options for the visual generator
      * @returns {Promise<string>} - promise resolves with the path to the newly created package 
      */
-    static generate(targetPath, visualName, options) {
+    static generateVisual(targetPath, visualName, options): Promise<string> {
         return new Promise((resolve, reject) => {
-            let buildOptions = lodashDefaults(options, defaultOptions);
-            if (!buildOptions.apiVersion || compareVersions.compare(buildOptions.apiVersion, minAPIversion, "<")) {
+            const buildOptions = lodashDefaults(options, defaultOptions);
+            if (!buildOptions.apiVersion || compareVersions(buildOptions.apiVersion, minAPIversion) === -1) {
                 return reject(new Error(`Can not generate a visual with an API below than ${minAPIversion}, current API is '${buildOptions.apiVersion}'.`));
             }
-            let visualOptions = generateVisualOptions(visualName, buildOptions.apiVersion);
+            const visualOptions = generateVisualOptions(visualName, buildOptions.apiVersion);
             const validationResult = VisualGenerator.checkVisualName(visualOptions.name);
             if (!visualOptions || !visualOptions.name || validationResult) {
                 return reject(new Error(validationResult || "Invalid visual name"));
             }
 
             if (!validTemplate(buildOptions.template)) {
-                return reject(new Error('Invalid template'));
+                return reject(new Error(`Invalid template "${buildOptions.template}"`));
             }
 
-            let visualPath = path.join(targetPath, visualOptions.name);
+            const visualPath = path.join(targetPath, visualOptions.name);
             fs.access(visualPath, err => {
                 if (!err && !buildOptions.force) {
                     return reject(new Error('This visual already exists. Use force to overwrite.'));
@@ -192,7 +194,7 @@ class VisualGenerator {
      * Generates a random GUID for your visual
      */
     static generateVisualGuid() {
-        return uuid.v4().replace(/-/g, '').toUpperCase();
+        return crypto.randomUUID().replace(/-/g, '').toUpperCase();
     }
 
     /**
@@ -232,4 +234,3 @@ class VisualGenerator {
         }
     }
 }
-module.exports = VisualGenerator;
