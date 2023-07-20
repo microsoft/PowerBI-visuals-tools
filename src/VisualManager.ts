@@ -65,7 +65,7 @@ export default class VisualManager {
     private webpackDevServer: WebpackDevServer;
 
     constructor(rootPath: string) {
-            this.basePath = rootPath;
+        this.basePath = rootPath;
     }
 
     public prepareVisual() {
@@ -76,10 +76,6 @@ export default class VisualManager {
             throw new Error(PBIVIZ_FILE + ' not found. You must be in the root of a visual project to run this command.')
         }
         return this;
-    }
-
-    public doesPBIVIZExists() {
-        return fs.existsSync(PBIVIZ_FILE);
     }
 
     public createVisualInstance() {
@@ -218,6 +214,10 @@ export default class VisualManager {
                     }
                 });
         });
+    }
+    
+    private doesPBIVIZExists() {
+        return fs.existsSync(PBIVIZ_FILE);
     }
 
     private prepareDropFiles() {

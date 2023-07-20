@@ -75,7 +75,37 @@ const webpackConfig = {
         "powerbi-visuals-api": 'null'
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '.css']
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.css'],
+        fallback: {
+            assert: path.resolve("../node-modules/assert/"),
+            buffer: path.resolve("../node-modules/buffer/"),
+            console: path.resolve("../node-modules/console-browserify/"),
+            constants: path.resolve("../node-modules/constants-browserify/"),
+            crypto: path.resolve("../node-modules/crypto-browserify/"),
+            domain: path.resolve("../node-modules/domain-browser/"),
+            events: path.resolve("../node-modules/events/"),
+            http: path.resolve("../node-modules/stream-http/"),
+            https: path.resolve("../node-modules/https-browserify/"),
+            os: path.resolve("../node-modules/os-browserify/"),
+            path: path.resolve("../node-modules/path-browserify/"),
+            punycode: path.resolve("../node-modules/punycode/"),
+            process: path.resolve("../node-modules/process/"),
+            querystring: path.resolve("../node-modules/querystring-es3/"),
+            stream: path.resolve("../node-modules/stream-browserify/"),
+            _stream_duplex: path.resolve("../node-modules/readable-stream/"),
+            _stream_passthrough: path.resolve("../node-modules/readable-stream/"),
+            _stream_readable: path.resolve("../node-modules/readable-stream/"),
+            _stream_transform: path.resolve("../node-modules/readable-stream/"),
+            _stream_writable: path.resolve("../node-modules/readable-stream/"),
+            string_decoder: path.resolve("../node-modules/string_decoder/"),
+            sys: path.resolve("../node-modules/util/"),
+            timers: path.resolve("../node-modules/timers-browserify/"),
+            tty: path.resolve("../node-modules/tty-browserify/"),
+            url: path.resolve("../node-modules/url/"),
+            util: path.resolve("../node-modules/util/"),
+            vm: path.resolve("../node-modules/vm-browserify/"),
+            zlib: path.resolve("../node-modules/browserify-zlib/")
+        }
     },
     output: {
         path: null,

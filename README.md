@@ -24,7 +24,7 @@ Before you can get started you'll need to install the tools. This should only ta
 
 Before you can run (or install) the command line tools you must install NodeJS.
 
-* NodeJS 14.0+ Required - [Download NodeJS](https://nodejs.org)
+* NodeJS 18.0+ Required - [Download NodeJS](https://nodejs.org)
 
 #### Installation
 

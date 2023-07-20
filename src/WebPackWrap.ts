@@ -4,9 +4,9 @@ import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
 import webpack from 'webpack';
-import util from'util';
-import { exec as processExec } from 'child_process';
+import util from 'util';
 const exec = util.promisify(processExec);
+import { exec as processExec } from 'child_process';
 import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { PowerBICustomVisualsWebpackPlugin } from 'powerbi-visuals-webpack-plugin';
@@ -27,8 +27,9 @@ export interface WebpackOptions {
     generatePbiviz: boolean;
     minifyJS: boolean;
     minify: boolean;
-    compression: number;
     stats: boolean;
+    compression?: number;
+    devtool?: string;
     devServerPort?: number;
     fast?: boolean;
 }
@@ -236,7 +237,7 @@ export default class WebPackWrap {
         });
     }
 
-    async prepareWebPackConfig(visualPackage, options, tsconfig) {
+    async prepareWebPackConfig(visualPackage, options: WebpackOptions, tsconfig) {
         this.webpackConfig = Object.assign({}, await import('./webpack.config.js')).default;
         if (options.minifyJS) {
             this.enableOptimization();

@@ -29,21 +29,63 @@
 
 import { createCertificate } from "../lib/CertificateTools.js";
 import ConsoleWriter from '../lib/ConsoleWriter.js';
+import CommandManager from '../lib/CommandManager.js';
 import { readJsonFromRoot } from '../lib/utils.js';
-import { program } from 'commander';
+import { Command, Option } from 'commander';
 
 const npmPackage = readJsonFromRoot('package.json');
+const rootPath = process.cwd();
+const program = new Command();
 
-program
+const pbiviz = program
     .version(npmPackage.version)
-    .command('new <name>', 'Create a new visual')
-    .command('info', 'Display info about the current visual')
-    .command('start', 'Start the current visual')
-    .command('package', 'Package the current visual into a pbiviz file')
-    .option('--install-cert', 'Creates and installs localhost certificate', createCertificate);
-
-program
+    .option('--install-cert', 'Creates and installs localhost certificate', createCertificate)
     .showHelpAfterError('Run "pbiviz help" for usage instructions.')
     .addHelpText('beforeAll', ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`))
-    .addHelpText('before', ConsoleWriter.getLogoVisualization())
-    .parse();
+    .addHelpText('before', ConsoleWriter.getLogoVisualization());
+
+pbiviz
+    .command('new')
+    .usage("<argument> [options]")
+    .argument('<name>', 'name of new visual')
+    .option('-f, --force', 'force creation (overwrites folder if exists)')
+    .addOption(new Option('-t, --template [template]', 'use a specific template')
+        .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml', 'circlecard'])
+        .default('default')
+    )
+    .action((name, options) => {
+        CommandManager.new(options, name, rootPath);
+    });
+
+pbiviz
+    .command('info')
+    .action(() => {
+        CommandManager.info(rootPath);
+    });
+
+pbiviz
+    .command('start')
+    .usage('[options]')
+    .option('-p, --port [port]', 'set the port listening on')
+    .option('-d, --drop', 'drop outputs into output folder')
+    .option('--no-stats', "Doesn't generate statistics files")
+    .action(async (options) => {
+        CommandManager.start(options, rootPath);
+    });
+
+pbiviz
+    .command('package')
+    .usage('[options]')
+    .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
+    .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
+    .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
+    .option('--no-stats', "Doesn't generate statistics files")
+    .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
+        .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+        .default('6')
+    )
+    .action((options) => {
+        CommandManager.package(options, rootPath);
+    });
+
+program.parse(process.argv);

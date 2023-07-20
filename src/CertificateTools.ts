@@ -34,7 +34,7 @@ import crypto from "crypto"
 import { getRootPath, readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
 
-const certSafePeriod = 1000 * 60 * 60 * 24;
+const certSafePeriod = 1000 * 60 * 60 * 24; // 24 hours
 const rootPath = getRootPath();
 const confPath = '/config.json';
 
