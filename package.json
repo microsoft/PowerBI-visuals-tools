@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node ./bin/pbiviz.js",
+    "pbiviz": "node ./bin/pbiviz.js",
+    "start": "npm run pbiviz start",
     "test": "npm run build && npm run clean-tests && npm run lint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",

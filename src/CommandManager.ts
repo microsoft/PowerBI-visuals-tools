@@ -37,6 +37,7 @@ export default class CommandManager {
         const visualManager = new VisualManager(rootPath)
         await visualManager
             .prepareVisual()
+            .validateVisual()
             .initializeWebpack(webpackOptions)
         visualManager.startWebpackServer(options.drop)
     }
@@ -58,6 +59,7 @@ export default class CommandManager {
         }
         new VisualManager(rootPath)
             .prepareVisual()
+            .validateVisual()
             .initializeWebpack(webpackOptions)
             .then(visualManager => visualManager.generatePackage())
     }
