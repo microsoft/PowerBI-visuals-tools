@@ -26,20 +26,19 @@
 
 "use strict";
 
-let chalk = require('chalk');
-let fs = require('fs');
-let path = require('path');
-let os = require('os');
+import chalk from 'chalk';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { getRootPath } from './utils.js';
 
-if (os.platform() === 'darwin') {
-    chalk = chalk.bold;
-}
+const preferredChalk = os.platform() === 'darwin' ? chalk.bold : chalk;
 
 function prependLogTag(tag, args) {
-    return [tag].concat(Array.from(args));
+    return [tag].concat(args);
 }
 
-class ConsoleWriter {
+export default class ConsoleWriter {
     /** Causes the terminal to beep */
     static beep() {
         process.stdout.write("\x07");
@@ -47,47 +46,47 @@ class ConsoleWriter {
 
     /** Outputs a blank line */
     static blank() {
-        console.info(chalk.reset(' '));
+        console.info(preferredChalk.reset(' '));
     }
 
     /**
      * Outputs arguments with the "done" tag / colors
      * 
-     * @param {...*} arguments - arguments passed through to console.info
+     * @param {array} arguments - arguments passed through to console.info
      */
-    static done(/* arguments */) {
-        let tag = chalk.bgGreen(' done  ');
-        console.info.apply(this, prependLogTag(tag, arguments));
+    static done(args) {
+        const tag = preferredChalk.bgGreen(' done  ');
+        console.info.apply(this, prependLogTag(tag, args));
     }
 
     /**
      * Outputs arguments with the "info" tag / colors
      * 
-     * @param {...*} arguments - arguments passed through to console.info
+     * @param {array} args - arguments passed through to console.info
      */
-    static info(/* arguments */) {
-        let tag = chalk.bgCyan(' info  ');
-        console.info.apply(this, prependLogTag(tag, arguments));
+    static info(args) {
+        const tag = preferredChalk.bgCyan(' info  ');
+        console.info.apply(this, prependLogTag(tag, args));
     }
 
     /**
      * Outputs arguments with the "warn" tag / colors
      * 
-     * @param {...*} arguments - arguments passed through to console.warn
+     * @param {array} args - arguments passed through to console.warn
      */
-    static warn(/* arguments */) {
-        let tag = chalk.bgYellow.black(' warn  ');
-        console.warn.apply(this, prependLogTag(tag, arguments));
+    static warning(args) {
+        const tag = preferredChalk.bgYellow.black(' warn  ');
+        console.warn.apply(this, prependLogTag(tag, args));
     }
 
     /**
      * Outputs arguments with the "error" tag / colors
      * 
-     * @param {...*} arguments - arguments passed through to console.error
+     * @param {array} args - arguments passed through to console.error
      */
-    static error(/* arguments */) {
-        let tag = chalk.bgRed(' error ');
-        console.error.apply(this, prependLogTag(tag, arguments));
+    static error(args) {
+        const tag = preferredChalk.bgRed(' error ');
+        console.error.apply(this, prependLogTag(tag, args));
     }
 
     /**
@@ -97,14 +96,14 @@ class ConsoleWriter {
      * @param {number} [depthLimit=Infinity] - limit the number of levels to recurse
      * @param {string} [keyPrefix=''] - text to prepend to each key
      */
-    static infoTable(data, depthLimit, keyPrefix) {
+    static infoTable(data, depthLimit?, keyPrefix?) {
         if (!data) {
             return;
         }
-        let limit = typeof depthLimit === 'undefined' ? Infinity : depthLimit;
-        for (let key in data) {
-            let item = data[key];
-            let itemKey = (keyPrefix || '') + key;
+        const limit = typeof depthLimit === 'undefined' ? Infinity : depthLimit;
+        for (const key in data) {
+            const item = data[key];
+            const itemKey = (keyPrefix || '') + key;
             if (limit > 1 && typeof item === 'object' && !Array.isArray(item)) {
                 ConsoleWriter.infoTable(item, limit - 1, itemKey + '.');
             } else {
@@ -120,11 +119,11 @@ class ConsoleWriter {
      * @param {string} value - value for this row
      * @param {number} [keyWidth=30] - width used for padding of the key column
      */
-    static infoTableRow(key, value, keyWidth) {
-        let width = keyWidth || 30;
-        let padding = Math.max(0, width - key.length);
-        let paddedKey = chalk.bold(key) + (new Array(padding)).join('.');
-        ConsoleWriter.info(paddedKey, value);
+    static infoTableRow(key, value, keyWidth?) {
+        const width = keyWidth || 30;
+        const padding = Math.max(0, width - key.length);
+        const paddedKey = preferredChalk.bold(key) + (new Array(padding)).join('.');
+        ConsoleWriter.info([paddedKey, value]);
     }
 
     /**
@@ -138,23 +137,22 @@ class ConsoleWriter {
                 if (!error) {
                     return;
                 }
-                let tag = error.type ? chalk.bold(error.type.toUpperCase()) : 'UNKNOWN';
-                let file = error.filename ? chalk.bgWhite.black(` ${error.filename} `) + ':' : '';
-                let position = (error.line && error.column) ? chalk.cyan(`(${error.line},${error.column})`) : '';
-                let message = error.message || '';
-                ConsoleWriter.error(tag, `${file} ${position} ${message}`);
+                const tag = error.type ? preferredChalk.bold(error.type.toUpperCase()) : 'UNKNOWN';
+                const file = error.filename ? preferredChalk.bgWhite.black(` ${error.filename} `) + ':' : '';
+                const position = (error.line && error.column) ? preferredChalk.cyan(`(${error.line},${error.column})`) : '';
+                const message = error.message || '';
+                ConsoleWriter.error([tag, `${file} ${position} ${message}`]);
             });
         } else {
-            ConsoleWriter.error('UNKNOWN', errors);
+            ConsoleWriter.error(['UNKNOWN', errors]);
         }
     }
 
     /**
      * Outputs ascii art of the PowerBI logo
      */
-    static logo() {
-        let logoText = fs.readFileSync(path.join(__dirname, '..', 'assets', 'logo.txt')).toString();
-        console.info(chalk.bold.yellow(logoText));
+    static getLogoVisualization() {
+        return fs.readFileSync(path.join(getRootPath(), 'assets', 'logo.txt')).toString();
     }
 
     /**
@@ -163,10 +161,10 @@ class ConsoleWriter {
     static validationLog(log) {
 
         // api/js/css/pkg
-        let filterChecks = (attrCB, propCB) => {
-            for (let checkname in log) {
+        const filterChecks = (attrCB, propCB) => {
+            for (const checkname in log) {
                 if (checkname !== 'valid') {
-                    let checkpoint = log[checkname];
+                    const checkpoint = log[checkname];
                     ConsoleWriter[checkpoint.error.length ? 'info' : 'done'](checkpoint.check);
                     attrCB(checkpoint, propCB);
                 }
@@ -174,10 +172,10 @@ class ConsoleWriter {
         };
 
         // error/message/ok
-        let filterCheckAttrs = (checkpoint, propCB) => {
-            for (let propName in checkpoint) {
+        const filterCheckAttrs = (checkpoint, propCB) => {
+            for (const propName in checkpoint) {
                 if (propName !== 'message') {
-                    let prop = checkpoint[propName];
+                    const prop = checkpoint[propName];
                     if (typeof (prop) === 'object' && prop.length) {
                         propCB(prop, propName);
                     }
@@ -186,10 +184,10 @@ class ConsoleWriter {
         };
 
         // col/line/text
-        let filterAttrProps = (props, propName) => {
+        const filterAttrProps = (props, propName) => {
             props.forEach((opt) => {
-                let result = [];
-                for (let key in opt) {
+                const result = [];
+                for (const key in opt) {
                     result.push(opt[key]);
                 }
                 if (result.length) {
@@ -200,11 +198,9 @@ class ConsoleWriter {
 
         filterChecks(filterCheckAttrs, filterAttrProps);
 
-        let type = log.valid ? 'done' : 'error';
-        let text = log.valid ? 'Valid package' : 'Invalid package';
+        const type = log.valid ? 'done' : 'error';
+        const text = log.valid ? 'Valid package' : 'Invalid package';
         ConsoleWriter.blank();
         ConsoleWriter[type](text);
     }
 }
-
-module.exports = ConsoleWriter;

@@ -27,46 +27,65 @@
 
 "use strict";
 
-let confPath = '../config.json';
-let program = require('commander');
-let npmPackage = require('../package.json');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let config = require(confPath);
-let args = process.argv;
-let CertificateTools = require("../lib/CertificateTools");
+import { createCertificate } from "../lib/CertificateTools.js";
+import ConsoleWriter from '../lib/ConsoleWriter.js';
+import CommandManager from '../lib/CommandManager.js';
+import { readJsonFromRoot } from '../lib/utils.js';
+import { Command, Option } from 'commander';
 
-ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`);
+const npmPackage = readJsonFromRoot('package.json');
+const rootPath = process.cwd();
+const program = new Command();
 
-program
+const pbiviz = program
     .version(npmPackage.version)
-    .command('new [name]', 'Create a new visual')
-    .command('info', 'Display info about the current visual')
-    .command('start', 'Start the current visual')
-    .command('package', 'Package the current visual into a pbiviz file')
-    .option('--install-cert', 'Creates and installs localhost certificate', onOpenCertFile);
+    .option('--install-cert', 'Creates and installs localhost certificate', createCertificate)
+    .showHelpAfterError('Run "pbiviz help" for usage instructions.')
+    .addHelpText('beforeAll', ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`))
+    .addHelpText('before', ConsoleWriter.getLogoVisualization());
 
-//prepend logo to help screen
-if (args.length === 2 || (args.length > 2 && args[2] === 'help')) {
-    ConsoleWriter.logo();
-}
+pbiviz
+    .command('new')
+    .usage("<argument> [options]")
+    .argument('<name>', 'name of new visual')
+    .option('-f, --force', 'force creation (overwrites folder if exists)')
+    .addOption(new Option('-t, --template [template]', 'use a specific template')
+        .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml', 'circlecard'])
+        .default('default')
+    )
+    .action((name, options) => {
+        CommandManager.new(options, name, rootPath);
+    });
 
-program.parse(args);
+pbiviz
+    .command('info')
+    .action(() => {
+        CommandManager.info(rootPath);
+    });
 
-if (program.args.length > 0) {
-    let validCommands = program.commands.map(c => c.name());
-    if (validCommands.indexOf(program.args[0]) === -1) {
-        ConsoleWriter.error("Invalid command. Run 'pbiviz help' for usage instructions.");
-        process.exit(1);
-    }
-}
+pbiviz
+    .command('start')
+    .usage('[options]')
+    .option('-p, --port [port]', 'set the port listening on')
+    .option('-d, --drop', 'drop outputs into output folder')
+    .option('--no-stats', "Doesn't generate statistics files")
+    .action(async (options) => {
+        CommandManager.start(options, rootPath);
+    });
 
-async function onOpenCertFile() {
-    let certPath = await CertificateTools.getCertFile(config, true);
-    
-    if (!certPath) {
-        ConsoleWriter.error("Certificate not found. The new certificate will be generated");
-        await CertificateTools.createCertFile(config, true);
-    } else {
-        await CertificateTools.openCertFile(config);
-    }
-}
+pbiviz
+    .command('package')
+    .usage('[options]')
+    .option('--resources', "Produces a folder containing the pbiviz resource files (js, css, json)")
+    .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
+    .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
+    .option('--no-stats', "Doesn't generate statistics files")
+    .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
+        .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+        .default('6')
+    )
+    .action((options) => {
+        CommandManager.package(options, rootPath);
+    });
+
+program.parse(process.argv);

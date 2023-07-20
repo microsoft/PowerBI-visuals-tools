@@ -1,4 +1,5 @@
 {
     "apiVersion": "5.1.0",
-    "externalJS": null
+    "externalJS": null,
+    "version": "1.0.0.0"
 }

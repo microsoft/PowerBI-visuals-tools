@@ -26,29 +26,35 @@
 
 "use strict";
 
-let program = require('commander');
-let VisualPackage = require('../lib/VisualPackage');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let CommandHelpManager = require('../lib/CommandHelpManager');
-let options = process.argv;
+import path from "path";
+import fs from 'fs-extra';
 
-if (options.some(option => option === '--help' || option === '-h')) {
-    program.help(CommandHelpManager.createSubCommandHelpCallback(options));
-    process.exit(0);
-}
+export const readdirSyncRecursive = (baseDir) => {
+    const read = (dir) => {
+        let results = [];
+        const list = fs.readdirSync(dir);
+        list.forEach((file) => {
+            file = dir + '/' + file;
+            const stat = fs.statSync(file);
+            if (stat && stat.isDirectory()) { 
+                /* Recurse into a subdirectory */
+                results = results.concat(read(file));
+            } else { 
+                /* Is a file */
+                results.push(file.replace(baseDir, ""));
+            }
+        });
+        return results;
+    };
+    return read(baseDir);
+};
 
-program.parse(options);
-
-let cwd = process.cwd();
-
-VisualPackage.loadVisualPackage(cwd).then((visualPackage) => {
-    let info = visualPackage.config;
-    if (info) {
-        ConsoleWriter.infoTable(info);
-    } else {
-        ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
-    }
-}).catch((e) => {
-    ConsoleWriter.error('LOAD ERROR', e);
-    process.exit(1);
-});
+export const writeMetadata = (visualPath) => {
+    const pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
+    const pbiviz = fs.readJSONSync(pbivizJSONFile);
+    pbiviz.visual.description = "description";
+    pbiviz.visual.supportUrl = "supportUrl";
+    pbiviz.author.name = "Microsoft";
+    pbiviz.author.email = "pbicvsupport";
+    fs.writeJSONSync(pbivizJSONFile, pbiviz);
+};

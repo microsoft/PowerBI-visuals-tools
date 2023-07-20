@@ -26,22 +26,30 @@
 
 "use strict";
 
-let confPath = '../config.json';
-let nodeExec = require('child_process').exec;
-let path = require('path');
-let os = require('os');
-let ConsoleWriter = require('../lib/ConsoleWriter');
-let fs = require('fs-extra');
-let config = require(confPath);
-const certSafePeriod = 1000 * 60 * 60 * 24;
+import { exec as nodeExec } from 'child_process';
+import fs from 'fs-extra';
+import os from 'os';
+import path from 'path';
+import crypto from "crypto"
+import { getRootPath, readJsonFromRoot } from './utils.js';
+import ConsoleWriter from './ConsoleWriter.js';
 
-function exec(command, callback) {
-    if (callback) {
-        return nodeExec(command, callback);
-    }
+const certSafePeriod = 1000 * 60 * 60 * 24; // 24 hours
+const rootPath = getRootPath();
+const confPath = '/config.json';
 
+interface CertificateOptions {
+    passphrase?: string;
+    cert?: string;
+    key?: string;
+    pfx?: string;
+    certificate?: string;
+    privateKey?: string;
+}
+
+function exec(command, callback?): Promise<string> {
     return new Promise((resolve, reject) => {
-        nodeExec(command, (err, stdout, stderr) => {
+        nodeExec(command, callback ? callback : (err, stdout: string, stderr) => {
             if (err) {
                 reject(stderr);
             }
@@ -51,7 +59,19 @@ function exec(command, callback) {
 
 }
 
-async function createCertFile(config, open) {
+export async function createCertificate() {
+    const config = readJsonFromRoot('config.json');
+    const certPath = await getCertFile(config, true);
+    
+    if (!certPath) {
+        ConsoleWriter.error("Certificate not found. The new certificate will be generated");
+        await createCertFile(config, true);
+    } else {
+        await openCertFile(config);
+    }
+}
+
+export async function createCertFile(config, open) {
     ConsoleWriter.info(`Generating a new certificate...`);
     const subject = "localhost";
     const keyLength = 2048;
@@ -62,11 +82,11 @@ async function createCertFile(config, open) {
         open = false;
     }
 
-    let certPath = path.join(__dirname, '..', config.server.certificate);
-    let keyPath = path.join(__dirname, '..', config.server.privateKey);
-    let pfxPath = path.join(__dirname, '..', config.server.pfx);
+    const certPath = path.join(rootPath, config.server.certificate);
+    const keyPath = path.join(rootPath, config.server.privateKey);
+    const pfxPath = path.join(rootPath, config.server.pfx);
 
-    let openCmds = {
+    const openCmds = {
         linux: 'openssl',
         darwin: 'openssl',
         win32: 'powershell'
@@ -114,10 +134,12 @@ async function createCertFile(config, open) {
                     }
                     break;
                 case "win32":
+                    // eslint-disable-next-line no-case-declarations
                     let passphrase = "";
                     // for windows 7 and others
                     // 6.1 - Windows 7
-                    let osVersion = os.release().split(".");
+                    // eslint-disable-next-line no-case-declarations
+                    const osVersion = os.release().split(".");
                     if ((Number(osVersion[0]) === 6 && Number(osVersion[1]) === 1) || Number(osVersion[0]) < 6) {
                         await removeCertFiles(certPath, keyPath, pfxPath);
                         startCmd = "openssl";
@@ -138,13 +160,12 @@ async function createCertFile(config, open) {
                         }
                         break;
                     }
+                    passphrase = crypto.getRandomValues(new Uint32Array(1))[0].toString().substring(2);
+                    config.server.passphrase = passphrase;
+                    fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
                     // for windows 8 / 8.1 / server 2012 R2 /
                     if (Number(osVersion[0]) === 6 && (Number(osVersion[1]) === 2 || Number(osVersion[1]) === 3)) {
                         // for 10
-                        passphrase = Math.random().toString().substring(2);
-                        config.server.passphrase = passphrase;
-                        fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
-
                         createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
                             `   New-SelfSignedCertificate ` +
                             `       -DnsName localhost ` +
@@ -156,15 +177,8 @@ async function createCertFile(config, open) {
                             `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
 
                         await exec(`${startCmd} "${createCertCommand}"`);
-                        if (await fs.exists(pfxPath)) {
-                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`);
-                        }
                     } else {
                         // for window 10 / server 2016
-                        passphrase = Math.random().toString().substring(2);
-                        config.server.passphrase = passphrase;
-                        fs.writeFileSync(path.join(__dirname, confPath), JSON.stringify(config));
-
                         createCertCommand = `$cert = ('Cert:\\CurrentUser\\My\\' + (` +
                             `   New-SelfSignedCertificate ` +
                             `       -DnsName localhost ` +
@@ -183,9 +197,9 @@ async function createCertFile(config, open) {
                             `       -Password (ConvertTo-SecureString -String '${passphrase}' -Force -AsPlainText)`;
 
                         await exec(`${startCmd} "${createCertCommand}"`);
-                        if (await fs.exists(pfxPath)) {
-                            ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`);
-                        }
+                    }
+                    if (await fs.exists(pfxPath)) {
+                        ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is '${passphrase}'`);
                     }
                     break;
                 default:
@@ -193,28 +207,28 @@ async function createCertFile(config, open) {
             }
         } catch (e) {
             if (e && e.message && e.message.indexOf("'openssl' is not recognized as an internal or external command") > 0) {
-                ConsoleWriter.warn('Create certificate error:');
-                ConsoleWriter.warn('OpenSSL is not installed or not available from command line');
+                ConsoleWriter.warning('Create certificate error:');
+                ConsoleWriter.warning('OpenSSL is not installed or not available from command line');
                 ConsoleWriter.info('Install OpenSSL from https://www.openssl.org or https://wiki.openssl.org/index.php/Binaries');
                 ConsoleWriter.info('and try again');
 
                 ConsoleWriter.info('Read more at');
                 ConsoleWriter.info('https://github.com/Microsoft/PowerBI-visuals/blob/master/tools/CreateCertificate.md#manual');
             } else {
-                ConsoleWriter.error('Create certificate error:', e);
+                ConsoleWriter.error(['Create certificate error:', e]);
             }
         }
     } else {
-        ConsoleWriter.error('Unknown platform. Please place a custom-generated certificate in:', certPath);
+        ConsoleWriter.error(['Unknown platform. Please place a custom-generated certificate in:', certPath]);
     }
 }
 
-async function getCertFile(config, silent) {
+async function getCertFile(config, silent?) {
     if (typeof silent === "undefined") {
         silent = false;
     }
-    let cert = path.join(__dirname, '..', config.server.certificate);
-    let pfx = path.join(__dirname, '..', config.server.pfx);
+    const cert = path.join(rootPath, config.server.certificate);
+    const pfx = path.join(rootPath, config.server.pfx);
 
     if (await fs.exists(cert)) {
         return cert;
@@ -235,30 +249,30 @@ async function getCertFile(config, silent) {
 }
 
 async function openCertFile(config) {
-    let certPath = await getCertFile(config);
+    const certPath = await getCertFile(config);
 
     if (!certPath) {
         return null;
     }
 
-    let openCmds = {
+    const openCmds = {
         linux: 'xdg-open',
         darwin: 'open',
         win32: 'powershell start'
     };
-    let startCmd = openCmds[os.platform()];
+    const startCmd = openCmds[os.platform()];
     if (startCmd) {
         try {
             await exec(`${startCmd} "${certPath}"`);
         } catch (e) {
-            ConsoleWriter.info('Certificate path:', certPath);
+            ConsoleWriter.info(['Certificate path:', certPath]);
         }
     } else {
-        ConsoleWriter.info('Certificate path:', certPath);
+        ConsoleWriter.info(['Certificate path:', certPath]);
     }
 }
 
-async function removeCertFiles(certPath, keyPath, pfxPath) {
+export async function removeCertFiles(certPath, keyPath, pfxPath?) {
     try {
         await fs.unlink(certPath);
     } catch (e) {
@@ -282,36 +296,37 @@ async function removeCertFiles(certPath, keyPath, pfxPath) {
     }
 }
 
-async function getGlobalPbivizCerts() {
-    let options = {};
+async function getGlobalPbivizCerts(config) {
+    const options: CertificateOptions = {};
     try {
-        let location = (await exec('npm ls -g powerbi-visuals-tools')).split("\n")[0];
-        let certPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.certificate);
-        let keyPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.privateKey);
-        let pfxPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.pfx);
-        let globalPbiviConfig = path.join(location, "node_modules", "powerbi-visuals-tools", "config.json");
-        options.passphrase = fs.existsSync(globalPbiviConfig) && fs.readJSONSync(globalPbiviConfig).server.passphrase;
+        const location = (await exec('npm ls -g powerbi-visuals-tools')).split("\n")[0];
+        const certPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.certificate);
+        const keyPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.privateKey);
+        const pfxPath = path.join(location, "node_modules", "powerbi-visuals-tools", config.server.pfx);
+        const globalPbivizConfig = path.join(location, "node_modules", "powerbi-visuals-tools", "config.json");
+        options.passphrase = fs.existsSync(globalPbivizConfig) && fs.readJSONSync(globalPbivizConfig).server.passphrase;
 
-        let CertFileVerified = await veryfyCertFile(keyPath, certPath, pfxPath, options.passphrase);
+        const CertFileVerified = await verifyCertFile(keyPath, certPath, pfxPath, options.passphrase);
 
         options.cert = fs.existsSync(certPath) && certPath;
         options.key = fs.existsSync(keyPath) && keyPath;
         options.pfx = fs.existsSync(pfxPath) && CertFileVerified && pfxPath;
     }
     catch (err) {
-        ConsoleWriter.warn(`Global certificate error: ${err}`);
+        ConsoleWriter.warning(`Global certificate error: ${err}`);
     }
     if (!options.cert && !options.pfx) {
-        ConsoleWriter.warn(`Global instance of valid pbiviz certificate not found.`);
+        ConsoleWriter.warning(`Global instance of valid pbiviz certificate not found.`);
     }
     return options;
 }
 
-async function resolveCertificate() {
-    let options = {};
-    let keyPath = path.join(__dirname, '..', config.server.privateKey);
-    let certPath = path.join(__dirname, '..', config.server.certificate);
-    let pfxPath = path.join(__dirname, '..', config.server.pfx);
+export async function resolveCertificate() {
+    const config = readJsonFromRoot('config.json');
+    const options: CertificateOptions = {};
+    const keyPath = path.join(rootPath, config.server.privateKey);
+    const certPath = path.join(rootPath, config.server.certificate);
+    const pfxPath = path.join(rootPath, config.server.pfx);
 
     if (config.server.passphrase) {
         options.passphrase = config.server.passphrase;
@@ -326,12 +341,12 @@ async function resolveCertificate() {
         options.pfx = await fs.readFile(pfxPath);
     }
 
-    let CertFileVerified = await veryfyCertFile(keyPath, certPath, pfxPath, options.passphrase);
+    const CertFileVerified = await verifyCertFile(keyPath, certPath, pfxPath, options.passphrase);
 
     if ((!options.cert && !options.pfx) || !CertFileVerified) {
-        ConsoleWriter.warn("Local valid certificate not found.");
+        ConsoleWriter.warning("Local valid certificate not found.");
         ConsoleWriter.info("Checking global instance of pbiviz certificate...");
-        let globalPbivizOptions = await getGlobalPbivizCerts();
+        const globalPbivizOptions = await getGlobalPbivizCerts(config);
 
         if (!globalPbivizOptions.cert && !globalPbivizOptions.pfx) {
             await createCertFile(config, true);
@@ -358,28 +373,28 @@ async function resolveCertificate() {
             // copy certs to local instance
             ConsoleWriter.info("Copy server certificate from global instance of pbiviz...");
             if (globalPbivizOptions.cert) {
-                await fs.copyFile(globalPbivizOptions.cert, path.join(__dirname, '..', config.server.certificate));
+                await fs.copyFile(globalPbivizOptions.cert, path.join(rootPath, config.server.certificate));
                 options.certificate = config.server.certificate;
             }
             if (globalPbivizOptions.key) {
-                await fs.copyFile(globalPbivizOptions.key, path.join(__dirname, '..', config.server.privateKey));
+                await fs.copyFile(globalPbivizOptions.key, path.join(rootPath, config.server.privateKey));
                 options.privateKey = config.server.privateKey;
             }
             if (globalPbivizOptions.pfx) {
-                await fs.copyFile(globalPbivizOptions.pfx, path.join(__dirname, '..', config.server.pfx));
-                // need to pass whole file instead patho to file
-                options.pfx = await fs.readFile(path.join(__dirname, '..', config.server.pfx));
+                await fs.copyFile(globalPbivizOptions.pfx, path.join(rootPath, config.server.pfx));
+                // need to pass whole file instead path to file
+                options.pfx = await fs.readFile(path.join(rootPath, config.server.pfx));
                 options.passphrase = globalPbivizOptions.passphrase;
                 // eslint-disable-next-line require-atomic-updates
                 config.server.passphrase = globalPbivizOptions.passphrase;
             }
-            await fs.writeFile(path.join(__dirname, confPath), JSON.stringify(config));
+            await fs.writeFile(path.join(rootPath, confPath), JSON.stringify(config));
         }
     }
     return options;
 }
 
-async function veryfyCertFile(keyPath, certPath, pfxPath, passphrase) {
+export async function verifyCertFile(keyPath, certPath, pfxPath, passphrase) {
     let verifyCertDate;
     try {
         let endDateStr;
@@ -389,7 +404,7 @@ async function veryfyCertFile(keyPath, certPath, pfxPath, passphrase) {
             if (!fs.existsSync(pfxPath) || !passphrase) {
                 return false;
             }
-            let certStr = await exec(`powershell.exe (New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('${pfxPath}','${passphrase}')).NotAfter.ToString('yyyy-MM-dd HH:mm:ss')`);
+            const certStr = await exec(`powershell.exe (New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('${pfxPath}','${passphrase}')).NotAfter.ToString('yyyy-MM-dd HH:mm:ss')`);
             endDateStr = certStr.trim();
         }
         // For Linux and Mac/darwin OS:
@@ -400,26 +415,17 @@ async function veryfyCertFile(keyPath, certPath, pfxPath, passphrase) {
             endDateStr = await exec(`openssl x509 -enddate -noout -in ${certPath} | cut -d = -f 2`);
         }
 
-        let endDate = Date.parse(endDateStr);
+        const endDate = Date.parse(endDateStr);
         verifyCertDate = (endDate - Date.now()) > certSafePeriod;
         if (verifyCertDate) {
             ConsoleWriter.info(`Certificate is valid.`);
         } else {
-            ConsoleWriter.warn(`Certificate is invalid!`);
+            ConsoleWriter.warning(`Certificate is invalid!`);
             removeCertFiles(certPath, keyPath, pfxPath);
         }
     } catch (err) {
-        ConsoleWriter.warn(`Certificate verification error: ${err}`);
+        ConsoleWriter.warning(`Certificate verification error: ${err}`);
         removeCertFiles(certPath, keyPath, pfxPath);
     }
     return verifyCertDate;
 }
-
-module.exports = {
-    getCertFile,
-    createCertFile,
-    openCertFile,
-    removeCertFiles,
-    getGlobalPbivizCerts,
-    resolveCertificate
-};

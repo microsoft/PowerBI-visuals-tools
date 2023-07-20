@@ -15,5 +15,9 @@
     },
     "files": [
         "./src/visual.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "templates",
     ]
   }
