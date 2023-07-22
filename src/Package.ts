@@ -27,6 +27,7 @@
 "use strict";
 
 import { VisualFeatureType } from "./features/FeatureTypes.js";
+import isMatch from "lodash.ismatch";
 
 /**
  * Represents an instance of a visual package based on file path
@@ -47,24 +48,6 @@ export default class Package {
     }
 
     public isCapabilityEnabled(expectedObject: object) {
-        return this.doesObjectInclude(this.capabilities, expectedObject);
-    }
-
-    private doesObjectInclude(capabilitiesValue, expectedValue) {
-        if (typeof capabilitiesValue !== 'object' || typeof expectedValue !== 'object') {
-            return capabilitiesValue === expectedValue;
-        }
-    
-        if (Array.isArray(capabilitiesValue) && Array.isArray(expectedValue)) {
-            return expectedValue.every((expectedValueItem) => {
-                return capabilitiesValue.some((capabilitiesValueItem) => {
-                    return this.doesObjectInclude(capabilitiesValueItem, expectedValueItem);
-                });
-            });
-        }
-
-        return Object.keys(expectedValue).every((key) => {
-            return this.doesObjectInclude(capabilitiesValue[key], expectedValue[key]);
-        });
+        return isMatch(this.capabilities, expectedObject);
     }
 }

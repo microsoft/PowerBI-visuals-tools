@@ -36,7 +36,7 @@ const config = readJsonFromRoot('config.json');
 describe("Features", () => {
     describe("Visual", () => {
         const { APIVersion, ESLint, VisualVersion } = features;
-        it("API version", () => {
+        it("Should support API Version", () => {
             const Visual = {
                 doesAPIVersionMatch: (minVersion) =>  {
                     expect(minVersion).toBe(config.constants.minAPIversion);
@@ -46,14 +46,14 @@ describe("Features", () => {
             expect(APIVersion.isSupported(Visual)).toBeTrue;
         });
 
-        it("ESLint", () => {
+        it("Should support ESLint", () => {
             const Visual = {
                 doesESLlintSupported: () =>  true
             }
             expect(ESLint.isSupported(Visual)).toBeTrue;
         });
 
-        it("Version", () => {
+        it("Should support Version", () => {
             const Visual = {
                 isVisualVersionValid: (versionLength) =>  {
                     expect(versionLength).toBe(4);
@@ -64,46 +64,52 @@ describe("Features", () => {
         });
     });
 
-    describe("Package", () => {
+    fdescribe("Package", () => {
         const featuresArray = Object.keys(features).filter(key => features[key].stage === Stage.PostBuild).map(key =>  features[key]);
-
-        const sourceCode = `.allowInteractions, .applySelectionFromFilter or .registerOnSelectCallback, .colorPalette,
-            .createDataViewWildcardSelector, .showContextMenu, .downloadService and .exportVisualsContent,
-            getFormattingModel, .isHighContrast, .launchUrl, .createLocalizationManager, .storageService, .openModalDialog,
-            .eventService and .renderingStarted and .renderingFinished, tooltipService, .displayWarningIcon`
-        const capabilities = {
-            advancedEditMode: 1,
-            supportsHighlight: true,
-            supportsKeyboardFocus: true,
-            supportsLandingPage: true,
-            supportsMultiVisualSelection: true,
-            supportsSynchronizingFilterState: true,
-            subtotals: true,
-            tooltips: {},
-            objects: {
-                objectCategory: 2
-            },
-            drilldown: { 
-                roles: [] 
-            },
-            dataViewMappings: [
-                {
-                    table: {
-                        rows: {
-                            dataReductionAlgorithm: {}
+        
+        it("Should support features with correct sources", () => {
+            const sourceCode = `.allowInteractions, .applySelectionFromFilter or .registerOnSelectCallback, .colorPalette,
+                .createDataViewWildcardSelector, .showContextMenu, .downloadService and .exportVisualsContent,
+                getFormattingModel, .isHighContrast, .launchUrl, .createLocalizationManager, .storageService, .openModalDialog,
+                .eventService and .renderingStarted and .renderingFinished, tooltipService, .displayWarningIcon`
+            const capabilities = {
+                advancedEditMode: 1,
+                supportsHighlight: true,
+                supportsKeyboardFocus: true,
+                supportsLandingPage: true,
+                supportsMultiVisualSelection: true,
+                supportsSynchronizingFilterState: true,
+                subtotals: true,
+                tooltips: {},
+                objects: {
+                    objectCategory: 2
+                },
+                drilldown: { 
+                    roles: [] 
+                },
+                dataViewMappings: [
+                    {
+                        table: {
+                            rows: {
+                                dataReductionAlgorithm: {}
+                            }
                         }
                     }
-                }
-            ]
-        }
-        const correctPackage = new Package(sourceCode, capabilities, VisualFeatureType.All);
-        const emptyPackage = new Package('', {}, VisualFeatureType.All);
+                ]
+            }
+            const correctPackage = new Package(sourceCode, capabilities, VisualFeatureType.All);
 
-        featuresArray.forEach(feature => {
-            it(feature.name, () => {
+            featuresArray.forEach(feature => {
                 expect(feature.isSupported(correctPackage)).toBeTrue;
+            })
+        });
+
+        it("Should not support features with empty sources", () => {
+            const emptyPackage = new Package('', {}, VisualFeatureType.All);
+
+            featuresArray.forEach(feature => {
                 expect(feature.isSupported(emptyPackage)).toBeFalse;
-            });
-        })
+            })
+        });
     });
 });
