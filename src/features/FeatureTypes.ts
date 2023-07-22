@@ -10,15 +10,11 @@ export enum Stage {
     PostBuild = "post-build",
 }
 
-const DEFAULT = 1;
-const SLICER = 2;
-const MATRIX = 4;
-
 export enum VisualFeatureType {
-    Default = DEFAULT,
-    Slicer = SLICER | MATRIX,
-    Matrix = DEFAULT | MATRIX,
-    All = SLICER | DEFAULT | MATRIX,
+    Default= 1 << 1,
+    Slicer = 1 << 2,
+    Matrix = 1 << 3,
+    All = Default | Slicer | Matrix
 }
 
 // Interaction types: Selection or filter (slicer)

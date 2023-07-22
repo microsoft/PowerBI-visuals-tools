@@ -7,7 +7,7 @@ export default class Bookmarks implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/bookmarks-support"
     public static severity = Severity.Info
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.Slicer
+    public static visualFeatureType = VisualFeatureType.Slicer | VisualFeatureType.Matrix
     public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {

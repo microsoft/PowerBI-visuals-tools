@@ -11,6 +11,6 @@ export default class SelectionAcrossVisuals implements BaseFeature {
     public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
-        return packageInstance.capabilityEnabled({ supportsMultiVisualSelection: true })
+        return packageInstance.isCapabilityEnabled({ supportsMultiVisualSelection: true })
     }
 } 

@@ -11,5 +11,5 @@ export default abstract class BaseFeature {
     public static errorMessage: string
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static isSupported(source: Visual | Package) {}
+    protected static isSupported(source: Visual | Package) {}
 }

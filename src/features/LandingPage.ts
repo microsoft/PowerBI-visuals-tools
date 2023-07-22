@@ -7,10 +7,10 @@ export default class LandingPage implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/landing-page"
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.All
+    public static visualFeatureType = VisualFeatureType.Default
     public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
-        return packageInstance.capabilityEnabled({ supportsLandingPage: true })
+        return packageInstance.isCapabilityEnabled({ supportsLandingPage: true })
     }
 } 

@@ -43,10 +43,10 @@ export default class Package {
     }
     
     public contain(keyword: string) {
-        return this.sourceCode.indexOf(keyword) > -1;
+        return this.sourceCode.includes(keyword);
     }
 
-    public capabilityEnabled(expectedObject: object) {
+    public isCapabilityEnabled(expectedObject: object) {
         return this.doesObjectInclude(this.capabilities, expectedObject);
     }
 

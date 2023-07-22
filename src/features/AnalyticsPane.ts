@@ -7,12 +7,12 @@ export default class AnalyticsPane implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/analytics-pane"
     public static severity = Severity.Info
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.All
+    public static visualFeatureType = VisualFeatureType.Default
     public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return (
-            packageInstance.capabilityEnabled({
+            packageInstance.isCapabilityEnabled({
                 objects: {
                     objectCategory: 2
                 }

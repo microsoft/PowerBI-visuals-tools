@@ -38,7 +38,7 @@ import { readJsonFromRoot, readJsonFromVisual } from './utils.js';
 import WebpackWrap, { WebpackOptions } from './WebPackWrap.js';
 import Package from './Package.js';
 import { Visual } from "./Visual.js";
-import { FeatureManager, Logs } from "./FeatureManager.js";
+import { FeatureManager, Logs, Status } from "./FeatureManager.js";
 import { Severity, Stage } from "./features/FeatureTypes.js";
 import TemplateFetcher from "./TemplateFetcher.js";
 
@@ -135,9 +135,9 @@ export default class VisualManager {
 
     public validateVisual() {
         this.featureManager = new FeatureManager()
-        const { ok, logs } = this.featureManager.validate(Stage.PreBuild, this.visual);
+        const { status, logs } = this.featureManager.validate(Stage.PreBuild, this.visual);
         this.outputResults(logs);
-        if(!ok){
+        if(status === Status.Error){
             process.exit(1);
         }
 

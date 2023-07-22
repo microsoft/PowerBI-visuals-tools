@@ -3,8 +3,12 @@ import * as features from "./features/index.js";
 import { Visual } from "./Visual.js";
 import Package from "./Package.js";
 
+export enum Status {
+    Success,
+    Error
+}
 export interface ValidationStats {
-    ok: boolean,
+    status: Status,
     logs: Logs
 }
 
@@ -19,8 +23,8 @@ export class FeatureManager {
     public features = Object.keys(features).map(key =>  features[key]);
 
     public validate(stage: Stage, sourceInstance: Visual | Package): ValidationStats {
-        const status: ValidationStats = {
-            ok: true,
+        const result: ValidationStats = {
+            status: Status.Success,
             logs: {
                 errors: [],
                 warnings: [],
@@ -28,27 +32,27 @@ export class FeatureManager {
                 deprecation: []
             }
         }
-        this.features.forEach(feature => {
-            if (feature.stage == stage && (feature.visualFeatureType & sourceInstance.visualFeatureType)) {
-                if(!feature.isSupported(sourceInstance)) {
-                    switch(feature.severity) {
-                        case Severity.Error:
-                            status.ok = false;
-                            status.logs.errors.push(feature.errorMessage);
-                            break;
-                        case Severity.Warning:
-                            status.logs.warnings.push(feature.errorMessage);
-                            break;
-                        case Severity.Info:
-                            status.logs.info.push(feature.errorMessage);
-                            break;
-                        case Severity.Deprecation:
-                            status.logs.deprecation.push(feature.errorMessage);
-                            break;
-                    }
+        this.features
+            .filter(feature => feature.stage == stage)
+            .filter(feature => feature.visualFeatureType & sourceInstance.visualFeatureType)
+            .filter(feature => !feature.isSupported(sourceInstance))
+            .forEach(feature => {
+                switch(feature.severity) {
+                    case Severity.Error:
+                        result.status = Status.Error;
+                        result.logs.errors.push(feature.errorMessage);
+                        break;
+                    case Severity.Warning:
+                        result.logs.warnings.push(feature.errorMessage);
+                        break;
+                    case Severity.Info:
+                        result.logs.info.push(feature.errorMessage);
+                        break;
+                    case Severity.Deprecation:
+                        result.logs.deprecation.push(feature.errorMessage);
+                        break;
                 }
-            }
         });
-        return status
+        return result
     }
 }
