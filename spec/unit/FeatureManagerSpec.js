@@ -64,7 +64,7 @@ describe("Features", () => {
         });
     });
 
-    fdescribe("Package", () => {
+    describe("Package", () => {
         const featuresArray = Object.keys(features).filter(key => features[key].stage === Stage.PostBuild).map(key =>  features[key]);
         
         it("Should support features with correct sources", () => {
