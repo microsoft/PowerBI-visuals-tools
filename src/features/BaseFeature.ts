@@ -1,5 +1,3 @@
-import Package from "../Package.js";
-import { Visual } from "../Visual.js";
 import { Severity, Stage, VisualFeatureType } from "./FeatureTypes.js";
 
 export default abstract class BaseFeature {
@@ -10,6 +8,5 @@ export default abstract class BaseFeature {
     public static documentationLink: string
     public static errorMessage: string
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected static isSupported(source: Visual | Package) {}
+    protected static isSupported() {}
 }
