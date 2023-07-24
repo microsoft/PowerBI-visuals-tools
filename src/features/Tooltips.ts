@@ -8,7 +8,6 @@ export default class Tooltips implements BaseFeature {
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
     public static visualFeatureType = VisualFeatureType.Default
-    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return packageInstance.contain("tooltipService") && packageInstance.isCapabilityEnabled({tooltips: {}})

@@ -8,7 +8,6 @@ export default class SyncSlicer implements BaseFeature {
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
     public static visualFeatureType = VisualFeatureType.Slicer | VisualFeatureType.Matrix
-    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return packageInstance.isCapabilityEnabled({ supportsSynchronizingFilterState: true })

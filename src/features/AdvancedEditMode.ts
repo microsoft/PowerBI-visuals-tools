@@ -8,7 +8,6 @@ export default class AdvancedEditMode implements BaseFeature {
     public static severity = Severity.Info
     public static stage = Stage.PostBuild
     public static visualFeatureType = VisualFeatureType.Default
-    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return !packageInstance.isCapabilityEnabled({ advancedEditMode: 0 }) // 0 - Advanced edit mode is disabled

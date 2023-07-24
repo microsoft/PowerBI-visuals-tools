@@ -8,7 +8,6 @@ export default class TotalSubTotal implements BaseFeature {
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
     public static visualFeatureType = VisualFeatureType.Matrix | VisualFeatureType.Default
-    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return packageInstance.isCapabilityEnabled({ subtotals: true })

@@ -6,7 +6,9 @@ export default abstract class BaseFeature {
     public static visualFeatureType: VisualFeatureType
     public static featureName: string
     public static documentationLink: string
-    public static errorMessage: string
+    public static get errorMessage() {
+        return `${this.featureName} - ${this.documentationLink}`
+    }
 
     protected static isSupported() {}
 }

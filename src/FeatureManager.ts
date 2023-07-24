@@ -37,19 +37,20 @@ export class FeatureManager {
             .filter(feature => feature.visualFeatureType & sourceInstance.visualFeatureType)
             .filter(feature => !feature.isSupported(sourceInstance))
             .forEach(feature => {
+                const errorMessage = feature.errorMessage;
                 switch(feature.severity) {
                     case Severity.Error:
                         result.status = Status.Error;
-                        result.logs.errors.push(feature.errorMessage);
+                        result.logs.errors.push(errorMessage);
                         break;
                     case Severity.Warning:
-                        result.logs.warnings.push(feature.errorMessage);
+                        result.logs.warnings.push(errorMessage);
                         break;
                     case Severity.Info:
-                        result.logs.info.push(feature.errorMessage);
+                        result.logs.info.push(errorMessage);
                         break;
                     case Severity.Deprecation:
-                        result.logs.deprecation.push(feature.errorMessage);
+                        result.logs.deprecation.push(errorMessage);
                         break;
                 }
         });
