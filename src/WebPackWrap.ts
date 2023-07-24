@@ -7,13 +7,13 @@ import webpack from 'webpack';
 import util from 'util';
 const exec = util.promisify(processExec);
 import { exec as processExec } from 'child_process';
+import lodashCloneDeep from 'lodash.clonedeep';
 import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { PowerBICustomVisualsWebpackPlugin } from 'powerbi-visuals-webpack-plugin';
 import ConsoleWriter from './ConsoleWriter.js';
 import { resolveCertificate } from "./CertificateTools.js";
-import lodashCloneDeep from 'lodash.clonedeep';
-import { readJsonFromRoot, readJsonFromVisual } from './utils.js'
+import { getRootPath, readJsonFromRoot, readJsonFromVisual } from './utils.js'
 
 const config = readJsonFromRoot('config.json');
 const npmPackage = readJsonFromRoot('package.json');
@@ -230,7 +230,7 @@ export default class WebPackWrap {
             test: /(\.ts)x?$/,
             use: [
                 {
-                    loader: 'ts-loader',
+                    loader: path.resolve(getRootPath(), "node_modules", "ts-loader"),
                     options: tsOptions
                 }
             ]
