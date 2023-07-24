@@ -23,7 +23,7 @@ export function createFolder(folderName): string {
 
 export function getRootPath(): string {
     const pathToDirectory = fileURLToPath(import.meta.url);
-    return path.join(pathToDirectory, "../..");
+    return path.join(pathToDirectory, "..", "..");
 }
 
 export function readFileFromRoot(filePath: string) {

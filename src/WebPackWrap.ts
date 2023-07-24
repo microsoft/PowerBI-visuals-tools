@@ -230,7 +230,7 @@ export default class WebPackWrap {
             test: /(\.ts)x?$/,
             use: [
                 {
-                    loader: path.resolve(getRootPath(), "node_modules/ts-loader/"),
+                    loader: path.resolve(getRootPath(), "node_modules", "ts-loader"),
                     options: tsOptions
                 }
             ]

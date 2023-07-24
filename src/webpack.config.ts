@@ -40,7 +40,7 @@ const webpackConfig = {
             },
             {
                 test: /\.json$/,
-                loader: path.resolve(rootPath, "node_modules/json-loader/"),
+                loader: path.resolve(rootPath, "node_modules", "json-loader"),
                 type: "javascript/auto"
             },
             {
@@ -50,10 +50,10 @@ const webpackConfig = {
                         loader: MiniCssExtractPlugin.loader
                     },
                     {
-                        loader: path.resolve(rootPath, "node_modules/css-loader/")
+                        loader: path.resolve(rootPath, "node_modules", "css-loader")
                     },
                     {
-                        loader: path.resolve(rootPath, "node_modules/less-loader/"),
+                        loader: path.resolve(rootPath, "node_modules", "less-loader"),
                         options: {
                             lessOptions: {
                                 paths: [path.resolve(rootPath, 'node_modules')]
@@ -78,34 +78,34 @@ const webpackConfig = {
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js', '.css'],
         fallback: {
-            assert: path.resolve(rootPath, "node_modules/assert/"),
-            buffer: path.resolve(rootPath, "node_modules/buffer/"),
-            console: path.resolve(rootPath, "node_modules/console-browserify/"),
-            constants: path.resolve(rootPath, "node_modules/constants-browserify/"),
-            crypto: path.resolve(rootPath, "node_modules/crypto-browserify/"),
-            domain: path.resolve(rootPath, "node_modules/domain-browser/"),
-            events: path.resolve(rootPath, "node_modules/events/"),
-            http: path.resolve(rootPath, "node_modules/stream-http/"),
-            https: path.resolve(rootPath, "node_modules/https-browserify/"),
-            os: path.resolve(rootPath, "node_modules/os-browserify/"),
-            path: path.resolve(rootPath, "node_modules/path-browserify/"),
-            punycode: path.resolve(rootPath, "node_modules/punycode/"),
-            process: path.resolve(rootPath, "node_modules/process/"),
-            querystring: path.resolve(rootPath, "node_modules/querystring-es3/"),
-            stream: path.resolve(rootPath, "node_modules/stream-browserify/"),
-            _stream_duplex: path.resolve(rootPath, "node_modules/readable-stream/"),
-            _stream_passthrough: path.resolve(rootPath, "node_modules/readable-stream/"),
-            _stream_readable: path.resolve(rootPath, "node_modules/readable-stream/"),
-            _stream_transform: path.resolve(rootPath, "node_modules/readable-stream/"),
-            _stream_writable: path.resolve(rootPath, "node_modules/readable-stream/"),
-            string_decoder: path.resolve(rootPath, "node_modules/string_decoder/"),
-            sys: path.resolve(rootPath, "node_modules/util/"),
-            timers: path.resolve(rootPath, "node_modules/timers-browserify/"),
-            tty: path.resolve(rootPath, "node_modules/tty-browserify/"),
-            url: path.resolve(rootPath, "node_modules/url/"),
-            util: path.resolve(rootPath, "node_modules/util/"),
-            vm: path.resolve(rootPath, "node_modules/vm-browserify/"),
-            zlib: path.resolve(rootPath, "node_modules/browserify-zlib/")
+            assert: path.resolve(rootPath, "node_modules", "assert"),
+            buffer: path.resolve(rootPath, "node_modules", "buffer"),
+            console: path.resolve(rootPath, "node_modules", "console-browserify"),
+            constants: path.resolve(rootPath, "node_modules", "constants-browserify"),
+            crypto: path.resolve(rootPath, "node_modules", "crypto-browserify"),
+            domain: path.resolve(rootPath, "node_modules", "domain-browser"),
+            events: path.resolve(rootPath, "node_modules", "events"),
+            http: path.resolve(rootPath, "node_modules", "stream-http"),
+            https: path.resolve(rootPath, "node_modules", "https-browserify"),
+            os: path.resolve(rootPath, "node_modules", "os-browserify"),
+            path: path.resolve(rootPath, "node_modules", "path-browserify"),
+            punycode: path.resolve(rootPath, "node_modules", "punycode"),
+            process: path.resolve(rootPath, "node_modules", "process"),
+            querystring: path.resolve(rootPath, "node_modules", "querystring-es3"),
+            stream: path.resolve(rootPath, "node_modules", "stream-browserify"),
+            _stream_duplex: path.resolve(rootPath, "node_modules", "readable-stream"),
+            _stream_passthrough: path.resolve(rootPath, "node_modules", "readable-stream"),
+            _stream_readable: path.resolve(rootPath, "node_modules", "readable-stream"),
+            _stream_transform: path.resolve(rootPath, "node_modules", "readable-stream"),
+            _stream_writable: path.resolve(rootPath, "node_modules", "readable-stream"),
+            string_decoder: path.resolve(rootPath, "node_modules", "string_decoder"),
+            sys: path.resolve(rootPath, "node_modules", "util"),
+            timers: path.resolve(rootPath, "node_modules", "timers-browserify"),
+            tty: path.resolve(rootPath, "node_modules", "tty-browserify"),
+            url: path.resolve(rootPath, "node_modules", "url"),
+            util: path.resolve(rootPath, "node_modules", "util"),
+            vm: path.resolve(rootPath, "node_modules", "vm-browserify"),
+            zlib: path.resolve(rootPath, "node_modules", "browserify-zlib")
         }
     },
     output: {
@@ -128,7 +128,7 @@ const webpackConfig = {
         }
     },
     watchOptions: {
-        ignored: ['node_modules/**']
+        ignored: ['node_modules", "**']
     },
     plugins: [
         new webpack.ProvidePlugin({
