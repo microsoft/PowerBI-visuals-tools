@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.0.1
+* Fixed broken imports in webpack.config for some cases
+
 ## 5.0.0
 * Migrated to TypeScript
 * Migrated to eslint
