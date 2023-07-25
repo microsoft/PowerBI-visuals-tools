@@ -58,7 +58,7 @@
     "mini-css-extract-plugin": "^2.7.6",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
-    "powerbi-visuals-webpack-plugin": "^4.0.1",
+    "powerbi-visuals-webpack-plugin": "4.0.1",
     "process": "^0.11.10",
     "punycode": "^2.3.0",
     "querystring-es3": "^0.2.1",

@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import https from "https";
 import path from "path";
-import os from "os";
+import { fileURLToPath } from 'node:url';
 
 export function download(url, pathToFile) {
     return new Promise((resolve, reject) => {
@@ -22,9 +22,8 @@ export function createFolder(folderName): string {
 }
 
 export function getRootPath(): string {
-    const isLinux = os.platform() === "linux"
-    const pathToDirectory = import.meta.url.split(isLinux ? "file://" : "file:///")[1];
-    return path.join(pathToDirectory, "../..");
+    const pathToDirectory = fileURLToPath(import.meta.url);
+    return path.join(pathToDirectory, "..", "..");
 }
 
 export function readFileFromRoot(filePath: string) {
