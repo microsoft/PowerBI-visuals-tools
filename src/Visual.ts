@@ -31,13 +31,7 @@ export class Visual {
     private getVisualFeatureType() {
         const isMatrixSupported = this.capabilities?.dataViewMappings?.some(dataView => dataView.matrix)
         const isSlicer = Boolean(this.capabilities?.objects?.general?.properties?.filter?.type?.filter)
-        let type;
-        if(!isSlicer && !isMatrixSupported){
-            type = type | VisualFeatureType.NonSlicer;
-        }
-        if (isSlicer) {
-            type = type | VisualFeatureType.Slicer;
-        }
+        let type = isSlicer ? VisualFeatureType.Slicer : VisualFeatureType.NonSlicer;
         if (isMatrixSupported) {
             type = type | VisualFeatureType.Matrix;
         }
