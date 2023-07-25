@@ -7,7 +7,7 @@ export default class HighlightData implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/highlight"
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.Default 
+    public static visualFeatureType = VisualFeatureType.NonSlicer 
 
     static isSupported(packageInstance: Package) {
         return packageInstance.isCapabilityEnabled({ supportsHighlight: true })

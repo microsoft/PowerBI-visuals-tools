@@ -7,7 +7,7 @@ export default class APIVersion implements BaseFeature {
     public static featureName = "Api"
     public static severity = Severity.Error
     public static stage = Stage.PreBuild
-    public static visualFeatureType = VisualFeatureType.Default
+    public static visualFeatureType = VisualFeatureType.NonSlicer
     public static minAPIversion: string;
     public static errorMessage: string;
 

@@ -11,10 +11,10 @@ export enum Stage {
 }
 
 export enum VisualFeatureType {
-    Default= 1 << 1,
+    NonSlicer = 1 << 1,
     Slicer = 1 << 2,
     Matrix = 1 << 3,
-    All = Default | Slicer | Matrix
+    All = NonSlicer | Slicer | Matrix
 }
 
 // Interaction types: Selection or filter (slicer)

@@ -29,16 +29,18 @@ export class Visual {
     }
 
     private getVisualFeatureType() {
-        let type = VisualFeatureType.Default;
         const isMatrixSupported = this.capabilities?.dataViewMappings?.some(dataView => dataView.matrix)
         const isSlicer = Boolean(this.capabilities?.objects?.general?.properties?.filter?.type?.filter)
-        if(isSlicer && isMatrixSupported){
-            type = VisualFeatureType.All;
-        } else if (isSlicer) {
-            type = VisualFeatureType.Slicer;
-        } else if (isMatrixSupported) {
-            type = VisualFeatureType.Matrix;
+        let type;
+        if(!isSlicer && !isMatrixSupported){
+            type = type | VisualFeatureType.NonSlicer;
+        }
+        if (isSlicer) {
+            type = type | VisualFeatureType.Slicer;
+        }
+        if (isMatrixSupported) {
+            type = type | VisualFeatureType.Matrix;
         }
         return type;
     }
-}  
+}

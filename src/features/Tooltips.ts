@@ -7,7 +7,7 @@ export default class Tooltips implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/add-tooltips"
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.Default
+    public static visualFeatureType = VisualFeatureType.NonSlicer | VisualFeatureType.Slicer
 
     static isSupported(packageInstance: Package) {
         return packageInstance.contain("tooltipService") && packageInstance.isCapabilityEnabled({tooltips: {}})

@@ -36,9 +36,8 @@ export class FeatureManager {
             .filter(feature => feature.stage == stage)
             .filter(feature => feature.visualFeatureType & sourceInstance.visualFeatureType)
             .filter(feature => !feature.isSupported(sourceInstance))
-            .forEach(feature => {
-                const errorMessage = feature.errorMessage;
-                switch(feature.severity) {
+            .forEach(({ errorMessage, severity }) => {
+                switch(severity) {
                     case Severity.Error:
                         result.status = Status.Error;
                         result.logs.errors.push(errorMessage);

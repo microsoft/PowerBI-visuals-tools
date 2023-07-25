@@ -7,7 +7,7 @@ export default class WarningIcon implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/visual-display-warning-icon"
     public static severity = Severity.Info
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.Default
+    public static visualFeatureType = VisualFeatureType.NonSlicer | VisualFeatureType.Slicer
 
     static isSupported(packageInstance: Package) {
         return packageInstance.contain(".displayWarningIcon")

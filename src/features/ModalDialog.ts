@@ -7,7 +7,7 @@ export default class ModalDialog implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/create-display-dialog-box"
     public static severity = Severity.Info
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.Default 
+    public static visualFeatureType = VisualFeatureType.NonSlicer | VisualFeatureType.Slicer 
 
     static isSupported(packageInstance: Package) {
         return packageInstance.contain(".openModalDialog")

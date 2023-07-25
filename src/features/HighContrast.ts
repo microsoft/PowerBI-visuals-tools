@@ -7,7 +7,7 @@ export default class HighContrast implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/high-contrast-support"
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.Default
+    public static visualFeatureType = VisualFeatureType.NonSlicer | VisualFeatureType.Slicer
 
     static isSupported(packageInstance: Package) {
         return packageInstance.contain(".isHighContrast")
