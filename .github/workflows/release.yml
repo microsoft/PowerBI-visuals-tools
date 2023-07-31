@@ -25,7 +25,7 @@ jobs:
         npm i
         npm run test
         npm run lint
-    - run: zip -r lib.zip . -x '.*' 'node_modules/*' './src/*'
+    - run: zip -r lib.zip . -x '.*' 'node_modules/*' 'src/*' 'spec/*'
     - name: Upload production artifacts
       run: |
         gh release upload $TAG_NAME "lib.zip#build"
