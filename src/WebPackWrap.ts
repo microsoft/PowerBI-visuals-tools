@@ -13,7 +13,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { PowerBICustomVisualsWebpackPlugin } from 'powerbi-visuals-webpack-plugin';
 import ConsoleWriter from './ConsoleWriter.js';
 import { resolveCertificate } from "./CertificateTools.js";
-import { getRootPath, readJsonFromRoot, readJsonFromVisual } from './utils.js'
+import { readJsonFromRoot, readJsonFromVisual } from './utils.js'
 
 const config = readJsonFromRoot('config.json');
 const npmPackage = readJsonFromRoot('package.json');
@@ -230,7 +230,7 @@ export default class WebPackWrap {
             test: /(\.ts)x?$/,
             use: [
                 {
-                    loader: path.resolve(getRootPath(), "node_modules", "ts-loader"),
+                    loader: "ts-loader",
                     options: tsOptions
                 }
             ]
