@@ -1,4 +1,5 @@
 
+import { createCertificate } from './CertificateTools.js';
 import ConsoleWriter from './ConsoleWriter.js';
 import VisualManager from './VisualManager.js';
 import { WebpackOptions } from './WebPackWrap.js';
@@ -23,6 +24,7 @@ interface NewOptions {
 }
 
 export default class CommandManager {
+
     public static async start(options: StartOptions, rootPath: string) {
         const webpackOptions: WebpackOptions = {
             devMode: true,
@@ -74,5 +76,9 @@ export default class CommandManager {
         new VisualManager(rootPath)
             .prepareVisual()
             .displayInfo();
+    }
+
+    public static async installCert() {
+        await createCertificate();
     }
 }

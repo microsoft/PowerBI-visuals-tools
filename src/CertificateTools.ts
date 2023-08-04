@@ -243,7 +243,7 @@ async function getCertFile(config, silent?) {
     }
 
     if (!silent) {
-        ConsoleWriter.info('Certificate not found. Call `pbiviz --install-cert` command to create the new certificate');
+        ConsoleWriter.info('Certificate not found. Call `pbiviz install-cert` command to create the new certificate');
     }
     return null;
 }
@@ -352,7 +352,7 @@ export async function resolveCertificate() {
             await createCertFile(config, true);
             if (!(await getCertFile(config, true))) {
                 ConsoleWriter.error('Certificate wasn\'t created');
-                throw new Error("Call `pbiviz --install-cert` command to create the new certificate");
+                throw new Error("Call `pbiviz install-cert` command to create the new certificate");
             }
             else {
                 if (config.server.passphrase) {

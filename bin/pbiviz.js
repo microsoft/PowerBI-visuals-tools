@@ -27,19 +27,16 @@
 
 "use strict";
 
-import { createCertificate } from "../lib/CertificateTools.js";
 import ConsoleWriter from '../lib/ConsoleWriter.js';
 import CommandManager from '../lib/CommandManager.js';
 import { readJsonFromRoot } from '../lib/utils.js';
-import { Command, Option } from 'commander';
+import { program, Option } from 'commander';
 
 const npmPackage = readJsonFromRoot('package.json');
 const rootPath = process.cwd();
-const program = new Command();
 
 const pbiviz = program
     .version(npmPackage.version)
-    .option('--install-cert', 'Creates and installs localhost certificate', createCertificate)
     .showHelpAfterError('Run "pbiviz help" for usage instructions.')
     .addHelpText('beforeAll', ConsoleWriter.info(`${npmPackage.name} version - ${npmPackage.version}`))
     .addHelpText('before', ConsoleWriter.getLogoVisualization());
@@ -59,8 +56,16 @@ pbiviz
 
 pbiviz
     .command('info')
+    .description('Displays visual info')
     .action(() => {
         CommandManager.info(rootPath);
+    });
+ 
+pbiviz
+    .command('install-cert')
+    .description('Creates and installs localhost certificate')
+    .action(() => {
+        CommandManager.installCert();
     });
 
 pbiviz
