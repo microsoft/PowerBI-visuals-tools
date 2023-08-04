@@ -33,13 +33,13 @@ import { createCertFile } from '../../lib/CertificateTools.js';
 
 const config = readJsonFromRoot('config.json');
 
-describe("E2E - pbiviz --install-cert", () => {
+describe("E2E - pbiviz install-cert", () => {
     beforeEach((done) => {
         createCertFile(config, false).then(done);
     });
 
     describe("pbiviz", () => {
-        it("pbiviz --install-cert command should generate certificate", (done) => {
+        it("pbiviz install-cert command should generate certificate", (done) => {
             const rootPath = getRootPath();
             const certPath = path.join(rootPath, config.server.certificate);
             const keyPath = path.join(rootPath, config.server.privateKey);
