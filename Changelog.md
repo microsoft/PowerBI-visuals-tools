@@ -4,6 +4,7 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 ## 5.0.3
 * Now option `--install-cert` is command. New usage is `pbiviz install-cert`
+* Fixed bug with the incorrect detection of the installed API version
 
 ## 5.0.2
 * Implemented common solution for webpack loaders on different environments

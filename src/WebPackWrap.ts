@@ -141,7 +141,7 @@ export default class WebPackWrap {
     async configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig) {
         const pluginConfiguration = lodashCloneDeep(visualPackage.pbivizConfig);
         //(?=\D*$) - positive look-ahead to find last version symbols and exclude any non-digit symbols after the version.
-        const regexFullVersion = /(?:\d+\.?){1,3}(?=\D*$)/;
+        const regexFullVersion = /(?<=powerbi-visuals-api@)((?:\d+\.?){1,3})/g;
         const regexMinorVersion = /\d+(?:\.\d+)?/;
         let apiVersionInstalled;
         try {
