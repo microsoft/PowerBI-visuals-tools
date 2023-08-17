@@ -98,9 +98,14 @@ describe("E2E - webpack tools", () => {
     });
 
     it("Should skip powerbi-visual-api installation with flag --skip-api", () => {
+        let error;
         removeApi();
-        FileSystem.runPbiviz('package', '--skip-api');
-
+        try {
+            FileSystem.runPbiviz('package', '--skip-api');
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeDefined();
         const packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
         expect(packageJson.dependencies["powerbi-visuals-api"]).not.toBeDefined();
     });

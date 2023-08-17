@@ -57,7 +57,7 @@ export default class WebPackWrap {
         const doesAPIExist = fs.pathExistsSync(apiPath);
         if (!doesAPIExist) {
             ConsoleWriter.error(`Can't find powerbi-visuals-api package`);
-            return null;
+            process.exit(1);
         }
         return import("file://" + path.join(apiPath, "index.js"));
     }
