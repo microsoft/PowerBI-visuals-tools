@@ -459,6 +459,14 @@ describe("E2E - pbiviz package", () => {
             expect(error).not.toBeNull();
         }
     });
+
+    fit("Should generate statistic files without flags", () => {
+        FileSystem.runPbiviz('package');
+        const pbivizPath = path.join(visualPath, 'dist', visualPbiviz.visual.guid + "." + pbiviz.visual.version + '.pbiviz');
+        const packageSize = fs.statSync(pbivizPath);
+        FileSystem.runPbiviz('package', '--all-locales');
+        expect(fs.statSync(pbivizPath).size).toBeGreaterThan(packageSize.size);
+    });
 });
 
 function mkDirPromise(path) {

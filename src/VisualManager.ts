@@ -63,7 +63,8 @@ export default class VisualManager {
         if (this.doesPBIVIZExists()) {
             this.pbivizConfig = readJsonFromVisual(PBIVIZ_FILE, this.basePath);
         } else {
-            throw new Error(PBIVIZ_FILE + ' not found. You must be in the root of a visual project to run this command.')
+            ConsoleWriter.error(PBIVIZ_FILE + ' not found. You must be in the root of a visual project to run this command.')
+            process.exit(1);
         }
         return this;
     }

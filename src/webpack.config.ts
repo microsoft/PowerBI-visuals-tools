@@ -1,6 +1,5 @@
 
 import { getRootPath, readJsonFromRoot } from './utils.js';
-import { LocalizationLoader } from "powerbi-visuals-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import path from "path";
@@ -65,10 +64,6 @@ const webpackConfig = {
             {
                 test: /\.(woff|ttf|ico|woff2|jpg|jpeg|png|webp|gif|svg|eot)$/i,
                 type: 'asset/inline'
-            },
-            { 
-                test: /powerbiGlobalizeLocales\.js$/,
-                loader: LocalizationLoader
             }
         ]
     },
