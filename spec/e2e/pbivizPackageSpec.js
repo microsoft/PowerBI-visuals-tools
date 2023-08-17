@@ -73,7 +73,7 @@ describe("E2E - pbiviz package", () => {
         }
         expect(error).toBeDefined();
         expect(error.status).toBe(1);
-        expect(error.message).toContain("Error: pbiviz.json not found. You must be in the root of a visual project to run this command");
+        expect(error.message).toContain("pbiviz.json not found. You must be in the root of a visual project to run this command");
     });
 
     it("Should throw error if there is nothing to produce", () => {
