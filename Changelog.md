@@ -3,10 +3,10 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
 ## 5.1.0
-* Implemented new flag `--skip-api` to skip verifying api version. Use only if you know why do you need it. (ex. installing new version brakes packages managed by monorepo managers)
+* Implemented new flag `--skip-api` to skip verifying API version. Use only if you know why you need it. (ex. installing new version brakes packages managed by mono repo managers)
 
 ## 5.0.3
-* Now option `--install-cert` is command. New usage is `pbiviz install-cert` **⚠**
+* Now option `--install-cert` is command. The new usage is `pbiviz install-cert` **⚠**
 * Fixed bug with the incorrect detection of the installed API version
 
 ## 5.0.2
@@ -43,8 +43,10 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 ### **⚠ BREAKING CHANGES**
 ## 4.1.0
-* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` version 5.1 and higher
-  Now loader deletes all unused in stringResources folder locales.
+* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` version 5.1 and higher.
+  
+    Now loader deletes all unused in stringResources folder locales.
+
 * Fixed vulnerabilities
 
 ## 4.0.9
