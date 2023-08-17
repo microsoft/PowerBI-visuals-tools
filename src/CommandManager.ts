@@ -7,7 +7,8 @@ import { WebpackOptions } from './WebPackWrap.js';
 interface StartOptions {
     port: number,
     stats: boolean,
-    drop: boolean
+    drop: boolean,
+    skipApi: boolean
 }
 
 interface PackageOptions {
@@ -16,6 +17,7 @@ interface PackageOptions {
     minify: boolean,
     compression: number,
     stats: boolean,
+    skipApi: boolean
 }
 
 interface NewOptions {
@@ -34,7 +36,8 @@ export default class CommandManager {
             minifyJS: false,
             minify: false,
             devServerPort: options.port,
-            stats: options.stats
+            stats: options.stats,
+            skipApiCheck: options.skipApi
         }
         const visualManager = new VisualManager(rootPath)
         await visualManager
@@ -49,14 +52,15 @@ export default class CommandManager {
             process.exit(1);
         }
         
-        const webpackOptions = {
+        const webpackOptions: WebpackOptions = {
             devMode: false,
             generateResources: options.resources,
             generatePbiviz: options.pbiviz,
             minifyJS: options.minify,
             minify: options.minify,
             compression: options.compression, 
-            stats: options.stats
+            stats: options.stats,
+            skipApiCheck: options.skipApi
         }
         new VisualManager(rootPath)
             .prepareVisual()

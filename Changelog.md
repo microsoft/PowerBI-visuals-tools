@@ -2,8 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.1.0
+* Implemented new flag `--skip-api` to skip verifying api version. Use only if you know why do you need it. (ex. installing new version brakes packages managed by monorepo managers)
+
 ## 5.0.3
-* Now option `--install-cert` is command. New usage is `pbiviz install-cert`
+* Now option `--install-cert` is command. New usage is `pbiviz install-cert` **⚠**
 * Fixed bug with the incorrect detection of the installed API version
 
 ## 5.0.2
@@ -20,6 +23,7 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Migrated to NodeJS 18.0 **⚠**
 
 ## 4.3.2
+* `options` in `Visual.constructor()` is optional. It's made to match PowerBI interface and to support strict mode
 * LocalizationLoader has been moved to `powerbi-visuals-webpack-plugin`
 
 ## 4.3.1
@@ -36,8 +40,11 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Fixed vulnerabilities
 * Updated `powerbi-visuals-webpack-plugin` to 3.2.0
 
+
+### **⚠ BREAKING CHANGES**
 ## 4.1.0
 * Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` version 5.1 and higher
+  Now loader deletes all unused in stringResources folder locales.
 * Fixed vulnerabilities
 
 ## 4.0.9
