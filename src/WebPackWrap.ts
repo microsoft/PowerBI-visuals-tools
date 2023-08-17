@@ -53,12 +53,13 @@ export default class WebPackWrap {
     }
 
     static loadAPIPackage() {
-        try {
-            return import("file://" + path.join(process.cwd(), "node_modules", "powerbi-visuals-api", "index.js"));
-        } catch (ex) {
+        const apiPath = path.join(process.cwd(), "node_modules", "powerbi-visuals-api");
+        const doesAPIExist = fs.pathExistsSync(apiPath);
+        if (!doesAPIExist) {
             ConsoleWriter.error(`Can't find powerbi-visuals-api package`);
             return null;
         }
+        return import("file://" + path.join(apiPath, "index.js"));
     }
 
     async installAPIpackage() {
