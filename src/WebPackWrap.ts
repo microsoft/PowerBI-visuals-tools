@@ -245,7 +245,7 @@ export default class WebPackWrap {
                 }
             ]
         });
-        if(includeAllLocales){
+        if(!includeAllLocales){
             this.webpackConfig.module.rules.push({ 
                 test: /powerbiGlobalizeLocales\.js$/, // path to file with all locales declared in formattingutils
                 loader: LocalizationLoader
