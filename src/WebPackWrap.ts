@@ -141,7 +141,6 @@ export default class WebPackWrap {
     }
 
     async configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig) {
-        console.log(options)
         if (options.skipApiCheck) {
             ConsoleWriter.warning(`Skipping API check. Tools started with --skipApi flag.`);
         } else {
