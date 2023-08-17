@@ -3,7 +3,7 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
 ## 5.1.0
-* Implemented new flag `--skip-api` to skip verifying API version. Use only if you know why you need it. (ex. installing new version brakes packages managed by mono repo managers)
+* New flag `--skip-api` to skip verifying api version. It might produce different errors in visual, so use it only in some specific cases (ex. installing something during the build process brakes packages managed by monorepo managers).
 
 ## 5.0.3
 * Now option `--install-cert` is command. The new usage is `pbiviz install-cert` **⚠**
