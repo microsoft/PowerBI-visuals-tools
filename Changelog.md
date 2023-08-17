@@ -4,9 +4,13 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 
 ## 5.1.0
 * New flag `--skip-api` to skip verifying api version. It might produce different errors in visual, so use it only in some specific cases (ex. installing something during the build process brakes packages managed by monorepo managers).
+* New flag `--all-locales` to disable optimization using localization loader. It's recommended not to use this flag because all locales take a huge amount of package size. If you need just a few of them follow [this guide](https://learn.microsoft.com/en-us/power-bi/developer/visuals/localization?tabs=English#step-5---add-a-resources-file-for-each-language). In this case, only declared in stringResources locales will be added to your visual package.
 
 ## 5.0.3
 * Now option `--install-cert` is command. The new usage is `pbiviz install-cert` **⚠**
+
+## 5.0.3
+* Now option `--install-cert` is command. New usage is `pbiviz install-cert`
 * Fixed bug with the incorrect detection of the installed API version
 
 ## 5.0.2
