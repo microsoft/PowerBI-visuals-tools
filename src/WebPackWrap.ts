@@ -32,6 +32,7 @@ export interface WebpackOptions {
     devtool?: string;
     devServerPort?: number;
     fast?: boolean;
+    skipApiCheck?: boolean;
 }
 
 export default class WebPackWrap {
@@ -52,11 +53,13 @@ export default class WebPackWrap {
     }
 
     static loadAPIPackage() {
-        try {
-            return import("file://" + path.join(process.cwd(), "node_modules", "powerbi-visuals-api", "index.js"));
-        } catch (ex) {
-            return null;
+        const apiPath = path.join(process.cwd(), "node_modules", "powerbi-visuals-api");
+        const doesAPIExist = fs.pathExistsSync(apiPath);
+        if (!doesAPIExist) {
+            ConsoleWriter.error(`Can't find powerbi-visuals-api package`);
+            process.exit(1);
         }
+        return import("file://" + path.join(apiPath, "index.js"));
     }
 
     async installAPIpackage() {
@@ -139,47 +142,54 @@ export default class WebPackWrap {
     }
 
     async configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig) {
-        const pluginConfiguration = lodashCloneDeep(visualPackage.pbivizConfig);
-        //(?=\D*$) - positive look-ahead to find last version symbols and exclude any non-digit symbols after the version.
-        const regexFullVersion = /(?<=powerbi-visuals-api@)((?:\d+\.?){1,3})/g;
-        const regexMinorVersion = /\d+(?:\.\d+)?/;
-        let apiVersionInstalled;
-        try {
-            const subprocess = await exec('npm list powerbi-visuals-api version')
-            apiVersionInstalled = subprocess.stdout.match(regexFullVersion)[0];
-        } catch (err) {
-            ConsoleWriter.warning(`"powerbi-visuals-api" is not installed`);
+        if (options.skipApiCheck) {
+            ConsoleWriter.warning(`Skipping API check. Tools started with --skipApi flag.`);
+        } else {
+            await this.configureAPIVersion()
         }
-        // if the powerbi-visual-api package wasn't installed
-        // install the powerbi-visual-api, with version from apiVersion in pbiviz.json
-        // or the latest API, if apiVersion is absent in pbiviz.json
-        if (!apiVersionInstalled || !this.pbiviz.apiVersion || this.pbiviz.apiVersion.match(regexMinorVersion)[0] != apiVersionInstalled.match(regexMinorVersion)[0]) {
-            ConsoleWriter.warning(`installed "powerbi-visuals-api" version - "${apiVersionInstalled}", is not match with the version specified in pbviz.json - "${this.pbiviz.apiVersion}".`);
-            await this.installAPIpackage();
-        }
-
-        // pluginConfiguration.env = await this.getEnvironmentDetails();
 
         const api = await WebPackWrap.loadAPIPackage();
-        pluginConfiguration.apiVersion = api.version;
-        pluginConfiguration.capabilitiesSchema = api.schemas.capabilities;
-        pluginConfiguration.pbivizSchema = api.schemas.pbiviz;
-        pluginConfiguration.stringResourcesSchema = api.schemas.stringResources;
-        pluginConfiguration.dependenciesSchema = api.schemas.dependencies;
-
-
-        pluginConfiguration.customVisualID = `CustomVisual_${this.pbiviz.visual.guid}`.replace(/[^\w\s]/gi, '');
-        pluginConfiguration.devMode = (typeof options.devMode === "undefined") ? true : options.devMode;
-        pluginConfiguration.generatePbiviz = options.generatePbiviz;
-        pluginConfiguration.generateResources = options.generateResources;
-        pluginConfiguration.minifyJS = options.minifyJS;
         const dependenciesPath = this.pbiviz.dependencies && path.join(process.cwd(), this.pbiviz.dependencies);
-        pluginConfiguration.dependencies = fs.existsSync(dependenciesPath) ? this.pbiviz.dependencies : null;
-        pluginConfiguration.modules = typeof tsconfig.compilerOptions.outDir !== "undefined";
-        pluginConfiguration.visualSourceLocation = path.posix.relative(config.build.precompileFolder, tsconfig.files[0]).replace(/(\.ts)x|\.ts/, "");
-        pluginConfiguration.pluginLocation = path.join(config.build.precompileFolder, "visualPlugin.ts");
-        pluginConfiguration.compression = options.compression;
+        let pluginConfiguration = {
+            ...lodashCloneDeep(visualPackage.pbivizConfig),
+
+            apiVersion: api.version,
+            capabilitiesSchema: api.schemas.capabilities,
+            pbivizSchema: api.schemas.pbiviz,
+            stringResourcesSchema: api.schemas.stringResources,
+            dependenciesSchema: api.schemas.dependencies,
+
+            customVisualID: `CustomVisual_${this.pbiviz.visual.guid}`.replace(/[^\w\s]/gi, ''),
+            devMode: options.devMode,
+            generatePbiviz: options.generatePbiviz,
+            generateResources: options.generateResources,
+            minifyJS: options.minifyJS,
+            dependencies: fs.existsSync(dependenciesPath) ? this.pbiviz.dependencies : null,
+            modules: typeof tsconfig.compilerOptions.outDir !== "undefined",
+            visualSourceLocation: path.posix.relative(config.build.precompileFolder, tsconfig.files[0]).replace(/(\.ts)x|\.ts/, ""),
+            pluginLocation: path.join(config.build.precompileFolder, "visualPlugin.ts"),
+            compression: options.compression
+
+        };
         return pluginConfiguration;
+    }
+
+    async configureAPIVersion() {
+        //(?<=powerbi-visuals-api@) - positive look-behind to find version installed in visual and get 3 level version.
+        const regexFullVersion = /(?<=powerbi-visuals-api@)((?:\d+\.?){1,3})/g;
+        //get only first 2 parts of version
+        const regexMajorVersion = /\d+(?:\.\d+)?/;
+        const listResults = (await exec('npm list powerbi-visuals-api version')).stdout
+        const installedAPIVersion = listResults.match(regexFullVersion)[0] ?? "not found";
+        const doesAPIExist = fs.pathExistsSync(path.join(process.cwd(), "node_modules", "powerbi-visuals-api"));
+
+        // if the powerbi-visual-api package wasn't installed install the powerbi-visual-api,
+        // with version from apiVersion in pbiviz.json or the latest API, if apiVersion is absent in pbiviz.json
+        const isAPIConfigured = doesAPIExist && installedAPIVersion && this.pbiviz.apiVersion
+        if (!isAPIConfigured || this.pbiviz.apiVersion.match(regexMajorVersion)[0] != installedAPIVersion.match(regexMajorVersion)[0]) {
+            ConsoleWriter.warning(`installed "powerbi-visuals-api" version - "${installedAPIVersion}", is not match with the version specified in pbviz.json - "${this.pbiviz.apiVersion}".`);
+            await this.installAPIpackage();
+        }
     }
 
     async appendPlugins(options, visualPackage, tsconfig) {
@@ -278,7 +288,8 @@ export default class WebPackWrap {
         devServerPort: 8080,
         fast: false,
         compression: 0,
-        stats: true
+        stats: true,
+        skipApiCheck: false
     }) {
         const tsconfig = readJsonFromVisual('tsconfig.json');
         this.pbiviz = readJsonFromVisual('pbiviz.json');

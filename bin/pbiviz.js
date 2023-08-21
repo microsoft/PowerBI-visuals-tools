@@ -44,9 +44,9 @@ const pbiviz = program
 pbiviz
     .command('new')
     .usage("<argument> [options]")
-    .argument('<name>', 'name of new visual')
-    .option('-f, --force', 'force creation (overwrites folder if exists)')
-    .addOption(new Option('-t, --template [template]', 'use a specific template')
+    .argument('<name>', 'Name of new visual')
+    .option('-f, --force', 'Force creation (overwrites folder if exists)')
+    .addOption(new Option('-t, --template [template]', 'Use a specific template')
         .choices(['default', 'table', 'slicer', 'rvisual', 'rhtml', 'circlecard'])
         .default('default')
     )
@@ -71,9 +71,10 @@ pbiviz
 pbiviz
     .command('start')
     .usage('[options]')
-    .option('-p, --port [port]', 'set the port listening on')
-    .option('-d, --drop', 'drop outputs into output folder')
+    .option('-p, --port [port]', 'Set the port listening on')
+    .option('-d, --drop', 'Drop outputs into output folder')
     .option('--no-stats', "Doesn't generate statistics files")
+    .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .action(async (options) => {
         CommandManager.start(options, rootPath);
     });
@@ -85,6 +86,7 @@ pbiviz
     .option('--no-pbiviz', "Doesn't produce a pbiviz file (must be used in conjunction with resources flag)")
     .option('--no-minify', "Doesn't minify the js in the package (useful for debugging)")
     .option('--no-stats', "Doesn't generate statistics files")
+    .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
         .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
         .default('6')
