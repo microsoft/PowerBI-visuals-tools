@@ -30,7 +30,7 @@ import { exec as nodeExec } from 'child_process';
 import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
-import crypto from "crypto"
+import { getRandomValues, webcrypto } from "crypto"
 import { getRootPath, readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
 
@@ -160,7 +160,7 @@ export async function createCertFile(config, open) {
                         }
                         break;
                     }
-                    passphrase = crypto.getRandomValues(new Uint32Array(1))[0].toString().substring(2);
+                    passphrase = (getRandomValues || <typeof getRandomValues>webcrypto.getRandomValues)(new Uint32Array(1))[0].toString().substring(2);
                     config.server.passphrase = passphrase;
                     fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
                     // for windows 8 / 8.1 / server 2012 R2 /
