@@ -9,6 +9,7 @@ interface StartOptions {
     stats: boolean,
     drop: boolean,
     skipApi: boolean
+    allLocales: boolean
 }
 
 interface PackageOptions {
@@ -18,6 +19,7 @@ interface PackageOptions {
     compression: number,
     stats: boolean,
     skipApi: boolean
+    allLocales: boolean
 }
 
 interface NewOptions {
@@ -37,7 +39,8 @@ export default class CommandManager {
             minify: false,
             devServerPort: options.port,
             stats: options.stats,
-            skipApiCheck: options.skipApi
+            skipApiCheck: options.skipApi,
+            allLocales: options.allLocales
         }
         const visualManager = new VisualManager(rootPath)
         await visualManager
@@ -60,7 +63,8 @@ export default class CommandManager {
             minify: options.minify,
             compression: options.compression, 
             stats: options.stats,
-            skipApiCheck: options.skipApi
+            skipApiCheck: options.skipApi,
+            allLocales: options.allLocales
         }
         new VisualManager(rootPath)
             .prepareVisual()

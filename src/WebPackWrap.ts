@@ -10,7 +10,7 @@ import { exec as processExec } from 'child_process';
 import lodashCloneDeep from 'lodash.clonedeep';
 import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import { PowerBICustomVisualsWebpackPlugin } from 'powerbi-visuals-webpack-plugin';
+import { PowerBICustomVisualsWebpackPlugin, LocalizationLoader } from 'powerbi-visuals-webpack-plugin';
 import ConsoleWriter from './ConsoleWriter.js';
 import { resolveCertificate } from "./CertificateTools.js";
 import { readJsonFromRoot, readJsonFromVisual } from './utils.js'
@@ -33,6 +33,7 @@ export interface WebpackOptions {
     devServerPort?: number;
     fast?: boolean;
     skipApiCheck?: boolean;
+    allLocales?: boolean;
 }
 
 export default class WebPackWrap {
@@ -226,25 +227,30 @@ export default class WebPackWrap {
         }
     }
 
-    async useLoader({
-        fast = false
+    async configureLoaders({
+        fast = false,
+        includeAllLocales = false
     }) {
-        let tsOptions = {};
-        if (fast) {
-            tsOptions = {
-                transpileOnly: false,
-                experimentalWatchApi: false
-            };
-        }
         this.webpackConfig.module.rules.push({
             test: /(\.ts)x?$/,
             use: [
                 {
                     loader: "ts-loader",
-                    options: tsOptions
+                    options: fast 
+                        ? {
+                            transpileOnly: false,
+                            experimentalWatchApi: false
+                        } 
+                        : {}
                 }
             ]
         });
+        if(!includeAllLocales){
+            this.webpackConfig.module.rules.push({ 
+                test: /powerbiGlobalizeLocales\.js$/, // path to file with all locales declared in formattingutils
+                loader: LocalizationLoader
+            });
+        }
     }
 
     async prepareWebPackConfig(visualPackage, options: WebpackOptions, tsconfig) {
@@ -260,8 +266,9 @@ export default class WebPackWrap {
         await this.appendPlugins(options, visualPackage, tsconfig);
         await this.configureDevServer(visualPackage, options.devServerPort);
         await this.configureVisualPlugin(options, tsconfig, visualPackage);
-        await this.useLoader({
-            fast: options.fast
+        await this.configureLoaders({
+            fast: options.fast,
+            includeAllLocales: options.allLocales
         });
 
         return this.webpackConfig;
@@ -289,7 +296,8 @@ export default class WebPackWrap {
         fast: false,
         compression: 0,
         stats: true,
-        skipApiCheck: false
+        skipApiCheck: false,
+        allLocales: false
     }) {
         const tsconfig = readJsonFromVisual('tsconfig.json');
         this.pbiviz = readJsonFromVisual('pbiviz.json');
