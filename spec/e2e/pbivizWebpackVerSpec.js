@@ -97,4 +97,17 @@ describe("E2E - webpack tools", () => {
             .toBe(semver.minor(packageJson.dependencies["powerbi-visuals-api"].replace(/\^|\~/, ""))); // eslint-disable-line no-useless-escape
     });
 
+    it("Should skip powerbi-visual-api installation with flag --skip-api", () => {
+        let error;
+        removeApi();
+        try {
+            FileSystem.runPbiviz('package', '--skip-api');
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeDefined();
+        const packageJson = fs.readJsonSync(path.join(visualPath, 'package.json'));
+        expect(packageJson.dependencies["powerbi-visuals-api"]).not.toBeDefined();
+    });
+
 });
