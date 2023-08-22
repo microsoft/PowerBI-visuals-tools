@@ -8,6 +8,7 @@ export default class ESLint implements BaseFeature {
     public static severity = Severity.Error
     public static stage = Stage.PreBuild
     public static visualFeatureType = VisualFeatureType.All
+    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(visual: Visual) {
         return visual.doesESLlintSupported()

@@ -8,6 +8,7 @@ export default class HighlightData implements BaseFeature {
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
     public static visualFeatureType = VisualFeatureType.NonSlicer 
+    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return packageInstance.isCapabilityEnabled({ supportsHighlight: true })

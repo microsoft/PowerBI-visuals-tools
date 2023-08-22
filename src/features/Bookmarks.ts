@@ -8,6 +8,7 @@ export default class Bookmarks implements BaseFeature {
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
     public static visualFeatureType = VisualFeatureType.Slicer
+    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return packageInstance.contain("applySelectionFromFilter") || packageInstance.contain("registerOnSelectCallback")

@@ -8,6 +8,7 @@ export default class FormatPane implements BaseFeature {
     public static severity = Severity.Deprecation
     public static stage = Stage.PostBuild
     public static visualFeatureType = VisualFeatureType.All
+    public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
         return packageInstance.contain("getFormattingModel")
