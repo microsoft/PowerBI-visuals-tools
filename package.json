@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "5.1.0",
+  "version": "5.2.0-beta.1",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./bin/pbiviz.js",
   "type": "module",
@@ -54,6 +54,7 @@
     "lodash.clonedeep": "4.5.0",
     "lodash.defaults": "4.2.0",
     "lodash.isequal": "4.5.0",
+    "lodash.ismatch": "^4.4.0",
     "mini-css-extract-plugin": "^2.7.6",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",

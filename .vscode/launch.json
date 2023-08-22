@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "cwd": "${workspaceRoot}",
-            "program": "${workspaceFolder}\\bin\\pbiviz-new.js",
+            "program": "${workspaceFolder\bin\\pbiviz-new.js",
             "args": [
                 "-t",
                 "circlecard",
