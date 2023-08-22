@@ -2,8 +2,22 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 5.1.0
+## 5.2.0
 * Integrated PAC validation
+
+## 5.1.0
+* New flag `--skip-api` to skip verifying api version. It might produce different errors in visual, so use it only in some specific cases (ex. installing something during the build process brakes packages managed by monorepo managers).
+* New flag `--all-locales` to disable optimization using localization loader. It's recommended not to use this flag because all locales take a huge amount of package size. If you need just a few of them follow [this guide](https://learn.microsoft.com/en-us/power-bi/developer/visuals/localization?tabs=English#step-5---add-a-resources-file-for-each-language). In this case, only declared in stringResources locales will be added to your visual package.
+
+## 5.0.3
+* Now option `--install-cert` is command. The new usage is `pbiviz install-cert` **⚠**
+
+## 5.0.3
+* Now option `--install-cert` is command. New usage is `pbiviz install-cert`
+* Fixed bug with the incorrect detection of the installed API version
+
+## 5.0.2
+* Implemented common solution for webpack loaders on different environments
 
 ## 5.0.1
 * Fixed broken imports in webpack.config for some cases
@@ -16,6 +30,7 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Migrated to NodeJS 18.0 **⚠**
 
 ## 4.3.2
+* `options` in `Visual.constructor()` is optional. It's made to match PowerBI interface and to support strict mode
 * LocalizationLoader has been moved to `powerbi-visuals-webpack-plugin`
 
 ## 4.3.1
@@ -32,8 +47,13 @@ This page contains information about changes to the PowerBI Visual Tools (pbiviz
 * Fixed vulnerabilities
 * Updated `powerbi-visuals-webpack-plugin` to 3.2.0
 
+
+### **⚠ BREAKING CHANGES**
 ## 4.1.0
-* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` version 5.1 and higher
+* Added loader to reduce localizations size. REQUIRES `powerbi-visuals-utils-formattingutils` version 5.1 and higher.
+  
+    Now loader deletes all unused in stringResources folder locales.
+
 * Fixed vulnerabilities
 
 ## 4.0.9

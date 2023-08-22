@@ -30,7 +30,7 @@ import { exec as nodeExec } from 'child_process';
 import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
-import crypto from "crypto"
+import crypto, { webcrypto } from "crypto"
 import { getRootPath, readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
 
@@ -160,7 +160,7 @@ export async function createCertFile(config, open) {
                         }
                         break;
                     }
-                    passphrase = crypto.getRandomValues(new Uint32Array(1))[0].toString().substring(2);
+                    passphrase = (crypto.getRandomValues || <typeof crypto.getRandomValues>webcrypto.getRandomValues)(new Uint32Array(1))[0].toString().substring(2);
                     config.server.passphrase = passphrase;
                     fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
                     // for windows 8 / 8.1 / server 2012 R2 /
@@ -243,7 +243,7 @@ async function getCertFile(config, silent?) {
     }
 
     if (!silent) {
-        ConsoleWriter.info('Certificate not found. Call `pbiviz --install-cert` command to create the new certificate');
+        ConsoleWriter.info('Certificate not found. Call `pbiviz install-cert` command to create the new certificate');
     }
     return null;
 }
@@ -352,7 +352,7 @@ export async function resolveCertificate() {
             await createCertFile(config, true);
             if (!(await getCertFile(config, true))) {
                 ConsoleWriter.error('Certificate wasn\'t created');
-                throw new Error("Call `pbiviz --install-cert` command to create the new certificate");
+                throw new Error("Call `pbiviz install-cert` command to create the new certificate");
             }
             else {
                 if (config.server.passphrase) {

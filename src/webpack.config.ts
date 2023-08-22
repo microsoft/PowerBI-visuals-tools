@@ -1,6 +1,5 @@
 
 import { getRootPath, readJsonFromRoot } from './utils.js';
-import { LocalizationLoader } from "powerbi-visuals-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import path from "path";
@@ -40,7 +39,7 @@ const webpackConfig = {
             },
             {
                 test: /\.json$/,
-                loader: path.resolve(rootPath, "node_modules", "json-loader"),
+                loader: "json-loader",
                 type: "javascript/auto"
             },
             {
@@ -50,10 +49,10 @@ const webpackConfig = {
                         loader: MiniCssExtractPlugin.loader
                     },
                     {
-                        loader: path.resolve(rootPath, "node_modules", "css-loader")
+                        loader: "css-loader"
                     },
                     {
-                        loader: path.resolve(rootPath, "node_modules", "less-loader"),
+                        loader: "less-loader",
                         options: {
                             lessOptions: {
                                 paths: [path.resolve(rootPath, 'node_modules')]
@@ -65,47 +64,47 @@ const webpackConfig = {
             {
                 test: /\.(woff|ttf|ico|woff2|jpg|jpeg|png|webp|gif|svg|eot)$/i,
                 type: 'asset/inline'
-            },
-            { 
-                test: /powerbiGlobalizeLocales\.js$/,
-                loader: LocalizationLoader
             }
         ]
+    },
+    resolveLoader: {
+        modules: ['node_modules', path.resolve(rootPath, 'node_modules')],
     },
     externals: {
         "powerbi-visuals-api": 'null'
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js', '.css'],
+        modules: ['node_modules', path.resolve(rootPath, 'node_modules')],
         fallback: {
-            assert: path.resolve(rootPath, "node_modules", "assert"),
-            buffer: path.resolve(rootPath, "node_modules", "buffer"),
-            console: path.resolve(rootPath, "node_modules", "console-browserify"),
-            constants: path.resolve(rootPath, "node_modules", "constants-browserify"),
-            crypto: path.resolve(rootPath, "node_modules", "crypto-browserify"),
-            domain: path.resolve(rootPath, "node_modules", "domain-browser"),
-            events: path.resolve(rootPath, "node_modules", "events"),
-            http: path.resolve(rootPath, "node_modules", "stream-http"),
-            https: path.resolve(rootPath, "node_modules", "https-browserify"),
-            os: path.resolve(rootPath, "node_modules", "os-browserify"),
-            path: path.resolve(rootPath, "node_modules", "path-browserify"),
-            punycode: path.resolve(rootPath, "node_modules", "punycode"),
-            process: path.resolve(rootPath, "node_modules", "process"),
-            querystring: path.resolve(rootPath, "node_modules", "querystring-es3"),
-            stream: path.resolve(rootPath, "node_modules", "stream-browserify"),
-            _stream_duplex: path.resolve(rootPath, "node_modules", "readable-stream"),
-            _stream_passthrough: path.resolve(rootPath, "node_modules", "readable-stream"),
-            _stream_readable: path.resolve(rootPath, "node_modules", "readable-stream"),
-            _stream_transform: path.resolve(rootPath, "node_modules", "readable-stream"),
-            _stream_writable: path.resolve(rootPath, "node_modules", "readable-stream"),
-            string_decoder: path.resolve(rootPath, "node_modules", "string_decoder"),
-            sys: path.resolve(rootPath, "node_modules", "util"),
-            timers: path.resolve(rootPath, "node_modules", "timers-browserify"),
-            tty: path.resolve(rootPath, "node_modules", "tty-browserify"),
-            url: path.resolve(rootPath, "node_modules", "url"),
-            util: path.resolve(rootPath, "node_modules", "util"),
-            vm: path.resolve(rootPath, "node_modules", "vm-browserify"),
-            zlib: path.resolve(rootPath, "node_modules", "browserify-zlib")
+            assert: "assert",
+            buffer: "buffer",
+            console: "console-browserify",
+            constants: "constants-browserify",
+            crypto: "crypto-browserify",
+            domain: "domain-browser",
+            events: "events",
+            http: "stream-http",
+            https: "https-browserify",
+            os: "os-browserify",
+            path: "path-browserify",
+            punycode: "punycode",
+            process: "process",
+            querystring: "querystring-es3",
+            stream: "stream-browserify",
+            _stream_duplex: "readable-stream",
+            _stream_passthrough: "readable-stream",
+            _stream_readable: "readable-stream",
+            _stream_transform: "readable-stream",
+            _stream_writable: "readable-stream",
+            string_decoder: "string_decoder",
+            sys: "util",
+            timers: "timers-browserify",
+            tty: "tty-browserify",
+            url: "url",
+            util: "util",
+            vm: "vm-browserify",
+            zlib: "browserify-zlib"
         }
     },
     output: {
