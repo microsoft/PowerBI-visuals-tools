@@ -281,7 +281,8 @@ export default class VisualManager {
         }
         let outputLog;
         switch(severity) {
-            case Severity.Error || Severity.Deprecation:
+            case Severity.Deprecation:
+            case Severity.Error:
                 outputLog = ConsoleWriter.error;
                 break;
             case Severity.Warning:
