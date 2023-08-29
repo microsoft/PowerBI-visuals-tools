@@ -12,6 +12,8 @@ jobs:
       GH_TOKEN: ${{secrets.GH_TOKEN}}
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ vars.BRANCH_NAME }}
     - name: Add config details
       run: |
         git config --global user.name ${{secrets.NAME}}
