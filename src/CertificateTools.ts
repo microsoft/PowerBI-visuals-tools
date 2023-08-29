@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /*
  *  Power BI Visual CLI
  *
@@ -134,11 +135,8 @@ export async function createCertFile(config, open) {
                     }
                     break;
                 case "win32":
-                    // eslint-disable-next-line no-case-declarations
-                    let passphrase = "";
                     // for windows 7 and others
                     // 6.1 - Windows 7
-                    // eslint-disable-next-line no-case-declarations
                     const osVersion = os.release().split(".");
                     if ((Number(osVersion[0]) === 6 && Number(osVersion[1]) === 1) || Number(osVersion[0]) < 6) {
                         await removeCertFiles(certPath, keyPath, pfxPath);
@@ -160,7 +158,13 @@ export async function createCertFile(config, open) {
                         }
                         break;
                     }
-                    passphrase = (crypto?.getRandomValues || <typeof crypto.getRandomValues>crypto?.webcrypto?.getRandomValues)(new Uint32Array(1))[0].toString().substring(2);
+                    let randomValues: Uint32Array;
+                    if(crypto.getRandomValues !== undefined){
+                        randomValues = crypto.getRandomValues(new Uint32Array(1));
+                    } else {
+                        randomValues = crypto.webcrypto.getRandomValues(new Uint32Array(1));
+                    }
+                    const passphrase = randomValues[0].toString().substring(2);
                     config.server.passphrase = passphrase;
                     fs.writeFileSync(path.join(rootPath, confPath), JSON.stringify(config));
                     // for windows 8 / 8.1 / server 2012 R2 /
