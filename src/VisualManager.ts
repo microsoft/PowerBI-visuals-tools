@@ -36,6 +36,10 @@ import ConsoleWriter from './ConsoleWriter.js';
 import VisualGenerator from './VisualGenerator.js';
 import { readJsonFromRoot, readJsonFromVisual } from './utils.js';
 import WebpackWrap, { WebpackOptions } from './WebPackWrap.js';
+import Package from './Package.js';
+import { Visual } from "./Visual.js";
+import { FeatureManager, Logs, Status } from "./FeatureManager.js";
+import { Severity, Stage } from "./features/FeatureTypes.js";
 import TemplateFetcher from "./TemplateFetcher.js";
 
 interface GenerateOptions {
@@ -43,6 +47,7 @@ interface GenerateOptions {
     template: string;
 }
 
+const globalConfig = readJsonFromRoot('config.json');
 const PBIVIZ_FILE = 'pbiviz.json';
 
 /**
@@ -51,7 +56,11 @@ const PBIVIZ_FILE = 'pbiviz.json';
 export default class VisualManager {
     public basePath: string;
     public pbivizConfig;
+    private capabilities;
     private webpackConfig;
+    private visual: Visual;
+    private package: Package;
+    private featureManager: FeatureManager;
     private compiler: Compiler;
     private webpackDevServer: WebpackDevServer;
 
@@ -62,11 +71,18 @@ export default class VisualManager {
     public prepareVisual() {
         if (this.doesPBIVIZExists()) {
             this.pbivizConfig = readJsonFromVisual(PBIVIZ_FILE, this.basePath);
+            this.createVisualInstance();
         } else {
             ConsoleWriter.error(PBIVIZ_FILE + ' not found. You must be in the root of a visual project to run this command.')
             process.exit(1);
         }
         return this;
+    }
+
+    public createVisualInstance() {
+        this.capabilities = readJsonFromVisual("capabilities.json", this.basePath);
+        const packageJSON = readJsonFromVisual("package.json", this.basePath);
+        this.visual = new Visual(this.capabilities, this.pbivizConfig, packageJSON);
     }
 
     public async initializeWebpack(webpackOptions: WebpackOptions) {
@@ -80,6 +96,9 @@ export default class VisualManager {
 
     public generatePackage() {
         const callback = (err: Error, stats: Stats) => {
+            this.createPackageInstance();
+            const logs = this.validatePackage();
+            this.outputResults(logs);
             this.parseCompilationResults(err, stats)
         }
         this.compiler.run(callback);
@@ -115,6 +134,37 @@ export default class VisualManager {
         }
     }
 
+    public validateVisual() {
+        this.featureManager = new FeatureManager()
+        const { status, logs } = this.featureManager.validate(Stage.PreBuild, this.visual);
+        this.outputResults(logs);
+        if(status === Status.Error){
+            process.exit(1);
+        }
+
+        return this;
+    }
+    
+    public validatePackage() {
+        const featureManager = new FeatureManager();
+        const { logs } = featureManager.validate(Stage.PostBuild, this.package);
+
+        return logs;
+    }
+
+    public outputResults({ errors, deprecation, warnings, info }: Logs) {
+        const featuresTotalLog = {
+            errors: `Visual doesn't support some features required for all custom visuals:`,
+            deprecation: `Some features are going to be required soon, please update the visual:`,
+            warn: `Visual doesn't support some features recommended for all custom visuals:`,
+            info: `Visual can be improved by adding some features:`
+        };
+        this.outputLogsWithHeadMessage(featuresTotalLog.errors, errors, Severity.Error);
+        this.outputLogsWithHeadMessage(featuresTotalLog.deprecation, deprecation, Severity.Deprecation);
+        this.outputLogsWithHeadMessage(featuresTotalLog.warn, warnings, Severity.Warning);
+        this.outputLogsWithHeadMessage(featuresTotalLog.info, info, Severity.Info);
+    }
+    
     public displayInfo() {
         if (this.pbivizConfig) {
             ConsoleWriter.infoTable(this.pbivizConfig);
@@ -166,7 +216,7 @@ export default class VisualManager {
                 });
         });
     }
-
+    
     private doesPBIVIZExists() {
         return fs.existsSync(PBIVIZ_FILE);
     }
@@ -205,6 +255,12 @@ export default class VisualManager {
         }
     }
 
+    private createPackageInstance() {
+        const pathToJSContent = path.join((this.pbivizConfig.build ?? globalConfig.build).dropFolder, "visual.js");
+        const sourceCode = fs.readFileSync(pathToJSContent, "utf8");
+        this.package = new Package(sourceCode, this.capabilities, this.visual.visualFeatureType);
+    }
+
     private parseCompilationResults(err: Error, stats: Stats) {
         ConsoleWriter.blank();
         if (err) {
@@ -217,5 +273,32 @@ export default class VisualManager {
         if (!err && !stats?.compilation.errors.length) {
             ConsoleWriter.done('Build completed successfully');
         }
+    }
+
+    private outputLogsWithHeadMessage(headMessage: string, logs: string[], severity: Severity) {
+        if(!logs.length) {
+            return;
+        }
+        let outputLog;
+        switch(severity) {
+            case Severity.Deprecation:
+            case Severity.Error:
+                outputLog = ConsoleWriter.error;
+                break;
+            case Severity.Warning:
+                outputLog = ConsoleWriter.warning;
+                break;
+            default:
+                outputLog = ConsoleWriter.info;
+                break;
+        }
+
+        if(headMessage) {
+            outputLog(headMessage);
+            ConsoleWriter.blank();
+        }
+
+        logs.forEach(error => outputLog(error));
+        ConsoleWriter.blank();
     }
 }
