@@ -60,7 +60,7 @@ pbiviz
     .action(() => {
         CommandManager.info(rootPath);
     });
- 
+
 pbiviz
     .command('install-cert')
     .description('Creates and installs localhost certificate')
@@ -89,6 +89,7 @@ pbiviz
     .option('--no-stats', "Doesn't generate statistics files")
     .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .option('-l, --all-locales', "Keeps all locale files in the package. By default only used inside stringResources folder locales are included.")
+    .option('--guid <guid>', "Used instead of guid value from pbiviz.json (useful for debugging)")
     .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
         .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
         .default('6')

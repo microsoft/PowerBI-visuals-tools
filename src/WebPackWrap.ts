@@ -34,6 +34,7 @@ export interface WebpackOptions {
     fast?: boolean;
     skipApiCheck?: boolean;
     allLocales?: boolean;
+    guid?: string;
 }
 
 export default class WebPackWrap {
@@ -122,11 +123,11 @@ export default class WebPackWrap {
         this.webpackConfig.watchOptions.ignored.push(visualPluginPath)
         if (tsconfig.compilerOptions.out) {
             this.webpackConfig.entry = {
-                "visual.js": visualJSFilePath
+                "visual.js": visualJSFilePath 
             };
         } else {
             this.webpackConfig.entry["visual.js"] = [visualPluginPath];
-            this.webpackConfig.output.library = `${this.pbiviz.visual.guid}${options.devMode ? "_DEBUG" : ""}`;
+            this.webpackConfig.output.library = `${options.guid ?? this.pbiviz.visual.guid}${options.devMode ? "_DEBUG" : ""}`;
             this.webpackConfig.output.libraryTarget = 'var';
         }
     }
@@ -149,6 +150,7 @@ export default class WebPackWrap {
             await this.configureAPIVersion()
         }
 
+        if (options.guid) visualPackage.pbivizConfig.visual.guid = options.guid;
         const api = await WebPackWrap.loadAPIPackage();
         const dependenciesPath = this.pbiviz.dependencies && path.join(process.cwd(), this.pbiviz.dependencies);
         let pluginConfiguration = {
@@ -160,7 +162,7 @@ export default class WebPackWrap {
             stringResourcesSchema: api.schemas.stringResources,
             dependenciesSchema: api.schemas.dependencies,
 
-            customVisualID: `CustomVisual_${this.pbiviz.visual.guid}`.replace(/[^\w\s]/gi, ''),
+            customVisualID: `CustomVisual_${options.guid ?? this.pbiviz.visual.guid}`.replace(/[^\w\s]/gi, ''),
             devMode: options.devMode,
             generatePbiviz: options.generatePbiviz,
             generateResources: options.generateResources,

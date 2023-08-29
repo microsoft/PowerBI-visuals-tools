@@ -18,8 +18,9 @@ interface PackageOptions {
     minify: boolean,
     compression: number,
     stats: boolean,
-    skipApi: boolean
-    allLocales: boolean
+    skipApi: boolean,
+    allLocales: boolean,
+    guid: string,
 }
 
 interface NewOptions {
@@ -55,7 +56,7 @@ export default class CommandManager {
             ConsoleWriter.error('Nothing to build. Cannot use --no-pbiviz without --resources');
             process.exit(1);
         }
-        
+         
         const webpackOptions: WebpackOptions = {
             devMode: false,
             generateResources: options.resources,
@@ -65,7 +66,8 @@ export default class CommandManager {
             compression: options.compression, 
             stats: options.stats,
             skipApiCheck: options.skipApi,
-            allLocales: options.allLocales
+            allLocales: options.allLocales,
+            guid: options.guid
         }
         new VisualManager(rootPath)
             .prepareVisual()
