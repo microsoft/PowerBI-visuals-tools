@@ -1,6 +1,8 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+## 5.1.1
+* Updated crypto import to fix error in old Node versions
 
 ## 5.1.0
 * New flag `--skip-api` to skip verifying api version. It might produce different errors in visual, so use it only in some specific cases (ex. installing something during the build process brakes packages managed by monorepo managers).
