@@ -278,36 +278,36 @@ describe("E2E - pbiviz package", () => {
 
     it("Should correctly generate pbiviz file with stringResources localization", (done) => {
         const resourceStringLocalization =
-        {
-            "locale": "ru-RU",
-            "values": {
-                "formattingGeneral": "Общие настройки",
-                "formattingGeneralOrientation": "Ориентация",
-                "formattingGeneralOrientationVertical": "Вертикальная"
-            }
-        };
+            {
+                "locale": "ru-RU",
+                "values": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
         const validStringResources =
-        {
-            "ru-RU": {
-                "formattingGeneral": "Общие настройки",
-                "formattingGeneralOrientation": "Ориентация",
-                "formattingGeneralOrientationVertical": "Вертикальная"
-            }
-        };
+            {
+                "ru-RU": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
 
         mkDirPromise('stringResources')
             .then(() => writeJsonPromise('stringResources/ru-RU.json', resourceStringLocalization))
-            .then(() =>
+            .then(() => 
                 readJsonPromise('pbiviz.json')
             )
             .then((pbivizJson) => {
                 pbivizJson.stringResources = ["stringResources/ru-RU.json"];
                 return writeJsonPromise('pbiviz.json', pbivizJson);
             })
-            .then(() =>
+            .then(() => 
                 FileSystem.runPbiviz('package', undefined, '--no-pbiviz --no-minify --resources')
             )
-            .then(() =>
+            .then(() => 
                 readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json'))
             )
             .then((pbivizJson) => {
@@ -322,31 +322,31 @@ describe("E2E - pbiviz package", () => {
 
     it("Should correctly generate pbiviz file with RESJSON localization", (done) => {
         const ResJsonEngLocalization =
-        {
-            "formattingGeneral": "General",
-            "formattingGeneralOrientation": "Orientation",
-            "formattingGeneralOrientationVertical": "Vertical"
-        };
-        const ResJsonRuLocalization =
-        {
-            "formattingGeneral": "Общие настройки",
-            "formattingGeneralOrientation": "Ориентация",
-            "formattingGeneralOrientationVertical": "Вертикальная"
-        };
-
-        const validStringResources =
-        {
-            "en-US": {
+            {
                 "formattingGeneral": "General",
                 "formattingGeneralOrientation": "Orientation",
                 "formattingGeneralOrientationVertical": "Vertical"
-            },
-            "ru-RU": {
+            };
+        const ResJsonRuLocalization =
+            {
                 "formattingGeneral": "Общие настройки",
                 "formattingGeneralOrientation": "Ориентация",
                 "formattingGeneralOrientationVertical": "Вертикальная"
-            }
-        };
+            };
+
+        const validStringResources =
+            {
+                "en-US": {
+                    "formattingGeneral": "General",
+                    "formattingGeneralOrientation": "Orientation",
+                    "formattingGeneralOrientationVertical": "Vertical"
+                },
+                "ru-RU": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
         mkDirPromise('stringResources')
             .then(() =>
                 Promise.all([
@@ -355,10 +355,10 @@ describe("E2E - pbiviz package", () => {
                     mkDirPromise('stringResources/ru-RU')
                         .then(() => writeJsonPromise('stringResources/ru-RU/resources.resjson', ResJsonRuLocalization))
                 ]))
-            .then(() =>
+            .then(() => 
                 FileSystem.runPbiviz('package', undefined, '--no-pbiviz --no-minify --resources')
             )
-            .then(() =>
+            .then(() => 
                 readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json'))
             )
             .then((pbivizJson) => {
@@ -373,44 +373,44 @@ describe("E2E - pbiviz package", () => {
 
     it("Should correctly generate pbiviz file with RESJSON and stringResources localizations", (done) => {
         const resourceStringRuLocalization =
-        {
-            "locale": "ru-RU",
-            "values": {
-                "formattingGeneral": "Главные настройки",
-                "formattingGeneralOrientation": "Ориентация",
-                "formattingHeaderFontColor": "Цвет шрифта",
-                "formattingHeaderBackground": "Цвет фона"
-            }
-        };
+            {
+                "locale": "ru-RU",
+                "values": {
+                    "formattingGeneral": "Главные настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingHeaderFontColor": "Цвет шрифта",
+                    "formattingHeaderBackground": "Цвет фона"
+                }
+            };
 
         const ResJsonEngLocalization =
-        {
-            "formattingGeneral": "General",
-            "formattingGeneralOrientation": "Orientation",
-            "formattingGeneralOrientationVertical": "Vertical"
-        };
-        const ResJsonRuLocalization =
-        {
-            "formattingGeneral": "Общие настройки",
-            "formattingGeneralOrientation": "Ориентация",
-            "formattingGeneralOrientationVertical": "Вертикальная"
-        };
-
-        const validStringResources =
-        {
-            "en-US": {
+            {
                 "formattingGeneral": "General",
                 "formattingGeneralOrientation": "Orientation",
                 "formattingGeneralOrientationVertical": "Vertical"
-            },
-            "ru-RU": {
+            };
+        const ResJsonRuLocalization =
+            {
                 "formattingGeneral": "Общие настройки",
                 "formattingGeneralOrientation": "Ориентация",
-                "formattingHeaderFontColor": "Цвет шрифта",
-                "formattingHeaderBackground": "Цвет фона",
                 "formattingGeneralOrientationVertical": "Вертикальная"
-            }
-        };
+            };
+
+        const validStringResources =
+            {
+                "en-US": {
+                    "formattingGeneral": "General",
+                    "formattingGeneralOrientation": "Orientation",
+                    "formattingGeneralOrientationVertical": "Vertical"
+                },
+                "ru-RU": {
+                    "formattingGeneral": "Общие настройки",
+                    "formattingGeneralOrientation": "Ориентация",
+                    "formattingHeaderFontColor": "Цвет шрифта",
+                    "formattingHeaderBackground": "Цвет фона",
+                    "formattingGeneralOrientationVertical": "Вертикальная"
+                }
+            };
 
         mkDirPromise('stringResources')
             .then(() =>
@@ -426,7 +426,7 @@ describe("E2E - pbiviz package", () => {
                 pbivizJson.stringResources = ["stringResources/ru-RU.json"];
                 return writeJsonPromise('pbiviz.json', pbivizJson);
             })
-            .then(() =>
+            .then(() => 
                 FileSystem.runPbiviz('package', undefined, '--no-pbiviz --no-minify --resources')
             )
             .then(() => readJsonPromise(path.join(visualPath, 'dist', 'resources', visualPbiviz.visual.guid + '.pbiviz.json')))
@@ -443,7 +443,7 @@ describe("E2E - pbiviz package", () => {
     it("Should generate statistic files without flags", () => {
         FileSystem.runPbiviz('package');
         const statisticFilePath = path.join(visualPath, 'webpack.statistics.prod.html');
-        try {
+        try { 
             expect(fs.statSync(statisticFilePath).isFile()).toBe(true);
         } catch (error) {
             expect(error).toBeNull();
@@ -453,7 +453,7 @@ describe("E2E - pbiviz package", () => {
     it("Shouldn't generate statistic files with --no-stats flag", () => {
         FileSystem.runPbiviz('package', '--no-stats');
         const statisticFilePath = path.join(visualPath, 'webpack.statistics.prod.html');
-        try {
+        try { 
             expect(fs.statSync(statisticFilePath).isFile()).toBe(false);
         } catch (error) {
             expect(error).not.toBeNull();

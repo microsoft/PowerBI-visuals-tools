@@ -123,7 +123,7 @@ export default class WebPackWrap {
         this.webpackConfig.watchOptions.ignored.push(visualPluginPath)
         if (tsconfig.compilerOptions.out) {
             this.webpackConfig.entry = {
-                "visual.js": visualJSFilePath 
+                "visual.js": visualJSFilePath
             };
         } else {
             this.webpackConfig.entry["visual.js"] = [visualPluginPath];

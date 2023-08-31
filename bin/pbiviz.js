@@ -67,7 +67,7 @@ pbiviz
     .action(() => {
         CommandManager.installCert();
     });
-
+ 
 pbiviz
     .command('start')
     .usage('[options]')

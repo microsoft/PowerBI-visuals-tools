@@ -56,7 +56,7 @@ export default class CommandManager {
             ConsoleWriter.error('Nothing to build. Cannot use --no-pbiviz without --resources');
             process.exit(1);
         }
-         
+
         const webpackOptions: WebpackOptions = {
             devMode: false,
             generateResources: options.resources,
