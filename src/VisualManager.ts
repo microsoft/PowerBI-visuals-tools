@@ -31,10 +31,11 @@ import WebpackDevServer from "webpack-dev-server";
 import childProcess from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
+import { ESLint } from "eslint";
 
 import ConsoleWriter from './ConsoleWriter.js';
 import VisualGenerator from './VisualGenerator.js';
-import { readJsonFromRoot, readJsonFromVisual } from './utils.js';
+import { getRootPath, readJsonFromRoot, readJsonFromVisual } from './utils.js';
 import WebpackWrap, { WebpackOptions } from './WebPackWrap.js';
 import Package from './Package.js';
 import { Visual } from "./Visual.js";
@@ -42,9 +43,15 @@ import { FeatureManager, Logs, Status } from "./FeatureManager.js";
 import { Severity, Stage } from "./features/FeatureTypes.js";
 import TemplateFetcher from "./TemplateFetcher.js";
 
-interface GenerateOptions {
+export interface GenerateOptions {
     force: boolean;
     template: string;
+}
+
+export interface LintOptions {
+    verbose: boolean;
+    fix: boolean;
+    lintPath?: string;
 }
 
 const globalConfig = readJsonFromRoot('config.json');
@@ -104,6 +111,9 @@ export default class VisualManager {
         this.compiler.run(callback);
     }
 
+    /**
+     * Starts webpack server
+     */
     public startWebpackServer(generateDropFiles: boolean = false) {
         ConsoleWriter.blank();
         ConsoleWriter.info('Starting server...');
@@ -134,6 +144,9 @@ export default class VisualManager {
         }
     }
 
+    /**
+     * Validates the visual code
+     */
     public validateVisual(verbose: boolean = false) {
         this.featureManager = new FeatureManager()
         const { status, logs } = this.featureManager.validate(Stage.PreBuild, this.visual);
@@ -145,6 +158,9 @@ export default class VisualManager {
         return this;
     }
     
+    /**
+     * Validates the visual package
+     */
     public validatePackage() {
         const featureManager = new FeatureManager();
         const { logs } = featureManager.validate(Stage.PostBuild, this.package);
@@ -152,6 +168,9 @@ export default class VisualManager {
         return logs;
     }
 
+    /**
+     * Outputs the results of the validation 
+     */
     public outputResults({ errors, deprecation, warnings, info }: Logs, verbose: boolean) {
         const headerMessage = {
             error: `Visual doesn't support some features required for all custom visuals:`,
@@ -171,6 +190,9 @@ export default class VisualManager {
         this.outputLogsWithHeadMessage(headerInfoMessage, infoLogs, Severity.Info);
     }
     
+    /**
+     * Displays visual info
+     */
     public displayInfo() {
         if (this.pbivizConfig) {
             ConsoleWriter.infoTable(this.pbivizConfig);
@@ -180,7 +202,56 @@ export default class VisualManager {
     }
 
     /**
-     * Creates a new visual package
+     * Runs eslint validation in the visual folder
+     */
+    public async runLintValidation({ verbose, fix, lintPath }: LintOptions) {
+        ConsoleWriter.info("Running eslint check...");
+        const rootPath = getRootPath();
+        const visualCodePath = `${process.cwd()}`;
+        const config: ESLint.Options = {
+            overrideConfig: {
+                env: {
+                    browser: true,
+                    es6: true,
+                    es2022: true
+                },
+                plugins: [
+                    "powerbi-visuals"
+                ],
+                extends: [
+                    "plugin:powerbi-visuals/recommended"
+                ]
+            },
+            extensions: [".ts", ".tsx"],
+            resolvePluginsRelativeTo: rootPath,
+            fix
+        }
+        const eslint = new ESLint(config);
+        const lintPathPath = lintPath.split(',').map(el => path.join(visualCodePath, ...el.split('/')));
+        const results = await eslint.lintPath(lintPathPath);
+        if (fix) {
+            ConsoleWriter.info("Eslint fixing errors...");
+            await ESLint.outputFixes(results);
+        }
+        if (verbose) {
+            const formatter = await eslint.loadFormatter("stylish");
+            const formattedResults = await formatter.format(results);
+            console.log(formattedResults)
+        } else {
+            const filteredResults = ESLint.getErrorResults(results);
+            // get total amount of errors and warnings in all elements of filteredResults
+            const totalErrors = filteredResults.reduce((acc, curr) => acc + curr.errorCount, 0);
+            const totalWarnings = filteredResults.reduce((acc, curr) => acc + curr.warningCount, 0);
+            if(totalErrors > 0 || totalWarnings > 0) {
+                ConsoleWriter.error(`Linter found ${totalErrors} errors and ${totalWarnings} warnings. Run with --verbose flag to see details.`)
+                process.exit(1)
+            }
+        }   
+        ConsoleWriter.info("Eslint check completed.");
+    }
+
+    /**
+     * Creates a new visual
      */
     static async createVisual(rootPath: string, visualName: string, generateOptions: GenerateOptions): Promise<VisualManager | void> {
         ConsoleWriter.info('Creating new visual');

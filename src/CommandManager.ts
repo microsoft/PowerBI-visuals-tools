@@ -1,7 +1,7 @@
 
 import { createCertificate } from './CertificateTools.js';
 import ConsoleWriter from './ConsoleWriter.js';
-import VisualManager from './VisualManager.js';
+import VisualManager, { LintOptions, GenerateOptions } from './VisualManager.js';
 import { WebpackOptions } from './WebPackWrap.js';
 
 interface StartOptions {
@@ -21,6 +21,8 @@ interface PackageOptions {
     skipApi: boolean;
     allLocales: boolean;
     verbose: boolean;
+    fix: boolean;
+    lintPath: string;
 }
 
 interface NewOptions {
@@ -50,6 +52,13 @@ export default class CommandManager {
             .initializeWebpack(webpackOptions)
         visualManager.startWebpackServer(options.drop)
     }
+    
+    public static async lint(options: LintOptions, rootPath: string) {
+        const visualManager = new VisualManager(rootPath)
+        await visualManager
+            .prepareVisual()
+            .runLintValidation(options)
+    }
 
     public static async package(options: PackageOptions, rootPath: string) {
         if (!options.pbiviz && !options.resources) {
@@ -68,15 +77,20 @@ export default class CommandManager {
             skipApiCheck: options.skipApi,
             allLocales: options.allLocales
         }
-        new VisualManager(rootPath)
-            .prepareVisual()
-            .validateVisual(options.verbose)
+        const lintOptions: LintOptions = {
+            verbose: options.verbose,
+            fix: options.fix,
+            lintPath: options.lintPath
+        }
+        const visual = new VisualManager(rootPath).prepareVisual()
+        await visual.runLintValidation(lintOptions)
+        visual.validateVisual()
             .initializeWebpack(webpackOptions)
             .then(visualManager => visualManager.generatePackage(options.verbose))
     }
 
     public static new({ force, template }: NewOptions, name: string, rootPath: string) {
-        const generateOptions = {
+        const generateOptions: GenerateOptions = {
             force: force,
             template: template
         };
