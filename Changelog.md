@@ -1,6 +1,8 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+## 5.1.1
+* Updated crypto import to fix error in old Node versions
 
 ## 5.2.0
 * Integrated PAC validation
