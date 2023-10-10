@@ -94,11 +94,11 @@ export default class VisualManager {
         return this;
     }
 
-    public generatePackage() {
+    public generatePackage(verbose: boolean = false) {
         const callback = (err: Error, stats: Stats) => {
             this.createPackageInstance();
             const logs = this.validatePackage();
-            this.outputResults(logs);
+            this.outputResults(logs, verbose);
             this.parseCompilationResults(err, stats)
         }
         this.compiler.run(callback);
@@ -134,10 +134,10 @@ export default class VisualManager {
         }
     }
 
-    public validateVisual() {
+    public validateVisual(verbose: boolean = false) {
         this.featureManager = new FeatureManager()
         const { status, logs } = this.featureManager.validate(Stage.PreBuild, this.visual);
-        this.outputResults(logs);
+        this.outputResults(logs, verbose);
         if(status === Status.Error){
             process.exit(1);
         }
@@ -152,17 +152,23 @@ export default class VisualManager {
         return logs;
     }
 
-    public outputResults({ errors, deprecation, warnings, info }: Logs) {
-        const featuresTotalLog = {
-            errors: `Visual doesn't support some features required for all custom visuals:`,
+    public outputResults({ errors, deprecation, warnings, info }: Logs, verbose: boolean) {
+        const headerMessage = {
+            error: `Visual doesn't support some features required for all custom visuals:`,
             deprecation: `Some features are going to be required soon, please update the visual:`,
-            warn: `Visual doesn't support some features recommended for all custom visuals:`,
-            info: `Visual can be improved by adding some features:`
+            warning: `Visual doesn't support some features recommended for all custom visuals:`,
+            verboseInfo: `Visual can be improved by adding some features:`,
+            shortInfo: `Visual can be improved by adding ${info.length} more optional features.`
         };
-        this.outputLogsWithHeadMessage(featuresTotalLog.errors, errors, Severity.Error);
-        this.outputLogsWithHeadMessage(featuresTotalLog.deprecation, deprecation, Severity.Deprecation);
-        this.outputLogsWithHeadMessage(featuresTotalLog.warn, warnings, Severity.Warning);
-        this.outputLogsWithHeadMessage(featuresTotalLog.info, info, Severity.Info);
+
+        this.outputLogsWithHeadMessage(headerMessage.error, errors, Severity.Error);
+        this.outputLogsWithHeadMessage(headerMessage.deprecation, deprecation, Severity.Deprecation);
+        this.outputLogsWithHeadMessage(headerMessage.warning, warnings, Severity.Warning);
+
+        const verboseSuggestion = 'Run `pbiviz package` with --verbose flag to see more details.';
+        const headerInfoMessage = headerMessage[verbose ? "verboseInfo" : "shortInfo"]
+        const infoLogs = (!info.length || verbose) ? info : [verboseSuggestion];
+        this.outputLogsWithHeadMessage(headerInfoMessage, infoLogs, Severity.Info);
     }
     
     public displayInfo() {

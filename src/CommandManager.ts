@@ -5,26 +5,27 @@ import VisualManager from './VisualManager.js';
 import { WebpackOptions } from './WebPackWrap.js';
 
 interface StartOptions {
-    port: number,
-    stats: boolean,
-    drop: boolean,
-    skipApi: boolean
-    allLocales: boolean
+    port: number;
+    stats: boolean;
+    drop: boolean;
+    skipApi: boolean;
+    allLocales: boolean;
 }
 
 interface PackageOptions {
-    pbiviz: boolean,
-    resources: boolean,
-    minify: boolean,
-    compression: number,
-    stats: boolean,
-    skipApi: boolean
-    allLocales: boolean
+    pbiviz: boolean;
+    resources: boolean;
+    minify: boolean;
+    compression: number;
+    stats: boolean;
+    skipApi: boolean;
+    allLocales: boolean;
+    verbose: boolean;
 }
 
 interface NewOptions {
-    force: boolean,
-    template: string
+    force: boolean;
+    template: string;
 }
 
 export default class CommandManager {
@@ -69,9 +70,9 @@ export default class CommandManager {
         }
         new VisualManager(rootPath)
             .prepareVisual()
-            .validateVisual()
+            .validateVisual(options.verbose)
             .initializeWebpack(webpackOptions)
-            .then(visualManager => visualManager.generatePackage())
+            .then(visualManager => visualManager.generatePackage(options.verbose))
     }
 
     public static new({ force, template }: NewOptions, name: string, rootPath: string) {

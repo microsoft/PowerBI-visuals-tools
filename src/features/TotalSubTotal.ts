@@ -7,7 +7,7 @@ export default class TotalSubTotal implements BaseFeature {
     public static documentationLink = "https://learn.microsoft.com/en-us/power-bi/developer/visuals/total-subtotal-api"
     public static severity = Severity.Warning
     public static stage = Stage.PostBuild
-    public static visualFeatureType = VisualFeatureType.Matrix | VisualFeatureType.NonSlicer | VisualFeatureType.Slicer
+    public static visualFeatureType = VisualFeatureType.Matrix
     public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
