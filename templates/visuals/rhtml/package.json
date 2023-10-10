@@ -1,7 +1,7 @@
 {
   "name": "visual",
   "dependencies": {
-    "powerbi-visuals-utils-formattingmodel": "5.0.0"
+    "powerbi-visuals-utils-formattingmodel": "6.0.0"
   },
   "devDependencies": {
     "powerbi-visuals-api": "5.4.0",

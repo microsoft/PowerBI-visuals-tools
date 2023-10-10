@@ -111,7 +111,7 @@ export class Visual implements IVisual {
         }
 
         const dataView: DataView = options.dataViews[0];
-        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews);
+        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
 
         let payloadBase64: string = null;
         if (dataView.scriptResult && dataView.scriptResult.payloadBase64) {
