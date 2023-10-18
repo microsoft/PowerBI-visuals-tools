@@ -96,10 +96,10 @@ export default class VisualManager {
 
     public generatePackage(verbose: boolean = false) {
         const callback = (err: Error, stats: Stats) => {
+            this.parseCompilationResults(err, stats);
             this.createPackageInstance();
             const logs = this.validatePackage();
             this.outputResults(logs, verbose);
-            this.parseCompilationResults(err, stats)
         }
         this.compiler.run(callback);
     }
@@ -278,6 +278,8 @@ export default class VisualManager {
         }
         if (!err && !stats?.compilation.errors.length) {
             ConsoleWriter.done('Build completed successfully');
+        } else {
+            process.exit(1);
         }
     }
 

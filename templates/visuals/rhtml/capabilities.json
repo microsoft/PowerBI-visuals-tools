@@ -59,5 +59,10 @@
     }
   },
   "suppressDefaultTitle": true,
-  "privileges": []
+  "privileges": [
+    {
+      "name": "WebAccess",
+      "parameters": ["*"]
+    }
+  ]
 }

@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.2.1
+* Fixed errors output when packaging the visual
+* Fixed `RHTML` template render error
+
 ## 5.2.0
 * Integrated PAC validation
 
