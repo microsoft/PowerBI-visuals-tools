@@ -41,15 +41,14 @@ pbiviz
 ```
 
 ## How to build a visual?
-Refer to our [documentation repository](https://github.com/Microsoft/PowerBI-visuals)
+Refer to our [documentation repository](https://learn.microsoft.com/en-us/power-bi/developer/visuals/develop-circle-card)
 
 ## Usage
 
 You can learn more about using these tools in the following guides
 
-* [Installation Guide](https://docs.microsoft.com/en-us/power-bi/developer/visuals/custom-visual-develop-tutorial#setting-up-the-developer-environment)
-* [Usage Guide](https://docs.microsoft.com/en-us/power-bi/developer/visuals/custom-visual-develop-tutorial#creating-a-custom-visual)
-* [Debugging Guide](https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/how-to-debug)
+* [Usage Guide](https://learn.microsoft.com/en-us/power-bi/developer/visuals/develop-circle-card#create-a-development-project)
+* [Debugging Guide](https://learn.microsoft.com/en-us/power-bi/developer/visuals/visuals-how-to-debug)
 
 ## PowerBI Visuals Tools Changes
 
