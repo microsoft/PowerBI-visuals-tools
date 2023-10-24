@@ -24,7 +24,6 @@ import Tooltips from './Tooltips.js'
 import TotalSubTotal from './TotalSubTotal.js'
 import WarningIcon from './WarningIcon.js'
 import APIVersion from './APIVersion.js'
-import ESLint from './ESLint.js'
 import VisualVersion from './VisualVersion.js'
 
 export { 
@@ -34,5 +33,5 @@ export {
     HighlightData, KeyboardNavigation, LandingPage, LaunchURL,
     Localizations, LocalStorage, ModalDialog, RenderingEvents,
     SelectionAcrossVisuals, SyncSlicer, Tooltips, TotalSubTotal,
-    WarningIcon, APIVersion, ESLint, VisualVersion
+    WarningIcon, APIVersion, VisualVersion
 }

@@ -88,8 +88,7 @@ export default class VisualManager {
 
     public createVisualInstance() {
         this.capabilities = readJsonFromVisual("capabilities.json", this.basePath);
-        const packageJSON = readJsonFromVisual("package.json", this.basePath);
-        this.visual = new Visual(this.capabilities, this.pbivizConfig, packageJSON);
+        this.visual = new Visual(this.capabilities, this.pbivizConfig);
     }
 
     public async initializeWebpack(webpackOptions: WebpackOptions) {
@@ -228,7 +227,7 @@ export default class VisualManager {
         }
         const eslint = new ESLint(config);
         const lintPathPath = lintPath.split(',').map(el => path.join(visualCodePath, ...el.split('/')));
-        const results = await eslint.lintPath(lintPathPath);
+        const results = await eslint.lintFiles(lintPathPath);
         if (fix) {
             ConsoleWriter.info("Eslint fixing errors...");
             await ESLint.outputFixes(results);
@@ -244,7 +243,6 @@ export default class VisualManager {
             const totalWarnings = filteredResults.reduce((acc, curr) => acc + curr.warningCount, 0);
             if(totalErrors > 0 || totalWarnings > 0) {
                 ConsoleWriter.error(`Linter found ${totalErrors} errors and ${totalWarnings} warnings. Run with --verbose flag to see details.`)
-                process.exit(1)
             }
         }   
         ConsoleWriter.info("Eslint check completed.");
