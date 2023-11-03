@@ -70,8 +70,7 @@ pbiviz
 
 pbiviz
     .command('lint')
-    .option('--fix', 'Set the port listening on')
-    .option('-f, --lint-path <lintPath>', 'Paths that will be linted. Specify the relative path from the root of your visual, if you need more than one then separate it with a "," ', 'src')
+    .option('-f, --fix', 'Set the port listening on')
     .action(options => {
         CommandManager.lint({ ...options, verbose: true }, rootPath);
     });
@@ -98,7 +97,6 @@ pbiviz
     .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .option('-l, --all-locales', "Keeps all locale files in the package. By default only used inside stringResources folder locales are included.")
     .option('-v, --verbose', "Enables verbose logging")
-    .option('-f, --lint-path <lintPath>', 'Paths that will be linted. Specify the relative path from the root of your visual, if you need more than one then separate it with a ","', "src")
     .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
         .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
         .default('6')

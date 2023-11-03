@@ -22,7 +22,6 @@ interface PackageOptions {
     allLocales: boolean;
     verbose: boolean;
     fix: boolean;
-    lintPath: string;
 }
 
 interface NewOptions {
@@ -80,7 +79,6 @@ export default class CommandManager {
         const lintOptions: LintOptions = {
             verbose: options.verbose,
             fix: options.fix,
-            lintPath: options.lintPath
         }
         const visual = new VisualManager(rootPath).prepareVisual()
         await visual.runLintValidation(lintOptions)

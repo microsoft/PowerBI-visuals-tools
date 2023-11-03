@@ -31,17 +31,17 @@ import WebpackDevServer from "webpack-dev-server";
 import childProcess from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
-import { ESLint } from "eslint";
 
 import ConsoleWriter from './ConsoleWriter.js';
 import VisualGenerator from './VisualGenerator.js';
-import { getRootPath, readJsonFromRoot, readJsonFromVisual } from './utils.js';
+import { readJsonFromRoot, readJsonFromVisual } from './utils.js';
 import WebpackWrap, { WebpackOptions } from './WebPackWrap.js';
 import Package from './Package.js';
 import { Visual } from "./Visual.js";
 import { FeatureManager, Logs, Status } from "./FeatureManager.js";
 import { Severity, Stage } from "./features/FeatureTypes.js";
 import TemplateFetcher from "./TemplateFetcher.js";
+import { LintValidator } from "./LintValidator.js";
 
 export interface GenerateOptions {
     force: boolean;
@@ -51,7 +51,6 @@ export interface GenerateOptions {
 export interface LintOptions {
     verbose: boolean;
     fix: boolean;
-    lintPath?: string;
 }
 
 const globalConfig = readJsonFromRoot('config.json');
@@ -86,6 +85,11 @@ export default class VisualManager {
         return this;
     }
 
+    public runLintValidation(options: LintOptions) {
+        const linter = new LintValidator(options.fix);
+        linter.runLintValidation(options);
+    }
+    
     public createVisualInstance() {
         this.capabilities = readJsonFromVisual("capabilities.json", this.basePath);
         this.visual = new Visual(this.capabilities, this.pbivizConfig);
@@ -200,53 +204,7 @@ export default class VisualManager {
         }
     }
 
-    /**
-     * Runs eslint validation in the visual folder
-     */
-    public async runLintValidation({ verbose, fix, lintPath }: LintOptions) {
-        ConsoleWriter.info("Running eslint check...");
-        const rootPath = getRootPath();
-        const visualCodePath = `${process.cwd()}`;
-        const config: ESLint.Options = {
-            overrideConfig: {
-                env: {
-                    browser: true,
-                    es6: true,
-                    es2022: true
-                },
-                plugins: [
-                    "powerbi-visuals"
-                ],
-                extends: [
-                    "plugin:powerbi-visuals/recommended"
-                ]
-            },
-            extensions: [".ts", ".tsx"],
-            resolvePluginsRelativeTo: rootPath,
-            fix
-        }
-        const eslint = new ESLint(config);
-        const lintPathPath = lintPath.split(',').map(el => path.join(visualCodePath, ...el.split('/')));
-        const results = await eslint.lintFiles(lintPathPath);
-        if (fix) {
-            ConsoleWriter.info("Eslint fixing errors...");
-            await ESLint.outputFixes(results);
-        }
-        if (verbose) {
-            const formatter = await eslint.loadFormatter("stylish");
-            const formattedResults = await formatter.format(results);
-            console.log(formattedResults)
-        } else {
-            const filteredResults = ESLint.getErrorResults(results);
-            // get total amount of errors and warnings in all elements of filteredResults
-            const totalErrors = filteredResults.reduce((acc, curr) => acc + curr.errorCount, 0);
-            const totalWarnings = filteredResults.reduce((acc, curr) => acc + curr.warningCount, 0);
-            if(totalErrors > 0 || totalWarnings > 0) {
-                ConsoleWriter.error(`Linter found ${totalErrors} errors and ${totalWarnings} warnings. Run with --verbose flag to see details.`)
-            }
-        }   
-        ConsoleWriter.info("Eslint check completed.");
-    }
+    
 
     /**
      * Creates a new visual

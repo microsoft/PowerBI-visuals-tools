@@ -35,6 +35,9 @@ export function readJsonFromRoot(filePath: string) {
 }
 
 export function readJsonFromVisual(filePath: string, visualPath?: string) {
-    return JSON.parse(fs.readFileSync(path.join(visualPath ?? process.cwd(), filePath), "utf8"));
+    return JSON.parse(fs.readFileSync(path.join(visualPath , filePath), "utf8"));
 }
 
+export function fileExists(pathToFile: string, fileName: string) {
+    return fs.existsSync(path.join(pathToFile, fileName));
+}
