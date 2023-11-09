@@ -34,6 +34,7 @@ import { program, Option } from 'commander';
 
 const npmPackage = readJsonFromRoot('package.json');
 const rootPath = process.cwd();
+const pbivizPath = 'pbiviz.json';
 
 const pbiviz = program
     .version(npmPackage.version)
@@ -76,6 +77,7 @@ pbiviz
     .option('--no-stats', "Doesn't generate statistics files")
     .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .option('-l, --all-locales', "Keeps all locale files in the package. By default only used inside stringResources folder locales are included.")
+    .option('-p, --pbiviz-path <pbiviz-path>', "Path to pbiviz.json file (useful for debugging)", pbivizPath)
     .action(async (options) => {
         CommandManager.start(options, rootPath);
     });
@@ -90,6 +92,7 @@ pbiviz
     .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .option('-l, --all-locales', "Keeps all locale files in the package. By default only used inside stringResources folder locales are included.")
     .option('-v, --verbose', "Enables verbose logging")
+    .option('-p, --pbiviz-path <pbiviz-path>', "Path to pbiviz.json file (useful for debugging)", pbivizPath)
     .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
         .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
         .default('6')

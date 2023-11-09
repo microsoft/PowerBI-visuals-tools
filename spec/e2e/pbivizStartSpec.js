@@ -198,6 +198,19 @@ describe("E2E - pbiviz start", () => {
             });
         });
 
+        it("Should throw error if wrong path speciefied with --pbiviz-path flag", () => {
+            const pbivizPath = 'testPath.json';
+            let error;
+
+            try {
+                FileSystem.runPbiviz('start', undefined, `--pbiviz-path ${pbivizPath}`);
+            } catch (e) {
+                error = e
+            }
+            expect(error).toBeDefined();
+            expect(error.status).toBe(1);
+            expect(error.message).toContain("You must be in the root of a visual project to run this command.");
+        });
 
         // TODO rewrite this UT because build sequence is different
         xit("Should rebuild files on change and update status", (done) => {
