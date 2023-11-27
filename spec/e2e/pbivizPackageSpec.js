@@ -460,12 +460,12 @@ describe("E2E - pbiviz package", () => {
         }
     });
 
-    it("Should throw error if wrong path speciefied with --pbiviz-path flag", () => {
-        const pbivizPath = 'testPath.json';
+    fit("Should throw error if wrong file speciefied with --pbiviz-file flag", () => {
+        const pbivizFile = 'testFile.json';
         let error;
 
         try {
-            FileSystem.runPbiviz('package', undefined, `--pbiviz-path ${pbivizPath}`);
+            FileSystem.runPbiviz('package', undefined, `--pbiviz-file ${pbivizFile}`);
         } catch (e) {
             error = e
         }

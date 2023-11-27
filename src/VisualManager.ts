@@ -68,12 +68,12 @@ export default class VisualManager {
         this.basePath = rootPath;
     }
 
-    public prepareVisual(pbivizPath: string = PBIVIZ_FILE) {
-        if (this.doesPBIVIZExists(pbivizPath)) {
-            this.pbivizConfig = readJsonFromVisual(pbivizPath, this.basePath);
+    public prepareVisual(pbivizFile: string = PBIVIZ_FILE) {
+        if (this.doesPBIVIZExists(pbivizFile)) {
+            this.pbivizConfig = readJsonFromVisual(pbivizFile, this.basePath);
             this.createVisualInstance();
         } else {
-            ConsoleWriter.error(pbivizPath + ' not found. You must be in the root of a visual project to run this command.')
+            ConsoleWriter.error(pbivizFile + ' not found. You must be in the root of a visual project to run this command.')
             process.exit(1);
         }
         return this;
@@ -223,8 +223,8 @@ export default class VisualManager {
         });
     }
     
-    private doesPBIVIZExists(pbivizPath) {
-        return fs.existsSync(pbivizPath);
+    private doesPBIVIZExists(pbivizFile) {
+        return fs.existsSync(pbivizFile);
     }
 
     private prepareDropFiles() {

@@ -34,7 +34,7 @@ export interface WebpackOptions {
     fast?: boolean;
     skipApiCheck?: boolean;
     allLocales?: boolean;
-    pbivizPath?: string;
+    pbivizFile?: string;
 }
 
 export default class WebPackWrap {
@@ -299,10 +299,10 @@ export default class WebPackWrap {
         stats: true,
         skipApiCheck: false,
         allLocales: false,
-        pbivizPath: 'pviviz.json',
+        pbivizFile: 'pbiviz.json',
     }) {
         const tsconfig = readJsonFromVisual('tsconfig.json');
-        this.pbiviz = readJsonFromVisual(options.pbivizPath);
+        this.pbiviz = readJsonFromVisual(options.pbivizFile);
 
         const capabilitiesPath = this.pbiviz.capabilities;
         visualPackage.pbivizConfig.capabilities = capabilitiesPath;
