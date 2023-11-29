@@ -198,7 +198,7 @@ describe("E2E - pbiviz start", () => {
             });
         });
 
-        fit("Should throw error if wrong file speciefied with --pbiviz-file flag", () => {
+        it("Should throw error if wrong file speciefied with --pbiviz-file flag", () => {
             const pbivizFile = 'testFile.json';
             let error;
 
