@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.3.0
+* Updated packages
+* Updated to Typescript 5.0 **⚠**
+* New flag `--pbiviz-file` to specify path to pbiviz.json file
+
 ## 5.2.1
 * Fixed errors output when packaging the visual
 * Fixed `RHTML` template render error

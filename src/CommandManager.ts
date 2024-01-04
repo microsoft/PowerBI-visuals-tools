@@ -10,6 +10,7 @@ interface StartOptions {
     drop: boolean;
     skipApi: boolean;
     allLocales: boolean;
+    pbivizFile: string;
 }
 
 interface PackageOptions {
@@ -22,6 +23,7 @@ interface PackageOptions {
     allLocales: boolean;
     verbose: boolean;
     fix: boolean;
+    pbivizFile: string;
 }
 
 interface NewOptions {
@@ -42,11 +44,12 @@ export default class CommandManager {
             devServerPort: options.port,
             stats: options.stats,
             skipApiCheck: options.skipApi,
-            allLocales: options.allLocales
+            allLocales: options.allLocales,
+            pbivizFile: options.pbivizFile,
         }
         const visualManager = new VisualManager(rootPath)
         await visualManager
-            .prepareVisual()
+            .prepareVisual(options.pbivizFile)
             .validateVisual()
             .initializeWebpack(webpackOptions)
         visualManager.startWebpackServer(options.drop)
@@ -74,15 +77,16 @@ export default class CommandManager {
             compression: options.compression, 
             stats: options.stats,
             skipApiCheck: options.skipApi,
-            allLocales: options.allLocales
+            allLocales: options.allLocales,
+            pbivizFile: options.pbivizFile,
         }
         const lintOptions: LintOptions = {
             verbose: options.verbose,
             fix: options.fix,
         }
-        const visual = new VisualManager(rootPath).prepareVisual()
+        const visual = new VisualManager(rootPath).prepareVisual(options.pbivizFile)
         await visual.runLintValidation(lintOptions)
-        visual.validateVisual()
+        visual.validateVisual(options.verbose)
             .initializeWebpack(webpackOptions)
             .then(visualManager => visualManager.generatePackage(options.verbose))
     }
