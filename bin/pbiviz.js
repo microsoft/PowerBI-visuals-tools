@@ -70,6 +70,13 @@ pbiviz
     });
 
 pbiviz
+    .command('lint')
+    .option('--fix', 'Enable autofixing of lint errors')
+    .action(options => {
+        CommandManager.lint({ ...options, verbose: true }, rootPath);
+    });
+
+pbiviz
     .command('start')
     .usage('[options]')
     .option('-p, --port [port]', 'Set the port listening on')
@@ -92,6 +99,7 @@ pbiviz
     .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .option('-l, --all-locales', "Keeps all locale files in the package. By default only used inside stringResources folder locales are included.")
     .option('-v, --verbose', "Enables verbose logging")
+    .option('--fix', 'Enable autofixing of lint errors')
     .option('-p, --pbiviz-file <pbiviz-file>', "Path to pbiviz.json file (useful for debugging)", pbivizFile)
     .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
         .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])

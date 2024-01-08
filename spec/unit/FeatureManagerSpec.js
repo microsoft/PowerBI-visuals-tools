@@ -35,7 +35,7 @@ const config = readJsonFromRoot('config.json');
 
 describe("Features", () => {
     describe("Visual", () => {
-        const { APIVersion, ESLint, VisualVersion } = features;
+        const { APIVersion, VisualVersion } = features;
         it("Should support API Version", () => {
             const Visual = {
                 doesAPIVersionMatch: (minVersion) =>  {
@@ -46,12 +46,6 @@ describe("Features", () => {
             expect(APIVersion.isSupported(Visual)).toBeTrue;
         });
 
-        it("Should support ESLint", () => {
-            const Visual = {
-                doesESLlintSupported: () =>  true
-            }
-            expect(ESLint.isSupported(Visual)).toBeTrue;
-        });
 
         it("Should support Version", () => {
             const Visual = {

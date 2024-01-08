@@ -1,7 +1,7 @@
 
 import { createCertificate } from './CertificateTools.js';
 import ConsoleWriter from './ConsoleWriter.js';
-import VisualManager from './VisualManager.js';
+import VisualManager, { LintOptions, GenerateOptions } from './VisualManager.js';
 import { WebpackOptions } from './WebPackWrap.js';
 
 interface StartOptions {
@@ -22,6 +22,7 @@ interface PackageOptions {
     skipApi: boolean;
     allLocales: boolean;
     verbose: boolean;
+    fix: boolean;
     pbivizFile: string;
 }
 
@@ -53,6 +54,13 @@ export default class CommandManager {
             .initializeWebpack(webpackOptions)
         visualManager.startWebpackServer(options.drop)
     }
+    
+    public static async lint(options: LintOptions, rootPath: string) {
+        const visualManager = new VisualManager(rootPath)
+        await visualManager
+            .prepareVisual()
+            .runLintValidation(options)
+    }
 
     public static async package(options: PackageOptions, rootPath: string) {
         if (!options.pbiviz && !options.resources) {
@@ -72,15 +80,19 @@ export default class CommandManager {
             allLocales: options.allLocales,
             pbivizFile: options.pbivizFile,
         }
-        new VisualManager(rootPath)
-            .prepareVisual(options.pbivizFile)
-            .validateVisual(options.verbose)
+        const lintOptions: LintOptions = {
+            verbose: options.verbose,
+            fix: options.fix,
+        }
+        const visual = new VisualManager(rootPath).prepareVisual(options.pbivizFile)
+        await visual.runLintValidation(lintOptions)
+        visual.validateVisual(options.verbose)
             .initializeWebpack(webpackOptions)
             .then(visualManager => visualManager.generatePackage(options.verbose))
     }
 
     public static new({ force, template }: NewOptions, name: string, rootPath: string) {
-        const generateOptions = {
+        const generateOptions: GenerateOptions = {
             force: force,
             template: template
         };

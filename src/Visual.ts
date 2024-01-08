@@ -5,23 +5,17 @@ export class Visual {
     public visualFeatureType: VisualFeatureType;
     private capabilities;
     private config;
-    private packageJSON;
     private visualVersion: string;
 
-    constructor(capabilities, config, packageJson) {
+    constructor(capabilities, config) {
         this.capabilities = capabilities;
         this.config = config;
         this.visualFeatureType = this.getVisualFeatureType();
-        this.packageJSON = packageJson;
         this.visualVersion = config.visual.version;
     }
 
     public doesAPIVersionMatch(minAPIversion: string) {
         return compareVersions(this.config.apiVersion ?? minAPIversion, minAPIversion) !== -1
-    }
-
-    public doesESLlintSupported() {
-        return Object.entries(this.packageJSON.scripts).some(([, value]) => (<string>value).includes("eslint"))
     }
 
     public isVisualVersionValid(length: number) {

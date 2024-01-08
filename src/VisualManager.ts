@@ -41,10 +41,16 @@ import { Visual } from "./Visual.js";
 import { FeatureManager, Logs, Status } from "./FeatureManager.js";
 import { Severity, Stage } from "./features/FeatureTypes.js";
 import TemplateFetcher from "./TemplateFetcher.js";
+import { LintValidator } from "./LintValidator.js";
 
-interface GenerateOptions {
+export interface GenerateOptions {
     force: boolean;
     template: string;
+}
+
+export interface LintOptions {
+    verbose: boolean;
+    fix: boolean;
 }
 
 const globalConfig = readJsonFromRoot('config.json');
@@ -79,10 +85,14 @@ export default class VisualManager {
         return this;
     }
 
+    public runLintValidation(options: LintOptions) {
+        const linter = new LintValidator(options.fix);
+        linter.runLintValidation(options);
+    }
+    
     public createVisualInstance() {
         this.capabilities = readJsonFromVisual("capabilities.json", this.basePath);
-        const packageJSON = readJsonFromVisual("package.json", this.basePath);
-        this.visual = new Visual(this.capabilities, this.pbivizConfig, packageJSON);
+        this.visual = new Visual(this.capabilities, this.pbivizConfig);
     }
 
     public async initializeWebpack(webpackOptions: WebpackOptions) {
@@ -104,6 +114,9 @@ export default class VisualManager {
         this.compiler.run(callback);
     }
 
+    /**
+     * Starts webpack server
+     */
     public startWebpackServer(generateDropFiles: boolean = false) {
         ConsoleWriter.blank();
         ConsoleWriter.info('Starting server...');
@@ -134,6 +147,9 @@ export default class VisualManager {
         }
     }
 
+    /**
+     * Validates the visual code
+     */
     public validateVisual(verbose: boolean = false) {
         this.featureManager = new FeatureManager()
         const { status, logs } = this.featureManager.validate(Stage.PreBuild, this.visual);
@@ -145,6 +161,9 @@ export default class VisualManager {
         return this;
     }
     
+    /**
+     * Validates the visual package
+     */
     public validatePackage() {
         const featureManager = new FeatureManager();
         const { logs } = featureManager.validate(Stage.PostBuild, this.package);
@@ -152,6 +171,9 @@ export default class VisualManager {
         return logs;
     }
 
+    /**
+     * Outputs the results of the validation 
+     */
     public outputResults({ errors, deprecation, warnings, info }: Logs, verbose: boolean) {
         const headerMessage = {
             error: `Visual doesn't support some features required for all custom visuals:`,
@@ -171,6 +193,9 @@ export default class VisualManager {
         this.outputLogsWithHeadMessage(headerInfoMessage, infoLogs, Severity.Info);
     }
     
+    /**
+     * Displays visual info
+     */
     public displayInfo() {
         if (this.pbivizConfig) {
             ConsoleWriter.infoTable(this.pbivizConfig);
@@ -179,8 +204,10 @@ export default class VisualManager {
         }
     }
 
+    
+
     /**
-     * Creates a new visual package
+     * Creates a new visual
      */
     static async createVisual(rootPath: string, visualName: string, generateOptions: GenerateOptions): Promise<VisualManager | void> {
         ConsoleWriter.info('Creating new visual');
