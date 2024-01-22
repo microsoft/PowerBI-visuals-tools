@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.4.1
+* Updated R-based visuals settings.ts file to work properly with the new API
+
 ## 5.4.0
 * Updated packages
 * New command `pbiviz lint` to run lint check from tools. It'll use eslintrc file from the root of the visual, if there is no such file, recommended one will be used instead.
