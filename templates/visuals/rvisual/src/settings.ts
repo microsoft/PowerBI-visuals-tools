@@ -31,14 +31,24 @@ import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import FormattingSettingsCard = formattingSettings.SimpleCard;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
-
+import TextInput = formattingSettings.TextInput;
 
 /**
  * RCV Script Formatting Card
  */
 class rcvScriptCardSettings extends FormattingSettingsCard {
-    provider: FormattingSettingsSlice = undefined;
-    source: FormattingSettingsSlice = undefined;
+    provider: FormattingSettingsSlice = new TextInput({
+        name: "provider",
+        displayName: "Provider",
+        value: undefined,
+        placeholder: "Provider"
+    });
+    source: FormattingSettingsSlice = new TextInput({
+        name: "source",
+        displayName: "Source",
+        value: undefined,
+        placeholder: "Source"
+    });
 
     name: string = "rcv_script";
     displayName: string = "rcv_script";
@@ -46,8 +56,7 @@ class rcvScriptCardSettings extends FormattingSettingsCard {
 }
 
 /**
-* visual settings model class
-*
+* Visual settings model class
 */
 export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     // Create formatting settings model formatting cards
