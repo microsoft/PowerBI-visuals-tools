@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.4.2
+* Added the **node: false** option to the webpack plugin to eliminate the use of the potentially dangerous **new Function()** method, which ensures compatibility with the Node.js runtime.
+* Introduced support for *.mjs ECMAScript modules.
+
 ## 5.4.1
 * Updated R-based visuals settings.ts file to work properly with the new API
 

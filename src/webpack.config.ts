@@ -13,6 +13,7 @@ const webpackConfig = {
         'visual.js': ['./src/visual.ts']
     },
     target: 'web',
+    node: false,
     devtool: false,
     mode: "production",
     optimization: {
@@ -74,7 +75,7 @@ const webpackConfig = {
         "powerbi-visuals-api": 'null'
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '.css'],
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.css'],
         modules: ['node_modules', path.resolve(rootPath, 'node_modules')],
         fallback: {
             assert: "assert",
