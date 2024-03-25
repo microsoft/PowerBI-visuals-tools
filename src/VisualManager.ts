@@ -51,6 +51,7 @@ export interface GenerateOptions {
 export interface LintOptions {
     verbose: boolean;
     fix: boolean;
+    defaultRules: boolean;
 }
 
 const globalConfig = readJsonFromRoot('config.json');
@@ -85,9 +86,15 @@ export default class VisualManager {
         return this;
     }
 
-    public runLintValidation(options: LintOptions) {
-        const linter = new LintValidator(options.fix);
-        linter.runLintValidation(options);
+    public async runLintValidation(options: LintOptions) {
+        try {
+            const linter = new LintValidator(options);
+            await linter.runLintValidation();
+        } catch (error) {
+            ConsoleWriter.error("Can't run lint validation.");
+            if(options.verbose) ConsoleWriter.error(error.message);
+        }
+        
     }
     
     public createVisualInstance() {
