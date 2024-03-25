@@ -73,7 +73,7 @@ export class LintValidator {
         if (!this.useDefaultConfig && eslintrcExtensions.some(el => fileExists(this.visualPath, `.eslintrc${el}`))){
             this.config = requiredConfig
         } else {
-            ConsoleWriter.warning("No .eslintrc file found in the visual folder. Using default config.")
+            ConsoleWriter.warning("Using recommended eslint config.")
             this.config = {
                 ...requiredConfig,
                 overrideConfig: {
