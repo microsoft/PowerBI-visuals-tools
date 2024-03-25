@@ -84,7 +84,7 @@ export default class CommandManager {
         const lintOptions: LintOptions = {
             verbose: options.verbose,
             fix: options.fix,
-            defaultRules: options.default
+            useDefaultConfig: options.default
         }
         const visual = new VisualManager(rootPath).prepareVisual(options.pbivizFile)
         await visual.runLintValidation(lintOptions)

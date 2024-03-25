@@ -16,11 +16,11 @@ export class LintValidator {
     private config: ESLint.Options;
     private linterInstance: ESLint;
 
-    constructor({verbose, fix, defaultRules}: LintOptions) {
+    constructor({verbose, fix, useDefaultConfig}: LintOptions) {
         this.visualPath = process.cwd()
         this.rootPath = getRootPath();
         this.isVerboseMode = verbose;
-        this.useDefaultConfig = defaultRules;
+        this.useDefaultConfig = useDefaultConfig;
         this.shouldFix = fix;
 
         this.prepareConfig();

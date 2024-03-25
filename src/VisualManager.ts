@@ -51,7 +51,7 @@ export interface GenerateOptions {
 export interface LintOptions {
     verbose: boolean;
     fix: boolean;
-    defaultRules: boolean;
+    useDefaultConfig: boolean;
 }
 
 const globalConfig = readJsonFromRoot('config.json');
