@@ -1,8 +1,14 @@
 
 import { createCertificate } from './CertificateTools.js';
 import ConsoleWriter from './ConsoleWriter.js';
-import VisualManager, { LintOptions, GenerateOptions } from './VisualManager.js';
+import VisualManager, { GenerateOptions } from './VisualManager.js';
 import { WebpackOptions } from './WebPackWrap.js';
+
+export interface LintOptions {
+    verbose: boolean;
+    fix: boolean;
+    useDefault: boolean;
+}
 
 interface StartOptions {
     port: number;
@@ -24,7 +30,7 @@ interface PackageOptions {
     verbose: boolean;
     fix: boolean;
     pbivizFile: string;
-    default: boolean; // related to Eslint config
+    useDefault: boolean; // related to Eslint config
 }
 
 interface NewOptions {
@@ -84,7 +90,7 @@ export default class CommandManager {
         const lintOptions: LintOptions = {
             verbose: options.verbose,
             fix: options.fix,
-            useDefaultConfig: options.default
+            useDefault: options.useDefault
         }
         const visual = new VisualManager(rootPath).prepareVisual(options.pbivizFile)
         await visual.runLintValidation(lintOptions)

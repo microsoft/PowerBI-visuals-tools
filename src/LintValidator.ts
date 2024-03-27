@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 import ConsoleWriter from "./ConsoleWriter.js";
-import { LintOptions } from "./VisualManager.js";
+import { LintOptions } from "./CommandManager.js";
 import { fileExists, getRootPath } from "./utils.js";
 
 export class LintValidator {
@@ -11,16 +11,16 @@ export class LintValidator {
     private visualPath: string;
     private rootPath: string;
     private isVerboseMode: boolean;
-    private useDefaultConfig: boolean;
+    private useDefault: boolean;
     private shouldFix: boolean;
     private config: ESLint.Options;
     private linterInstance: ESLint;
 
-    constructor({verbose, fix, useDefaultConfig}: LintOptions) {
+    constructor({verbose, fix, useDefault}: LintOptions) {
         this.visualPath = process.cwd()
         this.rootPath = getRootPath();
         this.isVerboseMode = verbose;
-        this.useDefaultConfig = useDefaultConfig;
+        this.useDefault = useDefault;
         this.shouldFix = fix;
 
         this.prepareConfig();
@@ -70,7 +70,7 @@ export class LintValidator {
             resolvePluginsRelativeTo: this.getPluginPath()
         }
         const eslintrcExtensions = ['.json', '.js', '.cjs', '.ts', '']
-        if (!this.useDefaultConfig && eslintrcExtensions.some(el => fileExists(this.visualPath, `.eslintrc${el}`))){
+        if (!this.useDefault && eslintrcExtensions.some(el => fileExists(this.visualPath, `.eslintrc${el}`))){
             this.config = requiredConfig
         } else {
             ConsoleWriter.warning("Using recommended eslint config.")
