@@ -42,15 +42,11 @@ import { FeatureManager, Logs, Status } from "./FeatureManager.js";
 import { Severity, Stage } from "./features/FeatureTypes.js";
 import TemplateFetcher from "./TemplateFetcher.js";
 import { LintValidator } from "./LintValidator.js";
+import { LintOptions } from "./CommandManager.js";
 
 export interface GenerateOptions {
     force: boolean;
     template: string;
-}
-
-export interface LintOptions {
-    verbose: boolean;
-    fix: boolean;
 }
 
 const globalConfig = readJsonFromRoot('config.json');
@@ -85,9 +81,17 @@ export default class VisualManager {
         return this;
     }
 
-    public runLintValidation(options: LintOptions) {
-        const linter = new LintValidator(options.fix);
-        linter.runLintValidation(options);
+    public async runLintValidation(options: LintOptions) {
+        try {
+            const linter = new LintValidator(options);
+            await linter.runLintValidation();
+        } catch (error) {
+            ConsoleWriter.error("Can't run lint validation.");
+            if(options.verbose) {
+                ConsoleWriter.error(error.message);
+            }
+        }
+        
     }
     
     public createVisualInstance() {
