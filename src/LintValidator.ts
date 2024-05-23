@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import ConsoleWriter from "./ConsoleWriter.js";
-import { LintOptions } from "./VisualManager.js";
+import { LintOptions } from "./CommandManager.js";
 import { getRootPath } from "./utils.js";
 
 export class LintValidator {
