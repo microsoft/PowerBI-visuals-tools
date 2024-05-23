@@ -1,6 +1,6 @@
 import { ESLint } from "eslint";
+import path from 'path';
 import fs from 'fs-extra';
-import path from "path";
 
 import ConsoleWriter from "./ConsoleWriter.js";
 import { LintOptions } from "./VisualManager.js";
