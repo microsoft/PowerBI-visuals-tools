@@ -28,7 +28,8 @@
 
 import fs from 'fs-extra';
 import path from 'path';
-import { getRootPath, readJsonFromRoot } from '../../lib/utils.js';
+import os from 'os';
+import { readJsonFromRoot } from '../../lib/utils.js';
 import { createCertFile } from '../../lib/CertificateTools.js';
 
 const config = readJsonFromRoot('config.json');
@@ -39,11 +40,11 @@ describe("E2E - pbiviz install-cert", () => {
     });
 
     describe("pbiviz", () => {
-        it("pbiviz install-cert command should generate certificate", (done) => {
-            const rootPath = getRootPath();
-            const certPath = path.join(rootPath, config.server.certificate);
-            const keyPath = path.join(rootPath, config.server.privateKey);
-            const pfxPath = path.join(rootPath, config.server.pfx);
+        fit("pbiviz install-cert command should generate certificate", (done) => {
+            const homeDir = os.homedir();
+            const certPath = path.join(homeDir, config.server.certificate);
+            const keyPath = path.join(homeDir, config.server.privateKey);
+            const pfxPath = path.join(homeDir, config.server.pfx);
             const certExists = fs.existsSync(certPath);
             const keyExists = fs.existsSync(keyPath);
             const pfxExists = fs.existsSync(pfxPath);

@@ -1,8 +1,10 @@
 import { ESLint } from "eslint";
+import fs from 'fs-extra';
+import path from "path";
 
 import ConsoleWriter from "./ConsoleWriter.js";
 import { LintOptions } from "./VisualManager.js";
-import { fileExists, getRootPath } from "./utils.js";
+import { getRootPath } from "./utils.js";
 
 export class LintValidator {
 
@@ -77,7 +79,7 @@ export class LintValidator {
         }
 
         const eslintrcExtensions = ['.json', '.js', '.ts']
-        if (eslintrcExtensions.some(el => fileExists(this.visualPath, `.eslintrc${el}`))){
+        if (eslintrcExtensions.some(el => fs.existsSync(path.join(this.visualPath, `.eslintrc${el}`)))) {
             this.config = { fix }
         } else {
             ConsoleWriter.warning("No .eslintrc file found in the visual folder. Using default config.")

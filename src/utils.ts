@@ -21,12 +21,18 @@ export function createFolder(folderName): string {
     return folder;
 }
 
+export async function ensureAndWriteFile(pathToFile: string, content) {
+    const folder = path.dirname(pathToFile);
+    fs.ensureDirSync(folder);
+    await fs.writeFileSync(pathToFile, content);
+}
+
 export function getRootPath(): string {
     const pathToDirectory = fileURLToPath(import.meta.url);
     return path.join(pathToDirectory, "..", "..");
 }
 
-export function readFileFromRoot(filePath: string) {
+function readFileFromRoot(filePath: string) {
     return fs.readFileSync(path.join(getRootPath(), filePath), "utf8")
 }
 
@@ -36,8 +42,4 @@ export function readJsonFromRoot(filePath: string) {
 
 export function readJsonFromVisual(filePath: string, visualPath?: string) {
     return JSON.parse(fs.readFileSync(path.join(visualPath ?? process.cwd(), filePath), "utf8"));
-}
-
-export function fileExists(pathToFile: string, fileName: string) {
-    return fs.existsSync(path.join(pathToFile, fileName));
 }
