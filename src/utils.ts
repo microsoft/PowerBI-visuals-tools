@@ -21,12 +21,6 @@ export function createFolder(folderName): string {
     return folder;
 }
 
-export async function ensureAndWriteFile(pathToFile: string, content) {
-    const folder = path.dirname(pathToFile);
-    fs.ensureDirSync(folder);
-    await fs.writeFileSync(pathToFile, content);
-}
-
 export function getRootPath(): string {
     const pathToDirectory = fileURLToPath(import.meta.url);
     return path.join(pathToDirectory, "..", "..");

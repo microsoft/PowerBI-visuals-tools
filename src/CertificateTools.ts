@@ -32,7 +32,7 @@ import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
 import crypto from "crypto"
-import { ensureAndWriteFile, readJsonFromRoot } from './utils.js';
+import { readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
 
 const certSafePeriod = 1000 * 60 * 60 * 24; // 24 hours
@@ -96,6 +96,7 @@ export async function createCertFile(config, open = false) {
     try {
         let createCertCommand = "";
         let passphrase = "";
+        fs.ensureDirSync(homeDir);
         switch (os.platform()) {
             case "linux":
             case "darwin":
@@ -285,5 +286,5 @@ const getRandomValues = () => {
 
 const savePassphrase = async (config, passphrase) => {
     const pathToFile = path.join(homeDir, config.server.passphrase);
-    await ensureAndWriteFile(pathToFile, passphrase);
+    await fs.writeFileSync(pathToFile, passphrase);
 }
