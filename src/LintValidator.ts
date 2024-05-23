@@ -10,29 +10,35 @@ export class LintValidator {
 
     private visualPath: string;
     private rootPath: string;
+    private isVerboseMode: boolean;
+    private useDefault: boolean;
+    private shouldFix: boolean;
     private config: ESLint.Options;
-    private defaultConfig: ESLint.Options;
     private linterInstance: ESLint;
 
-    constructor(fix: boolean = false) {
+    constructor({verbose, fix, useDefault}: LintOptions) {
         this.visualPath = process.cwd()
         this.rootPath = getRootPath();
-        this.prepareConfig(fix);
+        this.isVerboseMode = verbose;
+        this.useDefault = useDefault;
+        this.shouldFix = fix;
+
+        this.prepareConfig();
         this.linterInstance = new ESLint(this.config);
     }
 
     /**
      * Runs lint validation in the visual folder
      */
-    public async runLintValidation({ verbose, fix }: LintOptions) {
+    public async runLintValidation() {
         ConsoleWriter.info("Running lint check...");
         // By default it will lint all files in the src of current working directory, but some files can be excluded in .eslintignore
-        const results = await this.linterInstance.lintFiles("src/**/*");
+        const results = await this.linterInstance.lintFiles("src/");
 
-        if (fix) {
+        if (this.shouldFix) {
             await this.fixErrors(results);
         }
-        await this.outputResults(results, verbose);
+        await this.outputResults(results);
         ConsoleWriter.info("Lint check completed.");
     }
     
@@ -41,8 +47,8 @@ export class LintValidator {
         await ESLint.outputFixes(results);
     }
 
-    private async outputResults(results: ESLint.LintResult[], verbose: boolean) {
-        if (verbose) {
+    private async outputResults(results: ESLint.LintResult[]) {
+        if (this.isVerboseMode) {
             const formatter = await this.linterInstance.loadFormatter("stylish");
             const formattedResults = await formatter.format(results);
             console.log(formattedResults)
@@ -57,33 +63,42 @@ export class LintValidator {
         }   
     }
 
-    private prepareConfig(fix: boolean) {
-        this.defaultConfig = {
-            overrideConfig: {
-                env: {
-                    browser: true,
-                    es6: true,
-                    es2022: true
-                },
-                plugins: [
-                    "powerbi-visuals"
-                ],
-                extends: [
-                    "plugin:powerbi-visuals/recommended"
-                ]
-            },
-            extensions: [".ts", ".tsx"],
-            resolvePluginsRelativeTo: this.rootPath,
-            useEslintrc: false,
-            fix
+    private prepareConfig() {
+        const requiredConfig = {
+            extensions: [".js", ".jsx", ".ts", ".tsx"],
+            fix: this.shouldFix,
+            resolvePluginsRelativeTo: this.getPluginPath()
         }
-
-        const eslintrcExtensions = ['.json', '.js', '.ts']
-        if (eslintrcExtensions.some(el => fs.existsSync(path.join(this.visualPath, `.eslintrc${el}`)))) {
-            this.config = { fix }
+        const eslintrcExtensions = ['.json', '.js', '.cjs', '.ts', '']
+        if (!this.useDefault && eslintrcExtensions.some(el => fs.existsSync(path.join(this.visualPath, `.eslintrc${el}`)))) {
+            this.config = requiredConfig
         } else {
-            ConsoleWriter.warning("No .eslintrc file found in the visual folder. Using default config.")
-            this.config = this.defaultConfig
+            ConsoleWriter.warning("Using recommended eslint config.")
+            this.config = {
+                ...requiredConfig,
+                overrideConfig: {
+                    env: {
+                        browser: true,
+                        es6: true,
+                        es2022: true
+                    },
+                    plugins: [
+                        "powerbi-visuals"
+                    ],
+                    extends: [
+                        "plugin:powerbi-visuals/recommended"
+                    ]
+                },
+                useEslintrc: false,
+            }
         }
+    }
+
+    private getPluginPath() {
+        const pluginPaths = [
+            path.resolve(this.visualPath, "node_modules", "eslint-plugin-powerbi-visuals"),
+            path.resolve(this.rootPath, "node_modules", "eslint-plugin-powerbi-visuals")
+        ]
+        return pluginPaths.find(fs.existsSync)
     }
 }
