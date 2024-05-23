@@ -96,7 +96,7 @@ export async function createCertFile(config, open = false) {
     try {
         let createCertCommand = "";
         let passphrase = "";
-        fs.ensureDirSync(path.dirname(homeDir));
+        fs.ensureDirSync(path.dirname(certPath));
         switch (os.platform()) {
             case "linux":
             case "darwin":
