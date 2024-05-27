@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.5.0
+* Changed path for storing certificates. It allows the certificate to be reused regardless of tools version. New path is `({home directory}/pbiviz-certs)`.
+* Windows version lower 10 is deprecated.
+* Resolve of symlinks is disabled.
+
 ## 5.4.3
 * Fixed bug with missing plugins for Eslint.
 * New flag `--use-default` for `pbiviz package` and `pbiviz lint` commands. Use this command to lint files according to recommended lint config.
