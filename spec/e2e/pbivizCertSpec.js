@@ -41,10 +41,10 @@ describe("E2E - pbiviz install-cert", () => {
 
     describe("pbiviz", () => {
         it("pbiviz install-cert command should generate certificate", (done) => {
-            const homeDir = os.homedir();
-            const certPath = path.join(homeDir, config.server.certificate);
-            const keyPath = path.join(homeDir, config.server.privateKey);
-            const pfxPath = path.join(homeDir, config.server.pfx);
+            const pathToCertFolder = path.join(os.homedir(), config.server.certificateFolder);
+            const certPath = path.join(pathToCertFolder, config.server.certificate);
+            const keyPath = path.join(pathToCertFolder, config.server.privateKey);
+            const pfxPath = path.join(pathToCertFolder, config.server.pfx);
             const certExists = fs.existsSync(certPath);
             const keyExists = fs.existsSync(keyPath);
             const pfxExists = fs.existsSync(pfxPath);
