@@ -17,10 +17,11 @@
   "package": { "dropFolder": "dist" },
   "server": {
     "assetsRoute": "/assets",
-    "privateKey": "pbiviz-certs/PowerBICustomVisualTest_private.key",
-    "certificate": "pbiviz-certs/PowerBICustomVisualTest_public.crt",
-    "pfx": "pbiviz-certs/PowerBICustomVisualTest_public.pfx",
-    "passphrase": "pbiviz-certs/PowerBICustomVisualTestPass.txt"
+    "certificateFolder": "pbiviz-certs",
+    "privateKey": "PowerBICustomVisualTest_private.key",
+    "certificate": "PowerBICustomVisualTest_public.crt",
+    "pfx": "PowerBICustomVisualTest_public.pfx",
+    "passphrase": "PowerBICustomVisualTestPass.txt"
   },
   "visualTemplates": {
     "circlecard": "https://codeload.github.com/microsoft/powerbi-visuals-circlecard-react/zip/master"

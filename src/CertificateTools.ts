@@ -36,7 +36,14 @@ import { readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
 
 const certSafePeriod = 1000 * 60 * 60 * 24; // 24 hours
-const homeDir = os.homedir();
+const config = readJsonFromRoot('config.json');
+const pathToCertFolder = path.join(os.homedir(), config.server.certificateFolder);
+const secretFilesPath = {
+    certPath: path.join(pathToCertFolder, config.server.certificate),
+    keyPath: path.join(pathToCertFolder, config.server.privateKey),
+    pfxPath: path.join(pathToCertFolder, config.server.pfx),
+    passphrasePath: path.join(pathToCertFolder, config.server.passphrase)
+};
 
 interface CertificateOptions {
     passphrase?: string;
@@ -61,25 +68,22 @@ function exec(command, options?, callback?): Promise<string> {
 }
 
 export async function createCertificate() {
-    const config = readJsonFromRoot('config.json');
-    const certPath = await getCertFile(config, true);
+    const certPath = await getCertFile(true);
     
     if (!certPath) {
         ConsoleWriter.error("Certificate not found. The new certificate will be generated");
-        await createCertFile(config, true);
+        await createCertFile(true);
     } else {
-        await openCertFile(config);
+        await openCertFile();
     }
 }
 
-export async function createCertFile(config, open = false) {
+export async function createCertFile(open = false) {
     ConsoleWriter.info(`Generating a new certificate...`);
     const subject = "localhost";
     const keyLength = 2048;
     const validPeriod = 365;
-    const certPath = path.join(homeDir, config.server.certificate);
-    const keyPath = path.join(homeDir, config.server.privateKey);
-    const pfxPath = path.join(homeDir, config.server.pfx);
+    const { certPath, keyPath, pfxPath } = secretFilesPath;
 
     const openCmds = {
         linux: 'openssl',
@@ -115,7 +119,7 @@ export async function createCertFile(config, open = false) {
                 if (await fs.exists(certPath)) {
                     ConsoleWriter.info(`Certificate generated. Location is ${certPath}`);
                     if (open) {
-                        await openCertFile(config);
+                        await openCertFile();
                     }
                 }
                 break;
@@ -139,7 +143,7 @@ export async function createCertFile(config, open = false) {
                     await Promise.all([
                         removeCertFiles(certPath, keyPath, pfxPath), 
                         exec(`${startCmd} -Command "${createCertCommand}"`),
-                        savePassphrase(config, passphrase)
+                        savePassphrase(passphrase)
                     ]);
                 if (await fs.exists(pfxPath)) {
                     ConsoleWriter.info(`Certificate generated. Location is ${pfxPath}. Passphrase is ${passphrase}`);
@@ -164,20 +168,18 @@ export async function createCertFile(config, open = false) {
     }
 }
 
-async function getCertFile(config, silent = false) {
-    const cert = path.join(homeDir, config.server.certificate);
-    if (await fs.exists(cert)) {
-        return cert;
+async function getCertFile(silent = false) {
+    const { certPath, pfxPath, passphrasePath } = secretFilesPath;
+    if (await fs.exists(certPath)) {
+        return certPath;
     }
 
-    const pfx = path.join(homeDir, config.server.pfx);
-    if (await fs.exists(pfx)) {
-        const passphrasePath = path.join(homeDir, config.server.passphrase);
+    if (await fs.exists(pfxPath)) {
         if (!silent && await fs.exists(passphrasePath)) {
             const passphrase = await fs.readFile(passphrasePath, 'utf8')
             ConsoleWriter.info(`Use '${passphrase}' passphrase to install PFX certificate.`);
         }
-        return pfx;
+        return pfxPath;
     }
 
     if (!silent) {
@@ -186,14 +188,14 @@ async function getCertFile(config, silent = false) {
     return null;
 }
 
-async function openCertFile(config) {
+async function openCertFile() {
     const openCmds = {
         linux: 'xdg-open',
         darwin: 'open',
         win32: 'powershell start'
     };
     const startCmd = openCmds[os.platform()];
-    const certPath = await getCertFile(config);
+    const certPath = await getCertFile();
     try {
         if (!startCmd || !certPath) {
             throw new Error(); 
@@ -217,17 +219,12 @@ export async function removeCertFiles(...paths) {
 }
 
 export async function resolveCertificate() {
-    const config = readJsonFromRoot('config.json');
     const options: CertificateOptions = {};
-    const certPath = path.join(homeDir, config.server.certificate);
-    const keyPath = path.join(homeDir, config.server.privateKey);
-    const pfxPath = path.join(homeDir, config.server.pfx);
-    const passphrasePath = path.join(homeDir, config.server.passphrase);
+    const { certPath, keyPath, pfxPath, passphrasePath } = secretFilesPath;
     const isCertificateValid = await verifyCertFile(keyPath, certPath, pfxPath, passphrasePath);
     if (!isCertificateValid) {
-        await createCertFile(config);
+        await createCertFile();
     }
-    
     if (await fs.exists(passphrasePath)) {
         options.passphrase = await fs.readFile(passphrasePath, 'utf8');
     }
@@ -284,7 +281,7 @@ const getRandomValues = () => {
     return crypto.webcrypto.getRandomValues(new Uint32Array(1));
 }
 
-const savePassphrase = async (config, passphrase) => {
-    const pathToFile = path.join(homeDir, config.server.passphrase);
-    await fs.writeFileSync(pathToFile, passphrase);
+const savePassphrase = async (passphrase) => {
+    const { passphrasePath } = secretFilesPath;
+    await fs.writeFileSync(passphrasePath, passphrase);
 }
