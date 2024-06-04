@@ -1,10 +1,10 @@
 import { ESLint } from "eslint";
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
 
 import ConsoleWriter from "./ConsoleWriter.js";
 import { LintOptions } from "./CommandManager.js";
-import { fileExists, getRootPath } from "./utils.js";
+import { getRootPath } from "./utils.js";
 
 export class LintValidator {
 
@@ -70,7 +70,7 @@ export class LintValidator {
             resolvePluginsRelativeTo: this.getPluginPath()
         }
         const eslintrcExtensions = ['.json', '.js', '.cjs', '.ts', '']
-        if (!this.useDefault && eslintrcExtensions.some(el => fileExists(this.visualPath, `.eslintrc${el}`))){
+        if (!this.useDefault && eslintrcExtensions.some(el => fs.existsSync(path.join(this.visualPath, `.eslintrc${el}`)))) {
             this.config = requiredConfig
         } else {
             ConsoleWriter.warning("Using recommended eslint config.")
