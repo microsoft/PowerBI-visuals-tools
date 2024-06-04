@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/parser": "^7.12.0",
     "assert": "^2.1.0",
     "async": "^3.2.5",
     "browserify-zlib": "^0.2.0",
@@ -50,7 +50,7 @@
     "json-loader": "0.5.7",
     "jszip": "^3.10.1",
     "less": "^4.2.0",
-    "less-loader": "^11.1.4",
+    "less-loader": "^12.2.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.defaults": "4.2.0",
     "lodash.isequal": "4.5.0",
@@ -75,11 +75,11 @@
     "util": "^0.12.5",
     "vm-browserify": "^1.1.2",
     "webpack": "^5.91.0",
-    "webpack-bundle-analyzer": "4.10.1",
+    "webpack-bundle-analyzer": "4.10.2",
     "webpack-dev-server": "^4.15.2"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
     "eslint": "^8.57.0",
     "eslint-plugin-powerbi-visuals": "^0.8.1",
     "jasmine": "5.1.0",
