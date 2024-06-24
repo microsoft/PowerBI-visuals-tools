@@ -11,6 +11,6 @@ export default class TotalSubTotal implements BaseFeature {
     public static errorMessage = `${this.featureName} - ${this.documentationLink}`
 
     static isSupported(packageInstance: Package) {
-        return packageInstance.isCapabilityEnabled({ subtotals: true })
+        return packageInstance.isCapabilityEnabled({ subtotals: {} })
     }
 } 
