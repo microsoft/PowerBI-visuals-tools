@@ -1,3 +1,5 @@
+//Shimizu git Fix Test
+
 import { compareVersions } from "compare-versions";
 import { VisualFeatureType } from "./features/FeatureTypes.js";
 
