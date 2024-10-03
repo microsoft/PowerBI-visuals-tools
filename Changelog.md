@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 5.6.0
+* Updated to ESLint v9
+* Updated to TypeScript v5
+* `--use-default` flag for `pbiviz package` and `pbiviz lint` commands is deprecated. Recommeded config is used by default
+
 ## 5.5.1
 * Fixed subtotal feature check
 

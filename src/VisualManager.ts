@@ -283,11 +283,11 @@ export default class VisualManager {
         };
     }
 
-    private stopServer() {
+    private async stopServer() {
         ConsoleWriter.blank();
         ConsoleWriter.info("Stopping server...");
         if (this.webpackDevServer) {
-            this.webpackDevServer.close();
+            await this.webpackDevServer.stop();
             this.webpackDevServer = null;
         }
     }
