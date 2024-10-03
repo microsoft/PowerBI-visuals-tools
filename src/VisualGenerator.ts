@@ -209,7 +209,7 @@ export default class VisualGenerator {
      */
     static checkVisualName(name) {
         const regexES3ReservedWord = /^(?:do|if|in|for|int|new|try|var|byte|case|char|else|enum|goto|long|null|this|true|void|with|break|catch|class|const|false|final|float|short|super|throw|while|delete|double|export|import|native|public|return|static|switch|throws|typeof|boolean|default|extends|finally|package|private|abstract|continue|debugger|function|volatile|interface|protected|transient|implements|instanceof|synchronized)$/;
-        const regexNumber = /^(?![+-])([0-9\+\-\.]+)/; // eslint-disable-line no-useless-escape
+        const regexNumber = /^(?![+-])([0-9\+\-\.]+)/;
         const regexZeroWidth = /\u200c|\u200d/;
         const regexpWrongSymbols = /^[a-zA-Z0-9]+$/;
         const valueAsUnescapedString = name.replace(/\\u([a-fA-F0-9]{4})|\\u\{([0-9a-fA-F]{1,})\}/g, ($0, $1, $2) => {

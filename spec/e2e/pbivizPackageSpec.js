@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-escape */
+ 
 /*
  *  Power BI Visual CLI
  *

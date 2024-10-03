@@ -11,7 +11,7 @@
     "test": "npm run build && npm run clean-tests && npm run lint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
-    "lint": "npx eslint . --ext .ts,.tsx",
+    "lint": "npx eslint .",
     "clean-tests": "node spec/clean-tests.js",
     "debug-tests": "npm run clean-tests && npm run lint && npm run jasmine-inspect"
   },
