@@ -259,7 +259,7 @@ export default class VisualManager {
     }
 
     private prepareDropFiles() {
-        this.webpackConfig.devServer.onBeforeSetupMiddleware = (devServer) => {
+        this.webpackConfig.devServer.setupMiddlewares = (middlewares, devServer) => {
             const { headers, publicPath, static: { directory } } = this.webpackConfig.devServer;
             const assets = [ 'visual.js`', 'visual.css', 'pbiviz.json' ]
 
@@ -267,27 +267,35 @@ export default class VisualManager {
                 Object.getOwnPropertyNames(headers)
                     .forEach(property => res.header(property, headers[property]));
             };
-            const readFile = (file, res) => {
-                fs.readFile(file).then(function (content) {
-                    res.write(content);
-                    res.end();
+            const readFile = (file, res, name) => {
+                middlewares.unshift({
+                    name,
+                    middleware: (req, middlewareRes) => {
+                        fs.readFile(file).then(function (content) {
+                            middlewareRes.write(content);
+                            console.log(`Serving ${name} to `);
+                            middlewareRes.end();
+                        });
+                    },
                 });
+                res.end();
             };
 
             assets.forEach(asset => {
                 devServer.app.get(`${publicPath}/${asset}`, function (req, res) {
                     setHeaders(res);
-                    readFile(path.join(directory, asset), res);
+                    readFile(path.join(directory, asset), res, asset);
                 });
             });
+            return middlewares;
         };
     }
 
-    private stopServer() {
+    private async stopServer() {
         ConsoleWriter.blank();
         ConsoleWriter.info("Stopping server...");
         if (this.webpackDevServer) {
-            this.webpackDevServer.close();
+            await this.webpackDevServer.stop();
             this.webpackDevServer = null;
         }
     }

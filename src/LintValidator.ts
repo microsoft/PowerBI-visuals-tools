@@ -1,7 +1,5 @@
 import { ESLint } from "eslint";
-import path from 'path';
-import fs from 'fs-extra';
-
+import powerbiPlugin from 'eslint-plugin-powerbi-visuals';
 import ConsoleWriter from "./ConsoleWriter.js";
 import { LintOptions } from "./CommandManager.js";
 import { getRootPath } from "./utils.js";
@@ -11,16 +9,14 @@ export class LintValidator {
     private visualPath: string;
     private rootPath: string;
     private isVerboseMode: boolean;
-    private useDefault: boolean;
     private shouldFix: boolean;
     private config: ESLint.Options;
     private linterInstance: ESLint;
 
-    constructor({verbose, fix, useDefault}: LintOptions) {
+    constructor({verbose, fix}: LintOptions) {
         this.visualPath = process.cwd()
         this.rootPath = getRootPath();
         this.isVerboseMode = verbose;
-        this.useDefault = useDefault;
         this.shouldFix = fix;
 
         this.prepareConfig();
@@ -32,7 +28,7 @@ export class LintValidator {
      */
     public async runLintValidation() {
         ConsoleWriter.info("Running lint check...");
-        // By default it will lint all files in the src of current working directory, but some files can be excluded in .eslintignore
+        // By default it will lint all files in the src of current working directory
         const results = await this.linterInstance.lintFiles("src/");
 
         if (this.shouldFix) {
@@ -64,41 +60,11 @@ export class LintValidator {
     }
 
     private prepareConfig() {
-        const requiredConfig = {
-            extensions: [".js", ".jsx", ".ts", ".tsx"],
+        ConsoleWriter.warning("Using recommended eslint config.")
+        this.config = {
+            overrideConfig: powerbiPlugin.configs.recommended,
+            overrideConfigFile: true,
             fix: this.shouldFix,
-            resolvePluginsRelativeTo: this.getPluginPath()
         }
-        const eslintrcExtensions = ['.json', '.js', '.cjs', '.ts', '']
-        if (!this.useDefault && eslintrcExtensions.some(el => fs.existsSync(path.join(this.visualPath, `.eslintrc${el}`)))) {
-            this.config = requiredConfig
-        } else {
-            ConsoleWriter.warning("Using recommended eslint config.")
-            this.config = {
-                ...requiredConfig,
-                overrideConfig: {
-                    env: {
-                        browser: true,
-                        es6: true,
-                        es2022: true
-                    },
-                    plugins: [
-                        "powerbi-visuals"
-                    ],
-                    extends: [
-                        "plugin:powerbi-visuals/recommended"
-                    ]
-                },
-                useEslintrc: false,
-            }
-        }
-    }
-
-    private getPluginPath() {
-        const pluginPaths = [
-            path.resolve(this.visualPath, "node_modules", "eslint-plugin-powerbi-visuals"),
-            path.resolve(this.rootPath, "node_modules", "eslint-plugin-powerbi-visuals")
-        ]
-        return pluginPaths.find(fs.existsSync)
     }
 }

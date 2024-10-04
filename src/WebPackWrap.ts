@@ -181,8 +181,13 @@ export default class WebPackWrap {
         const regexFullVersion = /(?<=powerbi-visuals-api@)((?:\d+\.?){1,3})/g;
         //get only first 2 parts of version
         const regexMajorVersion = /\d+(?:\.\d+)?/;
-        const listResults = (await exec('npm list powerbi-visuals-api version')).stdout
-        const installedAPIVersion = listResults.match(regexFullVersion)[0] ?? "not found";
+        let listResults;
+        try {
+            listResults = (await exec('npm list powerbi-visuals-api version')).stdout
+        } catch (error) {
+            listResults = error.stdout;
+        }
+        const installedAPIVersion = listResults.match(regexFullVersion)?.[0] ?? "not found";
         const doesAPIExist = fs.pathExistsSync(path.join(process.cwd(), "node_modules", "powerbi-visuals-api"));
 
         // if the powerbi-visual-api package wasn't installed install the powerbi-visual-api,

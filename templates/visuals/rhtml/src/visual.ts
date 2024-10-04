@@ -128,7 +128,6 @@ export class Visual implements IVisual {
     }
 
     public onResizing(finalViewport: IViewport): void {
-        // tslint:disable-next-line
         /* add code to handle resizing of the view port */
     }
 
@@ -146,7 +145,6 @@ export class Visual implements IVisual {
         // create 'virtual' HTML, so parsing is easier
         let el: HTMLHtmlElement = document.createElement("html");
         try {
-            // tslint:disable-next-line
             el.innerHTML = window.atob(payloadBase64);
         } catch (err) {
             return;

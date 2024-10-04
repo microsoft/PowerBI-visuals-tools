@@ -39,7 +39,7 @@ function createScriptNode(refNode: Element): HTMLElement {
       };
     }
   }
-  // tslint:disable-next-line
+  
   script.innerHTML = refNode.innerHTML;
   return script;
 }
