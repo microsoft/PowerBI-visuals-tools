@@ -59,6 +59,7 @@
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "powerbi-visuals-webpack-plugin": "4.1.0",
+    "eslint-plugin-powerbi-visuals": "^1.0.0",
     "process": "^0.11.10",
     "punycode": "^2.3.1",
     "querystring-es3": "^0.2.1",
@@ -81,7 +82,6 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "eslint": "^9.11.1",
-    "eslint-plugin-powerbi-visuals": "1.0.0",
     "jasmine": "5.3.0",
     "jasmine-spec-reporter": "7.0.0",
     "semver": "7.6.3",
