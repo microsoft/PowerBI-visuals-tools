@@ -1,7 +1,7 @@
 **POWER BI CUSTOM VISUALS – STANDARD VISUALIZATION LICENSE TERMS**
 
 These license terms are an agreement between you and the visualization developer. Please read them. 
-They apply to the visualization for Power BI you download from the Office Store, including any updates 
+They apply to the visualization for Power BI you download from the Public AppSource store, including any updates 
 or supplements for the visualization (the “Visualization”), unless the Visualization comes with separate 
 terms, in which case those terms apply.  
 
@@ -10,7 +10,7 @@ ACCEPT THESE TERMS. IF YOU DO NOT ACCEPT THEM, YOU HAVE NO RIGHT TO AND MUST NOT
 DOWNLOAD OR USE THE VISUALIZATION.** 
 
 **The Visualization developer means the entity licensing the Visualization to you, as identified in the 
-Office Store.**  
+Public AppSource store.**  
 
 **If you comply with these license terms, you have the rights below.**
 
@@ -47,7 +47,7 @@ available.
 7. **ENTIRE AGREEMENT.** This agreement, any applicable Visualization developer privacy policy, and the 
 terms for supplements and updates are the entire agreement between you and Visualization developer 
 for the Visualization. If Microsoft is the Visualization developer, this agreement does not change the 
-terms of your relationship with Microsoft with regard to Power BI, Microsoft Office, the Office Store, or 
+terms of your relationship with Microsoft with regard to Power BI, Microsoft Office, the Public AppSource store, or 
 any other Microsoft product or service (which is governed by the software license terms that 
 accompanied, or terms of use that are associated with, the applicable product or service).  
 8. **APPLICABLE LAW.**  
