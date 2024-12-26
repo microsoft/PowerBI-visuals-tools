@@ -33,7 +33,7 @@ import FileSystem from '../helpers/FileSystem.js';
 import { writeMetadata } from "./testUtils.js";
 import { download, createFolder } from "../../lib/utils.js";
 
-const tempPath = FileSystem.getTempPath();
+const tempPath = path.join(FileSystem.getTempPath(), path.basename(import.meta.url));
 const startPath = process.cwd();
 
 // these tests can take a bit longer
@@ -63,7 +63,7 @@ describe("E2E - pbiviz start", () => {
     const assetFiles = ['visual.js', 'visual.css', 'pbiviz.json', 'status'];
 
     beforeEach(() => {
-        FileSystem.resetTempDirectory();
+        FileSystem.resetDirectory(tempPath);
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, '--force');
         FileSystem.runCMDCommand('npm i', visualPath, tempPath);
@@ -77,7 +77,7 @@ describe("E2E - pbiviz start", () => {
 
     afterAll(() => {
         process.chdir(startPath);
-        FileSystem.deleteTempDirectory();
+        FileSystem.deleteDirectory(tempPath);
     });
 
     xit("Should throw error if not in the visual root", () => {

@@ -31,7 +31,7 @@ import path from 'path';
 import FileSystem from '../helpers/FileSystem.js';
 import { writeMetadata } from "./testUtils.js";
 
-const tempPath = FileSystem.getTempPath();
+const tempPath = path.join(FileSystem.getTempPath(), path.basename(import.meta.url));
 const startPath = process.cwd();
 
 describe("E2E - pbiviz info", () => {
@@ -41,7 +41,7 @@ describe("E2E - pbiviz info", () => {
 
     beforeEach(() => {
         process.chdir(startPath);
-        FileSystem.resetTempDirectory();
+        FileSystem.resetDirectory(tempPath);
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
@@ -51,7 +51,7 @@ describe("E2E - pbiviz info", () => {
 
     afterAll(() => {
         process.chdir(startPath);
-        FileSystem.deleteTempDirectory();
+        FileSystem.deleteDirectory(tempPath);
     });
 
     it("Should throw error if not in the visual root", () => {

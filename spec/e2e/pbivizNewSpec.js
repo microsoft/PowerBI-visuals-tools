@@ -34,7 +34,7 @@ import { writeMetadata, readdirSyncRecursive } from "./testUtils.js";
 import { download, createFolder, readJsonFromRoot } from "../../lib/utils.js";
 
 const config = readJsonFromRoot('config.json');
-const tempPath = FileSystem.getTempPath();
+const tempPath = path.join(FileSystem.getTempPath(), path.basename(import.meta.url));
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();
 const visualName = 'visualName';
@@ -43,7 +43,7 @@ const visualPath = path.join(tempPath, visualName);
 describe("E2E - pbiviz new", () => {
 
     beforeEach(() => {
-        FileSystem.resetTempDirectory();
+        FileSystem.resetDirectory(tempPath);
         process.chdir(tempPath);
     });
 
@@ -52,7 +52,7 @@ describe("E2E - pbiviz new", () => {
     });
 
     afterAll(() => {
-        FileSystem.deleteTempDirectory();
+        FileSystem.deleteDirectory(tempPath);
     });
 
     it("Should generate new visual with default template", () => {
