@@ -26,14 +26,26 @@ export function getRootPath(): string {
     return path.join(pathToDirectory, "..", "..");
 }
 
-function readFileFromRoot(filePath: string) {
-    return fs.readFileSync(path.join(getRootPath(), filePath), "utf8")
+function getJsPath(filePath: string) {
+    return filePath.replace(/\.json$/, '.js');
 }
 
-export function readJsonFromRoot(filePath: string) {
-    return JSON.parse(readFileFromRoot(filePath));
+function safelyRequire(filePath: string) {
+    return fs.existsSync(filePath) && require(filePath);
+}
+
+function safelyParse(filePath: string) {
+    return fs.existsSync(filePath) && JSON.parse(fs.readFileSync(filePath, "utf-8"));
+}
+
+export function readJsonFromRoot(jsonFilename: string) {
+    const jsonPath = path.join(getRootPath(), jsonFilename);
+    const jsPath = getJsPath(jsonPath);
+    return safelyRequire(jsPath) || safelyParse(jsonPath);
 }
 
 export function readJsonFromVisual(filePath: string, visualPath?: string) {
-    return JSON.parse(fs.readFileSync(path.join(visualPath ?? process.cwd(), filePath), "utf8"));
+    const jsonPath = path.join(visualPath ?? process.cwd(), filePath);
+    const jsPath = getJsPath(jsonPath);
+    return safelyRequire(jsPath) || safelyParse(jsonPath);
 }

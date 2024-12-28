@@ -58,3 +58,17 @@ export const writeMetadata = (visualPath) => {
     pbiviz.author.email = "pbicvsupport";
     fs.writeJSONSync(pbivizJSONFile, pbiviz);
 };
+
+export const writeMetadataAsJsFile = (visualPath) => {
+    const pbivizJSONFile = path.join(visualPath, '/pbiviz.json');
+    const pbivizJSFile = path.join(visualPath, '/pbiviz.js');
+
+    const pbiviz = fs.readJSONSync(pbivizJSONFile);
+    pbiviz.visual.description = "description";
+    pbiviz.visual.supportUrl = "supportUrl";
+    pbiviz.author.name = "Microsoft";
+    pbiviz.author.email = "pbicvsupport";
+
+    const pbivizJSContents = `module.exports = JSON.parse(\`${JSON.stringify(pbiviz)}\`)`;
+    fs.writeFileSync(pbivizJSFile, pbivizJSContents);
+};
