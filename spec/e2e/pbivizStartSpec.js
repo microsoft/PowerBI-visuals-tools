@@ -173,7 +173,7 @@ describe("E2E - pbiviz start", () => {
                             path: '/assets/' + file,
                             method: 'GET'
                         };
-                        const certValid = "rejec" + "tedUnaut" + "horized" // Auto tests are failing because of this
+                        const certValid = "rejec" + "tUnaut" + "horized" // Auto tests are failing because of this
                         options[certValid] = false;
 
                         download(options, testFile)
