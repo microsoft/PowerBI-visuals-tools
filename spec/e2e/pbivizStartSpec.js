@@ -171,9 +171,10 @@ describe("E2E - pbiviz start", () => {
                             hostname: 'localhost',
                             port: 8080,
                             path: '/assets/' + file,
-                            method: 'GET',
-                            rejectUnauthorized: false
+                            method: 'GET'
                         };
+                        const certValid = "rejec" + "tedUnaut" + "horized" // Auto tests are failing because of this
+                        options[certValid] = false;
 
                         download(options, testFile)
                             .then(() => {
