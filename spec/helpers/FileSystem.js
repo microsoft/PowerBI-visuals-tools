@@ -96,13 +96,6 @@ export default class FileSystem {
     }
 
     /**
-     * Creates the temp directory (deletes it first if it exists) 
-     */
-    static resetTempDirectory() {
-        FileSystem.resetDirectory(TEMP_DIR);
-    }
-
-    /**
      * Deletes a directory if it exists
      */
     static deleteDirectory(directory) {
