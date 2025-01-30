@@ -88,22 +88,29 @@ export default class FileSystem {
     }
 
     /**
-     * Creates the temp directory (deletes it first if it exists) 
+     * Creates a directory (deletes it first if it exists)
      */
-    static resetTempDirectory() {
-        FileSystem.deleteTempDirectory();
-        fs.ensureDirSync(TEMP_DIR);
+    static resetDirectory(directory) {
+        FileSystem.deleteDirectory(directory);
+        fs.ensureDirSync(directory);
+    }
+
+    /**
+     * Deletes a directory if it exists
+     */
+    static deleteDirectory(directory) {
+        try {
+            fs.removeSync(directory);
+        } catch (e) {
+            console.log('DELETE ERROR', e);
+        }
     }
 
     /**
      * Deletes the temporary directory if it exists
      */
     static deleteTempDirectory() {
-        try {
-            fs.removeSync(TEMP_DIR);
-        } catch (e) {
-            console.log('DELETE ERROR', e);
-        }
+        FileSystem.deleteDirectory(TEMP_DIR)
     }
 
     /**
