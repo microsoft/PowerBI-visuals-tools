@@ -107,13 +107,6 @@ export default class FileSystem {
     }
 
     /**
-     * Deletes the temporary directory if it exists
-     */
-    static deleteTempDirectory() {
-        FileSystem.deleteDirectory(TEMP_DIR)
-    }
-
-    /**
      * Executes the pbiviz CLI
      * 
      * @param {string} command - the command to be executed

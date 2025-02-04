@@ -8,12 +8,11 @@
     "build": "tsc",
     "pbiviz": "node ./bin/pbiviz.js",
     "start": "npm run pbiviz start",
-    "test": "npm run build && npm run clean-tests && npm run lint && npm run jasmine",
+    "test": "npm run build && npm run lint && npm run jasmine",
     "jasmine": "node spec/jasmine-runner.js",
     "jasmine-inspect": "node --inspect spec/jasmine-runner.js",
     "lint": "npx eslint .",
-    "clean-tests": "node spec/clean-tests.js",
-    "debug-tests": "npm run clean-tests && npm run lint && npm run jasmine-inspect"
+    "debug-tests": "npm run lint && npm run jasmine-inspect"
   },
   "bin": {
     "pbiviz": "./bin/pbiviz.js"
