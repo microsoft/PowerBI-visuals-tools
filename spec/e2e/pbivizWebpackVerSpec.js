@@ -32,14 +32,14 @@ import semver from 'semver';
 import FileSystem from '../helpers/FileSystem.js';
 import { writeMetadata } from "./testUtils.js";
 
-const tempPath = FileSystem.getTempPath();
+const tempPath = path.join(FileSystem.getTempPath(), path.basename(import.meta.url));
 const startPath = process.cwd();
 const visualName = 'visualname';
 const visualPath = path.join(tempPath, visualName);
 
 describe("E2E - webpack tools", () => {
     beforeEach(() => {
-        FileSystem.resetTempDirectory();
+        FileSystem.resetDirectory(tempPath);
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName, ' -t default --force');
         process.chdir(visualPath);
@@ -53,7 +53,7 @@ describe("E2E - webpack tools", () => {
 
     afterAll(() => {
         process.chdir(startPath);
-        FileSystem.deleteTempDirectory();
+        FileSystem.deleteDirectory(tempPath);
     });
 
     const removeApi = () => {
