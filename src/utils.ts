@@ -30,22 +30,22 @@ function getJsPath(filePath: string) {
     return filePath.replace(/\.json$/, '.js');
 }
 
-function safelyRequire(filePath: string) {
-    return fs.existsSync(filePath) && require(filePath);
+async function safelyImport(filePath: string) {
+    return fs.existsSync(filePath) && (await import(`file://${filePath}`)).default;
 }
 
 function safelyParse(filePath: string) {
     return fs.existsSync(filePath) && JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
-export function readJsonFromRoot(jsonFilename: string) {
+export async function readJsonFromRoot(jsonFilename: string) {
     const jsonPath = path.join(getRootPath(), jsonFilename);
     const jsPath = getJsPath(jsonPath);
-    return safelyRequire(jsPath) || safelyParse(jsonPath);
+    return (await safelyImport(jsPath)) || safelyParse(jsonPath);
 }
 
-export function readJsonFromVisual(filePath: string, visualPath?: string) {
+export async function readJsonFromVisual(filePath: string, visualPath?: string) {
     const jsonPath = path.join(visualPath ?? process.cwd(), filePath);
     const jsPath = getJsPath(jsonPath);
-    return safelyRequire(jsPath) || safelyParse(jsonPath);
+    return (await safelyImport(jsPath)) || safelyParse(jsonPath);
 }

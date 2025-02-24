@@ -31,7 +31,7 @@ import Package from '../../lib/Package.js';
 import { Stage, VisualFeatureType } from '../../lib/features/FeatureTypes.js';
 import { readJsonFromRoot } from '../../lib/utils.js';
 
-const config = readJsonFromRoot('config.json');
+const config = await readJsonFromRoot('config.json');
 
 describe("Features", () => {
     describe("Visual", () => {

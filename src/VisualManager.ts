@@ -49,7 +49,7 @@ export interface GenerateOptions {
     template: string;
 }
 
-const globalConfig = readJsonFromRoot('config.json');
+const globalConfig = await readJsonFromRoot('config.json');
 const PBIVIZ_FILE = 'pbiviz.json';
 
 /**
@@ -70,10 +70,10 @@ export default class VisualManager {
         this.basePath = rootPath;
     }
 
-    public prepareVisual(pbivizFile: string = PBIVIZ_FILE) {
+    public async prepareVisual(pbivizFile: string = PBIVIZ_FILE) {
         if (this.doesPBIVIZExists(pbivizFile)) {
-            this.pbivizConfig = readJsonFromVisual(pbivizFile, this.basePath);
-            this.createVisualInstance();
+            this.pbivizConfig = await readJsonFromVisual(pbivizFile, this.basePath);
+            await this.createVisualInstance();
         } else {
             ConsoleWriter.error(pbivizFile + ' not found. You must be in the root of a visual project to run this command.')
             process.exit(1);
@@ -94,8 +94,8 @@ export default class VisualManager {
         
     }
     
-    public createVisualInstance() {
-        this.capabilities = readJsonFromVisual("capabilities.json", this.basePath);
+    public async createVisualInstance() {
+        this.capabilities = await readJsonFromVisual("capabilities.json", this.basePath);
         this.visual = new Visual(this.capabilities, this.pbivizConfig);
     }
 
@@ -220,7 +220,7 @@ export default class VisualManager {
         }
 
         try {
-            const config = readJsonFromRoot('config.json');
+            const config = await readJsonFromRoot('config.json');
             if(config.visualTemplates[generateOptions.template]){
                 new TemplateFetcher( generateOptions.template, visualName, undefined )
                     .fetch();

@@ -32,7 +32,7 @@ import os from 'os';
 import { readJsonFromRoot } from '../../lib/utils.js';
 import { createCertFile } from '../../lib/CertificateTools.js';
 
-const config = readJsonFromRoot('config.json');
+const config = await readJsonFromRoot('config.json');
 
 describe("E2E - pbiviz install-cert", () => {
     beforeEach((done) => {

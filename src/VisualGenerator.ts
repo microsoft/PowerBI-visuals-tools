@@ -34,7 +34,7 @@ import lodashDefaults from 'lodash.defaults';
 import path from 'path';
 import template from '../templates/pbiviz-json-template.js';
 
-const config = readJsonFromRoot('config.json');
+const config = await readJsonFromRoot('config.json');
 
 const VISUAL_TEMPLATES_PATH = path.join(getRootPath(), config.templates.visuals);
 const API_VERSION = config.generate.apiVersion;

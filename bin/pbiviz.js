@@ -32,7 +32,7 @@ import CommandManager from '../lib/CommandManager.js';
 import { readJsonFromRoot } from '../lib/utils.js';
 import { program, Option } from 'commander';
 
-const npmPackage = readJsonFromRoot('package.json');
+const npmPackage = await readJsonFromRoot('package.json');
 const rootPath = process.cwd();
 const pbivizFile = 'pbiviz.json';
 
