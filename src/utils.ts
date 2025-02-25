@@ -26,8 +26,8 @@ export function getRootPath(): string {
     return path.join(pathToDirectory, "..", "..");
 }
 
-function getJsPath(filePath: string) {
-    return filePath.replace(/\.json$/, '.js');
+export function getJsPath(filePath: string) {
+    return filePath.replace(/\.json$/, '.mjs');
 }
 
 async function safelyImport(filePath: string) {

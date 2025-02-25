@@ -71,8 +71,9 @@ export default class VisualManager {
     }
 
     public async prepareVisual(pbivizFile: string = PBIVIZ_FILE) {
-        if (this.doesPBIVIZExists(pbivizFile)) {
-            this.pbivizConfig = await readJsonFromVisual(pbivizFile, this.basePath);
+        this.pbivizConfig = await readJsonFromVisual(pbivizFile, this.basePath);
+
+        if (this.pbivizConfig) {
             await this.createVisualInstance();
         } else {
             ConsoleWriter.error(pbivizFile + ' not found. You must be in the root of a visual project to run this command.')

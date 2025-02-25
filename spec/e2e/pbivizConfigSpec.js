@@ -31,6 +31,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import FileSystem from '../helpers/FileSystem.js';
 import { writeMetadataAsJsFile } from "./testUtils.js";
+import { readJsonFromVisual } from "../../lib/utils.js";
 
 const require = createRequire(import.meta.url);
 const tempPath = path.join(FileSystem.getTempPath(), path.basename(import.meta.url));
@@ -41,14 +42,14 @@ describe("E2E - pbiviz JS config", () => {
     const visualName = 'myjsvisualname';
     const visualPath = path.join(tempPath, visualName);
 
-    beforeEach(() => {
+    beforeEach(async () => {
         process.chdir(startPath);
         FileSystem.resetDirectory(tempPath);
         process.chdir(tempPath);
         FileSystem.runPbiviz('new', visualName);
         process.chdir(visualPath);
 
-        writeMetadataAsJsFile(visualPath);
+        await writeMetadataAsJsFile(visualPath);
     });
 
     afterAll(() => {
@@ -56,9 +57,9 @@ describe("E2E - pbiviz JS config", () => {
         FileSystem.deleteDirectory(tempPath);
     });
 
-    it("Should output visual info from a JS file", () => {
+    it("Should output visual info from a JS file", async () => {
         const output = FileSystem.runPbiviz('info').toString();
-        const visualConfig = require(path.join(visualPath, 'pbiviz.js')).visual;
+        const visualConfig = (await readJsonFromVisual('pbiviz.mjs', visualPath)).visual;
         expect(output).toContain(visualName);
         expect(output).toContain(visualConfig.guid);
     });

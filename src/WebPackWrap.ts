@@ -151,7 +151,7 @@ export default class WebPackWrap {
         }
 
         const api = await WebPackWrap.loadAPIPackage();
-        const dependenciesPath = this.pbiviz.dependencies && path.join(process.cwd(), this.pbiviz.dependencies);
+        const dependenciesPath = typeof this.pbiviz.dependencies === "string" && path.join(process.cwd(), this.pbiviz.dependencies);
         let pluginConfiguration = {
             ...lodashCloneDeep(visualPackage.pbivizConfig),
 
