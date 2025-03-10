@@ -15,8 +15,8 @@ import ConsoleWriter from './ConsoleWriter.js';
 import { resolveCertificate } from "./CertificateTools.js";
 import { readJsonFromRoot, readJsonFromVisual } from './utils.js'
 
-const config = readJsonFromRoot('config.json');
-const npmPackage = readJsonFromRoot('package.json');
+const config = await readJsonFromRoot('config.json');
+const npmPackage = await readJsonFromRoot('package.json');
 
 const visualPlugin = "visualPlugin.ts";
 const encoding = "utf8";
@@ -151,7 +151,7 @@ export default class WebPackWrap {
         }
 
         const api = await WebPackWrap.loadAPIPackage();
-        const dependenciesPath = this.pbiviz.dependencies && path.join(process.cwd(), this.pbiviz.dependencies);
+        const dependenciesPath = typeof this.pbiviz.dependencies === "string" && path.join(process.cwd(), this.pbiviz.dependencies);
         let pluginConfiguration = {
             ...lodashCloneDeep(visualPackage.pbivizConfig),
 
@@ -306,8 +306,8 @@ export default class WebPackWrap {
         allLocales: false,
         pbivizFile: 'pbiviz.json',
     }) {
-        const tsconfig = readJsonFromVisual('tsconfig.json');
-        this.pbiviz = readJsonFromVisual(options.pbivizFile);
+        const tsconfig = await readJsonFromVisual('tsconfig.json');
+        this.pbiviz = await readJsonFromVisual(options.pbivizFile);
 
         const capabilitiesPath = this.pbiviz.capabilities;
         visualPackage.pbivizConfig.capabilities = capabilitiesPath;

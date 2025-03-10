@@ -33,7 +33,7 @@ import FileSystem from '../helpers/FileSystem.js';
 import { writeMetadata, readdirSyncRecursive } from "./testUtils.js";
 import { download, createFolder, readJsonFromRoot } from "../../lib/utils.js";
 
-const config = readJsonFromRoot('config.json');
+const config = await readJsonFromRoot('config.json');
 const tempPath = path.join(FileSystem.getTempPath(), path.basename(import.meta.url));
 const templatePath = FileSystem.getTemplatePath();
 const startPath = process.cwd();

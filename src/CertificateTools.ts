@@ -36,7 +36,7 @@ import { readJsonFromRoot } from './utils.js';
 import ConsoleWriter from './ConsoleWriter.js';
 
 const certSafePeriod = 1000 * 60 * 60 * 24; // 24 hours
-const config = readJsonFromRoot('config.json');
+const config = await readJsonFromRoot('config.json');
 const pathToCertFolder = path.join(os.homedir(), config.server.certificateFolder);
 const secretFilesPath = {
     certPath: path.join(pathToCertFolder, config.server.certificate),

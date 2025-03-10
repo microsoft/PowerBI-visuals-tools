@@ -26,33 +26,42 @@
 
 "use strict";
 
+import { createRequire } from 'module';
 import fs from 'fs-extra';
 import path from 'path';
-import os from 'os';
-import { readJsonFromRoot } from '../../lib/utils.js';
-import { createCertFile } from '../../lib/CertificateTools.js';
+import FileSystem from '../helpers/FileSystem.js';
+import { writeMetadataAsJsFile } from "./testUtils.js";
+import { readJsonFromVisual } from "../../lib/utils.js";
 
-const config = await readJsonFromRoot('config.json');
+const require = createRequire(import.meta.url);
+const tempPath = path.join(FileSystem.getTempPath(), path.basename(import.meta.url));
+const startPath = process.cwd();
 
-describe("E2E - pbiviz install-cert", () => {
-    beforeEach((done) => {
-        createCertFile(config, false).then(done);
+describe("E2E - pbiviz JS config", () => {
+
+    const visualName = 'myjsvisualname';
+    const visualPath = path.join(tempPath, visualName);
+
+    beforeEach(async () => {
+        process.chdir(startPath);
+        FileSystem.resetDirectory(tempPath);
+        process.chdir(tempPath);
+        FileSystem.runPbiviz('new', visualName);
+        process.chdir(visualPath);
+
+        await writeMetadataAsJsFile(visualPath);
     });
 
-    describe("pbiviz", () => {
-        it("pbiviz install-cert command should generate certificate", (done) => {
-            const pathToCertFolder = path.join(os.homedir(), config.server.certificateFolder);
-            const certPath = path.join(pathToCertFolder, config.server.certificate);
-            const keyPath = path.join(pathToCertFolder, config.server.privateKey);
-            const pfxPath = path.join(pathToCertFolder, config.server.pfx);
-            const certExists = fs.existsSync(certPath);
-            const keyExists = fs.existsSync(keyPath);
-            const pfxExists = fs.existsSync(pfxPath);
+    afterAll(() => {
+        process.chdir(startPath);
+        FileSystem.deleteDirectory(tempPath);
+    });
 
-            const result = (certExists && keyExists) || pfxExists;
-
-            expect(result).toBeTruthy();
-            done();
-        });
+    it("Should output visual info from a JS file", async () => {
+        const output = FileSystem.runPbiviz('info').toString();
+        const visualConfig = (await readJsonFromVisual('pbiviz.mjs', visualPath)).visual;
+        expect(output).toContain(visualName);
+        expect(output).toContain(visualConfig.guid);
     });
 });
+

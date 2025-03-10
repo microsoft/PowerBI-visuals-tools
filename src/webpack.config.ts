@@ -5,7 +5,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import path from "path";
 import webpack from "webpack";
 
-const config = readJsonFromRoot("/config.json");
+const config = await readJsonFromRoot("/config.json");
 const rootPath = getRootPath();
 
 const webpackConfig = {

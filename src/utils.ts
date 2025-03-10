@@ -26,14 +26,26 @@ export function getRootPath(): string {
     return path.join(pathToDirectory, "..", "..");
 }
 
-function readFileFromRoot(filePath: string) {
-    return fs.readFileSync(path.join(getRootPath(), filePath), "utf8")
+export function getJsPath(filePath: string) {
+    return filePath.replace(/\.json$/, '.mjs');
 }
 
-export function readJsonFromRoot(filePath: string) {
-    return JSON.parse(readFileFromRoot(filePath));
+async function safelyImport(filePath: string) {
+    return fs.existsSync(filePath) && (await import(`file://${filePath}`)).default;
 }
 
-export function readJsonFromVisual(filePath: string, visualPath?: string) {
-    return JSON.parse(fs.readFileSync(path.join(visualPath ?? process.cwd(), filePath), "utf8"));
+function safelyParse(filePath: string) {
+    return fs.existsSync(filePath) && JSON.parse(fs.readFileSync(filePath, "utf-8"));
+}
+
+export async function readJsonFromRoot(jsonFilename: string) {
+    const jsonPath = path.join(getRootPath(), jsonFilename);
+    const jsPath = getJsPath(jsonPath);
+    return (await safelyImport(jsPath)) || safelyParse(jsonPath);
+}
+
+export async function readJsonFromVisual(filePath: string, visualPath?: string) {
+    const jsonPath = path.join(visualPath ?? process.cwd(), filePath);
+    const jsPath = getJsPath(jsonPath);
+    return (await safelyImport(jsPath)) || safelyParse(jsonPath);
 }

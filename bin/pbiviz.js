@@ -32,7 +32,7 @@ import CommandManager from '../lib/CommandManager.js';
 import { readJsonFromRoot } from '../lib/utils.js';
 import { program, Option } from 'commander';
 
-const npmPackage = readJsonFromRoot('package.json');
+const npmPackage = await readJsonFromRoot('package.json');
 const rootPath = process.cwd();
 const pbivizFile = 'pbiviz.json';
 
@@ -84,7 +84,7 @@ pbiviz
     .option('--no-stats', "Doesn't generate statistics files")
     .option('--skip-api', "Skips powerbi-visuals-api verifying")
     .option('-l, --all-locales', "Keeps all locale files in the package. By default only used inside stringResources folder locales are included.")
-    .option('-f, --pbiviz-file <pbiviz-file>', "Path to pbiviz.json file (useful for debugging)", pbivizFile)
+    .option('-f, --pbiviz-file <pbiviz-file>', "Path to visual config file (pbiviz.json / pbiviz.mjs)", pbivizFile)
     .action(async (options) => {
         CommandManager.start(options, rootPath);
     });
@@ -100,7 +100,7 @@ pbiviz
     .option('-l, --all-locales', "Keeps all locale files in the package. By default only used inside stringResources folder locales are included.")
     .option('-v, --verbose', "Enables verbose logging")
     .option('--fix', 'Enable autofixing of lint errors')
-    .option('-p, --pbiviz-file <pbiviz-file>', "Path to pbiviz.json file (useful for debugging)", pbivizFile)
+    .option('-p, --pbiviz-file <pbiviz-file>', "Path to visual config file (pbiviz.json / pbiviz.mjs)", pbivizFile)
     .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
         .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
         .default('6')

@@ -7,7 +7,7 @@ import { exec } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
 
-const config = readJsonFromRoot('config.json');
+const config = await readJsonFromRoot('config.json');
 
 export default class TemplateFetcher {
     private templateName: string;

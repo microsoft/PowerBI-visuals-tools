@@ -11,8 +11,8 @@ export default class APIVersion implements BaseFeature {
     public static minAPIversion: string;
     public static errorMessage: string;
 
-    static isSupported(visual: Visual) {
-        const globalConfig = readJsonFromRoot('config.json');
+    static async isSupported(visual: Visual) {
+        const globalConfig = await readJsonFromRoot('config.json');
         this.minAPIversion = globalConfig.constants.minAPIversion;
         this.errorMessage = `API version must be at least ${this.minAPIversion}.`
         return visual.doesAPIVersionMatch(this.minAPIversion)
