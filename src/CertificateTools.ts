@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 /*
  *  Power BI Visual CLI
  *
