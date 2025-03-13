@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 6.0.0
+* **Introduced pbiviz.js support.** This feature allows generate configuration dynamically using benefits of JavaScript.
+  It allows you to easily use any js logic to build your pbiviz file using environment variables or other parameters.
+* Updated dependencies to the latest versions.
+
 ## 5.6.0
 * Updated to ESLint v9
 * Updated to TypeScript v5
