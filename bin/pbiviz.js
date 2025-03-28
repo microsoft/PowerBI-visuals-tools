@@ -101,6 +101,8 @@ pbiviz
     .option('-v, --verbose', "Enables verbose logging")
     .option('--fix', 'Enable autofixing of lint errors')
     .option('-p, --pbiviz-file <pbiviz-file>', "Path to visual config file (pbiviz.json / pbiviz.mjs)", pbivizFile)
+    .option('--certification-audit ', 'Audit the visual package for possible certification issues')
+    .option('--certification-fix', 'Fix found certification issues in the visual package. Please carefully test the built package to ensure its functionality is not broken after that')
     .addOption(new Option('-c, --compression <compressionLevel>', "Enables compression of visual package")
         .choices(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
         .default('6')
