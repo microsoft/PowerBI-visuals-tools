@@ -31,11 +31,30 @@ export function getJsPath(filePath: string) {
 }
 
 async function safelyImport(filePath: string) {
-    return fs.existsSync(filePath) && (await import(`file://${filePath}`)).default;
+    if (!fs.existsSync(filePath)) {
+        return null;
+    }
+
+    try {
+        return (await import(`file://${filePath}`)).default;
+    } catch (e) {
+        console.error(`Error importing JS config from ${filePath}`, e);
+        return null;
+    }
 }
 
 function safelyParse(filePath: string) {
-    return fs.existsSync(filePath) && JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    if (!fs.existsSync(filePath)) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    }
+    catch (e) {
+        console.error(`Error parsing JSON config from ${filePath}`, e);
+        return null;
+    }
 }
 
 export async function readJsonFromRoot(jsonFilename: string) {
