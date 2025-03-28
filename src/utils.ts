@@ -57,14 +57,18 @@ function safelyParse(filePath: string) {
     }
 }
 
-export async function readJsonFromRoot(jsonFilename: string) {
-    const jsonPath = path.join(getRootPath(), jsonFilename);
+export async function readJsonFromRoot(jsonFileName: string) {
+    const jsonPath = path.join(getRootPath(), jsonFileName);
     const jsPath = getJsPath(jsonPath);
-    return (await safelyImport(jsPath)) || safelyParse(jsonPath);
+    const content = (await safelyImport(jsPath)) || safelyParse(jsonPath)
+    if(!content) throw new Error(`${jsonFileName} file not found`)
+    return content
 }
 
 export async function readJsonFromVisual(filePath: string, visualPath?: string) {
     const jsonPath = path.join(visualPath ?? process.cwd(), filePath);
     const jsPath = getJsPath(jsonPath);
-    return (await safelyImport(jsPath)) || safelyParse(jsonPath);
+    const content = (await safelyImport(jsPath)) || safelyParse(jsonPath)
+    if(!content) throw new Error(`${filePath} file not found`)
+    return content
 }
