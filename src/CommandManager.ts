@@ -29,6 +29,8 @@ interface PackageOptions {
     verbose: boolean;
     fix: boolean;
     pbivizFile: string;
+    certificationAudit: boolean;
+    certificationFix: boolean;
 }
 
 interface NewOptions {
@@ -70,7 +72,6 @@ export default class CommandManager {
             ConsoleWriter.error('Nothing to build. Cannot use --no-pbiviz without --resources');
             process.exit(1);
         }
-        
         const webpackOptions: WebpackOptions = {
             devMode: false,
             generateResources: options.resources,
@@ -82,6 +83,8 @@ export default class CommandManager {
             skipApiCheck: options.skipApi,
             allLocales: options.allLocales,
             pbivizFile: options.pbivizFile,
+            certificationAudit: options.certificationAudit,
+            certificationFix: options.certificationFix,
         }
         const lintOptions: LintOptions = {
             verbose: options.verbose,

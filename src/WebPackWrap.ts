@@ -35,6 +35,8 @@ export interface WebpackOptions {
     skipApiCheck?: boolean;
     allLocales?: boolean;
     pbivizFile?: string;
+    certificationAudit?: boolean;
+    certificationFix?: boolean;
 }
 
 export default class WebPackWrap {
@@ -170,8 +172,9 @@ export default class WebPackWrap {
             modules: typeof tsconfig.compilerOptions.outDir !== "undefined",
             visualSourceLocation: path.posix.relative(config.build.precompileFolder, tsconfig.files[0]).replace(/(\.ts)x|\.ts/, ""),
             pluginLocation: path.join(config.build.precompileFolder, "visualPlugin.ts"),
-            compression: options.compression
-
+            compression: options.compression,
+            certificationAudit: options.certificationAudit,
+            certificationFix: options.certificationFix,
         };
         return pluginConfiguration;
     }
@@ -305,6 +308,8 @@ export default class WebPackWrap {
         skipApiCheck: false,
         allLocales: false,
         pbivizFile: 'pbiviz.json',
+        certificationAudit: false,
+        certificationFix: false,
     }) {
         const tsconfig = await readJsonFromVisual('tsconfig.json');
         this.pbiviz = await readJsonFromVisual(options.pbivizFile);
