@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 6.1.1
+* Fixed bug with source maps generation (now using `eval-source-map` instead of `source-map`)
+
 ## 6.1.0
 * Added `--certification-audit` flag to `pbiviz package` command. It audits the visual package for possible certification issues.
 * Added `--certification-fix` flag to `pbiviz package` command. It fixes found certification issues in the visual package. Please carefully test the built package to ensure its functionality is not broken after that.

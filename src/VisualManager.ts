@@ -262,23 +262,32 @@ export default class VisualManager {
     private prepareDropFiles() {
         this.webpackConfig.devServer.setupMiddlewares = (middlewares, devServer) => {
             const { headers, publicPath, static: { directory } } = this.webpackConfig.devServer;
-            const assets = [ 'visual.js`', 'visual.css', 'pbiviz.json' ]
-
+            const assets = ['visual.js', 'visual.css', 'pbiviz.json'];
             const setHeaders = (res) => {
                 Object.getOwnPropertyNames(headers)
                     .forEach(property => res.header(property, headers[property]));
             };
+
             const readFile = (file, res, name) => {
+                const assetMiddleware = (req, middlewareRes, next) => {
+                    fs.readFile(file)
+                        .then(content => {
+                            middlewareRes.write(content);
+                            ConsoleWriter.info(`Serving ${name}`);
+                            middlewareRes.end();
+                        })
+                        .catch(err => {
+                            ConsoleWriter.error(`Error serving ${name}: ${err.message}`);
+                            next();
+                        });
+                };
+                
                 middlewares.unshift({
                     name,
-                    middleware: (req, middlewareRes) => {
-                        fs.readFile(file).then(function (content) {
-                            middlewareRes.write(content);
-                            console.log(`Serving ${name} to `);
-                            middlewareRes.end();
-                        });
-                    },
+                    path: `${publicPath}/${name}`,
+                    middleware: assetMiddleware
                 });
+                
                 res.end();
             };
 

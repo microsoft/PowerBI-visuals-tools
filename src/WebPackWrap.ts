@@ -226,7 +226,7 @@ export default class WebPackWrap {
             })
         );
 
-        if (options.devtool === "source-map" && this.webpackConfig.devServer.port) {
+        if (options.devMode && options.devtool && this.webpackConfig.devServer.port) {
             this.webpackConfig.plugins.push(
                 new webpack.SourceMapDevToolPlugin({
                     filename: '[file].map',
@@ -242,6 +242,7 @@ export default class WebPackWrap {
     }) {
         this.webpackConfig.module.rules.push({
             test: /(\.ts)x?$/,
+            exclude: /node_modules/,
             use: [
                 {
                     loader: "ts-loader",
