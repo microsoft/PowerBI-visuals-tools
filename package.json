@@ -81,7 +81,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "eslint": "^9.26.0",
-    "jasmine": "5.7.1",
+    "jasmine": "5.3.1",
     "jasmine-spec-reporter": "7.0.0",
     "semver": "7.7.2",
     "tree-kill": "1.2.2",
