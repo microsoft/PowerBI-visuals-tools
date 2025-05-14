@@ -128,7 +128,7 @@ const webpackConfig = {
         }
     },
     watchOptions: {
-        ignored: ['node_modules/**', '**/node_modules/**']
+        ignored: ['node_modules/**']
     },
     plugins: [
         new webpack.ProvidePlugin({

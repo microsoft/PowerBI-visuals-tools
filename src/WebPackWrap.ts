@@ -242,7 +242,6 @@ export default class WebPackWrap {
     }) {
         this.webpackConfig.module.rules.push({
             test: /(\.ts)x?$/,
-            exclude: /node_modules/,
             use: [
                 {
                     loader: "ts-loader",
