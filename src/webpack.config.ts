@@ -1,4 +1,3 @@
-
 import { getRootPath, readJsonFromRoot } from './utils.js';
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
@@ -129,7 +128,7 @@ const webpackConfig = {
         }
     },
     watchOptions: {
-        ignored: ['node_modules", "**']
+        ignored: ['node_modules/**']
     },
     plugins: [
         new webpack.ProvidePlugin({
