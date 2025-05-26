@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 6.1.2
+* Fixed issue with `process/browser` not being resolved correctly in webpack config
+
 ## 6.1.1
 * Fixed bug with source maps generation (now using `eval-source-map` instead of `source-map`)
 

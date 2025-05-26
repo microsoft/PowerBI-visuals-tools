@@ -38,6 +38,12 @@ const webpackConfig = {
                 }
             },
             {
+                test: /\.m?js/,
+                resolve: {
+                    fullySpecified: false
+                }
+            },
+            {
                 test: /\.json$/,
                 loader: "json-loader",
                 type: "javascript/auto"
