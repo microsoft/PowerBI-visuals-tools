@@ -17,6 +17,7 @@ import { readJsonFromRoot, readJsonFromVisual } from './utils.js'
 
 const config = await readJsonFromRoot('config.json');
 const npmPackage = await readJsonFromRoot('package.json');
+const visualPackage = await readJsonFromVisual('package.json');
 
 const visualPlugin = "visualPlugin.ts";
 const encoding = "utf8";
@@ -134,17 +135,6 @@ export default class WebPackWrap {
         }
     }
 
-    async getEnvironmentDetails() {
-        const env = {
-            nodeVersion: process.versions.node,
-            osPlatform: await os.platform(),
-            osVersion: await os.version ?? "undefined",
-            osReleaseVersion: await os.release(),
-            toolsVersion: npmPackage.version
-        };
-        return env;
-    }
-
     async configureCustomVisualsWebpackPlugin(visualPackage, options, tsconfig) {
         if (options.skipApiCheck) {
             ConsoleWriter.warning(`Skipping API check. Tools started with --skipApi flag.`);
@@ -154,6 +144,7 @@ export default class WebPackWrap {
 
         const api = await WebPackWrap.loadAPIPackage();
         const dependenciesPath = typeof this.pbiviz.dependencies === "string" && path.join(process.cwd(), this.pbiviz.dependencies);
+        const environmentInformation = await this.getEnvironmentInformation(options);
         let pluginConfiguration = {
             ...lodashCloneDeep(visualPackage.pbivizConfig),
 
@@ -175,8 +166,23 @@ export default class WebPackWrap {
             compression: options.compression,
             certificationAudit: options.certificationAudit,
             certificationFix: options.certificationFix,
+            environmentInformation: environmentInformation
         };
         return pluginConfiguration;
+    }
+
+    async getEnvironmentInformation(options) {
+        const typescriptVersion = process.versions.typescript ?? 
+            visualPackage?.devDependencies?.typescript ?? 
+            visualPackage?.dependencies?.typescript;
+        const environmentInformation = {
+            typescript: typescriptVersion,
+            node: process.versions.node,
+            tools: npmPackage.version,
+            flags: JSON.stringify(options),
+            os: await os.platform()
+        };
+        return environmentInformation;
     }
 
     async configureAPIVersion() {
