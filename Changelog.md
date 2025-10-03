@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 6.2.0
+* Changed source map generation to `inline-source-map`. It includes source maps into the end of file instead of separate one. It's required because of latest changes in Power BI that forbids loading `.map` files.
+* Updated packages
+
 ## 6.1.2
 * Fixed issue with `process/browser` not being resolved correctly in webpack config
 

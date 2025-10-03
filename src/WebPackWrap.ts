@@ -226,7 +226,9 @@ export default class WebPackWrap {
             })
         );
 
-        if (options.devMode && options.devtool && this.webpackConfig.devServer.port) {
+        // Only add separate source map files when NOT using inline source maps
+        if (options.devMode && options.devtool && this.webpackConfig.devServer.port && 
+            options.devtool !== "inline-source-map") {
             this.webpackConfig.plugins.push(
                 new webpack.SourceMapDevToolPlugin({
                     filename: '[file].map',
@@ -264,6 +266,12 @@ export default class WebPackWrap {
 
     async prepareWebPackConfig(visualPackage, options: WebpackOptions, tsconfig) {
         this.webpackConfig = Object.assign({}, await import('./webpack.config.js')).default;
+        
+        // Set webpack mode based on devMode
+        if (options.devMode) {
+            this.webpackConfig.mode = "development";
+        }
+        
         if (options.minifyJS) {
             this.enableOptimization();
         }
