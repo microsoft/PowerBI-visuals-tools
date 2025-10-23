@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-tools",
-  "version": "6.3.0",
+  "version": "7.0.0-beta.1",
   "description": "Command line tool for creating and publishing visuals for Power BI",
   "main": "./bin/pbiviz.js",
   "type": "module",
