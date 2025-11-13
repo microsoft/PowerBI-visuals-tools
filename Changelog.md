@@ -2,7 +2,7 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
-## 6.3.0
+## 7.0.0
 * **BREAKING CHANGE**: Removed Node.js polyfills from webpack configuration for improved security and reduced bundle size. Node.js modules (crypto, buffer, stream, etc.) are no longer automatically available in the browser environment.
 * Removed browserify polyfill packages from dependencies (assert, buffer, crypto-browserify, console-browserify, constants-browserify, domain-browser, events, https-browserify, os-browserify, path-browserify, process, punycode, querystring-es3, readable-stream, stream-browserify, stream-http, string_decoder, timers-browserify, tty-browserify, url, util, vm-browserify, browserify-zlib)
 * **Action Required**: Review your visual code for Node.js module usage and remove them or update to browser-compatible alternatives
