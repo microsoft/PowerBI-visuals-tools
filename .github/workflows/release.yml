@@ -25,6 +25,7 @@ jobs:
     - name: Run npm install, build and test
       run: |
         npm i
+        npm run build
         npm run test
         npm run lint
     - run: zip -r lib.zip . -x '.*' 'node_modules/*' 'src/*' 'spec/*' 'CVClientLA.md'
