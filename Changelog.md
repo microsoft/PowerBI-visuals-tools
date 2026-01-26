@@ -2,6 +2,10 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 7.0.3
+* Fixed missing validation for `author` object in pbiviz.json. The `author` object with `name` and `email` fields is now required.
+* Updated packages.
+
 ## 7.0.2
 * Changed source map generation to `eval-source-map`.
 * Fixed load source map error.
