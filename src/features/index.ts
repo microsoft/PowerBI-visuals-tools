@@ -1,6 +1,7 @@
 import AdvancedEditMode from './AdvancedEditMode.js'
 import AllowInteractions from './AllowInteractions.js'
 import AnalyticsPane from './AnalyticsPane.js'
+import AuthorInfo from './AuthorInfo.js'
 import Bookmarks from './Bookmarks.js'
 import ColorPalette from './ColorPalette.js'
 import ConditionalFormatting from './ConditionalFormatting.js'
@@ -33,5 +34,5 @@ export {
     HighlightData, KeyboardNavigation, LandingPage, LaunchURL,
     Localizations, LocalStorage, ModalDialog, RenderingEvents,
     SelectionAcrossVisuals, SyncSlicer, Tooltips, TotalSubTotal,
-    WarningIcon, APIVersion, VisualVersion
+    WarningIcon, APIVersion, VisualVersion, AuthorInfo
 }

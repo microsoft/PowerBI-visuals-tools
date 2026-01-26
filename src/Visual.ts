@@ -22,6 +22,13 @@ export class Visual {
         return this.visualVersion.split(".").length === length
     }
 
+    public isAuthorDefined() {
+        const author = this.config.author;
+        return author !== undefined &&
+               author !== null &&
+               typeof author === "object";
+    }
+
     private getVisualFeatureType() {
         const isMatrixSupported = this.capabilities?.dataViewMappings?.some(dataView => dataView.matrix)
         const isSlicer = Boolean(this.capabilities?.objects?.general?.properties?.filter?.type?.filter)
