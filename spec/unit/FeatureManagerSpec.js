@@ -30,12 +30,13 @@ import * as features from '../../lib/features/index.js';
 import Package from '../../lib/Package.js';
 import { Stage, VisualFeatureType } from '../../lib/features/FeatureTypes.js';
 import { readJsonFromRoot } from '../../lib/utils.js';
+import { Visual } from '../../lib/Visual.js';
 
 const config = await readJsonFromRoot('config.json');
 
 describe("Features", () => {
     describe("Visual", () => {
-        const { APIVersion, VisualVersion } = features;
+        const { APIVersion, VisualVersion, AuthorInfo } = features;
         it("Should support API Version", () => {
             const Visual = {
                 doesAPIVersionMatch: (minVersion) =>  {
@@ -55,6 +56,62 @@ describe("Features", () => {
                 }
             }
             expect(VisualVersion.isSupported(Visual)).toBeTrue;
+        });
+
+        describe("AuthorInfo", () => {
+            it("Should support when author object is defined", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { name: "Test Author", email: "test@example.com" }
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeTrue();
+            });
+
+            it("Should support when author object is empty", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: {}
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeTrue();
+            });
+
+            it("Should not support when author is undefined", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0"
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author is null", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: null
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author is a string", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: "Test Author"
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
         });
     });
 
