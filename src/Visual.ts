@@ -23,10 +23,9 @@ export class Visual {
     }
 
     public isAuthorDefined() {
-        const author = this.config.author;
-        return author !== undefined &&
-               author !== null &&
-               typeof author === "object";
+        const author = this.config?.author;
+        return typeof author?.name === "string" && author.name.length > 0 &&
+               typeof author?.email === "string" && author.email.length > 0;
     }
 
     private getVisualFeatureType() {

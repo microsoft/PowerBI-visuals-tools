@@ -70,7 +70,7 @@ describe("Features", () => {
                 expect(AuthorInfo.isSupported(visual)).toBeTrue();
             });
 
-            it("Should support when author object is empty", () => {
+            it("Should not support when author object is empty", () => {
                 const capabilities = {};
                 const visualConfig = {
                     visual: { version: "1.0.0.0" },
@@ -78,7 +78,7 @@ describe("Features", () => {
                     author: {}
                 };
                 const visual = new Visual(capabilities, visualConfig);
-                expect(AuthorInfo.isSupported(visual)).toBeTrue();
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
             });
 
             it("Should not support when author is undefined", () => {
@@ -108,6 +108,83 @@ describe("Features", () => {
                     visual: { version: "1.0.0.0" },
                     apiVersion: "5.3.0",
                     author: "Test Author"
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author has invalid fields", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { someField: "MyString" }
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author is missing email", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { name: "Test Author" }
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author is missing name", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { email: "test@example.com" }
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author name is empty string", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { name: "", email: "test@example.com" }
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author email is empty string", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { name: "Test Author", email: "" }
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author name is not a string", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { name: 123, email: "test@example.com" }
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(AuthorInfo.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when author email is not a string", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0",
+                    author: { name: "Test Author", email: 123 }
                 };
                 const visual = new Visual(capabilities, visualConfig);
                 expect(AuthorInfo.isSupported(visual)).toBeFalse();
