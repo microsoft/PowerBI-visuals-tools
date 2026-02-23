@@ -8,7 +8,6 @@ import util from 'util';
 const exec = util.promisify(processExec);
 import { exec as processExec } from 'child_process';
 import lodashCloneDeep from 'lodash.clonedeep';
-import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { PowerBICustomVisualsWebpackPlugin, LocalizationLoader } from 'powerbi-visuals-webpack-plugin';
 import ConsoleWriter from './ConsoleWriter.js';
@@ -221,9 +220,14 @@ export default class WebPackWrap {
         }
         this.webpackConfig.plugins.push(
             new PowerBICustomVisualsWebpackPlugin(pluginConfiguration),
-            new ExtraWatchWebpackPlugin({
-                files: this.pbiviz.capabilities
-            })
+            {
+                apply: (compiler: webpack.Compiler) => {
+                    compiler.hooks.afterCompile.tap('AddCapabilitiesWatch', (compilation) => {
+                        const capabilitiesPath = path.resolve(process.cwd(), this.pbiviz.capabilities);
+                        compilation.fileDependencies.add(capabilitiesPath);
+                    });
+                }
+            }
         );
     }
 
