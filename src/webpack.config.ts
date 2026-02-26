@@ -2,7 +2,6 @@ import { getRootPath, readJsonFromRoot } from './utils.js';
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import path from "path";
-import webpack from "webpack";
 
 const config = await readJsonFromRoot("/config.json");
 const rootPath = getRootPath();
