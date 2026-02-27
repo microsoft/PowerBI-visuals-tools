@@ -30,6 +30,8 @@ import { formattingSettings, FormattingSettingsService } from "powerbi-visuals-u
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
+
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
 
@@ -85,6 +87,7 @@ const renderVisualUpdateType: number[] = [
 ];
 
 export class Visual implements IVisual {
+    private events: IVisualEventService;
     private rootElement: HTMLElement;
     private headNodes: Node[];
     private bodyNodes: Node[];
@@ -92,6 +95,8 @@ export class Visual implements IVisual {
     private formattingSettingsService: FormattingSettingsService;
 
     public constructor(options: VisualConstructorOptions) {
+        this.events = options.host.eventService;
+
         this.formattingSettingsService = new FormattingSettingsService();
         if (options && options.element) {
             this.rootElement = options.element;
@@ -101,29 +106,40 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions): void {
+        this.events.renderingStarted(options);
+
         if (!options ||
             !options.type ||
             !options.viewport ||
             !options.dataViews ||
             options.dataViews.length === 0 ||
             !options.dataViews[0]) {
+            this.events.renderingFinished(options);
             return;
         }
 
-        const dataView: DataView = options.dataViews[0];
-        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
+        try {
+            const dataView: DataView = options.dataViews[0];
+            this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
 
-        let payloadBase64: string = null;
-        if (dataView.scriptResult && dataView.scriptResult.payloadBase64) {
-            payloadBase64 = dataView.scriptResult.payloadBase64;
-        }
-
-        if (renderVisualUpdateType.indexOf(options.type) === -1) {
-            if (payloadBase64) {
-                this.injectCodeFromPayload(payloadBase64);
+            let payloadBase64: string = null;
+            if (dataView.scriptResult && dataView.scriptResult.payloadBase64) {
+                payloadBase64 = dataView.scriptResult.payloadBase64;
             }
-        } else {
-            this.onResizing(options.viewport);
+
+            if (renderVisualUpdateType.indexOf(options.type) === -1) {
+                if (payloadBase64) {
+                    this.injectCodeFromPayload(payloadBase64);
+                }
+            } else {
+                this.onResizing(options.viewport);
+            }
+
+            this.events.renderingFinished(options);
+        }
+        catch (error) {
+            console.log('Error in update method', error);
+            this.events.renderingFailed(error);
         }
     }
 

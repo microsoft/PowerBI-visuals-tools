@@ -37,6 +37,7 @@ import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
 
@@ -46,6 +47,7 @@ import { CategoryViewModel, VisualViewModel } from "./visualViewModel";
 
 "use strict";
 export class Visual implements IVisual {
+    private events: IVisualEventService;
     private target: d3.Selection<any, any, any, any>;
     private table: d3.Selection<any, any, any, any>;
     private tHead: d3.Selection<any, any, any, any>;
@@ -54,6 +56,8 @@ export class Visual implements IVisual {
     private formattingSettingsService: FormattingSettingsService;
 
     constructor(options: VisualConstructorOptions) {
+        this.events = options.host.eventService;
+
         this.formattingSettingsService = new FormattingSettingsService();
 
         let target: d3.Selection<any, any, any, any> = this.target = select(options.element).append("div")
@@ -67,7 +71,16 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions): void {
-        this.updateInternal(options, visualTransform(options.dataViews));
+        this.events.renderingStarted(options);
+
+        try {
+            this.updateInternal(options, visualTransform(options.dataViews[0]));
+            this.events.renderingFinished(options);
+        }
+        catch (error) {
+            console.log("Visual update error", error);
+            this.events.renderingFailed(options);
+        }
     }
 
     public updateInternal(options: VisualUpdateOptions, viewModel: VisualViewModel): void {

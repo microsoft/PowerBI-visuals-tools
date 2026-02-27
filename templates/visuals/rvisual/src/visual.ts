@@ -31,18 +31,22 @@ import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
 import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
 
 import { VisualFormattingSettingsModel } from "./settings";
 
 export class Visual implements IVisual {
+    private events: IVisualEventService;
     private imageDiv: HTMLDivElement;
     private imageElement: HTMLImageElement;
     private formattingSettings: VisualFormattingSettingsModel;
     private formattingSettingsService: FormattingSettingsService;
 
     public constructor(options: VisualConstructorOptions) {
+        this.events = options.host.eventService;
+
         this.formattingSettingsService = new FormattingSettingsService();
         this.imageDiv = document.createElement("div");
         this.imageDiv.className = "rcv_autoScaleImageContainer";
@@ -53,30 +57,40 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions): void {
-        if (!options ||
-            !options.type ||
-            !options.viewport ||
-            !options.dataViews ||
-            options.dataViews.length === 0 ||
-            !options.dataViews[0]) {
-            return;
+        this.events.renderingStarted(options);
+
+        try {
+            if (!options ||
+                !options.type ||
+                !options.viewport ||
+                !options.dataViews ||
+                options.dataViews.length === 0 ||
+                !options.dataViews[0]) {
+                this.events.renderingFinished(options);
+                return;
+            }
+
+            const dataView: DataView = options.dataViews[0];
+            this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
+
+            let imageUrl: string = null;
+            if (dataView.scriptResult && dataView.scriptResult.payloadBase64) {
+                imageUrl = "data:image/png;base64," + dataView.scriptResult.payloadBase64;
+            }
+
+            if (imageUrl) {
+                this.imageElement.src = imageUrl;
+            } else {
+                this.imageElement.src = null;
+            }
+
+            this.onResizing(options.viewport);
+            this.events.renderingFinished(options);
         }
-
-        const dataView: DataView = options.dataViews[0];
-        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
-
-        let imageUrl: string = null;
-        if (dataView.scriptResult && dataView.scriptResult.payloadBase64) {
-            imageUrl = "data:image/png;base64," + dataView.scriptResult.payloadBase64;
+        catch (error) {
+            console.log('Error in update method', error);
+            this.events.renderingFailed(error);
         }
-
-        if (imageUrl) {
-            this.imageElement.src = imageUrl;
-        } else {
-            this.imageElement.src = null;
-        }
-
-        this.onResizing(options.viewport);
     }
 
     public onResizing(finalViewport: IViewport): void {
