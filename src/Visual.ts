@@ -24,8 +24,9 @@ export class Visual {
 
     public isAuthorDefined() {
         const author = this.config?.author;
+        const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
         return typeof author?.name === "string" && author.name.length > 0 &&
-               typeof author?.email === "string" && author.email.length > 0;
+               typeof author?.email === "string" && emailRegex.test(author.email);
     }
 
     private getVisualFeatureType() {
