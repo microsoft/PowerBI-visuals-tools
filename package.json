@@ -70,8 +70,5 @@
   },
   "engines": {
     "node": ">=20.19.0"
-  },
-  "overrides": {
-    "serialize-javascript": "^7.0.3"
   }
 }
