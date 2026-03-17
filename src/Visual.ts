@@ -22,6 +22,13 @@ export class Visual {
         return this.visualVersion.split(".").length === length
     }
 
+    public isAuthorDefined() {
+        const author = this.config?.author;
+        const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+        return typeof author?.name === "string" && author.name.length > 0 &&
+               typeof author?.email === "string" && emailRegex.test(author.email);
+    }
+
     private getVisualFeatureType() {
         const isMatrixSupported = this.capabilities?.dataViewMappings?.some(dataView => dataView.matrix)
         const isSlicer = Boolean(this.capabilities?.objects?.general?.properties?.filter?.type?.filter)
