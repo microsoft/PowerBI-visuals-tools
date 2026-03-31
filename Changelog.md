@@ -2,6 +2,12 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 7.0.4
+* Treated renderingEvents issue as an error when certification-audit and certification-fix are used.
+* Switched to a new webpack plugin.
+* Added rendering events to the visual templates.
+* Updated packages.
+
 ## 7.0.3
 * Fixed missing validation for `author` object in pbiviz.json. The `author` object with `name` and `email` fields is now required.
 * Updated packages.
