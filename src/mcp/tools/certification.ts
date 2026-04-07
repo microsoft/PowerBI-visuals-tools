@@ -269,6 +269,67 @@ async function checkCapabilities(rootPath: string): Promise<CertificationCheck[]
     return checks;
 }
 
+async function getSourceFiles(dir: string): Promise<string[]> {
+    const files: string[] = [];
+    if (!fs.existsSync(dir)) return files;
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.tmp') {
+            files.push(...await getSourceFiles(fullPath));
+        } else if (/\.(ts|js|tsx|jsx)$/.test(entry.name)) {
+            files.push(fullPath);
+        }
+    }
+    return files;
+}
+
+async function checkRenderingEvents(rootPath: string): Promise<CertificationCheck[]> {
+    const checks: CertificationCheck[] = [];
+    const srcPath = path.join(rootPath, 'src');
+
+    if (!fs.existsSync(srcPath)) {
+        checks.push({
+            name: 'Rendering Events',
+            status: 'fail',
+            message: 'Cannot check — src/ folder not found'
+        });
+        return checks;
+    }
+
+    const sourceFiles = await getSourceFiles(srcPath);
+    let allCode = '';
+    for (const file of sourceFiles) {
+        allCode += await fs.readFile(file, 'utf-8') + '\n';
+    }
+
+    const hasStarted = /renderingStarted/.test(allCode);
+    const hasFinished = /renderingFinished/.test(allCode);
+    const hasFailed = /renderingFailed/.test(allCode);
+
+    if (hasStarted && hasFinished && hasFailed) {
+        checks.push({
+            name: 'Rendering Events',
+            status: 'pass',
+            message: 'All 3 rendering events implemented (renderingStarted, renderingFinished, renderingFailed)'
+        });
+    } else {
+        const missing: string[] = [];
+        if (!hasStarted) missing.push('renderingStarted');
+        if (!hasFinished) missing.push('renderingFinished');
+        if (!hasFailed) missing.push('renderingFailed');
+
+        checks.push({
+            name: 'Rendering Events',
+            status: 'fail',
+            message: `Missing rendering events: ${missing.join(', ')}`,
+            recommendation: 'Rendering events are required for certification. Call host.eventService.renderingStarted(options) at the beginning of update(), renderingFinished(options) on success, and renderingFailed(options, error) on error.'
+        });
+    }
+
+    return checks;
+}
+
 async function checkAssets(rootPath: string): Promise<CertificationCheck[]> {
     const checks: CertificationCheck[] = [];
     const assetsPath = path.join(rootPath, 'assets');
@@ -357,9 +418,10 @@ export async function prepareCertification(rootPath: string): Promise<string> {
         const fileChecks = await checkRequiredFiles(rootPath);
         const pbivizChecks = await checkPbivizConfig(rootPath);
         const capabilityChecks = await checkCapabilities(rootPath);
+        const renderingChecks = await checkRenderingEvents(rootPath);
         const assetChecks = await checkAssets(rootPath);
 
-        const allChecks = [...fileChecks, ...pbivizChecks, ...capabilityChecks, ...assetChecks];
+        const allChecks = [...fileChecks, ...pbivizChecks, ...capabilityChecks, ...renderingChecks, ...assetChecks];
 
         return formatResults(allChecks);
     } catch (error) {
