@@ -120,8 +120,8 @@ export default class FileSystem {
         flags = flags ? ' ' + flags : '';
         args = args ? ' ' + args : '';
         let pbivizCmd = command + args + flags;
-        if (verbose) { console.log('run:', 'node ' + BIN_PATH + ' ' + pbivizCmd); }
-        return childProcess.execSync('node ' + BIN_PATH + ' ' + pbivizCmd, opts);
+        if (verbose) { console.log('run:', 'node "' + BIN_PATH + '" ' + pbivizCmd); }
+        return childProcess.execSync('node "' + BIN_PATH + '" ' + pbivizCmd, opts);
     }
 
     /**
@@ -147,7 +147,7 @@ export default class FileSystem {
      * @param {boolean} [verbose = false] - enables verbose output
      */
     static runPbivizAsync(command, args, verbose) {
-        if (verbose) { console.log('run:', 'node ' + BIN_PATH + ' ' + command, args || ''); }
+        if (verbose) { console.log('run:', 'node "' + BIN_PATH + '" ' + command, args || ''); }
 
         let spawnCmd = [BIN_PATH, command];
         if (args) { spawnCmd = spawnCmd.concat(args); }
