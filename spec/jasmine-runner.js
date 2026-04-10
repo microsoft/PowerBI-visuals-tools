@@ -32,5 +32,5 @@ import { SpecReporter } from 'jasmine-spec-reporter';
 let jrunner = new jasmine();
 jrunner.configureDefaultReporter({ print: () => {} });
 jrunner.addReporter(new SpecReporter());
-jrunner.loadConfigFile();
-jrunner.execute();
+await jrunner.loadConfigFile();
+await jrunner.execute();

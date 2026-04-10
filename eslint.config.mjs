@@ -2,18 +2,21 @@ import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
 
+const __dirname = import.meta.dirname; // built-in, no imports needed
+
 export default [ 
     {
-        files: ["*.ts", "*tsx"],
         ignores: [
-            "node_modules/",
-            "dist/",
-            "templates/",
-            "spec/*/**",
-            "**/lib/",
-            "bin/",
-            "eslint.config.mjs",
+            "node_modules/**",
+            "dist/**",
+            "templates/**",
+            "spec/**",
+            "lib/**",
+            "bin/**",
         ],
+    },
+    {
+        files: ["**/*.ts", "**/*.tsx"],
         plugins: {
             "@typescript-eslint": typescriptEslint,
         },
@@ -26,7 +29,7 @@ export default [
             sourceType: "module",
             parserOptions: {
                 project: "tsconfig.json",
-                tsconfigRootDir: ".",
+                tsconfigRootDir: __dirname,
             },
         },
         rules: {

@@ -108,7 +108,7 @@ function createPbiVizJson(visualPath, options, templateName) {
 function fileExists(file) {
     try {
         fs.accessSync(file);
-    } catch (e) {
+    } catch {
         return false;
     }
     return true;
@@ -133,7 +133,7 @@ function copyVisualTemplate(targetPath, templateName) {
 function validTemplate(templateName) {
     try {
         fs.accessSync(path.join(VISUAL_TEMPLATES_PATH, templateName));
-    } catch (e) {
+    } catch {
         return false;
     }
     return true;

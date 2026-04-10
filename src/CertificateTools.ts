@@ -200,7 +200,7 @@ async function openCertFile() {
             throw new Error(); 
         }
         await exec(`${startCmd} "${certPath}"`);
-    } catch (e) {
+    } catch {
         ConsoleWriter.info(['Certificate path:', certPath]);
     }
 }
