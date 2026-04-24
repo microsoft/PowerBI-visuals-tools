@@ -74,7 +74,7 @@ export class Visual implements IVisual {
         }
         catch (error) {
             console.log("Visual update error", error);
-            this.events.renderingFailed(options);
+            this.events.renderingFailed(options, String(error));
         }
     }
 
