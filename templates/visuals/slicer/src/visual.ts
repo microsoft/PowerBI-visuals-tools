@@ -32,10 +32,12 @@ import "./../style/visual.less";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
 
 import { VisualFormattingSettingsModel } from "./settings";
 
 export class Visual implements IVisual {
+    private events: IVisualEventService;
     private target: HTMLElement;
     private updateCount: number;
     private textNode: Text;
@@ -44,6 +46,7 @@ export class Visual implements IVisual {
 
     constructor(options: VisualConstructorOptions) {
         console.log("Visual constructor", options);
+        this.events = options.host.eventService;
         this.formattingSettingsService = new FormattingSettingsService();
         this.target = options.element;
         this.updateCount = 0;
@@ -59,10 +62,19 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
-        this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
-        console.log("Visual update", options);
-        if (this.textNode) {
-            this.textNode.textContent = (this.updateCount++).toString();
+        this.events.renderingStarted(options);
+
+        try {
+            this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, options.dataViews[0]);
+            console.log("Visual update", options);
+            if (this.textNode) {
+                this.textNode.textContent = (this.updateCount++).toString();
+            }
+            this.events.renderingFinished(options);
+        }
+        catch (error) {
+            console.log("Visual update error", error);
+            this.events.renderingFailed(options, String(error));
         }
     }
 

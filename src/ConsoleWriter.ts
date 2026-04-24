@@ -49,6 +49,11 @@ export default class ConsoleWriter {
         console.info(preferredChalk.reset(' '));
     }
 
+    /** Outputs a separator line */
+    static separator() {
+        console.log(preferredChalk.white('--------------------------------'));
+    }
+
     /**
      * Outputs arguments with the "done" tag / colors
      * 

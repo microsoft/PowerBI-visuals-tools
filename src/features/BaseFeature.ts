@@ -7,6 +7,7 @@ export default abstract class BaseFeature {
     public static featureName: string
     public static documentationLink: string
     public static errorMessage: string
+    public static certificationRequired: boolean = false
 
     protected static isSupported() {}
 }
