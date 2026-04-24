@@ -139,7 +139,7 @@ export class Visual implements IVisual {
         }
         catch (error) {
             console.log('Error in update method', error);
-            this.events.renderingFailed(error);
+            this.events.renderingFailed(options, String(error))
         }
     }
 
