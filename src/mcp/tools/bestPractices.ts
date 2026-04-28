@@ -10,6 +10,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
+import { getSourceFiles, existsIgnoreCase } from '../../utils.js';
 
 interface PracticeCheck {
     id: number;
@@ -31,21 +32,6 @@ interface ProjectContext {
     hasChangelog: boolean;
     hasEslint: boolean;
     hasTests: boolean;
-}
-
-async function getSourceFiles(dir: string): Promise<string[]> {
-    const files: string[] = [];
-    if (!fs.existsSync(dir)) return files;
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.tmp') {
-            files.push(...await getSourceFiles(fullPath));
-        } else if (/\.(ts|js|tsx|jsx)$/.test(entry.name)) {
-            files.push(fullPath);
-        }
-    }
-    return files;
 }
 
 async function buildProjectContext(rootPath: string): Promise<ProjectContext> {
@@ -72,8 +58,8 @@ async function buildProjectContext(rootPath: string): Promise<ProjectContext> {
         pbivizContent: await readJsonSafe(path.join(rootPath, 'pbiviz.json')),
         sourceCode,
         sourceFiles: sourceFiles.map(f => path.relative(rootPath, f)),
-        hasReadme: fs.existsSync(path.join(rootPath, 'README.md')),
-        hasChangelog: fs.existsSync(path.join(rootPath, 'Changelog.md')) || fs.existsSync(path.join(rootPath, 'CHANGELOG.md')),
+        hasReadme: existsIgnoreCase(path.join(rootPath, 'README.md')),
+        hasChangelog: existsIgnoreCase(path.join(rootPath, 'Changelog.md')) || existsIgnoreCase(path.join(rootPath, 'CHANGELOG.md')),
         hasEslint: fs.existsSync(path.join(rootPath, 'eslint.config.mjs')) || fs.existsSync(path.join(rootPath, '.eslintrc.json')) || fs.existsSync(path.join(rootPath, '.eslintrc.js')),
         hasTests: fs.existsSync(path.join(rootPath, 'test')) || fs.existsSync(path.join(rootPath, 'spec')) || fs.existsSync(path.join(rootPath, '__tests__')),
     };

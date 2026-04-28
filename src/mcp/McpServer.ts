@@ -125,7 +125,7 @@ const MCP_CONFIG = {
     servers: {
         pbiviz: {
             command: "npx",
-            args: ["pbiviz", "mcp"]
+            args: ["-y", "powerbi-visuals-tools", "mcp"]
         }
     }
 };
@@ -160,7 +160,7 @@ export async function initMcpConfig(rootPath: string) {
         ConsoleWriter.info('   - "Show me available APIs for tooltips"');
         ConsoleWriter.blank();
     } catch (error) {
-        ConsoleWriter.error(`Failed to create MCP configuration: ${error.message}`);
+        ConsoleWriter.error(`Failed to create MCP configuration: ${(error instanceof Error) ? error.message : String(error)}`);
         process.exit(1);
     }
 }

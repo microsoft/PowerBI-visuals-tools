@@ -10,6 +10,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
+import { getSourceFiles } from '../../utils.js';
 
 interface ApiInfo {
     name: string;
@@ -27,7 +28,9 @@ const AVAILABLE_APIS: ApiInfo[] = [
         name: 'fetchMoreData',
         category: 'data',
         description: 'Enables loading additional data in chunks. Essential for large datasets that exceed the initial row limit.',
-        minApiVersion: '2.6.0',        codePatterns: [/fetchMoreData/],        example: `// In update method
+        minApiVersion: '2.6.0',
+        codePatterns: [/fetchMoreData/],
+        example: `// In update method
 if (options.dataViews[0].metadata.segment) {
     host.fetchMoreData();
 }`,
@@ -504,21 +507,6 @@ const formatter = new Intl.NumberFormat(locale);`,
         docsUrl: 'https://learn.microsoft.com/power-bi/developer/visuals/localization'
     }
 ];
-
-async function getSourceFiles(dir: string): Promise<string[]> {
-    const files: string[] = [];
-    if (!fs.existsSync(dir)) return files;
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.tmp') {
-            files.push(...await getSourceFiles(fullPath));
-        } else if (/\.(ts|js|tsx|jsx)$/.test(entry.name)) {
-            files.push(fullPath);
-        }
-    }
-    return files;
-}
 
 interface ApiUsageInfo {
     used: boolean;

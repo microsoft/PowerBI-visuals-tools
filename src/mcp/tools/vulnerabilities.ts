@@ -10,6 +10,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
+import { getSourceFiles } from '../../utils.js';
 
 interface VulnerabilityResult {
     severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
@@ -24,7 +25,7 @@ const CODE_PATTERNS = [
     { pattern: /innerHTML\s*=/, message: 'Direct innerHTML assignment may cause XSS vulnerabilities', severity: 'medium' as const },
     { pattern: /document\.write/, message: 'document.write is deprecated and can be dangerous', severity: 'medium' as const },
     { pattern: /window\.location\s*=/, message: 'Direct location assignment might be a security concern', severity: 'low' as const },
-    { pattern: /fetch\s*\(\s*['"`]http/, message: 'External HTTP calls are not allowed in certified visuals', severity: 'high' as const },
+    { pattern: /\bfetch\s*\(/, message: 'Use of fetch() is not allowed in certified visuals (external network calls are prohibited)', severity: 'high' as const },
     { pattern: /XMLHttpRequest/, message: 'XMLHttpRequest to external URLs is not allowed in certified visuals', severity: 'high' as const },
 ];
 
@@ -43,46 +44,83 @@ async function checkSourceCode(rootPath: string): Promise<VulnerabilityResult[]>
         const lines = content.split('\n');
         const relativePath = path.relative(rootPath, file);
 
-        for (const codePattern of CODE_PATTERNS) {
-            let inBlockComment = false;
+        let inBlockComment = false;
 
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
 
-                // Track block comments
-                if (!inBlockComment && line.includes('/*')) {
-                    inBlockComment = true;
-                }
+            // Split line into activeCode and commentedCode by walking
+            // left-to-right through /*, */, and // markers
+            let activeCode = '';
+            let commentedCode = '';
+            let pos = 0;
+
+            while (pos < line.length) {
                 if (inBlockComment) {
-                    if (line.includes('*/')) {
+                    const endIdx = line.indexOf('*/', pos);
+                    if (endIdx !== -1) {
+                        commentedCode += line.substring(pos, endIdx + 2);
+                        pos = endIdx + 2;
                         inBlockComment = false;
+                    } else {
+                        commentedCode += line.substring(pos);
+                        break;
                     }
-                    if (codePattern.pattern.test(line)) {
-                        results.push({
-                            severity: 'info',
-                            message: `${relativePath}:${i + 1}: ${codePattern.message} (commented out)`,
-                            recommendation: 'Remove commented-out dangerous code to keep the codebase clean'
-                        });
-                    }
-                    continue;
-                }
+                } else {
+                    const blockStart = line.indexOf('/*', pos);
+                    const lineComment = line.indexOf('//', pos);
 
-                // Check single-line comments
-                const trimmed = line.trimStart();
-                if (trimmed.startsWith('//') && codePattern.pattern.test(line)) {
+                    // Find which comment marker comes first
+                    let nextComment = -1;
+                    let isBlock = false;
+
+                    if (blockStart !== -1 && (lineComment === -1 || blockStart <= lineComment)) {
+                        nextComment = blockStart;
+                        isBlock = true;
+                    } else if (lineComment !== -1) {
+                        nextComment = lineComment;
+                    }
+
+                    if (nextComment === -1) {
+                        activeCode += line.substring(pos);
+                        break;
+                    }
+
+                    activeCode += line.substring(pos, nextComment);
+
+                    if (isBlock) {
+                        const endIdx = line.indexOf('*/', nextComment + 2);
+                        if (endIdx !== -1) {
+                            commentedCode += line.substring(nextComment, endIdx + 2);
+                            pos = endIdx + 2;
+                        } else {
+                            commentedCode += line.substring(nextComment);
+                            inBlockComment = true;
+                            break;
+                        }
+                    } else {
+                        // Line comment — rest of line is commented
+                        commentedCode += line.substring(nextComment);
+                        break;
+                    }
+                }
+            }
+
+            // Check all patterns against the appropriate segment
+            for (const codePattern of CODE_PATTERNS) {
+                const inActive = codePattern.pattern.test(activeCode);
+                const inComment = codePattern.pattern.test(commentedCode);
+
+                if (inActive) {
+                    results.push({
+                        severity: codePattern.severity,
+                        message: `${relativePath}:${i + 1}: ${codePattern.message}`
+                    });
+                } else if (inComment) {
                     results.push({
                         severity: 'info',
                         message: `${relativePath}:${i + 1}: ${codePattern.message} (commented out)`,
                         recommendation: 'Remove commented-out dangerous code to keep the codebase clean'
-                    });
-                    continue;
-                }
-
-                // Active code match
-                if (codePattern.pattern.test(line)) {
-                    results.push({
-                        severity: codePattern.severity,
-                        message: `${relativePath}:${i + 1}: ${codePattern.message}`
                     });
                 }
             }
@@ -90,22 +128,6 @@ async function checkSourceCode(rootPath: string): Promise<VulnerabilityResult[]>
     }
 
     return results;
-}
-
-async function getSourceFiles(dir: string): Promise<string[]> {
-    const files: string[] = [];
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-
-    for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (entry.isDirectory() && entry.name !== 'node_modules') {
-            files.push(...await getSourceFiles(fullPath));
-        } else if (entry.isFile() && /\.(ts|js|tsx|jsx)$/.test(entry.name)) {
-            files.push(fullPath);
-        }
-    }
-
-    return files;
 }
 
 function formatResults(results: VulnerabilityResult[]): string {
@@ -214,6 +236,6 @@ export async function checkVulnerabilities(rootPath: string): Promise<string> {
 
         return formatResults([...codeResults, ...eslintResults]);
     } catch (error) {
-        return `❌ Error scanning project: ${error.message}`;
+        return `❌ Error scanning project: ${(error instanceof Error) ? error.message : String(error)}`;
     }
 }

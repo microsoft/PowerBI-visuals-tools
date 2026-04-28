@@ -96,7 +96,7 @@ pbiviz new <visual-name>
 
         return formatVisualInfo(info);
     } catch (error) {
-        return `❌ Error reading visual info: ${error.message}`;
+        return `❌ Error reading visual info: ${(error instanceof Error) ? error.message : String(error)}`;
     }
 }
 

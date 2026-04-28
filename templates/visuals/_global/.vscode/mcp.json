@@ -2,7 +2,7 @@
     "servers": {
         "pbiviz": {
             "command": "npx",
-            "args": ["pbiviz", "mcp"]
+            "args": ["-y", "powerbi-visuals-tools", "mcp"]
         }
     }
 }

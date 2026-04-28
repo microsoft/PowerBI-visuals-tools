@@ -10,6 +10,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
+import { getSourceFiles, existsIgnoreCase } from '../../utils.js';
 
 interface CertificationCheck {
     name: string;
@@ -35,7 +36,7 @@ async function checkRequiredFiles(rootPath: string): Promise<CertificationCheck[
     const checks: CertificationCheck[] = [];
 
     for (const { file, description } of REQUIRED_FILES) {
-        const exists = fs.existsSync(path.join(rootPath, file));
+        const exists = existsIgnoreCase(path.join(rootPath, file));
         checks.push({
             name: `Required: ${file}`,
             status: exists ? 'pass' : 'fail',
@@ -45,7 +46,7 @@ async function checkRequiredFiles(rootPath: string): Promise<CertificationCheck[
     }
 
     for (const { file, description } of RECOMMENDED_FILES) {
-        const exists = fs.existsSync(path.join(rootPath, file));
+        const exists = existsIgnoreCase(path.join(rootPath, file));
         checks.push({
             name: `Recommended: ${file}`,
             status: exists ? 'pass' : 'warning',
@@ -269,21 +270,6 @@ async function checkCapabilities(rootPath: string): Promise<CertificationCheck[]
     return checks;
 }
 
-async function getSourceFiles(dir: string): Promise<string[]> {
-    const files: string[] = [];
-    if (!fs.existsSync(dir)) return files;
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.tmp') {
-            files.push(...await getSourceFiles(fullPath));
-        } else if (/\.(ts|js|tsx|jsx)$/.test(entry.name)) {
-            files.push(fullPath);
-        }
-    }
-    return files;
-}
-
 async function checkRenderingEvents(rootPath: string): Promise<CertificationCheck[]> {
     const checks: CertificationCheck[] = [];
     const srcPath = path.join(rootPath, 'src');
@@ -425,6 +411,6 @@ export async function prepareCertification(rootPath: string): Promise<string> {
 
         return formatResults(allChecks);
     } catch (error) {
-        return `❌ Error checking certification readiness: ${error.message}`;
+        return `❌ Error checking certification readiness: ${(error instanceof Error) ? error.message : String(error)}`;
     }
 }
