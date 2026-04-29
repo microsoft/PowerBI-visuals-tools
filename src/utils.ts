@@ -30,6 +30,32 @@ export function getJsPath(filePath: string) {
     return filePath.replace(/\.json$/, '.mjs');
 }
 
+export async function getSourceFiles(dir: string): Promise<string[]> {
+    const files: string[] = [];
+    if (!fs.existsSync(dir)) return files;
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.tmp') {
+            files.push(...await getSourceFiles(fullPath));
+        } else if (/\.(ts|js|tsx|jsx)$/.test(entry.name)) {
+            files.push(fullPath);
+        }
+    }
+    return files;
+}
+
+export function existsIgnoreCase(filePath: string): boolean {
+    const dir = path.dirname(filePath);
+    const name = path.basename(filePath).toLowerCase();
+    try {
+        const entries: string[] = fs.readdirSync(dir);
+        return entries.some(entry => entry.toLowerCase() === name);
+    } catch {
+        return false;
+    }
+}
+
 async function safelyImport(filePath: string) {
     return fs.existsSync(filePath) && (await import(`file://${filePath}`)).default;
 }

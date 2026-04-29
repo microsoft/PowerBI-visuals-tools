@@ -29,7 +29,8 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
-    "@typescript-eslint/parser": "^8.58.0",
+    "@modelcontextprotocol/sdk": "^1.25.3",
+    "@typescript-eslint/parser": "^8.50.0",
     "async": "^3.2.6",
     "chalk": "^5.4.1",
     "commander": "^14.0.3",
@@ -53,7 +54,9 @@
     "typescript": "^5.9.3",
     "webpack": "^5.105.4",
     "webpack-bundle-analyzer": "4.10.2",
-    "webpack-dev-server": "^5.2.3"
+    "webpack-dev-server": "^5.2.3",
+    "zod": "^4.3.6"
+
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.58.0",
