@@ -16,27 +16,34 @@ export interface Logs {
     errors: string[],
     warnings: string[],
     info: string[],
-    deprecation: string[]
+    deprecation: string[],
+    certificationErrors: string[]
 }
 
 export class FeatureManager {
     public features = Object.keys(features).map(key =>  features[key]);
 
-    public validate(stage: Stage, sourceInstance: Visual | Package): ValidationStats {
+    public validate(stage: Stage, sourceInstance: Visual | Package, certificationMode: boolean = false): ValidationStats {
         const result: ValidationStats = {
             status: Status.Success,
             logs: {
                 errors: [],
                 warnings: [],
                 info: [],
-                deprecation: []
+                deprecation: [],
+                certificationErrors: []
             }
         }
         this.features
             .filter(feature => feature.stage == stage)
             .filter(feature => feature.visualFeatureType & sourceInstance.visualFeatureType)
             .filter(feature => !feature.isSupported(sourceInstance))
-            .forEach(({ errorMessage, severity }) => {
+            .forEach(({ errorMessage, severity, certificationRequired }) => {
+                if (certificationMode && certificationRequired && severity === Severity.Warning) {
+                    result.status = Status.Error;
+                    result.logs.certificationErrors.push(errorMessage);
+                    return;
+                }
                 switch(severity) {
                     case Severity.Error:
                         result.status = Status.Error;

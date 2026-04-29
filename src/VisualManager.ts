@@ -109,12 +109,15 @@ export default class VisualManager {
         return this;
     }
 
-    public generatePackage(verbose: boolean = false) {
+    public generatePackage(verbose: boolean = false, certificationMode: boolean = false) {
         const callback = (err: Error, stats: Stats) => {
             this.parseCompilationResults(err, stats);
             this.createPackageInstance();
-            const logs = this.validatePackage();
+            const { status, logs } = this.validatePackage(certificationMode);
             this.outputResults(logs, verbose);
+            if (certificationMode && status === Status.Error) {
+                process.exit(1);
+            }
         }
         this.compiler.run(callback);
     }
@@ -169,17 +172,17 @@ export default class VisualManager {
     /**
      * Validates the visual package
      */
-    public validatePackage() {
+    public validatePackage(certificationMode: boolean = false) {
         const featureManager = new FeatureManager();
-        const { logs } = featureManager.validate(Stage.PostBuild, this.package);
+        const { status, logs } = featureManager.validate(Stage.PostBuild, this.package, certificationMode);
 
-        return logs;
+        return { status, logs };
     }
 
     /**
      * Outputs the results of the validation 
      */
-    public outputResults({ errors, deprecation, warnings, info }: Logs, verbose: boolean) {
+    public outputResults({ errors, deprecation, warnings, info, certificationErrors }: Logs, verbose: boolean) {
         const headerMessage = {
             error: `Visual doesn't support some features required for all custom visuals:`,
             deprecation: `Some features are going to be required soon, please update the visual:`,
@@ -187,6 +190,10 @@ export default class VisualManager {
             verboseInfo: `Visual can be improved by adding some features:`,
             shortInfo: `Visual can be improved by adding ${info.length} more optional features.`
         };
+
+        if (certificationErrors.length) {
+            this.outputCertificationSection(certificationErrors);
+        }
 
         this.outputLogsWithHeadMessage(headerMessage.error, errors, Severity.Error);
         this.outputLogsWithHeadMessage(headerMessage.deprecation, deprecation, Severity.Deprecation);
@@ -207,6 +214,17 @@ export default class VisualManager {
         } else {
             ConsoleWriter.error('Unable to load visual info. Please ensure the package is valid.');
         }
+    }
+
+    /**
+     * Outputs certification-required issues in a formatted section with separators
+     */
+    private outputCertificationSection(certificationErrors: string[]) {
+        ConsoleWriter.separator();
+        ConsoleWriter.info('Certification audit:');
+        certificationErrors.forEach(error => ConsoleWriter.error(error));
+        ConsoleWriter.error(`Found ${certificationErrors.length} certification issue(s). Fix them before submitting for certification.`);
+        ConsoleWriter.separator();
     }
 
     

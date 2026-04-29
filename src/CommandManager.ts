@@ -91,12 +91,13 @@ export default class CommandManager {
             verbose: options.verbose,
             fix: options.fix,
         }
+        const certificationMode = options.certificationAudit || options.certificationFix;
         const visualManager = new VisualManager(rootPath)
         const visual = await visualManager.prepareVisual(options.pbivizFile)
         await visual.runLintValidation(lintOptions)
         await visual.validateVisual(options.verbose)
         await visual.initializeWebpack(webpackOptions)
-            .then(manager => manager.generatePackage(options.verbose))
+            .then(manager => manager.generatePackage(options.verbose, certificationMode))
     }
 
     public static new({ force, template }: NewOptions, name: string, rootPath: string) {
