@@ -38,7 +38,7 @@ export async function getSourceFiles(dir: string): Promise<string[]> {
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.tmp') {
             files.push(...await getSourceFiles(fullPath));
-        } else if (/\.(ts|js|tsx|jsx)$/.test(entry.name)) {
+        } else if (entry.isFile() && /\.(ts|js|tsx|jsx)$/.test(entry.name)) {
             files.push(fullPath);
         }
     }
