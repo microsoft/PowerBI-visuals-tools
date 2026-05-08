@@ -20,6 +20,7 @@ import { checkVulnerabilities } from "./tools/vulnerabilities.js";
 import { prepareCertification } from "./tools/certification.js";
 import { getVisualInfo } from "./tools/visualInfo.js";
 import { getAvailableApis } from "./tools/availableApis.js";
+import { listAvailableSkills, getSkillInstructions } from "./tools/skills.js";
 
 export class McpServer {
     private server: MCPServerSDK;
@@ -97,6 +98,44 @@ export class McpServer {
             },
             async ({ category }) => {
                 const result = await getAvailableApis(category || "all", this.rootPath);
+                return {
+                    content: [{ type: "text", text: result }],
+                };
+            }
+        );
+
+        // Tool 6: List available features/skills
+        this.server.tool(
+            "list_available_features",
+            "List all available Power BI visual features that can be added to a project. " +
+            "Returns features like: dialog box, warning icon, tooltips, context menu, bookmarks, drill-down, and more. " +
+            "ALWAYS call this tool FIRST when a user asks to add, implement, create, or enable ANY feature in a Power BI custom visual — " +
+            "including dialog, modal, popup, warning, icon, tooltip, menu, drill, bookmark, highlight, format, or any UI/interaction feature. " +
+            "Each feature has an ID you pass to get_feature_documentation to get the full implementation guide.",
+            {},
+            async () => {
+                const result = await listAvailableSkills();
+                return {
+                    content: [{ type: "text", text: result }],
+                };
+            }
+        );
+
+        // Tool 7: Get feature implementation instructions
+        this.server.tool(
+            "get_feature_documentation",
+            "Get complete implementation instructions for a specific Power BI visual feature. " +
+            "Returns a step-by-step guide with code templates, configuration changes, certification constraints, and common pitfalls. " +
+            "ALWAYS call this AFTER list_available_features to get the guide BEFORE writing any code. " +
+            "Follow the returned instructions to implement the feature correctly in the visual project.",
+            {
+                featureName: z.string().describe(
+                    "The feature ID to get instructions for (e.g., 'dialog-box', 'display-warning-icon'). " +
+                    "Call list_available_features first to see all available IDs."
+                )
+            },
+            async ({ featureName }) => {
+                const result = await getSkillInstructions(featureName);
                 return {
                     content: [{ type: "text", text: result }],
                 };
