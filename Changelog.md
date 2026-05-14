@@ -2,6 +2,11 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 7.2.0
+* Added MCP Skills support with feature implementation guides (`add_feature`, `implement_feature` tools).
+* Added MCP section to README with setup instructions and available tools overview.
+* Updated packages.
+
 ## 7.1.0
 * Added MCP (Model Context Protocol) server support via `pbiviz mcp` command, providing AI-powered tools for visual development.
 * Added MCP tools: available APIs, best practices, certification guidance, visual info, and vulnerabilities detection.
