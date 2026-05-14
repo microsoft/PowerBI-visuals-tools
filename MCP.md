@@ -57,11 +57,13 @@ The server runs on STDIO, so you won't see output, but it will respond to MCP re
 
 | Tool | Description | Local | Read-only |
 |------|-------------|-------|-----------|
-| `get_best_practices` | Returns best practice guidelines for Power BI visual development | ✅ | ✅ |
-| `check_vulnerabilities` | Scans project for security vulnerabilities in dependencies and code | ✅ | ✅ |
-| `prepare_certification` | Audits visual for Power BI certification readiness | ✅ | ✅ |
-| `list_visual_info` | Returns info about current visual (name, GUID, API version, capabilities) | ✅ | ✅ |
-| `get_available_apis` | Lists available Power BI Visual APIs with examples | ✅ | ✅ |
+| `get_best_practices` | Get best practices and guidelines for Power BI visual development | ✅ | ✅ |
+| `check_vulnerabilities` | Scan project for security vulnerabilities and dangerous code patterns | ✅ | ✅ |
+| `prepare_certification` | Check if the visual is ready for certification and marketplace submission | ✅ | ✅ |
+| `list_visual_info` | Get info about current visual (name, GUID, API version, capabilities) | ✅ | ✅ |
+| `get_available_apis` | List available Power BI Visual APIs with examples | ✅ | ✅ |
+| `add_feature` | List all features that can be added to a Power BI visual | ✅ | ✅ |
+| `implement_feature` | Get step-by-step implementation guide for a specific feature | ✅ | ✅ |
 
 ### Tool Details
 
@@ -109,6 +111,28 @@ Provides documentation for:
 - **Utility APIs**: localization, storage, events, modal dialog
 
 Accepts optional `category` parameter: `data`, `formatting`, `interaction`, `utility`, or `all`.
+
+#### `add_feature`
+
+Lists all features that can be added to a Power BI visual, including:
+- Bookmarks, tooltips, context menu, drill-down
+- Dialog box, warning icon, landing page
+- Formatting pane, selection, highlight data, high contrast
+- Localization, local storage, file download
+- Rendering events, modal dialog, keyboard navigation
+- Analytics pane, conditional formatting, sync slicer, launch URL
+
+Returns feature IDs to pass to `implement_feature`.
+
+#### `implement_feature`
+
+For a given feature ID (from `add_feature`), returns:
+- Step-by-step implementation instructions
+- Code templates and examples
+- Required configuration changes (pbiviz.json, capabilities.json)
+- Certification constraints and common pitfalls
+
+Accepts required `featureName` parameter (e.g., `bookmarks`, `dialog-box`, `tooltips`).
 
 ## Example Interactions
 
