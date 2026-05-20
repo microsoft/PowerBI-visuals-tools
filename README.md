@@ -56,17 +56,10 @@ PowerBI Visual Tools includes a built-in [MCP (Model Context Protocol)](https://
 
 ### Setup
 
-Add the following to your `.vscode/mcp.json` (VS Code) or `~/.cursor/mcp.json` (Cursor):
+Run the following command to initialize the MCP configuration:
 
-```json
-{
-    "servers": {
-        "pbiviz": {
-            "command": "npx",
-            "args": ["-y", "powerbi-visuals-tools", "mcp"]
-        }
-    }
-}
+```
+pbiviz mcp --init
 ```
 
 ### Available Tools
