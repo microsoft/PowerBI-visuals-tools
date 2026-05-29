@@ -55,7 +55,14 @@ export class McpServer {
                     "- User asks about best practices → call get_best_practices\n" +
                     "- User asks about security → call check_vulnerabilities\n" +
                     "- User asks about certification → call prepare_certification\n" +
-                    "- User asks about their visual project → call list_visual_info",
+                    "- User asks about their visual project → call list_visual_info\n\n" +
+                    "CERTIFICATION FOLLOW-UP RULE (CRITICAL):\n" +
+                    "- When the user asks for certification check/readiness, after returning certification results ask: 'Do you also want me to run a vulnerability check?'\n" +
+                    "- If user says yes, call check_vulnerabilities.\n\n" +
+                    "READ-ONLY RESPONSE RULE (CRITICAL):\n" +
+                    "- For get_available_apis, get_best_practices, check_vulnerabilities, prepare_certification, and list_visual_info: return guidance/report only and DO NOT edit files immediately.\n" +
+                    "- After returning the response, ask the user for confirmation before any code changes (for example: 'Do you want me to apply these changes?').\n" +
+                    "- Only proceed with file modifications after explicit user approval.",
             }
         );
 
@@ -71,7 +78,8 @@ export class McpServer {
             "Trigger phrases: best practices, how to build, performance tips, security guidelines, accessibility, " +
             "coding standards, project structure, testing, documentation, guidelines, recommendations, " +
             "how should I, what's the best way, improve my visual, optimize, make it better. " +
-            "Covers: API version management, performance optimization, security, accessibility, formatting pane, testing, documentation.",
+            "Covers: API version management, performance optimization, security, accessibility, formatting pane, testing, documentation. " +
+            "READ-ONLY: Return recommendations only. Do not modify files unless the user explicitly asks after seeing the results.",
             {},
             async () => {
                 const practices = await getBestPractices(this.rootPath);
@@ -89,7 +97,8 @@ export class McpServer {
             "Trigger phrases: check security, find vulnerabilities, scan, audit, is my code safe, dangerous code, " +
             "security issues, eval, innerHTML, XSS, injection, unsafe, vulnerability, pentest, review security. " +
             "Detects: eval(), new Function(), innerHTML, document.write, external fetch/HTTP calls, XMLHttpRequest. " +
-            "Reports issues by severity with file paths and line numbers.",
+            "Reports issues by severity with file paths and line numbers. " +
+            "READ-ONLY: Report findings first. Do not modify files unless the user explicitly asks after seeing the results.",
             {},
             async () => {
                 const result = await checkVulnerabilities(this.rootPath);
@@ -107,7 +116,9 @@ export class McpServer {
             "Trigger phrases: certification, certify, ready for certification, publish, marketplace, submit, " +
             "certification checklist, AppSource, is my visual ready, prepare for submission, requirements. " +
             "Audits required files, visual configuration, capabilities, and assets. " +
-            "Reports pass/fail/warning status for each certification requirement.",
+            "Reports pass/fail/warning status for each certification requirement. " +
+            "FOLLOW-UP: After showing certification results, ask the user if they also want a vulnerability check. " +
+            "READ-ONLY: Return certification assessment first. Do not modify files unless the user explicitly asks after seeing the results.",
             {},
             async () => {
                 const result = await prepareCertification(this.rootPath);
@@ -125,7 +136,8 @@ export class McpServer {
             "Trigger phrases: visual info, project details, what is my visual, show configuration, visual settings, " +
             "what version, show my visual, project info, describe my visual, what API version, who is the author. " +
             "Returns: visual name, display name, GUID, version, API version, author, description, " +
-            "data roles, data view mappings, format objects, supported features, and dependencies.",
+            "data roles, data view mappings, format objects, supported features, and dependencies. " +
+            "READ-ONLY: Return project info only. Do not modify files unless the user explicitly asks after seeing the results.",
             {},
             async () => {
                 const result = await getVisualInfo(this.rootPath);
@@ -145,7 +157,8 @@ export class McpServer {
             "formatting model, visual API, powerbi API, host services. " +
             "Categories: 'data' (fetchMoreData, persist properties), 'formatting' (color palette, format pane, high contrast), " +
             "'interaction' (selection manager, tooltips, context menu, launch URL, drill down, bookmarks), " +
-            "'utility' (localization, local storage, file download, rendering events, modal dialog), or 'all'.",
+            "'utility' (localization, local storage, file download, rendering events, modal dialog), or 'all'. " +
+            "READ-ONLY: Return API guidance/examples only. Do not modify files unless the user explicitly asks after seeing the results.",
             {
                 category: z.string().optional().describe("Filter APIs by category: 'data', 'formatting', 'interaction', 'utility', or 'all' (default). Use 'all' if unsure.")
             },
