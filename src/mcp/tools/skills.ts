@@ -16,6 +16,7 @@ interface SkillInfo {
     minApiVersion?: string;
     tags?: string[];
     dependencies?: string[];
+    files: string[];
     safe: boolean;
     scripts: boolean;
 }
@@ -28,20 +29,20 @@ interface SkillsManifest {
     skills: SkillInfo[];
 }
 
-interface GitHubContentEntry {
-    name: string;
-    path: string;
-    type: "file" | "dir";
-    download_url: string | null;
-}
-
 const REPO_OWNER = "Demonkratiy";
 const REPO_NAME = "powerbi-visuals-skills";
 const BRANCH = "main";
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}`;
-const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents`;
 
 let cachedManifest: SkillsManifest | null = null;
+let cachedManifestTimestamp = 0;
+const MANIFEST_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+/** Reset the manifest cache. Exported for test isolation. */
+export function _resetCache(): void {
+    cachedManifest = null;
+    cachedManifestTimestamp = 0;
+}
 
 async function fetchRawFile(repoPath: string): Promise<string> {
     const url = `${RAW_BASE}/${repoPath}`;
@@ -52,21 +53,14 @@ async function fetchRawFile(repoPath: string): Promise<string> {
     return res.text();
 }
 
-async function fetchDirListing(repoPath: string): Promise<GitHubContentEntry[]> {
-    const url = `${API_BASE}/${repoPath}?ref=${BRANCH}`;
-    const res = await fetch(url, {
-        headers: { "Accept": "application/vnd.github.v3+json" }
-    });
-    if (!res.ok) {
-        throw new Error(`Failed to list ${url}: ${res.status} ${res.statusText}`);
-    }
-    return res.json() as Promise<GitHubContentEntry[]>;
-}
-
 async function getManifest(): Promise<SkillsManifest> {
-    if (cachedManifest) return cachedManifest;
+    const now = Date.now();
+    if (cachedManifest && (now - cachedManifestTimestamp) < MANIFEST_TTL_MS) {
+        return cachedManifest;
+    }
     const raw = await fetchRawFile("skills.json");
     cachedManifest = JSON.parse(raw) as SkillsManifest;
+    cachedManifestTimestamp = now;
     return cachedManifest;
 }
 
@@ -75,68 +69,64 @@ function findSkill(manifest: SkillsManifest, skillName: string): SkillInfo | nul
     return manifest.skills.find(s => s.id.toLowerCase() === lower) || null;
 }
 
-async function collectFilesRecursively(dirPath: string): Promise<Array<{ filename: string; content: string }>> {
+async function getAdditionalSkillFiles(
+    skill: SkillInfo
+): Promise<{ files: Array<{ filename: string; content: string }>; warnings: string[] }> {
     const files: Array<{ filename: string; content: string }> = [];
-    const entries = await fetchDirListing(dirPath);
+    const warnings: string[] = [];
 
-    for (const entry of entries) {
-        if (entry.type === "file" && entry.download_url) {
-            const content = await fetchRawFile(entry.path);
-            files.push({ filename: `${dirPath.split("/").pop()}/${entry.name}`, content });
-        } else if (entry.type === "dir") {
-            const subFiles = await collectFilesRecursively(entry.path);
-            files.push(...subFiles);
+    // The manifest declares every file in the skill directory, so we fetch each one
+    // directly via raw.githubusercontent.com. No GitHub contents API call required.
+    if (!Array.isArray(skill.files) || skill.files.length === 0) {
+        warnings.push(
+            `Skill "${skill.id}" manifest entry is missing a "files" array; no reference files will be loaded.`
+        );
+        return { files, warnings };
+    }
+
+    for (const filePath of skill.files) {
+        if (filePath === "SKILL.md") continue;
+        try {
+            const content = await fetchRawFile(`${skill.path}/${filePath}`);
+            files.push({ filename: filePath, content });
+        } catch (err) {
+            warnings.push(`Failed to fetch ${skill.path}/${filePath}: ${(err as Error).message}`);
         }
     }
 
-    return files;
-}
-
-async function getAdditionalSkillFiles(skillPath: string): Promise<Array<{ filename: string; content: string }>> {
-    const files: Array<{ filename: string; content: string }> = [];
-
-    try {
-        const entries = await fetchDirListing(skillPath);
-
-        for (const entry of entries) {
-            if (entry.name === "SKILL.md") continue;
-
-            if (entry.type === "file" && entry.download_url) {
-                const content = await fetchRawFile(entry.path);
-                files.push({ filename: entry.name, content });
-            } else if (entry.type === "dir") {
-                const subFiles = await collectFilesRecursively(entry.path);
-                files.push(...subFiles);
-            }
-        }
-    } catch {
-        // If listing fails (e.g., rate limit), return what we have
-    }
-
-    return files;
+    return { files, warnings };
 }
 
 export async function listAvailableSkills(): Promise<string> {
     try {
         const manifest = await getManifest();
 
-        return JSON.stringify({
-            message: "Available Power BI Visual Skills",
-            description: "Each skill contains step-by-step instructions for implementing a feature. Use get_skill_instructions to get the full implementation guide for a specific skill.",
-            skills: manifest.skills.map(s => ({
-                id: s.id,
-                description: s.description,
-                version: s.version,
-                tags: s.tags,
-                minApiVersion: s.minApiVersion
-            }))
-        }, null, 2);
+        return JSON.stringify(
+            {
+                message: "Available Power BI Visual Skills",
+                description:
+                    "Each skill contains step-by-step instructions for implementing a feature. Use get_skill_instructions to get the full implementation guide for a specific skill.",
+                skills: manifest.skills.map(s => ({
+                    id: s.id,
+                    description: s.description,
+                    version: s.version,
+                    tags: s.tags,
+                    minApiVersion: s.minApiVersion
+                }))
+            },
+            null,
+            2
+        );
     } catch (error) {
-        return JSON.stringify({
-            message: "Failed to fetch skills from remote repository",
-            error: (error as Error).message,
-            skills: []
-        }, null, 2);
+        return JSON.stringify(
+            {
+                message: "Failed to fetch skills from remote repository",
+                error: (error as Error).message,
+                skills: []
+            },
+            null,
+            2
+        );
     }
 }
 
@@ -146,33 +136,43 @@ export async function getSkillInstructions(skillName: string): Promise<string> {
 
     if (!skill) {
         const available = manifest.skills.map(s => s.id);
-        return JSON.stringify({
-            error: `Feature "${skillName}" not found.`,
-            message: `Please pick a valid feature ID from the list below and call get_feature_documentation again.`,
-            availableFeatures: available,
-            skills: manifest.skills.map(s => ({
-                id: s.id,
-                description: s.description,
-                version: s.version,
-                tags: s.tags,
-                minApiVersion: s.minApiVersion
-            }))
-        }, null, 2);
+        return JSON.stringify(
+            {
+                error: `Feature "${skillName}" not found.`,
+                message: `Please pick a valid feature ID from the list below and call implement_feature again.`,
+                availableFeatures: available,
+                skills: manifest.skills.map(s => ({
+                    id: s.id,
+                    description: s.description,
+                    version: s.version,
+                    tags: s.tags,
+                    minApiVersion: s.minApiVersion
+                }))
+            },
+            null,
+            2
+        );
     }
 
     // Fetch SKILL.md from the remote repo
     const skillMdPath = `${skill.path}/SKILL.md`;
     const instructions = await fetchRawFile(skillMdPath);
 
-    // Fetch additional reference files
-    const additionalFiles = await getAdditionalSkillFiles(skill.path);
+    // Fetch additional reference files declared in the manifest
+    const { files: additionalFiles, warnings } = await getAdditionalSkillFiles(skill);
 
-    return JSON.stringify({
-        skillName: skill.id,
-        description: skill.description,
-        version: skill.version,
-        instructions,
-        additionalFiles: additionalFiles.length > 0 ? additionalFiles : undefined,
-        usage: "Follow the instructions in the 'instructions' field to implement this feature in the target visual project. The instructions contain all necessary code templates, configuration changes, and step-by-step guidance."
-    }, null, 2);
+    return JSON.stringify(
+        {
+            skillName: skill.id,
+            description: skill.description,
+            version: skill.version,
+            instructions,
+            additionalFiles: additionalFiles.length > 0 ? additionalFiles : undefined,
+            warnings: warnings.length > 0 ? warnings : undefined,
+            usage:
+                "Follow the instructions in the 'instructions' field to implement this feature in the target visual project. The instructions contain all necessary code templates, configuration changes, and step-by-step guidance."
+        },
+        null,
+        2
+    );
 }

@@ -62,8 +62,8 @@ The server runs on STDIO, so you won't see output, but it will respond to MCP re
 | `prepare_certification` | Check if the visual is ready for certification and marketplace submission | ✅ | ✅ |
 | `list_visual_info` | Get info about current visual (name, GUID, API version, capabilities) | ✅ | ✅ |
 | `get_available_apis` | List available Power BI Visual APIs with examples | ✅ | ✅ |
-| `add_feature` | List all features that can be added to a Power BI visual | ✅ | ✅ |
-| `implement_feature` | Get step-by-step implementation guide for a specific feature | ✅ | ✅ |
+| `add_feature` | List all features that can be added to a Power BI visual | ❌ | ✅ |
+| `implement_feature` | Get step-by-step implementation guide for a specific feature | ❌ | ✅ |
 
 ### Tool Details
 
