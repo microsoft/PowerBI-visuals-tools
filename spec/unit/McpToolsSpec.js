@@ -34,6 +34,7 @@ import { checkVulnerabilities } from '../../lib/mcp/tools/vulnerabilities.js';
 import { prepareCertification } from '../../lib/mcp/tools/certification.js';
 import { getBestPractices } from '../../lib/mcp/tools/bestPractices.js';
 import { getAvailableApis } from '../../lib/mcp/tools/availableApis.js';
+import { listAvailableSkills, getSkillInstructions, _resetCache } from '../../lib/mcp/tools/skills.js';
 import { initMcpConfig } from '../../lib/mcp/McpServer.js';
 
 const rootPath = getRootPath();
@@ -410,6 +411,158 @@ describe("MCP Tools", () => {
 
         it("-> should return false for non-existent directory", () => {
             expect(existsIgnoreCase('/non/existent/dir/file.txt')).toBeFalse();
+        });
+    });
+
+    // ===== Skills (listAvailableSkills / getSkillInstructions) =====
+    describe("Skills", () => {
+        let originalFetch;
+
+        beforeEach(() => {
+            _resetCache();
+            originalFetch = globalThis.fetch;
+        });
+
+        afterEach(() => {
+            globalThis.fetch = originalFetch;
+        });
+
+        function mockFetch(responses) {
+            globalThis.fetch = jasmine.createSpy('fetch').and.callFake(async (url) => {
+                for (const [pattern, response] of Object.entries(responses)) {
+                    if (url.includes(pattern)) {
+                        if (response.error) {
+                            return { ok: false, status: response.status || 500, statusText: response.statusText || 'Error', headers: new Map(Object.entries(response.headers || {})) };
+                        }
+                        return {
+                            ok: true,
+                            status: 200,
+                            text: async () => typeof response === 'string' ? response : JSON.stringify(response),
+                            json: async () => typeof response === 'string' ? JSON.parse(response) : response,
+                            headers: new Map()
+                        };
+                    }
+                }
+                return { ok: false, status: 404, statusText: 'Not Found', headers: new Map() };
+            });
+        }
+
+        const mockManifest = {
+            schemaVersion: 1,
+            repo: "Demonkratiy/powerbi-visuals-skills",
+            defaultTarget: "main",
+            defaultSkills: ["bookmarks"],
+            skills: [
+                { id: "bookmarks", path: "skills/bookmarks", version: "1.0.0", description: "Add bookmarks support", safe: true, scripts: false, tags: ["interaction"], files: ["SKILL.md", "references/capabilities.json"] },
+                { id: "tooltips", path: "skills/tooltips", version: "1.0.0", description: "Add tooltips support", safe: true, scripts: false, tags: ["interaction"], files: ["SKILL.md"] }
+            ]
+        };
+
+        it("-> should parse manifest and list available skills", async () => {
+            mockFetch({ 'skills.json': mockManifest });
+
+            const result = await listAvailableSkills();
+            const parsed = JSON.parse(result);
+            expect(parsed.skills.length).toBe(2);
+            expect(parsed.skills[0].id).toBe('bookmarks');
+            expect(parsed.skills[1].id).toBe('tooltips');
+        });
+
+        it("-> should return error for unknown skill", async () => {
+            mockFetch({ 'skills.json': mockManifest });
+
+            const result = await getSkillInstructions('nonexistent-feature');
+            const parsed = JSON.parse(result);
+            expect(parsed.error).toContain('nonexistent-feature');
+            expect(parsed.availableFeatures).toContain('bookmarks');
+            expect(parsed.availableFeatures).toContain('tooltips');
+        });
+
+        it("-> should fetch skill instructions with files from manifest", async () => {
+            mockFetch({
+                'skills.json': mockManifest,
+                'skills/bookmarks/SKILL.md': '# Bookmarks\nStep 1: ...',
+                'references/capabilities.json': '{"supportsBookmarks": true}'
+            });
+
+            const result = await getSkillInstructions('bookmarks');
+            const parsed = JSON.parse(result);
+            expect(parsed.skillName).toBe('bookmarks');
+            expect(parsed.instructions).toContain('Bookmarks');
+            expect(parsed.additionalFiles.length).toBe(1);
+            expect(parsed.additionalFiles[0].filename).toBe('references/capabilities.json');
+        });
+
+        it("-> should handle network failure gracefully for manifest", async () => {
+            mockFetch({ 'skills.json': { error: true, status: 500, statusText: 'Internal Server Error' } });
+
+            const result = await listAvailableSkills();
+            const parsed = JSON.parse(result);
+            expect(parsed.error).toBeDefined();
+            expect(parsed.skills).toEqual([]);
+        });
+
+        it("-> should include warnings when additional files fail to load", async () => {
+            mockFetch({
+                'skills.json': mockManifest,
+                'skills/bookmarks/SKILL.md': '# Bookmarks'
+                // references/capabilities.json not mocked — will 404
+            });
+
+            const result = await getSkillInstructions('bookmarks');
+            const parsed = JSON.parse(result);
+            expect(parsed.warnings).toBeDefined();
+            expect(parsed.warnings.length).toBeGreaterThan(0);
+            expect(parsed.warnings[0]).toContain('Failed to fetch');
+        });
+
+        it("-> should cache manifest and reuse within TTL", async () => {
+            mockFetch({ 'skills.json': mockManifest });
+
+            await listAvailableSkills();
+            await listAvailableSkills();
+
+            // fetch should be called only once for skills.json (cached on second call)
+            const skillsCalls = globalThis.fetch.calls.allArgs().filter(args => args[0].includes('skills.json'));
+            expect(skillsCalls.length).toBe(1);
+        });
+
+        it("-> should never call api.github.com (raw-only fetching)", async () => {
+            mockFetch({
+                'skills.json': mockManifest,
+                'skills/bookmarks/SKILL.md': '# Bookmarks',
+                'references/capabilities.json': '{}'
+            });
+
+            await getSkillInstructions('bookmarks');
+
+            const apiCalls = globalThis.fetch.calls.allArgs().filter(args => {
+                try {
+                    return new URL(args[0]).hostname === 'api.github.com';
+                } catch {
+                    return false;
+                }
+            });
+            expect(apiCalls.length).toBe(0);
+        });
+
+        // Integration smoke test (requires network)
+        it("-> should fetch real manifest from remote repository (integration)", async () => {
+            // Skip if no network
+            try {
+                const result = await listAvailableSkills();
+                const parsed = JSON.parse(result);
+                if (parsed.error) {
+                    pending('Network unavailable — skipping integration test');
+                    return;
+                }
+                expect(parsed.skills).toBeDefined();
+                expect(parsed.skills.length).toBeGreaterThan(0);
+                expect(parsed.skills[0].id).toBeDefined();
+                expect(parsed.skills[0].description).toBeDefined();
+            } catch {
+                pending('Network unavailable — skipping integration test');
+            }
         });
     });
 });

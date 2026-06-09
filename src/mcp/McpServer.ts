@@ -20,6 +20,7 @@ import { checkVulnerabilities } from "./tools/vulnerabilities.js";
 import { prepareCertification } from "./tools/certification.js";
 import { getVisualInfo } from "./tools/visualInfo.js";
 import { getAvailableApis } from "./tools/availableApis.js";
+import { listAvailableSkills, getSkillInstructions } from "./tools/skills.js";
 
 export class McpServer {
     private server: MCPServerSDK;
@@ -27,10 +28,27 @@ export class McpServer {
 
     constructor(rootPath: string) {
         this.rootPath = rootPath;
-        this.server = new MCPServerSDK({
-            name: "pbiviz-mcp-server",
-            version: "1.0.0",
-        });
+        this.server = new MCPServerSDK(
+            {
+                name: "pbiviz-mcp-server",
+                version: "1.0.0",
+            },
+            {
+                instructions:
+                    "MCP server for Power BI custom visual development. Required for any request about visuals, features, APIs, best practices, security, or certification — even with informal or misspelled feature names.\n\n" +
+                    "Tool selection:\n" +
+                    "- Add/implement/enable/create a feature (e.g., 'add tooltip', 'implement bookmarks', 'enable drill-down') → ALWAYS call implement_feature with the feature name. Do NOT implement from your own knowledge.\n" +
+                    "- List available features → add_feature\n" +
+                    "- APIs/SDK → get_available_apis\n" +
+                    "- Best practices → get_best_practices\n" +
+                    "- Security → check_vulnerabilities\n" +
+                    "- Certification → prepare_certification\n" +
+                    "- Project info → list_visual_info\n\n" +
+                    "Rules:\n" +
+                    "- After prepare_certification, ask the user if they want a vulnerability check.\n" +
+                    "- All tools are read-only: get_available_apis, get_best_practices, check_vulnerabilities, prepare_certification, and list_visual_info return guidance only — ask for confirmation before editing files. implement_feature and add_feature return code meant to be applied directly.",
+            }
+        );
 
         this.registerTools();
     }
@@ -39,7 +57,8 @@ export class McpServer {
         // Tool 1: Get Best Practices
         this.server.tool(
             "get_best_practices",
-            "Returns best practice guidelines for Power BI custom visual development. Covers: API version management, performance optimization (update loop, lazy loading, data processing), security (eval, innerHTML, XSS, sanitization, external call/calls, network request/requests), accessibility (keyboard navigation, high contrast, screen reader, ARIA label/labels), project structure (module/modules, error handling), formatting pane (format model, formatting model), testing (unit test/tests, E2E test/tests, edge case/cases), and documentation (README, changelog, comment/comments).",
+            "Get best practices and coding guidelines for Power BI custom visual development. " +
+            "Covers performance, security, accessibility, project structure, and testing.",
             {},
             async () => {
                 const practices = await getBestPractices(this.rootPath);
@@ -52,7 +71,8 @@ export class McpServer {
         // Tool 2: Check Vulnerabilities
         this.server.tool(
             "check_vulnerabilities",
-            "Scans the visual project source code for security vulnerability/vulnerabilities and dangerous code pattern/patterns. Detects: eval(), new Function(), innerHTML assignment, document.write, external fetch/HTTP call/calls, XMLHttpRequest. Also checks for commented-out dangerous code and ESLint configuration. Reports issue/issues by severity (critical, high, medium, low, info) with file path and line number.",
+            "Scan the Power BI visual project for security vulnerabilities and dangerous code patterns. " +
+            "Detects unsafe APIs (eval, innerHTML, document.write, external requests) and reports issues by severity with file locations.",
             {},
             async () => {
                 const result = await checkVulnerabilities(this.rootPath);
@@ -65,7 +85,8 @@ export class McpServer {
         // Tool 3: Prepare Certification
         this.server.tool(
             "prepare_certification",
-            "Audits the visual for Power BI certification readiness. Checks: required file/files (pbiviz.json, capabilities.json, package.json, tsconfig.json), visual configuration (name, GUID, version, API version, author, support URL), capability/capabilities (data role/roles, data view mapping/mappings, keyboard focus, highlight support, web access privilege/privileges), and asset/assets (icon.png). Reports pass/fail/warning status for each check.",
+            "Check if the Power BI visual is ready for certification and marketplace submission. " +
+            "Audits required files, configuration, capabilities, and assets. Reports pass/fail/warning status for each requirement.",
             {},
             async () => {
                 const result = await prepareCertification(this.rootPath);
@@ -78,7 +99,8 @@ export class McpServer {
         // Tool 4: List Visual Info
         this.server.tool(
             "list_visual_info",
-            "Returns detailed information about the current Power BI visual project. Shows: visual name, display name, GUID, version, API version, author, description, support URL, data role/roles, data view mapping/mappings, format object/objects (setting/settings), supported feature/features (highlight, keyboard focus, landing page, multi-visual selection), dependency/dependencies from package.json, and quick command/commands.",
+            "Get information about the current Power BI visual project — name, GUID, API version, " +
+            "author, data roles, capabilities, and dependencies.",
             {},
             async () => {
                 const result = await getVisualInfo(this.rootPath);
@@ -91,12 +113,57 @@ export class McpServer {
         // Tool 5: Get Available APIs
         this.server.tool(
             "get_available_apis", 
-            "Lists available Power BI Visual API/APIs and feature/features with code example/examples and documentation link/links. Categories: 'data' (fetchMoreData, data snapshot, persist property/properties), 'formatting' (color palette, format pane, formatting model, custom color/colors, high contrast), 'interaction' (selection manager, tooltip/tooltips, tooltip service, context menu, launch URL, drill down/drilldown, warning icon), 'utility' (localization, local storage, file download, rendering event/events, modal dialog, authentication), or 'all'.",
+            "List available Power BI Visual APIs with code examples. " +
+            "Categories: data, formatting, interaction, utility, or all.",
             {
-                category: z.string().optional().describe("Filter APIs by category: 'data' (fetchMoreData, persist, snapshot), 'formatting' (color palette, format pane, high contrast), 'interaction' (selection, tooltip/tooltips, context menu, drill down, launch URL, warning icon), 'utility' (localization, storage, download, event/events, dialog, auth), or 'all' (default)")
+                category: z.string().optional().describe("Filter APIs by category: 'data', 'formatting', 'interaction', 'utility', or 'all' (default). Use 'all' if unsure.")
             },
             async ({ category }) => {
                 const result = await getAvailableApis(category || "all", this.rootPath);
+                return {
+                    content: [{ type: "text", text: result }],
+                };
+            }
+        );
+
+        // Tool 6: List available features/skills
+        this.server.tool(
+            "add_feature",
+            "List all features that can be added to a Power BI custom visual, including: tooltips, context-menu, " +
+            "bookmarks, drill-down, landing-page, launch-url, local-storage, modal-dialog, color-palette, " +
+            "conditional-formatting, display-warning-icon, high-contrast, rendering-events, selection, " +
+            "sync-slicer, format-pane, analytics-pane, and more. " +
+            "Use this tool when a user asks to add, enable, or implement ANY feature in a Power BI visual. " +
+            "Returns feature IDs that can be passed to implement_feature for step-by-step instructions.",
+            {},
+            async () => {
+                const result = await listAvailableSkills();
+                return {
+                    content: [{ type: "text", text: result }],
+                };
+            }
+        );
+
+        // Tool 7: Get feature implementation instructions
+        this.server.tool(
+            "implement_feature",
+            "Add, implement, or enable a specific feature in a Power BI custom visual. " +
+            "USE THIS TOOL when the user asks to 'add tooltip', 'add context menu', 'implement bookmarks', " +
+            "'enable drill-down', 'add landing page', or any similar request to add functionality. " +
+            "Returns complete code templates, configuration changes, and step-by-step instructions. " +
+            "If the feature name doesn't match exactly, returns available options.",
+            {
+                featureName: z.string().describe(
+                    "The feature name or ID to implement. Common values: 'tooltips', 'context-menu', 'bookmarks', " +
+                    "'drill-down', 'landing-page', 'launch-url', 'local-storage', 'modal-dialog', 'dialog-box', " +
+                    "'color-palette', 'conditional-formatting', 'display-warning-icon', 'high-contrast', " +
+                    "'rendering-events', 'selection', 'sync-slicer', 'format-pane', 'analytics-pane'. " +
+                    "Use the most likely feature ID based on the user's request. If unsure, try the closest match — " +
+                    "the tool will return available options if no exact match is found."
+                )
+            },
+            async ({ featureName }) => {
+                const result = await getSkillInstructions(featureName);
                 return {
                     content: [{ type: "text", text: result }],
                 };
