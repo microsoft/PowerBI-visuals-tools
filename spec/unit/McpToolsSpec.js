@@ -536,7 +536,13 @@ describe("MCP Tools", () => {
 
             await getSkillInstructions('bookmarks');
 
-            const apiCalls = globalThis.fetch.calls.allArgs().filter(args => args[0].includes('api.github.com'));
+            const apiCalls = globalThis.fetch.calls.allArgs().filter(args => {
+                try {
+                    return new URL(args[0]).hostname === 'api.github.com';
+                } catch {
+                    return false;
+                }
+            });
             expect(apiCalls.length).toBe(0);
         });
 
