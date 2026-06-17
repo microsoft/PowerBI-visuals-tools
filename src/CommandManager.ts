@@ -4,6 +4,7 @@ import ConsoleWriter from './ConsoleWriter.js';
 import VisualManager, { GenerateOptions } from './VisualManager.js';
 import { WebpackOptions } from './WebPackWrap.js';
 import { startMcpServer, initMcpConfig } from './mcp/McpServer.js';
+import { checkFirstRunMcpSetup } from './McpSetupPrompt.js';
 
 export interface LintOptions {
     verbose: boolean;
@@ -124,5 +125,9 @@ export default class CommandManager {
 
     public static async mcpInit(rootPath: string) {
         await initMcpConfig(rootPath);
+    }
+
+    public static async checkFirstRun(rootPath: string) {
+        await checkFirstRunMcpSetup(rootPath);
     }
 }

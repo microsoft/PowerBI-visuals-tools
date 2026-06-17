@@ -123,4 +123,14 @@ pbiviz
         }
     });
 
+// First-run MCP setup prompt (only shown once, skipped in CI)
+// Skip when user explicitly runs 'mcp --init' since that command handles its own setup
+pbiviz.hook('preAction', async (thisCommand, actionCommand) => {
+    const commandName = actionCommand.name();
+    const isExplicitMcpInit = commandName === 'mcp' && actionCommand.opts().init;
+    if (!isExplicitMcpInit) {
+        await CommandManager.checkFirstRun(rootPath);
+    }
+});
+
 program.parse(process.argv);

@@ -11,10 +11,9 @@
 import { McpServer as MCPServerSDK } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import fs from "fs-extra";
-import path from "path";
 
 import ConsoleWriter from "../ConsoleWriter.js";
+import { configureMcpConfig, MCP_NEXT_STEPS } from "../McpConfigManager.js";
 import { getBestPractices } from "./tools/bestPractices.js";
 import { checkVulnerabilities } from "./tools/vulnerabilities.js";
 import { prepareCertification } from "./tools/certification.js";
@@ -188,43 +187,23 @@ export async function startMcpServer(rootPath: string) {
     await server.start();
 }
 
-const MCP_CONFIG = {
-    servers: {
-        pbiviz: {
-            command: "npx",
-            args: ["-y", "powerbi-visuals-tools", "mcp"]
-        }
-    }
-};
-
 export async function initMcpConfig(rootPath: string) {
-    const vscodeDir = path.join(rootPath, ".vscode");
-    const mcpConfigPath = path.join(vscodeDir, "mcp.json");
-
     try {
-        // Check if mcp.json already exists
-        if (fs.existsSync(mcpConfigPath)) {
-            ConsoleWriter.warning("MCP configuration already exists at .vscode/mcp.json");
-            ConsoleWriter.info("To reconfigure, delete the file and run this command again.");
-            return;
+        const result = configureMcpConfig(rootPath);
+
+        switch (result.status) {
+            case "already-exists":
+                ConsoleWriter.warning(result.message);
+                ConsoleWriter.info("To reconfigure, remove the 'pbiviz' entry and run this command again.");
+                return;
+            case "created":
+            case "added":
+                ConsoleWriter.done("MCP configuration created successfully!");
+                break;
         }
 
-        // Create .vscode directory if it doesn't exist
-        fs.ensureDirSync(vscodeDir);
-
-        // Write mcp.json
-        fs.writeJsonSync(mcpConfigPath, MCP_CONFIG, { spaces: 4 });
-
-        ConsoleWriter.done("MCP configuration created successfully!");
         ConsoleWriter.blank();
-        ConsoleWriter.info("Created: .vscode/mcp.json");
-        ConsoleWriter.blank();
-        ConsoleWriter.info("Next steps:");
-        ConsoleWriter.info("1. Restart VS Code to activate MCP server");
-        ConsoleWriter.info("2. Open Copilot Chat and ask questions like:");
-        ConsoleWriter.info('   - "Check my visual for certification readiness"');
-        ConsoleWriter.info('   - "What are the best practices for Power BI visuals?"');
-        ConsoleWriter.info('   - "Show me available APIs for tooltips"');
+        MCP_NEXT_STEPS.forEach(line => ConsoleWriter.info(line));
         ConsoleWriter.blank();
     } catch (error) {
         ConsoleWriter.error(`Failed to create MCP configuration: ${(error instanceof Error) ? error.message : String(error)}`);
