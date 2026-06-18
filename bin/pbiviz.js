@@ -111,16 +111,4 @@ pbiviz
         CommandManager.package(options, rootPath);
     });
 
-pbiviz
-    .command('mcp')
-    .description('Start MCP (Model Context Protocol) server for AI assistant integration')
-    .option('--init', 'Initialize MCP configuration in current project (.vscode/mcp.json)')
-    .action((options) => {
-        if (options.init) {
-            CommandManager.mcpInit(rootPath);
-        } else {
-            CommandManager.mcp(rootPath);
-        }
-    });
-
 program.parse(process.argv);

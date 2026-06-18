@@ -50,41 +50,6 @@ You can learn more about using these tools in the following guides
 * [Usage Guide](https://learn.microsoft.com/en-us/power-bi/developer/visuals/develop-circle-card#create-a-development-project)
 * [Debugging Guide](https://learn.microsoft.com/en-us/power-bi/developer/visuals/visuals-how-to-debug)
 
-## MCP Server (AI Integration)
-
-PowerBI Visual Tools includes a built-in [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that allows AI assistants like GitHub Copilot, Cursor, and Claude to interact with your visual project directly.
-
-### Setup
-
-Run the following command to initialize the MCP configuration:
-
-```
-pbiviz mcp --init
-```
-
-### Available Tools
-
-| Tool | Description |
-|------|-------------|
-| `get_best_practices` | Best practices and guidelines for Power BI visual development |
-| `check_vulnerabilities` | Scan project for security vulnerabilities and dangerous code patterns |
-| `prepare_certification` | Check if the visual is ready for certification and marketplace submission |
-| `list_visual_info` | Get info about current visual (name, GUID, API version, capabilities) |
-| `get_available_apis` | List available Power BI Visual APIs with examples |
-| `add_feature` | List all features that can be added to a Power BI visual |
-| `implement_feature` | Get step-by-step implementation guide for a specific feature |
-
-### Example Prompts
-
-- *"Is my visual ready for certification?"* — runs `prepare_certification`
-- *"Check my visual for security issues"* — runs `check_vulnerabilities`
-- *"How do I add tooltips to my visual?"* — runs `implement_feature`
-- *"What APIs are available for data interaction?"* — runs `get_available_apis`
-
-All tools are **read-only** and **local** — no data is sent to external services.
-
-For detailed documentation see [MCP.md](MCP.md).
-
 ## PowerBI Visuals Tools Changes
 
 * [Change Log](https://github.com/Microsoft/PowerBI-visuals-tools/blob/master/Changelog.md)
