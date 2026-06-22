@@ -1,5 +1,7 @@
 # Power BI Visuals Tools - MCP Server
 
+> ⚠️ **Preview feature:** The MCP server integration is currently in **preview**. Its tools, behavior, and configuration may change in future releases.
+
 This document describes the MCP (Model Context Protocol) server integration for Power BI Custom Visual Tools, inspired by the Angular 21 MCP implementation.
 
 ## What is MCP?
@@ -10,7 +12,13 @@ Model Context Protocol (MCP) is an open protocol that allows AI assistants (like
 
 ### Option 1: Using VS Code with Copilot
 
-1. Add this to your VS Code settings or create `.vscode/mcp.json`:
+1. Run the following command to initialize the MCP configuration:
+
+```
+pbiviz mcp --init
+```
+
+   This creates (or updates) `.vscode/mcp.json` with the `pbiviz` server entry:
 
 ```json
 {

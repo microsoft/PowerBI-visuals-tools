@@ -135,6 +135,10 @@ export async function initMcpConfig(rootPath: string) {
     const mcpConfigPath = path.join(vscodeDir, "mcp.json");
 
     try {
+        ConsoleWriter.warning("The MCP server is a PREVIEW feature.");
+        ConsoleWriter.info("Its tools, behavior, and configuration may change in future releases");
+        ConsoleWriter.blank();
+
         // Check if mcp.json already exists
         if (fs.existsSync(mcpConfigPath)) {
             ConsoleWriter.warning("MCP configuration already exists at .vscode/mcp.json");
