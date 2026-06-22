@@ -1,7 +1,7 @@
 [![Npm Version](https://img.shields.io/npm/v/powerbi-visuals-tools.svg?style=flat)](https://www.npmjs.com/package/powerbi-visuals-tools)
 [![Npm Downloads](https://img.shields.io/npm/dm/powerbi-visuals-tools.svg?style=flat)](https://www.npmjs.com/package/powerbi-visuals-tools)
 ![Build](https://github.com/microsoft/powerbi-visuals-tools/workflows/build/badge.svg) 
-[![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs/branch/master?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
+[![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs/branch/main?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
 [![Code Climate](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools/badges/gpa.svg)](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools)
 
 # PowerBI Visual Tools (pbiviz)
@@ -42,7 +42,7 @@ pbiviz
 
 ## MCP Server (Preview)
 
-> ⚠️ **Preview feature:** The MCP server integration is currently in **preview**. Its tools, behavior, and configuration may change in future releases.
+> ⚠️ **Preview:** MCP support in `pbiviz` is currently in **Preview**. The command surface, available tools, and configuration format may change in future releases without backward-compatibility guarantees.
 
 The tools include a built-in [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that lets AI assistants (GitHub Copilot, Cursor, Claude, etc.) interact with your visual project directly.
 
@@ -62,7 +62,7 @@ Available tools include:
 | `list_visual_info` | Returns info about the current visual |
 | `get_available_apis` | Lists available Power BI Visual APIs with examples |
 
-For setup instructions, tool details, and example interactions, see the [MCP Server guide](https://github.com/Microsoft/PowerBI-visuals-tools/blob/master/MCP.md).
+For setup instructions, tool details, and example interactions, see the [MCP Server guide](https://github.com/Microsoft/PowerBI-visuals-tools/blob/main/MCP.md).
 
 ## How to build a visual?
 Refer to our [documentation repository](https://learn.microsoft.com/en-us/power-bi/developer/visuals/develop-circle-card)
@@ -76,12 +76,12 @@ You can learn more about using these tools in the following guides
 
 ## PowerBI Visuals Tools Changes
 
-* [Change Log](https://github.com/Microsoft/PowerBI-visuals-tools/blob/master/Changelog.md)
+* [Change Log](https://github.com/Microsoft/PowerBI-visuals-tools/blob/main/Changelog.md)
 
 ## Visuals API Changes
 
-* [API Change Log](https://github.com/microsoft/PowerBI-visuals-tools/blob/master/Changelog.md)
+* [API Change Log](https://github.com/microsoft/PowerBI-visuals-tools/blob/main/Changelog.md)
 
 ## Contributing
 
-If you would like to contribute please see [How To Contribute](https://github.com/Microsoft/PowerBI-visuals-tools/blob/master/CONTRIBUTING.md).
+If you would like to contribute please see [How To Contribute](https://github.com/Microsoft/PowerBI-visuals-tools/blob/main/CONTRIBUTING.md).

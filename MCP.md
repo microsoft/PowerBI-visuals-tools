@@ -1,6 +1,6 @@
 # Power BI Visuals Tools - MCP Server
 
-> ⚠️ **Preview feature:** The MCP server integration is currently in **preview**. Its tools, behavior, and configuration may change in future releases.
+> ⚠️ **Preview:** MCP support in `pbiviz` is currently in **Preview**. The command surface, available tools, and configuration format may change in future releases without backward-compatibility guarantees.
 
 This document describes the MCP (Model Context Protocol) server integration for Power BI Custom Visual Tools, inspired by the Angular 21 MCP implementation.
 
