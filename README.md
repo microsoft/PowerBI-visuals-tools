@@ -40,30 +40,6 @@ To confirm it was installed correctly you can run the command without any parame
 pbiviz
 ```
 
-## MCP Server (Preview)
-
-> ⚠️ **Preview:** MCP support in `pbiviz` is currently in **Preview**. The command surface, available tools, and configuration format may change in future releases without backward-compatibility guarantees.
-
-The tools include a built-in [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that lets AI assistants (GitHub Copilot, Cursor, Claude, etc.) interact with your visual project directly.
-
-Start the server from your visual project:
-
-```
-pbiviz mcp --init
-```
-
-Available tools include:
-
-| Tool | Description |
-|------|-------------|
-| `get_best_practices` | Best practice guidelines for Power BI visual development |
-| `check_vulnerabilities` | Scans the project for security vulnerabilities |
-| `prepare_certification` | Audits the visual for certification readiness |
-| `list_visual_info` | Returns info about the current visual |
-| `get_available_apis` | Lists available Power BI Visual APIs with examples |
-
-For setup instructions, tool details, and example interactions, see the [MCP Server guide](https://github.com/Microsoft/PowerBI-visuals-tools/blob/main/MCP.md).
-
 ## How to build a visual?
 Refer to our [documentation repository](https://learn.microsoft.com/en-us/power-bi/developer/visuals/develop-circle-card)
 
