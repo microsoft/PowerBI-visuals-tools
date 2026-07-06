@@ -135,6 +135,10 @@ export async function initMcpConfig(rootPath: string) {
     const mcpConfigPath = path.join(vscodeDir, "mcp.json");
 
     try {
+        ConsoleWriter.warning("MCP support in pbiviz is currently in Preview.");
+        ConsoleWriter.info("The command surface, available tools, and configuration format may change in future releases without backward-compatibility guarantees.");
+        ConsoleWriter.blank();
+
         // Check if mcp.json already exists
         if (fs.existsSync(mcpConfigPath)) {
             ConsoleWriter.warning("MCP configuration already exists at .vscode/mcp.json");

@@ -1,7 +1,7 @@
 [![Npm Version](https://img.shields.io/npm/v/powerbi-visuals-tools.svg?style=flat)](https://www.npmjs.com/package/powerbi-visuals-tools)
 [![Npm Downloads](https://img.shields.io/npm/dm/powerbi-visuals-tools.svg?style=flat)](https://www.npmjs.com/package/powerbi-visuals-tools)
 ![Build](https://github.com/microsoft/powerbi-visuals-tools/workflows/build/badge.svg) 
-[![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs/branch/master?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
+[![Build status](https://ci.appveyor.com/api/projects/status/ogws5ib33i35o5hs/branch/main?svg=true)](https://ci.appveyor.com/project/spatney/powerbi-visuals-tools)
 [![Code Climate](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools/badges/gpa.svg)](https://codeclimate.com/github/Microsoft/PowerBI-visuals-tools)
 
 # PowerBI Visual Tools (pbiviz)
@@ -52,12 +52,12 @@ You can learn more about using these tools in the following guides
 
 ## PowerBI Visuals Tools Changes
 
-* [Change Log](https://github.com/Microsoft/PowerBI-visuals-tools/blob/master/Changelog.md)
+* [Change Log](https://github.com/Microsoft/PowerBI-visuals-tools/blob/main/Changelog.md)
 
 ## Visuals API Changes
 
-* [API Change Log](https://github.com/microsoft/PowerBI-visuals-tools/blob/master/Changelog.md)
+* [API Change Log](https://github.com/microsoft/PowerBI-visuals-tools/blob/main/Changelog.md)
 
 ## Contributing
 
-If you would like to contribute please see [How To Contribute](https://github.com/Microsoft/PowerBI-visuals-tools/blob/master/CONTRIBUTING.md).
+If you would like to contribute please see [How To Contribute](https://github.com/Microsoft/PowerBI-visuals-tools/blob/main/CONTRIBUTING.md).
