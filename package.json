@@ -29,10 +29,10 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-tools#readme",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.3",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@typescript-eslint/parser": "^8.50.0",
     "async": "^3.2.6",
-    "chalk": "^5.4.1",
+    "chalk": "^5.6.2",
     "commander": "^14.0.3",
     "compare-versions": "^6.1.1",
     "css-loader": "^7.1.4",
@@ -54,7 +54,7 @@
     "typescript": "^5.9.3",
     "webpack": "^5.105.4",
     "webpack-bundle-analyzer": "4.10.2",
-    "webpack-dev-server": "^5.2.3",
+    "webpack-dev-server": "^5.2.6",
     "zod": "^4.3.6"
 
   },
@@ -70,6 +70,9 @@
   },
   "optionalDependencies": {
     "fsevents": "*"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   },
   "engines": {
     "node": ">=20.19.0"
