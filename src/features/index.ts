@@ -26,6 +26,7 @@ import TotalSubTotal from './TotalSubTotal.js'
 import WarningIcon from './WarningIcon.js'
 import APIVersion from './APIVersion.js'
 import VisualVersion from './VisualVersion.js'
+import VisualVersionLeadingZeros from './VisualVersionLeadingZeros.js'
 
 export { 
     AdvancedEditMode, AllowInteractions, AnalyticsPane, Bookmarks, 
@@ -34,5 +35,5 @@ export {
     HighlightData, KeyboardNavigation, LandingPage, LaunchURL,
     Localizations, LocalStorage, ModalDialog, RenderingEvents,
     SelectionAcrossVisuals, SyncSlicer, Tooltips, TotalSubTotal,
-    WarningIcon, APIVersion, VisualVersion, AuthorInfo
+    WarningIcon, APIVersion, VisualVersion, VisualVersionLeadingZeros, AuthorInfo
 }
