@@ -2,6 +2,9 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 
+## 7.1.2
+* Npm audit fixes.
+
 ## 7.1.1
 * Minor documentation and metadata updates.
 
