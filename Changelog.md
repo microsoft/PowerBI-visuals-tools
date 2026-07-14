@@ -2,7 +2,7 @@
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 ## 7.1.2
-* Added a pre-build validation that warns when the visual version contains parts with leading zeros (rejected by the Power BI marketplace package acceptance check).
+* Added a pre-build validation that fails with an error when the visual version contains parts with leading zeros (rejected by the Power BI marketplace package acceptance check).
 
 ## 7.1.2
 * Npm audit fixes.
