@@ -22,6 +22,10 @@ export class Visual {
         return this.visualVersion.split(".").length === length
     }
 
+    public hasVisualVersionLeadingZeros() {
+        return this.visualVersion.split(".").some(part => /^0\d+/.test(part));
+    }
+
     public isAuthorDefined() {
         const author = this.config?.author;
         const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;

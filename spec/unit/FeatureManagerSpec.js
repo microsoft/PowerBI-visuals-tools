@@ -36,7 +36,7 @@ const config = await readJsonFromRoot('config.json');
 
 describe("Features", () => {
     describe("Visual", () => {
-        const { APIVersion, VisualVersion, AuthorInfo } = features;
+        const { APIVersion, VisualVersion, VisualVersionLeadingZeros, AuthorInfo } = features;
         it("Should support API Version", () => {
             const Visual = {
                 doesAPIVersionMatch: (minVersion) =>  {
@@ -56,6 +56,48 @@ describe("Features", () => {
                 }
             }
             expect(VisualVersion.isSupported(Visual)).toBeTrue;
+        });
+
+        describe("VisualVersionLeadingZeros", () => {
+            it("Should support when version has no leading zeros", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.16.345.1" },
+                    apiVersion: "5.3.0"
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(VisualVersionLeadingZeros.isSupported(visual)).toBeTrue();
+            });
+
+            it("Should support when version parts are single zeros", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.0.0.0" },
+                    apiVersion: "5.3.0"
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(VisualVersionLeadingZeros.isSupported(visual)).toBeTrue();
+            });
+
+            it("Should not support when a version part has a leading zero", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "1.16.0345.1" },
+                    apiVersion: "5.3.0"
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(VisualVersionLeadingZeros.isSupported(visual)).toBeFalse();
+            });
+
+            it("Should not support when multiple version parts have leading zeros", () => {
+                const capabilities = {};
+                const visualConfig = {
+                    visual: { version: "01.02.03.04" },
+                    apiVersion: "5.3.0"
+                };
+                const visual = new Visual(capabilities, visualConfig);
+                expect(VisualVersionLeadingZeros.isSupported(visual)).toBeFalse();
+            });
         });
 
         describe("AuthorInfo", () => {
