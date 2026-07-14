@@ -1,9 +1,11 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
-
 ## 7.1.2
 * Added a pre-build validation that warns when the visual version contains parts with leading zeros (rejected by the Power BI marketplace package acceptance check).
+
+## 7.1.2
+* Npm audit fixes.
 
 ## 7.1.1
 * Minor documentation and metadata updates.
