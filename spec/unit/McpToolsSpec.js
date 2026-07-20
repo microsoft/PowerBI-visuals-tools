@@ -71,7 +71,7 @@ function createMockVisual(dir) {
     fs.writeJsonSync(path.join(dir, 'package.json'), {
         name: "test-visual",
         version: "1.0.0",
-        dependencies: { "powerbi-visuals-api": "5.11.0" },
+        dependencies: { "powerbi-visuals-api": "5.11.1" },
         devDependencies: { "eslint": "^9.0.0", "typescript": "5.5.4" }
     });
 

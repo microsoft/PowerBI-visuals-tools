@@ -11,7 +11,7 @@
     "powerbi-visuals-utils-formattingmodel": "6.0.4"
   },
   "devDependencies": {
-    "powerbi-visuals-api": "5.11.0",
+    "powerbi-visuals-api": "5.11.1",
     "@types/d3": "7.4.3",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "eslint": "^9.11.1",

@@ -16,7 +16,7 @@
   "dependencies": {
     "@types/d3": "7.4.3",
     "d3": "7.9.0",
-    "powerbi-visuals-api": "5.11.0",
+    "powerbi-visuals-api": "5.11.1",
     "powerbi-visuals-utils-formattingmodel": "6.0.4"
   },
   "devDependencies": {
