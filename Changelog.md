@@ -3,6 +3,7 @@
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
 ## 7.2.0
 * Added a pre-build validation that fails with an error when the visual version contains parts with leading zeros (rejected by the Power BI marketplace package acceptance check).
+* Bumped `powerbi-visuals-api` to `5.11.1` in the visual templates.
 
 ## 7.1.2
 * Npm audit fixes.
