@@ -5,7 +5,7 @@
     "plugin": "templates/plugin.ts.template",
     "package": "templates/package.json.template"
   },
-  "generate": { "apiVersion": "5.3.0" },
+  "generate": { "apiVersion": "5.11.1" },
   "constants": { "minAPIversion": "4.7.0" },
   "build": {
     "precompileFolder": ".tmp/precompile",
