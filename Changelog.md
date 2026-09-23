@@ -1,6 +1,9 @@
 # Change Log - PowerBI Visual Tools (pbiviz)
 
 This page contains information about changes to the PowerBI Visual Tools (pbiviz).
+## 7.2.2
+* Updated dependencies to address npm audit vulnerabilities.
+
 ## 7.2.1
 * Bumped apiVersion to 5.11.1 in the visual templates' pbiviz.json.
 
