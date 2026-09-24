@@ -54,7 +54,7 @@
     "typescript": "^5.9.3",
     "webpack": "^5.105.4",
     "webpack-bundle-analyzer": "4.10.2",
-    "webpack-dev-server": "^5.2.3",
+    "webpack-dev-server": "^6.0.0",
     "zod": "^4.3.6"
 
   },
